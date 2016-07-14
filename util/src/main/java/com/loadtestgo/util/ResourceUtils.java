@@ -48,12 +48,4 @@ public class ResourceUtils {
             }
         }
     }
-
-    public static String loadResourceAsString(Class klass, String filename) throws IOException {
-        InputStream stream = klass.getResourceAsStream(filename);
-        if (stream == null) {
-            throw new IOException(String.format("Unable to laod %s", filename));
-        }
-        return IOUtils.toString(stream);
-    }
 }

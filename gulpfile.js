@@ -11,11 +11,12 @@ var replace = require('gulp-replace');
 gulp.task('enginejs', function() {
     var tasks = [];
 
-    var src = 'script-engine/src/main/resources/chrome/extension/pizza/'
+    var src = 'script-engine/src/main/resources/chrome/extension/pizza/';
     var dest = 'script-engine/build/resources/main/chrome/extension/pizza/';
+    var i, r;
 
     var copyDirect = ['config.js', 'namespace.js', 'content.js'];
-    for (var i = 0; i < copyDirect.length; ++i) {
+    for (i = 0; i < copyDirect.length; ++i) {
         copyDirect[i] = src + copyDirect[i];
     }
 
@@ -44,8 +45,8 @@ gulp.task('enginejs', function() {
         return r;
     }
 
-    for (var i = 0; i < l.length; ++i) {
-        var r = l[i];
+    for (i = 0; i < l.length; ++i) {
+        r = l[i];
         r = cleanString(r);
         if (r != "namespace.js" && r != "config.js") {
             r = src + r;
@@ -64,8 +65,8 @@ gulp.task('enginejs', function() {
     l = f.split(",");
 
     files = [];
-    for (var i = 0; i < l.length; ++i) {
-        var r = l[i];
+    for (i = 0; i < l.length; ++i) {
+        r = l[i];
         r = cleanString(r);
         files.push(src + r);
     }

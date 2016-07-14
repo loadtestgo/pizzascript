@@ -4,7 +4,3 @@ include "script-engine"
 include "script-tester"
 include "util"
 include "view-metrics"
-
-// Vendor libs
-include ':java-websocket'
-project(':java-websocket').projectDir = new File(rootProject.projectDir, 'vendor/Java-WebSocket')

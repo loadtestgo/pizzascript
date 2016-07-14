@@ -1,23 +1,12 @@
-License
--------
-
-Copyright (c) 2015 Mark Watson (watsonmw@gmail.com)
-
-Not available for use without permission.
-
-No implied warranty.
-
-
 Requirements
 ------------
 
 + Java 8
 + Chrome 40+ (*)
 
-Only tested on OSX, YMMV.
-
 * Works with Stable and Release channels for the most part, but the block* and redirect*
   functions are only supported on the Dev Channel right now.
+
 
 Setup
 -----
@@ -26,6 +15,7 @@ If Chrome is installed and in the PATH or installed normally the script editor w
 generally find it.  Failing this you can set the path to Chrome (and other settings)
 in the settings.ini file.  See the settings.ini file included with this download for
 details.
+
 
 Running
 -------
@@ -45,7 +35,6 @@ Run a script from the console (no IDE):
 Run the interactive console:
 
   > bin/script-editor -console
-
 
 
 Example Scripts

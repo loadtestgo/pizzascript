@@ -987,7 +987,9 @@ pizza.main.commands = function() {
 
     function formatWasThrownException(response) {
         var t;
-        if (response.exceptionDetails) {
+        if (response.result.value) {
+            return response.result.value;
+        } else if (response.exceptionDetails) {
             t = response.exceptionDetails.text;
             var uncaught = "Uncaught ";
             if (t.indexOf(uncaught) == 0) {

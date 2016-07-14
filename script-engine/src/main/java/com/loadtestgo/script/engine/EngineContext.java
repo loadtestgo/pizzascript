@@ -6,6 +6,7 @@ import org.pmw.tinylog.Logger;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.io.IOException;
 
 /**
  * The main EngineContext that is shared between multiple browsers all
@@ -45,7 +46,7 @@ public class EngineContext {
             if (webSocketServer != null) {
                 webSocketServer.stop(3000);
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException|IOException e) {
             Logger.error(e, "while cleaning up");
         }
     }

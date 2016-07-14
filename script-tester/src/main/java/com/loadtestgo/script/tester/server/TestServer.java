@@ -85,7 +85,6 @@ public class TestServer {
         pageRegistry.registerClass(WeirdUrls.class, "/urls");
         pageRegistry.registerClass(Redirects.class, "/redirect");
         pageRegistry.registerClass(Timeouts.class, "/timeouts");
-        pageRegistry.registerClass(TestApi.class, "/test-api");
         pageRegistry.registerClass(WebRtcApi.class, "/webrtc-api");
         pageRegistry.registerClass(Posts.class, "/post");
         pageRegistry.registerClass(Headers.class, "/headers");
