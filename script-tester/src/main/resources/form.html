@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Form</title>
+</head>
+<body>
+    <h4>Simple Form</h4>
+    <form id="form1" method="post">
+        <div class="form-group">
+            <label for="input1">Text1</label>
+            <div>
+                <input id="input1" name="input1" type="text">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input2">Text2</label>
+            <div>
+                <input id="input2" name="input2" type="text">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="checkbox1">Checkbox</label>
+            <div>
+                <input id="checkbox1" name="checkbox1" type="checkbox">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="select1">Select</label>
+            <div>
+                <select id="select1" name="selec1t">
+                    <option value="value1">Value 1</option>
+                    <option value="value2" selected>Value 2</option>
+                    <option value="value3">Value 3</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="toppings">Select Multiple</label>
+            <div>
+                <select id="toppings" name="toppings" multiple>
+                    <option value="mushrooms">Mushrooms</option>
+                    <option value="greenpeppers">Green peppers</option>
+                    <option value="onions">Onions</option>
+                    <option value="tomatoes">Tomatoes</option>
+                    <option value="olives">Olives</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <!-- Test will fail if you add whitespace in between the textarea tags -->
+            <textarea name="input3"></textarea>
+        </div>
+
+        <button type="submit" class="submit-button">Submit</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XHR background timeout</title>
+</head>
+<body>
+<script>
+    function xhrGet() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                console.log(xhr.responseText);
+            }
+        };
+        xhr.open('GET', '/timeouts/timeoutAfterHeaders', true);
+        xhr.send();
+    }
+    xhrGet();
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{
+  "manifest_version": 2,
+
+  "name": "PizzaScript",
+  "description": "Browser automation API and instrumentation",
+  "version": "1.0",
+
+  "permissions": [
+    "declarativeWebRequest",
+    "webRequest",
+    "webRequestBlocking",
+    "webNavigation",
+    "debugger",
+    "processes",
+    "tabCapture",
+    "tabs",
+    "browsingData",
+    "cookies",
+    "<all_urls>",
+    "*://*/*",
+    "chrome://*/*"
+  ],
+
+  "content_scripts": [ {
+    "matches": ["*://*/*"],
+    "js": ["content.js"]
+  } ],
+
+  "background": {
+    "scripts": [
+      "namespace.js",
+      "async.js",
+      "config.js",
+      "utils.js",
+      "network.js",
+      "frametracker.js",
+      "contexttracker.js",
+      "commands.js",
+      "webdriver.js",
+      "devtools.js",
+      "input.js",
+      "navigation.js",
+      "automation.js",
+      "emulation.js",
+      "main.js"
+    ]
+  },
+
+  "web_accessible_resources": [
+    "jquery-2.1.1.js"
+  ],
+
+  "commands": {
+    "debug": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+B",
+        "mac": "Command+Shift+B"
+      },
+      "description": "Open the debugger for the extension"
+    },
+    "examine": {
+      "suggested_key": {
+        "default": "Ctrl+B",
+        "mac": "Command+B"
+      },
+      "description": "Examine the next element clicked on"
+    },
+    "test": {
+      "suggested_key": {
+        "default": "Ctrl+L",
+        "mac": "Command+L"
+      },
+      "description": "Run the current test"
+    }
+  },
+
+  "browser_action": {
+    "default_title": "Click Element to Inspect"
+  },
+
+  "icons": {
+      "16": "icon16x16.png",
+      "48": "icon48x48.png",
+      "128": "icon128x128.png"
+  }
+}

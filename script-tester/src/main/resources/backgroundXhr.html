@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XHR background</title>
+</head>
+<body>
+<script>
+    function sendMessage(message) {
+        var msgString = JSON.stringify(message);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                console.log(xhr.responseText);
+            }
+        };
+        xhr.open('POST', '/post/echo', true);
+        xhr.setRequestHeader("Custom-header", "Something");
+        xhr.send(msgString);
+    }
+    setTimeout(function() {
+        sendMessage({ msg: "background request" });
+    }, 1000);
+</script>
+</body>
+</html>

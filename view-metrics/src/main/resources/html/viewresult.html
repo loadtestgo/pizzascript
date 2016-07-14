@@ -1,0 +1,237 @@
+<script type="text/html" id="page-template-head">
+<tr class="pageRow">
+    <td class="pageCol pageName"><div class="{{class}}">{{name}}</div></td>
+    <td class="pageCol right">{{loadTime}}</td>
+</tr>
+</script>
+<script type="text/html" id="page-template">
+<tr class="pageInfoRow">
+    <td colspan="2">
+    <table cellpadding="0" cellspacing="0" class="tabView">
+        <tbody>
+        <tr class="tabViewRow">
+            <td valign="top">
+                <div class="tabViewBody">
+                    <div class="tabBar">
+                        <a view="Requests" class="tabRequests tab selected" selected="true">Requests</a>
+                        <a view="Domains" class="tabDomains tab">Domains</a>
+                        <a view="Console" class="tabConsole tab">Console</a>
+                        <a view="Details" class="tabDetails tab">Details</a>
+                    </div>
+                </div>
+                <div class="tabBodies">
+                    <div class="tabRequestsBody tabBody selected" selected="true">
+                        <table cellpadding="0" cellspacing="0" class="netTable">
+                            <thead>
+                                <tr class="netSizerRow">
+                                    <th width="40%" class="netHrefCol netCol"></th>
+                                    <th width="7%" class="netStatusCol netCol"></th>
+                                    <th width="7%" class="netSizeCol netCol"></th>
+                                    <th width="46%" class="netTimeCol netCol"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="requestTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tabDomainsBody tabBody">
+                        <table cellpadding="0" cellspacing="0" class="baseTable">
+                            <thead>
+                            <tr>
+                                <th width="99%"><b>Domain</b></th>
+                                <th>Requests</th>
+                                <th>IP</th>
+                                <th>Download</th>
+                                <th>Upload</th>
+                                <th>Headers Up</th>
+                                <th>Headers Down</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tabConsoleBody tabBody">
+                        <table cellpadding="0" cellspacing="0" class="baseTable">
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tabDetailsBody tabBody">
+                        <table cellpadding="0" cellspacing="0" class="baseTable">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </td>
+</tr></div>
+</script>
+<script type="text/html" id="request-template">
+    <td class="netHrefCol netCol"><div style="margin-left: 0px" class="netHrefLabel netLabel ">{{href}}</div>
+        <div style="margin-left: 0px" class="netFullHrefLabel netHrefLabel netLabel">{{url}}</div></td>
+    <td class="netStatusCol netCol"><div class="netStatusLabel netLabel">{{statusCode}}</div></td>
+    <td class="netSizeCol netCol"><div class="netSizeLabel netLabel">{{requestSize}}</div></td>
+    <td class="netTimeCol netCol"><div class="netTimelineBar"></div></td>
+</script>
+<script type="text/html" id="page-summary-template">
+    <tr class="netRow tableSummaryRow">
+        <td class="netHrefCol netCol"><div class="netSummaryLabel">{{numRequests}}</div></td>
+        <td class="netStatusCol netCol"></td>
+        <td class="netTotalSizeCol netSizeCol netCol"><div class="netTotalSizeLabel netSummaryLabel">{{size}}</div></td>
+        <td class="netTotalTimeCol netTimeCol netCol"><div style="width: 100%"><div class="netCacheSizeLabel netSummaryLabel">{{sizeStats}}</div>
+            <div class="netTimeBar "><span class="netTotalTimeLabel netSummaryLabel">{{loadTime}}</span></div></div></td>
+    </tr>
+</script>
+<script type="text/html" id="domain-item-template">
+    <tr><td>{{host}}</td>
+     <td>{{requests}}</td><td class="breakable">{{ip}}</td><td>{{size}}</td>
+     <td>{{uploadSize}}</td><td>{{rqHeadersSize}}</td><td>{{rspHeadersSize}}</td></tr>
+</script>
+<script type="text/html" id="domain-summary-template">
+    <tr class="tableSummaryRow"><td class="netCol">
+        <div class="netSummaryLabel">{{domains}} Domains</div></td>
+        <td class="netCol">{{requests}}</td><td class="netCol"></td><td class="netCol">{{down}}</td>
+        <td class="netCol">{{up}}</td><td class="netCol">{{headersUp}}</td><td class="netCol">{{headersDown}}</td>
+    </tr>
+</script>
+<script type="text/html" id="details-header-template">
+    <tr><td colspan="2"><div class="netInfoTableHeader">{{name}}</div></td></tr>
+</script>
+<script type="text/html" id="details-item-template">
+    <tr><td><div class="netInfoParamName">{{name}}</div></td><td class="netInfoParamValue"><pre>{{value}}</pre></td></tr>
+</script>
+<script type="text/html" id="request-row-info-template">
+    <tr class="netInfoRow">
+        <td colspan="4" class="netInfoCol">
+            <table cellpadding="0" cellspacing="0" class="tabView requestBody">
+                <tbody>
+                <tr class="tabViewRow">
+                    <td valign="top">
+                        <div class="tabViewBody">
+                            <div class="requestBodyBar tabBar">
+                                <a view="Headers" class="tabHeaders tab selected" selected="true">Headers</a>
+                                <a view="Details" class="tabDetails tab">Details</a>
+                                <a view="Url Params" class="tabUrlParams tab" style="display:none">Url Params</a>
+                                <a view="Post" class="tabPostBody tab" style="display:none">Post Body</a>
+                                <a view="Messages" class="tabMessages tab" style="display:none">WebSocket Frames</a>
+                            </div>
+                        </div>
+                        <div class="requestBodyBodies tabBodies">
+                            <div class="tabHeadersBody tabBody selected" selected="true">
+                                <table cellpadding="0" cellspacing="0" class="baseTable">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tabDetailsBody tabBody">
+                                <table cellpadding="0" cellspacing="0" class="baseTable">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tabUrlParamsBody tabBody">
+                                <table cellpadding="0" cellspacing="0" class="baseTable">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tabPostDataBody tabBody">
+                                <table cellpadding="0" cellspacing="0" class="baseTable">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tabMessagesBody tabBody">
+                                <table cellpadding="0" cellspacing="0" class="baseTable dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th><b>Offset</b></th>
+                                        <th>Direction</th>
+                                        <th>Data</th>
+                                        <th>Length</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="dataTableTbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="info-tip-item-template">
+    <tr class="timeInfoTipRow">
+        <td class="{{css}} timeInfoTipBar"></td>
+        <td class="timeInfoTipCell startTime">{{start}}</td>
+        <td class="timeInfoTipCell elapsedTime">{{elapsed}}</td>
+        <td>{{text}}</td>
+    </tr>
+</script>
+<script type="text/html" id="info-tip-template">
+    <div class="infoTip " multiline="true" style="left: {{x}}px; right: auto; top: {{y}}px; bottom: auto;" active="true">
+        <table class="timeInfoTip">
+            <tbody>
+            <tr>
+                <td></td>
+                <td>{{startTime}}</td>
+                <td colspan="2" class="timeInfoTipStartLabel">Request start time since the beginning</td>
+            </tr>
+            <tr>
+                <td colspan="4" height="10px" class="timeInfoTipSeparator">
+                    <span>Request phases start and elapsed time relative to the request start:</span></td>
+            </tr>
+            <tr>
+                <td colspan="4" height="10px" class="timeInfoTipSeparator timeInfoEvents">
+                    <span>Event timing relative to the first request start:</span></td>
+            </tr>
+            <tr class="timeInfoTipEventRow">
+                <td align="center" class="timeInfoTipBar"><div class="netNavStartBar timeInfoTipEventBar"></div></td>
+                <td>{{navStart}}</td>
+                <td colspan="2">Navigation Start</td>
+            </tr>
+            <tr class="timeInfoTipEventRow">
+                <td align="center" class="timeInfoTipBar"><div class="netContentLoadBar timeInfoTipEventBar"></div></td>
+                <td>{{domLoaded}}</td>
+                <td colspan="2">DOM Loaded</td>
+            </tr>
+            <tr class="timeInfoTipEventRow">
+                <td align="center" class="timeInfoTipBar"><div class="netFirstRenderBar timeInfoTipEventBar"></div></td>
+                <td>{{firstRender}}</td>
+                <td colspan="2">First Render</td>
+            </tr>
+            <tr class="timeInfoTipEventRow">
+                <td align="center" class="timeInfoTipBar"><div class="netWindowLoadBar timeInfoTipEventBar"></div></td>
+                <td>{{pageLoaded}}</td>
+                <td colspan="2">Page Loaded</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+<script type="text/html" id="text-tip-template">
+    <div class="infoTip" multiline="false" style="left: {{x}}px; right: auto; top: {{y}}px; bottom: auto;" active="true">
+        <div>{{text}}</div>
+    </div>
+</script>
+<script type="text/html" id="page-popup-template">
+    <div class="infoTip" multiline="false" style="left: {{x}}px; right: auto; top: {{y}}px; bottom: auto;" active="true">
+        <table class="timeInfoTip">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</script>
+<script type="text/html" id="websocket-msg-template">
+    <tr><td>{{time}}</td><td>{{flow}}</td><td>{{data}}</td><td>{{len}}</td></tr>
+</script>

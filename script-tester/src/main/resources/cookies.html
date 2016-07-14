@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cookies</title>
+</head>
+<body>
+    <h4>Cookies</h4>
+    <pre id="showCookies"></pre>
+<script>
+    document.cookie = "pizza1=x";
+    document.cookie = "pizza2=y";
+    var cookies = document.cookie;
+    var element = document.getElementById("showCookies");
+    element.innerText = cookies;
+</script>
+</body>
+</html>

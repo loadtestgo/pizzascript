@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Elements</title>
+</head>
+<body>
+<div id="div1"><p>Div with id 'div1'</p></div>
+<div id="div2"><p>Div with id 'div2'</p></div>
+<div class="class1"><p>Div with class 'class1'</p></div>
+<div class="class1"><p>Another div with class 'class1'</p></div>
+<div class="class1"><button id="button1">Button1</button></div>
+<div class="class1">this <span>is</span> some text</div>
+<div id="div3" style="display:none"><div id="div4">hidden</div></div>
+<div id="div5"><button id="button2">Show div6</button></div>
+<div id="div6">This is div6</div>
+<div id="div7" style="display:block;background-color:lightyellow;position:absolute;white-space:nowrap;z-index:1000;">This guy hides div6</div>
+<script>
+var div6rect = document.getElementById("div6").getBoundingClientRect();
+var popupDiv = document.getElementById("div7");
+popupDiv.style.left = div6rect.left + 'px';
+popupDiv.style.width = "100%";
+popupDiv.style.top = div6rect.top + 'px';
+popupDiv.style.height = div6rect.bottom + 'px';
+var button2 = document.getElementById("button2");
+button2.onclick = function() {
+    setTimeout(function() {
+        popupDiv.style.display = 'none';
+    }, 1000);
+}
+</script>
+</body>
+</html>

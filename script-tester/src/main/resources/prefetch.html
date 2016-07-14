@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add a prefetch resource on click!</title>
+</head>
+<body>
+<script>
+function prefetch() {
+    var hint = document.createElement("link");
+    hint.rel = 'prefetch';
+    hint.href = '/files/script.js';
+    document.head.appendChild(hint);
+    window.location = '/files/script.html';
+}
+</script>
+<h3>Prefetch a resource on click!</h3>
+<button onclick="prefetch()" id="button">Navigate with prefetch!</button>
+</body>
+</html>

@@ -1,0 +1,175 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    compileJava {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+
+        String javaHome = System.properties.'java.home';
+        options.bootClasspath = javaHome + "/lib/rt.jar:" + javaHome + "/lib/jce.jar"
+
+        // Make sure warnings are on
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+
+    version = "$majorVersion.$buildNumber"
+    group = "com.loadtestgo";
+
+    ext {
+        jacksonVersion = '2.4.3'
+        rhinoVersion = '1.7.7'
+    }
+
+    jar {
+        manifest {
+            attributes 'Implementation-Title': 'LoadTestGo', 'Implementation-Version': version
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.+'
+        testCompile 'org.jmockit:jmockit:1.20'
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            // Fail if we use multiple version of the same library in the same
+            // project.
+            failOnVersionConflict()
+        }
+    }
+}
+
+project(':script-api') {
+    dependencies {
+        compile project(':util')
+        compile "org.mozilla:rhino:$rhinoVersion"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    }
+}
+
+project(':util') {
+    dependencies {
+        compile 'commons-io:commons-io:2.4'
+        compile 'org.tinylog:tinylog:1.0'
+    }
+}
+
+project(':script-engine') {
+    dependencies {
+        compile project(':script-api')
+        compile project(':util')
+        compile project(':java-websocket')
+        compile "org.mozilla:rhino:$rhinoVersion"
+        compile 'commons-io:commons-io:2.4'
+        compile 'javax.servlet:javax.servlet-api:3.1.0'
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        compile 'org.json:json:20140107'
+        compile 'com.google.collections:google-collections:1.0'
+    }
+
+    if (project.hasProperty("release")) {
+        processResources {
+            exclude('chrome/extension/pizza/*.js')
+            exclude('chrome/extension/pizza/manifest.json')
+        }
+        task minify(type: Exec) {
+            commandLine 'gulp', 'enginejs'
+        }
+        processResources.dependsOn minify
+    }
+}
+
+project(':script-editor') {
+    apply plugin: 'application'
+    mainClassName = "com.loadtestgo.script.editor.ScriptEditor"
+    configurations.all {
+        resolutionStrategy {
+            failOnVersionConflict()
+            // RsyntaxTextArea/languagesupport brings in 1.7.6
+            force "org.mozilla:rhino:$rhinoVersion"
+        }
+    }
+
+    // Compress tar file
+    dependencies {
+        compile project(':script-api')
+        compile project(':script-engine')
+        compile project(':util')
+        compile project(':view-metrics')
+        compile 'jline:jline:2.10'
+        compile 'com.fifesoft:rsyntaxtextarea:2.5.8'
+        compile 'com.fifesoft:autocomplete:2.5.8'
+        compile 'com.fifesoft:languagesupport:2.5.8'
+    }
+    distTar {
+        compression = Compression.GZIP
+    }
+    applicationDistribution.from(fileTree(dir: '../scripts', includes: ['*.js'])) {
+        into("scripts")
+    }
+    applicationDistribution.from(fileTree(dir: '../jsdocs')) {
+        into("docs")
+    }
+    applicationDistribution.from(file('../script-api/docs.js')) {
+        into(".")
+    }
+}
+
+project(':view-metrics') {
+    if (project.hasProperty("release")) {
+        processResources {
+            exclude('js/*.js')
+        }
+        task minify(type: Exec) {
+            commandLine 'gulp', 'view-metrics'
+        }
+        processResources.dependsOn minify
+    }
+}
+
+project(':script-tester') {
+    dependencies {
+        compile project(':script-api')
+        compile project(':script-engine')
+        compile project(':util')
+        compile project(':view-metrics')
+        compile 'junit:junit:4.+'
+    }
+}
+
+task baseDocs(type:Exec) {
+  commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/docs.js', 'script-api/docs.md', '-d', 'jsdocs'
+}
+
+task docs(dependsOn:baseDocs) << {
+  FileTree tree = fileTree (dir: "jsdocs");
+  tree.include "*.html"
+  tree.each { File file ->
+    String contents = file.getText( 'UTF-8' )
+    contents = contents.replaceAll('<title>Home</title>', '<title>LoadTestGo | PizzaScript Browser Automation API</title>' )
+    contents = contents.replaceAll('<title>Module:', '<title>LoadTestGo | PizzaScript |' )
+    contents = contents.replaceAll('href="index.html"', 'href="https://loadtestgo.com"')
+    contents = contents.replaceAll('Home</a>', 'LoadTestGo</a><a class="jsdoc-navbar-package-name" href="index.html">PizzaScript</a>')
+    contents = contents.replaceAll('<span class="label label-kind">module</span>', '')
+
+    file.write( contents, 'UTF-8' )
+  }
+}
+
+task 'incVersion' << {
+    Properties props = new Properties()
+    File propsFile = new File('gradle.properties')
+    props.load(propsFile.newDataInputStream())
+    Integer nextbuildnum = (((props.getProperty('buildNumber')) as BigDecimal) + 1)
+    props.setProperty('buildNumber', nextbuildnum.toString())
+    props.store(propsFile.newWriter(), null)
+    props.load(propsFile.newDataInputStream())
+}

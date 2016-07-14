@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nav Menu Examples</title>
+<script>
+    var menuTimer = null;
+    var menuItem = null;
+    var menuTimeout = 500;
+
+    function menuOpen(id) {
+        menuCancelCloseTimer();
+        if (menuItem) {
+            menuItem.style.visibility = 'hidden';
+        }
+        menuItem = document.getElementById(id);
+        menuItem.style.visibility = 'visible';
+    }
+
+    function menuClose() {
+        if (menuItem) {
+            menuItem.style.visibility = 'hidden';
+        }
+    }
+
+    function menuStartCloseTimer() {
+        menuTimer = window.setTimeout(menuClose, menuTimeout);
+    }
+
+    function menuCancelCloseTimer() {
+        if(menuTimer) {
+            window.clearTimeout(menuTimer);
+            menuTimer = null;
+        }
+    }
+
+    document.onclick = menuClose;
+</script>
+</head>
+<body>
+
+<style>
+    #simpleMenu
+    {
+        margin: 0;
+        padding: 0;
+        z-index: 20
+    }
+
+    #simpleMenu li
+    {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        float: left;
+    }
+
+    #simpleMenu li a
+    {
+        display: block;
+        padding: 5px 5px;
+        width: 80px;
+        text-align: center;
+        text-decoration: none;
+        background: lightpink;
+        color: black;
+    }
+
+    #simpleMenu li a:hover
+    {
+        background: palevioletred;
+    }
+
+    #simpleMenu div
+    {
+        position: absolute;
+        visibility: hidden;
+    }
+
+    #simpleMenu div a {
+        position: relative;
+        display: block;
+        color: black;
+        background: blanchedalmond;
+    }
+
+    #simpleMenu div a:hover {
+        color: black;
+        background: white;
+    }
+</style>
+<ul id="simpleMenu">
+    <li onmouseover="menuOpen('menu1drop')" onmouseout="menuStartCloseTimer()"><a id="menu1">Menu1</a>
+        <div id="menu1drop" onmouseover="menuCancelCloseTimer()">
+            <a href="/files/basic.html">Item1</a>
+            <a href="/files/basic.html">Item2</a>
+        </div>
+    </li>
+    <li onmouseover="menuOpen('menu2drop')" onmouseout="menuStartCloseTimer()"><a id="menu2">Menu2</a>
+        <div id="menu2drop" onmouseover="menuCancelCloseTimer()">
+            <a href="/files/basic.html">Item1</a>
+            <a href="/files/basic.html">Item2</a>
+            <a href="/files/basic.html">Item3</a>
+        </div>
+    </li>
+</ul>
+<div style="clear:both"></div>
+
+<div id="hidden" style="display: none"></div>
+</body>
+</html>

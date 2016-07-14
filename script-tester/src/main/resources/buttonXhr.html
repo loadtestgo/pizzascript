@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XHR on button click</title>
+</head>
+<body>
+<script>
+function sendMessage(message) {
+    var msgString = JSON.stringify(message);
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.open('POST', '/post/echo', true);
+    xhr.send(msgString);
+}
+function buttonClicked() {
+    sendMessage({ clicked: true });
+}
+</script>
+<button onclick="buttonClicked()" id="button">Make an XHR request!</button>
+</body>
+</html>

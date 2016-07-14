@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Element added on the fly</title>
+</head>
+<body>
+<button id="reveal">Say Hello</button>
+<script>
+    var b = document.getElementById("reveal");
+    b.onclick = function() {
+        document.body.innerHTML = "<div id=\"divNew\">Hello</div>";
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+
+        var gatheredIceCandidates = [];
+        var pc = null;
+        var sessionId = null;
+        var serverUrl = '/webrtc-api/';
+
+        navigator.getUserMedia  = navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
+
+        function logError(error) {
+            console.log(error.name + ": " + error.message);
+            }
+
+        function onRemoteStreamAdded(event) {
+            console.log('Remote stream added.');
+            }
+
+        function onRemoteStreamRemoved(event) {
+            console.log('Remote stream removed.');
+            console.log(event);
+            }
+
+        function onSignalingStateChanged(event) {
+            console.log(event);
+            }
+
+        function onIceConnectionStateChanged(event) {
+            console.log(event);
+            }
+
+        function sendMessage(message) {
+            var msgString = JSON.stringify(message);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+            console.log(message, "message sent!");
+            sessionId = JSON.parse(xhr.response).sessionId;
+            }
+        };
+
+        var url = serverUrl;
+        if (sessionId) {
+            url += sessionId;
+            }
+        xhr.open('POST', url, true);
+        xhr.send(msgString);
+        }
+
+        function onIceCandidate(event) {
+            console.log(event);
+            if (event.candidate) {
+            gatheredIceCandidates.push({
+            type: 'candidate',
+            candidate: event.candidate});
+        } else {
+            sendMessage({ messages: gatheredIceCandidates });
+        console.log('End of candidates.');
+        }
+        }
+
+        function createPeerConnection() {
+            try {
+            var pcConfig = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+        var pcConstraints = {"optional": []};
+
+        pc = new webkitRTCPeerConnection(pcConfig, pcConstraints);
+        pc.onicecandidate = onIceCandidate;
+        console.log('Created RTCPeerConnection with:\n' +
+        '  config: \'' + JSON.stringify(pcConfig) + '\';\n' +
+        '  constraints: \'' + JSON.stringify(pcConstraints) + '\'.');
+        } catch (e) {
+            console.log('Failed to create PeerConnection, exception: ' + e.message);
+            return;
+            }
+        pc.onaddstream = onRemoteStreamAdded;
+        pc.onremovestream = onRemoteStreamRemoved;
+        pc.onsignalingstatechange = onSignalingStateChanged;
+        pc.oniceconnectionstatechange = onIceConnectionStateChanged;
+
+        return pc;
+        }
+
+        var setupStream = function(stream) {
+            pc  = createPeerConnection();
+            pc.addStream(stream);
+
+            pc.createOffer(function (sessionDescription) {
+            pc.setLocalDescription(sessionDescription, function() {
+            sendMessage({ messages: [ { sdp: sessionDescription.sdp, type: sessionDescription.type } ] } );
+        pollServer();
+        },
+        logError)
+        }, logError);
+        }
+
+        function processMessage(msg) {
+            console.log("processing:", msg)
+            if (msg.type == "answer") {
+            pc.setRemoteDescription(new RTCSessionDescription({ sdp: msg.sdp, type: "answer" }),
+        function() {
+            console.log("setRemoteDescription worked");
+            },
+        logError)
+        } else if (msg.type === "candidate") {
+            pc.addIceCandidate(new RTCIceCandidate(msg.candidate));
+            }
+        }
+
+        var pollServer = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+            try {
+            response = JSON.parse(xhr.responseText);
+            console.log(response);
+            if (response.messages) {
+            var messages = response.messages;
+            for (var i = 0; i < messages.length; ++i) {
+            var msg = messages[i];
+            processMessage(msg);
+            }
+        }
+        if (response.sessionId) {
+            sessionId = response.sessionId;
+            }
+        } catch (e) {
+            console.log(e);
+            }
+        setTimeout(pollServer, 1000)
+        }
+        }
+        var url = serverUrl;
+        if (sessionId) {
+            url += sessionId;
+            }
+        xhr.open('GET', url, true);
+        xhr.send(null);
+        };
+
+        navigator.getUserMedia({video: true, audio: false}, function(stream) {
+            setupStream(stream);
+//      document.getElementById("self-video").src = webkitURL.createObjectURL(stream);
+            }, logError);

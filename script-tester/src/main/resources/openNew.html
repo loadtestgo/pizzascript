@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Open New Tab</title></head>
+<body>
+
+<p>Open a link in a new tab using:</p> <pre>target="_blank"</pre>
+
+<a href="/files/basic.html" target="_blank" id="newTabButton">New tab!</a>
+
+<p>Open a link in a new tab using:</p><pre>window.open()</pre>
+
+<a href="" id="newWindowButton" onclick="return openWindow()">New window!</a>
+
+<script>
+function openWindow() {
+    window.open("/files/basic.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=0,left=0,width=400,height=400");
+    return false; // Don't refresh current page!
+}
+</script>
+
+</body>
+</html>

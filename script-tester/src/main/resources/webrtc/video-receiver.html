@@ -1,0 +1,151 @@
+<html>
+<head>
+    <title>Receive Video</title>
+</head>
+<body>
+<video id="remote-video" autoplay="autoplay" width="400" height="300"></video>
+<script>
+  var gatheredIceCandidates = [];
+  var pc = null;
+  var sessionId = null;
+  var serverUrl = '/webrtc-api/';
+
+  function logError(error) {
+      console.log(error);
+  }
+
+  function onRemoteStreamAdded(event) {
+      if (!event) return;
+      console.log(event, 'Remote stream added.');
+      console.log(event.stream.ended);
+      document.getElementById("remote-video").src = webkitURL.createObjectURL(event.stream);
+  }
+
+  function onRemoteStreamRemoved(event) {
+      console.log(event, 'Remote stream removed.');
+  }
+
+  function onSignalingStateChanged(event) {
+      console.log(event, 'SignalingStateChanged.');
+  }
+
+  function onIceConnectionStateChanged(event) {
+      console.log(event, 'onIceConnectionStateChanged');
+  }
+
+  function sendMessage(message) {
+      var msgString = JSON.stringify(message);
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4) {
+              console.log(message, "message sent!");
+              try {
+                  response = JSON.parse(xhr.responseText);
+                  if (response.sessionId) {
+                      sessionId = response.sessionId;
+                  }
+              } catch (e) {
+                  console.log(e);
+              }
+          }
+      };
+      var url = serverUrl;
+      if (sessionId) {
+          url += sessionId;
+      }
+      xhr.open('POST', url, true);
+      xhr.send(msgString);
+  }
+
+  function onIceCandidate(event) {
+      console.log(event);
+      if (event.candidate) {
+          gatheredIceCandidates.push({type: 'candidate',
+              candidate: event.candidate});
+      } else {
+          sendMessage({ messages: gatheredIceCandidates });
+          console.log('End of candidates.');
+      }
+  }
+
+  function createPeerConnection() {
+      try {
+          var pcConfig = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+          var pcConstraints = {"optional": []};
+
+          pc = new webkitRTCPeerConnection(pcConfig, pcConstraints);
+          pc.onicecandidate = onIceCandidate;
+          console.log('Created RTCPeerConnection with:\n' +
+                  '  config: \'' + JSON.stringify(pcConfig) + '\';\n' +
+                  '  constraints: \'' + JSON.stringify(pcConstraints) + '\'.');
+      } catch (e) {
+          console.log('Failed to create PeerConnection, exception: ' + e.message);
+          return;
+      }
+      pc.onaddstream = onRemoteStreamAdded;
+      pc.onremovestream = onRemoteStreamRemoved;
+      pc.onsignalingstatechange = onSignalingStateChanged;
+      pc.oniceconnectionstatechange = onIceConnectionStateChanged;
+
+      return pc;
+  }
+
+  function processMessage(msg) {
+      console.log("processing:", msg)
+      if (msg.type === "offer") {
+          setup( { sdp: msg.sdp, type: "offer" } );
+      } else if (msg.type === "candidate") {
+          pc.addIceCandidate(new RTCIceCandidate(msg.candidate));
+      }
+  }
+
+  var pollServer = function() {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4) {
+              try {
+                  response = JSON.parse(xhr.responseText);
+                  console.log(response);
+                  if (response.messages) {
+                      var messages = response.messages;
+                      for (var i = 0; i < messages.length; ++i) {
+                          var msg = messages[i];
+                          processMessage(msg);
+                      }
+                  }
+                  if (response.sessionId) {
+                      sessionId = response.sessionId;
+                  }
+              } catch (e) {
+                  console.log(e);
+              }
+              setTimeout(pollServer, 1000)
+          }
+      }
+      var url = serverUrl;
+      if (sessionId) {
+          url += sessionId;
+      }
+      xhr.open('GET', url, true);
+      xhr.send(null);
+  };
+
+  pollServer();
+
+  var setup = function(offerSDP) {
+      pc  = createPeerConnection();
+      pc.setRemoteDescription(new RTCSessionDescription(offerSDP), function() {
+          pc.createAnswer(function (sessionDescription) {
+              console.log(sessionDescription);
+              pc.setLocalDescription(sessionDescription, function() {
+                  sendMessage( { messages: [ { type: "answer", sdp: sessionDescription.sdp } ] });
+              }, logError);
+          }, logError);
+      },
+      logError);
+  };
+
+</script>
+
+</body>
+</html>

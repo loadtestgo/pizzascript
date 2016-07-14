@@ -1,0 +1,14 @@
+.gradle/
+.idea/
+tmp/
+out/
+script-editor/build/
+script-engine/build/
+script-tester/build/
+script-api/build/
+util/build/
+view-metrics/build/
+*.iml
+settings.ini
+node_modules/
+jsdocs/

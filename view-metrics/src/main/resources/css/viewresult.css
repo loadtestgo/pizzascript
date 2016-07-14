@@ -1,0 +1,773 @@
+.testResults {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.19;
+}
+
+.testResults a {
+    text-decoration: none;
+}
+
+.testResults h3 {
+    color: #15A97C;
+}
+
+/* Override bootstrap defaults */
+.testResults pre {
+    margin: 0;
+    padding: 0 0 0 0;
+    border: 0;
+    background-color: white;
+    line-height: inherit;
+    font-size: inherit;
+    border-radius: 0;
+}
+
+.testResults .collapsed,
+[collapsed="true"] {
+    display: none !important;
+}
+
+.testResults .link {
+    color: blue;
+}
+
+.testResults .link:hover {
+    cursor: pointer;
+}
+
+.harViewBodies {
+    position: absolute;
+    top: 33px;
+    bottom: 0;
+}
+
+.harViewBar > .tab {
+    font-size: 17px;
+}
+
+.harView[hideTabBar="true"] .harViewBar {
+    display: none;
+}
+
+.harView[hideTabBar="true"] .harViewBodies {
+    position: inherit;
+}
+
+.pageList {
+    width: 100%;
+}
+
+.pageTable {
+    width: 100%;
+    font-size: 11px;
+    table-layout: fixed;
+}
+
+.pageCol {
+    white-space: nowrap;
+    padding: 4px 0 4px 0;
+    background: #efefef;
+}
+
+.pageCol.right {
+    text-align: right;
+    padding-right: 10px;
+    white-space:nowrap;
+    text-overflow: clip;
+    overflow: hidden;
+    width: 200px;
+}
+
+.pageRow {
+    font-size: 17px;
+}
+
+.pageRow:hover {
+    background: #efefef;
+}
+
+.pageName {
+    font-weight: bold;
+}
+
+.pageName div {
+    padding-left: 6px;
+    white-space: nowrap;
+    text-overflow: clip;
+    overflow: hidden;
+}
+
+.pageName div.expandable {
+    background-image: url(images/twisty-sprites.png);
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+    padding-left: 18px;
+    cursor:pointer;
+}
+
+.pageRow.opened > .pageCol > .expandable {
+    background-image: url(images/twisty-sprites.png);
+    background-position: 5px -14px;
+}
+
+.pageID {
+    color: gray;
+}
+
+.pageInfoRow {
+    height: auto;
+}
+
+.pageInfoCol {
+    background: url(images/timeline-sprites.png) repeat-x scroll 0 -112px #ffffff;
+    padding: 0 0 4px 17px;
+}
+
+.dataTableSizer {
+    margin: 7px;
+    border: 1px solid #eeeeee;
+}
+
+.dataTableSizer:focus {
+    outline: none;
+}
+
+.logGroup .dataTable {
+    border: none;
+}
+
+.dataTable tbody {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.dataTable th {
+    border-bottom: 1px solid #808080;
+}
+
+.dataTable > .dataTableTbody > tr:nth-child(even) {
+    background-color: #efefef;
+}
+
+.dataTable a {
+    vertical-align:middle;
+}
+
+.dataTableTbody > tr > td {
+    padding: 1px 4px 0 4px;
+}
+
+.dataTableTbody > tr > td:last-child {
+    padding-right: 20px;
+}
+
+.panelNode.hideType-table .logRow-table {
+    display: none !important;
+}
+
+.tabConsole {
+    display: none;
+}
+
+.tabConsoleBody > table td {
+    overflow: hidden;
+}
+
+.consoleMsg.error {
+    color: red;
+}
+
+.consoleTime {
+    vertical-align: top;
+}
+
+.consoleText > div {
+    vertical-align: top;
+}
+
+.consoleUrl {
+    vertical-align: top;
+}
+
+.consoleUrl > div {
+    vertical-align: top;
+    white-space: nowrap;
+    overflow: hidden;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    width: 200px;
+}
+
+.tabDomainsBody th {
+    border-bottom: 1px solid #808080;
+}
+
+.tabDomainsBody tr,
+.tabConsoleBody tr {
+    border-bottom: 1px solid #efefef;
+}
+
+.baseTable {
+    font-size: 12px;
+    table-layout: fixed;
+}
+
+.tabDomainsBody td,
+.tabDomainsBody th {
+    vertical-align: top;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: clip;
+    overflow: hidden;
+    padding: 3px;
+}
+
+.baseTable td,
+.baseTable th {
+    vertical-align: top;
+    padding: 3px;
+}
+
+.baseTable pre {
+    vertical-align: top;
+}
+
+td.breakable {
+    white-space: normal;
+}
+
+.netTable {
+    width: 100%;
+    font-size: 11px;
+    table-layout: fixed;
+}
+
+.netRow {
+    height: 17px;
+    background: white;
+}
+
+.netRow.loaded {
+    background: #ffffff;
+}
+
+.netRow.error {
+    background: #ff8080;
+}
+
+.netRow.warn {
+    background: #e0e0e0;
+}
+
+.netRow.cached {
+    background: #e0ffe0;
+}
+
+.netRow.blocked {
+    background: #e0e0ff;
+}
+
+.netRow.loaded:hover {
+    background: #efefef;
+}
+
+.netRow.error:hover {
+    background: #cc4040;
+}
+
+.netRow.warn:hover {
+    background: #f0f0f0;
+}
+
+.netRow.cached:hover {
+    background: #b0e0b0;
+}
+
+.netRow.blocked:hover {
+    background: #b0b0e0;
+}
+
+.netCol {
+    vertical-align: top;
+    border-bottom: 1px solid #efefef;
+    white-space: nowrap;
+    text-overflow: clip;
+    overflow: hidden;
+}
+
+.netRow[breakLayout="true"] .netCol {
+    border-top: 1px solid #cfcfcf;
+}
+
+.netStatusCol {
+    color: #808080;
+}
+
+.responseError > .netStatusCol {
+    color: red;
+}
+
+.responseRedirect > td {
+    color: #f93;
+}
+
+.netStatusCol,
+.netSizeCol,
+.netTimeCol {
+    padding-left: 8px;
+}
+
+.netTimeCol {
+    overflow: visible;
+}
+
+.netSizeCol {
+    text-align: right;
+}
+
+.netHrefLabel {
+    overflow: hidden;
+    z-index: 100;
+    position: relative;
+    padding-left: 18px;
+    padding-top: 1px;
+    font-weight: bold;
+}
+
+.netFullHrefLabel {
+    display: none;
+    background: #ffffff;
+}
+
+.netRow.loaded:hover > .netCol > .netFullHrefLabel {
+    background-color: #efefef;
+}
+
+.netRow.cached:hover > .netCol > .netFullHrefLabel {
+    background-color: #b0e0b0;
+}
+
+.netRow.error:hover > .netCol > .netFullHrefLabel {
+    background-color: #cc4040;
+}
+
+.netRow.blocked:hover > .netCol > .netFullHrefLabel {
+    background-color: #b0b0e0;
+}
+
+.netStatusLabel,
+.netSizeLabel {
+    padding: 1px 0 2px 0 !important;
+}
+
+.responseError {
+    color: red;
+}
+
+.netHrefLabel:hover {
+    cursor: pointer;
+}
+
+.expandable .netHrefLabel:hover {
+    cursor: pointer;
+}
+
+.netTimelineBar {
+    position: relative;
+    border-right: 50px solid transparent;
+}
+
+.netBlockingBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: #FFFFFF url(images/timeline-sprites.png) repeat-x;
+    min-width: 0;
+    z-index: 60;
+    height: 16px;
+}
+
+.netResolvingBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url(images/timeline-sprites.png) repeat-x scroll 0 -16px #FFFFFF;
+    min-width: 0;
+    z-index: 50;
+    height: 16px;
+}
+
+.netConnectingBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url(images/timeline-sprites.png) repeat-x scroll 0 -32px #FFFFFF;
+    min-width: 0;
+    z-index: 40;
+    height: 16px;
+}
+
+.netSslBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url(images/timeline-sprites.png) repeat-x scroll 0 -96px #FFFFFF;
+    min-width: 0px;
+    z-index: 30;
+    height: 16px;
+}
+
+.netSendingBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url(images/timeline-sprites.png) repeat-x scroll 0 -48px #FFFFFF;
+    min-width: 0px;
+    z-index: 20;
+    height: 16px;
+}
+
+.netWaitingBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url(images/timeline-sprites.png) repeat-x scroll 0 -64px #FFFFFF;
+    min-width: 1px;
+    z-index: 15;
+    height: 16px;
+}
+
+.netReceivingBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url(images/timeline-sprites.png) repeat-x scroll 0 -80px #B6B6B6;
+    min-width: 1px;
+    z-index: 10;
+    height: 16px;
+}
+
+.netPageTimingBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 17px;
+    /* Opacity doesn't work in webkit JavaFX browser */
+    /* opacity: 0.5; */
+    display: none;
+    background-color: green;
+
+    /* The vertical line crosses bottom row border */
+    margin-bottom: -1px;
+
+    /* To make the width of the vertical line bigger so, it's easier to get the tooltip */
+    box-sizing: content-box;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+
+.netNavStartBar {
+    background-color: olive;
+}
+
+.netWindowLoadBar {
+    background-color: red;
+}
+
+.netContentLoadBar {
+    background-color: blue;
+}
+
+.netFirstRenderBar {
+    background-color: green;
+}
+
+.netTimeLabel {
+    -moz-box-sizing: padding-box;
+    position: absolute;
+    top: 1px;
+    left: 100%;
+    padding-left: 6px;
+    color: #444444;
+    min-width: 16px;
+}
+
+.sizeInfoTip {
+    font-size: 11px;
+}
+
+.timeInfoTip {
+    width: 150px;
+    height: 40px;
+    font-size: 11px;
+}
+
+.timeInfoTipBar,
+.timeInfoTipEventBar {
+    position: relative;
+    display: block;
+    margin: 0;
+    opacity: 1;
+    height: 15px;
+    width: 4px;
+}
+
+.timeInfoTipStartLabel {
+    color: gray;
+}
+
+.timeInfoTipSeparator {
+    padding-top: 10px;
+    color: gray;
+}
+
+.timeInfoTipSeparator SPAN {
+    white-space:pre-wrap;
+}
+
+.timeInfoTipEventBar {
+    width: 1px !important;
+}
+
+.netWindowLoadBar.timeInfoTipBar,
+.netContentLoadBar.timeInfoTipBar,
+.netFirstRenderBar.timeInfoTipBar {
+    width: 1px;
+}
+
+.tableSummaryRow .netTimeLabel,
+.loaded .netTimeLabel
+{
+    background: transparent;
+}
+
+.loaded .netTimeBar {
+    background: #B6B6B6 url(images/netBarLoaded.gif) repeat-x;
+    border-color: #B6B6B6;
+}
+
+.fromCache .netTimeBar {
+    background: #D6D6D6 url(images/netBarCached.gif) repeat-x;
+    border-color: #D6D6D6;
+}
+
+.tableSummaryRow .netTimeBar {
+    background: #BBBBBB;
+    border: none;
+    display: inline-block;
+}
+
+.timeInfoTipCell.startTime {
+    padding-right: 25px;
+}
+
+.timeInfoTipCell.elapsedTime {
+    text-align: right;
+    padding-right: 8px;
+}
+
+.netSummaryLabel {
+    padding-left: 3px;
+}
+
+.tableSummaryRow {
+    background: #bbbbbb !important;
+    font-weight: bold;
+}
+
+.tableSummaryRow td {
+    padding: 1px 0 2px 0 !important;
+}
+
+.tableSummaryRow > .netCol {
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid;
+    border-bottom-color: #999999;
+    padding-top: 1px;
+}
+
+.tableSummaryRow > .netCol:first-child {
+    border-left: 1px solid #999999;
+}
+
+.tableSummaryRow > .netCol:last-child {
+    border-right: 1px solid #999999;
+}
+
+.netTotalSizeCol {
+    text-align: right;
+}
+
+.netTotalTimeCol {
+    text-align: right;
+}
+
+.netCacheSizeLabel {
+    display: inline-block;
+    float:left;
+    padding-left: 6px;
+}
+
+.netTotalTimeLabel {
+    padding-right: 6px;
+}
+
+.netInfoCol {
+    border-top: 1px solid #EEEEEE;
+    background-color: #efefef;
+}
+
+.netInfoParamName {
+    font-weight: bold;
+    vertical-align: top;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.netInfoTableHeader {
+    margin-bottom: 4px;
+    border-bottom: 1px solid #d7d7d7;
+    padding-top: 8px;
+    padding-bottom: 2px;
+    font-weight: bold;
+    color: #565656;
+}
+
+.netInfoParamValue {
+    max-width: 55em; /* Max width set to this for script UI */
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.netInfoText {
+    padding: 8px;
+    background-color: #ffffff;
+    font-family: Monaco, monospace;
+}
+
+.infoTip[multiline="true"] {
+    background-image: none;
+}
+
+.infoTip[active="true"] {
+    display: block;
+}
+
+.infoTip {
+    z-index: 2147483647;
+    position: fixed;
+    padding: 2px 4px 3px 4px;
+    background: lightyellow;
+    color: #000000;
+    display: none;
+    white-space: nowrap;
+    font-size: 11px;
+    border: 1px solid #7eabcd;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: gray 2px 2px 3px;
+    -webkit-box-shadow: gray 2px 2px 3px;
+    box-shadow: gray 2px 2px 3px;
+    filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray');
+    -ms-filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray')";
+}
+
+.expandable .netHrefLabel {
+    background-image: url(images/twisty-sprites.png);
+    background-repeat: no-repeat;
+    background-position: 3px 3px;
+}
+
+.netRow.opened > .netCol > .netHrefLabel {
+    background-image: url(images/twisty-sprites.png);
+    background-position: 3px -16px;
+}
+
+.netSizerRow,
+.netSizerRow > .netCol {
+    border: 0;
+    padding: 0;
+}
+
+.tabView {
+    width: 100%;
+    color: #000000;
+}
+
+.tabViewBody {
+    background-color: #efefef;
+}
+
+.tabBar {
+    padding-left: 14px;
+    border-bottom: 1px solid #d7d7d7;
+    white-space: nowrap;
+}
+
+.tab {
+    position: relative;
+    top: 1px;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    color: #565656;
+    font-weight: bold;
+    white-space: nowrap;
+    -moz-user-select: none;
+    display:inline-block;
+}
+
+.tab:hover {
+    cursor: pointer;
+    border-color: #d7d7d7;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    border-radius: 4px 4px 0 0;
+}
+
+.tab[selected="true"],
+.tab .selected {
+    cursor: default !important;
+    border-color: #d7d7d7;
+    background-color: #ffffff;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    border-radius: 4px 4px 0 0;
+}
+
+/*
+ * If fixed height is specified, the overflow works, otherwise the position must be
+ * absolute with top: 33px (height of the tab-header and bottom: 0px to get available
+ * vertical space
+ */
+.tabBodies {
+    width: 100%;
+    overflow: auto;
+}
+
+.tabBody {
+    display: none;
+    border-left: 1px solid #cfcfcf;
+    border-right: 1px solid #cfcfcf;
+    border-bottom: 1px solid #cfcfcf;
+    background-color: #ffffff;
+    padding: 5px 5px 5px 5px;
+}
+
+.tabBody[selected="true"],
+.tabBody.selected {
+    display: block;
+}
+
