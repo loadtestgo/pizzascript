@@ -1008,7 +1008,16 @@ pizza.main.commands = function() {
     function executeAutomationAPI(callback, errorCallback, byValue, script) {
         var args = [];
         for (var i = 4; i < arguments.length; ++i) {
-            args.push({ value: arguments[i] });
+            var o = arguments[i];
+            var arg = { value: o };
+            if (pizza.isString(o)) {
+                arg.type = "string";
+            } else if (pizza.isNumber(o)) {
+                arg.type = "number";
+            } else {
+                arg.type = "object";
+            }
+            args.push(arg);
         }
         injectAutomationAPI(function(response) {
             if (response && response.error) {
@@ -1022,7 +1031,6 @@ pizza.main.commands = function() {
                 };
                 pizza.devtools.sendCommand('Runtime.callFunctionOn', loc, function (response) {
                     if (response.message) {
-                        console.log(response);
                         errorCallback(response.message);
                     } else if (response.wasThrown) {
                         console.log(response);
@@ -1185,22 +1193,23 @@ pizza.main.commands = function() {
     };
 
     var scriptSelectSingle = "" + function(selector, params) {
+      var i, o;
       var e = this.findElement(selector);
       if (params.index) {
-        var i = params.index;
+        i = params.index;
         if (i >= 0 && i < e.options.length) {
-          var o = e.options[i];
+          o = e.options[i];
           o.selected = true;
           return;
         }
         throw "Error: Unable to find option with index '" + i + "'!";
       }
-      var match = params.match;
-      if (match) {
-        match = new RegExp(match);
+      var match;
+      if (params.match) {
+        match = new RegExp(params.match);
       }
-      for (var i = 0; i < e.options.length; ++i) {
-        var o = e.options[i];
+      for (i = 0; i < e.options.length; ++i) {
+        o = e.options[i];
         if (params.text && o.text == params.text ||
               params.value && o.value == params.value ||
               match && o.text && o.text.match(match)) {
@@ -1213,7 +1222,7 @@ pizza.main.commands = function() {
       } else if (params.value) {
         throw "Error: Unable to find option with value '" + params.value + "'!";
       } else if (params.match) {
-         throw "Error: Unable to find option with text that matches " + match + "!";
+         throw "Error: Unable to find option with text that matches " + params.match + "!";
       } else {
         throw "Error: Unable to find option!";
       }
