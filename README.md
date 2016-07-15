@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)]
+
 # PizzaScript - Browser Automation & Performance Monitoring
 
 PizzaScript is a JavaScript browser automation framework with built-in performance monitoring.
@@ -34,21 +36,21 @@ First install the following:
 
 Download the latest [Script Editor](https://github.com/loadtestgo/pizzascript/files/365310/script-editor-0.2.4.zip) release.
 
-Open the Script Editor:
+Open the IDE:
 
-    script-editor/bin/script-editor
+    bin/script-editor
 
-Select **New File** or **Open** from the menu.  Example scripts can be found under `script-editor/scripts`.
+Open a file in IDE:
 
-Script Editor can also be ran in command line mode:
+    bin/script-editor samples/google.js
 
-    script-editor/bin/script-editor -nogui
+Run a script from the console (no IDE):
 
-From here you can type in JavaScript automation scripts directly.
+    bin/script-editor -console samples/google.js
 
-Also specific script files can be run from the command line:
+Run the interactive console:
 
-    script-editor/bin/script-editor -nogui scripts/google.js
+    bin/script-editor -console
 
 
 ## Example: Load Page
