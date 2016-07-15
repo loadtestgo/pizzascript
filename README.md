@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)]
+[![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)
 
 # PizzaScript - Browser Automation & Performance Monitoring
 
