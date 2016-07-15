@@ -23,7 +23,7 @@ Docs for the Scripting API can be found here:
 
   http://docs.loadtestgo.com
 
-These are generated from the files under `docs`.
+These are generated from the files under [script-api](https://github.com/loadtestgo/pizzascript/tree/master/script-api).
 
 ## Try It!
 
@@ -38,7 +38,7 @@ Open the Script Editor:
 
     script-editor/bin/script-editor
 
-Select 'New File' or 'Open' one of the example scripts under `script-editor/scripts`.
+Select **New File** or **Open** from the menu.  Example scripts can be found under `script-editor/scripts`.
 
 Script Editor can also be ran in command line mode:
 
@@ -51,16 +51,12 @@ Also specific script files can be run from the command line:
     script-editor/bin/script-editor -nogui scripts/google.js
 
 
-## Example Script 1
-
-Go to `google.com` and verify that the page loaded:
+## Example: Load Page
 
     b = pizza.open("www.google.com");
     b.verifyText("Search");
 
-## Example Script 2
-
-Login script:
+## Example: Site Login
 
     var b = pizza.open();
     b.open("loadtestgo.com");
@@ -71,9 +67,7 @@ Login script:
     b.click("button:contains(Login):nth(1)");
     b.waitPageLoad();
 
-## Example Script 2
-
-Load mobile version of `cnn.com`:
+## Example: Load Mobile Site
 
     var b = pizza.open();
     b.emulateDevice("Apple iPhone 6")
