@@ -17,9 +17,71 @@ It includes a script editor, with a console and debugger for interactively writi
 - Emulate network conditions (e.g. 3G/4G/Offline)
 - Record WebSocket request/responses
 
+## Documentation
+
+Docs for the Scripting API can be found here:
+
+  http://docs.loadtestgo.com
+
+These are generated from the files under `docs`.
+
+## Try It!
+
+First install the following:
+
++ Chrome 40+
++ Java 8 JRE
+
+Download the latest [Script Editor](https://github.com/loadtestgo/pizzascript/files/365310/script-editor-0.2.4.zip) release.
+
+Open the Script Editor:
+
+    script-editor/bin/script-editor
+
+Select 'New File' or 'Open' one of the example scripts under `script-editor/scripts`.
+
+Script Editor can also be ran in command line mode:
+
+    script-editor/bin/script-editor -nogui
+
+From here you can type in JavaScript automation scripts directly.
+
+Also specific script files can be run from the command line:
+
+    script-editor/bin/script-editor -nogui scripts/google.js
+
+
+## Example Script 1
+
+Go to `google.com` and verify that the page loaded:
+
+    b = pizza.open("www.google.com");
+    b.verifyText("Search");
+
+## Example Script 2
+
+Login script:
+
+    var b = pizza.open();
+    b.open("loadtestgo.com");
+    b.click("button:contains(Login)");
+    b.waitPageLoad();
+    b.type("#inputUsername", "demo@loadtestgo.com");
+    b.type("#inputPassword", "password");
+    b.click("button:contains(Login):nth(1)");
+    b.waitPageLoad();
+
+## Example Script 2
+
+Load mobile version of `cnn.com`:
+
+    var b = pizza.open();
+    b.emulateDevice("Apple iPhone 6")
+    b.open("cnn.com");
+
 ## FAQ
 
-** Q: How does this project differ from Selenium / WebDriver? **
+**Q: How does this project differ from Selenium / WebDriver?**
 
 A: The main thing is performance metrics (page load, first render time, http requests)
 are recorded as the page is interacted with.  You can use a proxy with Selenium, but doing
@@ -41,80 +103,18 @@ There are tons of things Selenium does better though, not least their browser su
 bit we still believe we are on the right track as far our API is concerned.
 
 
-** Q: Is there a script recorder? **
+**Q: Is there a script recorder?**
 
 A: There's an IDE for writing and debugging scripts. CSS selectors can be generated
 for HTML elements by clicking on them.  This makes it very efficient to write scripts
 once you have a basic understanding of the API.
 
 
-** Q: What browsers are supported? **
+**Q: What browsers are supported?**
 
 A: Currently only Chrome is supported.  Firefox and Edge support is on the roadmap.
 Support for emulating mobile browsers in Chrome is available right now.
 
-## Documentation
-
-Scripting API docs can be found here:
-
-  http://docs.loadtestgo.com
-  
-These are generated from the files under `docs`.
-
-## Try It!
-
-First install the following:
-
-+ Chrome 40+
-+ Java 8 JRE
-
-Then download the [latest release](https://github.com/loadtestgo/pizzascript/files/365310/script-editor-0.2.4.zip) and
-unzip it.
-
-Open the Script Editor: 
-
-    script-editor/bin/script-editor
-
-Select 'New File' or 'Open' one of the example scripts under `script-editor/scripts`.
-
-Scripts can be run without the script editor UI:
-
-    script-editor/bin/script-editor -nogui scripts/google.js
-
-Script Editor can also be ran in command line mode:
-
-    script-editor/bin/script-editor -nogui
-
-From here you can type in JavaScript automation scripts directly.
-
-## Example Script 1
-
-Go to google and verify that the page loaded:
-
-    b = pizza.open("www.google.com");
-    b.verifyText("Search");
-
-## Example Script 2
-
-Login script:
-
-    var b = pizza.open();
-    b.open("loadtestgo.com");
-    b.click("button:contains(Login)");
-    b.waitPageLoad();
-    b.type("#inputUsername", "demo@loadtestgo.com");
-    b.type("#inputPassword", "password");
-    b.click("button:contains(Login):nth(1)");
-    b.waitPageLoad();
-
-## Example Script 2
-
-Load mobile version of CNN:
-
-    var b = pizza.open();
-    b.emulateDevice("Apple iPhone 6")
-    b.open("cnn.com");
-   
 ## Implementation Details
 
 - Script are written in JavaScript and executed using Java Rhino.
