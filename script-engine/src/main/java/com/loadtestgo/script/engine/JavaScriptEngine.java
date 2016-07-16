@@ -98,16 +98,6 @@ public class JavaScriptEngine {
         ScriptableObject.putProperty(scope, "utils", utilsObj);
 
         ScriptableObject.putProperty(scope, "Key", defineStaticClass(Key.class));
-
-        /*
-        // Kernel no longer contains anything useful
-        String kernel = "kernel.js";
-        try {
-            String value = ResourceUtils.loadResourceAsString(getClass(), "/" + kernel);
-            context.evaluateString(scope, value, kernel, 1, null);
-        } catch (IOException e) {
-            Logger.error(e, "Unable to load js kernel functions");
-        }*/
     }
 
     static private class StaticClassWrapper extends NativeJavaClass {

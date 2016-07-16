@@ -52,6 +52,8 @@ Run the interactive console:
 
     bin/script-editor -console
 
+![Script Console](script-editor/script-console.gif)
+
 
 ## Example: Load Page
 

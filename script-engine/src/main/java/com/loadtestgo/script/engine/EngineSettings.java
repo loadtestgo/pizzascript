@@ -10,8 +10,7 @@ public class EngineSettings extends Settings {
     private static Boolean verboseLogging;
     private static Boolean saveChromeLogs;
 
-    static public String getChromeExecutable()
-    {
+    static public String getChromeExecutable() {
         String location = settings().getString("chrome.binary");
         if (location == null) {
             if (Os.isMac()) {
@@ -40,15 +39,11 @@ public class EngineSettings extends Settings {
         return location;
     }
 
-    static public int getChromeMinVersion()
-    {
-        // We require the dev channel version of Chrome for access to 'processes',
-        // among other features.
+    static public int getChromeMinVersion() {
         return 32;
     }
 
-    public static String getChromeFileName()
-    {
+    public static String getChromeFileName() {
         if (Os.isMac()) {
             return "Google Chrome";
         } else if (Os.isLinux()) {

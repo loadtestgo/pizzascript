@@ -89,7 +89,7 @@ public class BrowserWebSocket {
             commandResponses.add(jsonObject);
 
             if (conn != null) {
-                Logger.info("Closing socket...");
+                Logger.debug("Closing socket...");
                 conn.close();
                 conn = null;
             }

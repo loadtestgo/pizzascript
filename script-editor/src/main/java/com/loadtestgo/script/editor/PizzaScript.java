@@ -8,6 +8,8 @@ import com.loadtestgo.util.Os;
 import com.loadtestgo.util.Settings;
 import com.loadtestgo.util.StringUtils;
 import jline.console.ConsoleReader;
+import org.pmw.tinylog.Configurator;
+import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
@@ -125,6 +127,10 @@ public class PizzaScript {
     public static void main(String[] args) {
         processArgs(args);
 
+        // Make sure the settings are loaded from the current directory
+        // before before a Swing GUI dialog changes it
+        Settings.loadSettings();
+
         if (guiMode) {
             if (Os.isMac()) {
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
@@ -136,10 +142,6 @@ public class PizzaScript {
             } catch (Exception e) {
                 Logger.error(e, "Unable set system look and feel");
             }
-
-            // Make sure the settings are loaded from the current directory
-            // before it is changed with a dialog
-            Settings.loadSettings();
 
             Gui editor = new Gui();
             if (fileName != null) {

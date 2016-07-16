@@ -38,7 +38,7 @@ Run the interactive console:
 
 
 Example Scripts
---------------
+---------------
 
 Some example scripts can be found under 'scripts/'.
 

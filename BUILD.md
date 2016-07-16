@@ -19,11 +19,11 @@ This will save a zip file to:
 
 To build a flat dir:
 
-    gradle pizzascript-editor:install
+    gradle script-editor:install
 
 This will package run scripts and all dependent Jars to the following directory:
 
-    pizzascript-editor/build/install/script-editor
+    script-editor/build/install/script-editor
 
 
 ## Release Packaging
