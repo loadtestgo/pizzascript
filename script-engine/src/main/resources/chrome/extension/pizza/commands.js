@@ -1016,6 +1016,7 @@ pizza.main.commands = function() {
                 arg.type = "number";
             } else {
                 arg.type = "object";
+                arg.value = JSON.stringify(o);
             }
             args.push(arg);
         }
@@ -1192,9 +1193,10 @@ pizza.main.commands = function() {
         );
     };
 
-    var scriptSelectSingle = "" + function(selector, params) {
+    var scriptSelectSingle = "" + function(selector, jsonParams) {
       var i, o;
       var e = this.findElement(selector);
+      var params = JSON.parse(jsonParams);
       if (params.index) {
         i = params.index;
         if (i >= 0 && i < e.options.length) {
@@ -1228,55 +1230,56 @@ pizza.main.commands = function() {
       }
     };
 
-    var scriptSelectMultiple = "" + function(selector, params) {
-          var e = this.findElement(selector);
-          var a = null;
-          if (params.text) {
-            a = params.text;
-          } else if (params.value) {
-            a = params.value;
-          } else if (params.match) {
-            a = params.match;
-            for (var i = 0; i < a.length; ++i) {
-              var t = a[i];
-              a[i] = new RegExp(t);
-            }
-          } else if (params.index) {
-            a = params.index;
-          }
-          if (params.clear) {
-            for (var i = 0; i < e.options.length; ++i) {
-              var o = e.options[i];
-              o.selected = false;
-            }
-          }
-          for (var i = 0; i < a.length; ++i) {
-             var t = a[i];
-             var set = false;
-             for (var j = 0; j < e.options.length; ++j) {
-               var o = e.options[j];
-               console.log(t, j);
-               if (params.text && t == o.text ||
-                    params.value && t == o.value ||
-                    params.match && o.text && o.text.match(t) ||
-                    params.index && j == t) {
-                 o.selected = true;
-                 set = true;
-               }
-             }
-             if (!set) {
-               if (params.text) {
-                 throw "Error: Unable to find option with text '" + t + "'!";
-               } else if (params.value) {
-                 throw "Error: Unable to find option with value '" + t + "'!";
-               } else if (params.index) {
-                 throw "Error: Unable to find option with index '" + t + "'!";
-               } else if (params.match) {
-                 throw "Error: Unable to find option with text that matches " + params.match + "!";
-               }
-             }
-          }
-        };
+    var scriptSelectMultiple = "" + function(selector, jsonParams) {
+      var e = this.findElement(selector);
+      var a = null;
+      var params = JSON.parse(jsonParams);
+      if (params.text) {
+        a = params.text;
+      } else if (params.value) {
+        a = params.value;
+      } else if (params.match) {
+        a = params.match;
+        for (var i = 0; i < a.length; ++i) {
+          var t = a[i];
+          a[i] = new RegExp(t);
+        }
+      } else if (params.index) {
+        a = params.index;
+      }
+      if (params.clear) {
+        for (var i = 0; i < e.options.length; ++i) {
+          var o = e.options[i];
+          o.selected = false;
+        }
+      }
+      for (var i = 0; i < a.length; ++i) {
+         var t = a[i];
+         var set = false;
+         for (var j = 0; j < e.options.length; ++j) {
+           var o = e.options[j];
+           console.log(t, j);
+           if (params.text && t == o.text ||
+                params.value && t == o.value ||
+                params.match && o.text && o.text.match(t) ||
+                params.index && j == t) {
+             o.selected = true;
+             set = true;
+           }
+         }
+         if (!set) {
+           if (params.text) {
+             throw "Error: Unable to find option with text '" + t + "'!";
+           } else if (params.value) {
+             throw "Error: Unable to find option with value '" + t + "'!";
+           } else if (params.index) {
+             throw "Error: Unable to find option with index '" + t + "'!";
+           } else if (params.match) {
+             throw "Error: Unable to find option with text that matches " + params.match + "!";
+           }
+         }
+      }
+    };
 
     var _select = function(id, params) {
         var value = params.value;
@@ -1621,7 +1624,6 @@ pizza.main.commands = function() {
 
     var _emulateNetworkCondition = function(id, params) {
         pizza.emulation.setNetworkCondition(params, function(r) {
-            console.log(r);
             if (!r.error) {
                 sendResponse(id, { value: r.value });
             } else {

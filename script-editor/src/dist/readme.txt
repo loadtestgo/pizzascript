@@ -28,9 +28,9 @@ Open a file in IDE:
 
   > bin/script-editor samples/google.js
 
-Run a script from the console (no IDE):
+Run a script from the console and save a HAR (HTTP Archive) file:
 
-  > bin/script-editor -console samples/google.js
+  > bin/script-editor -console samples/google.js -har
 
 Run the interactive console:
 

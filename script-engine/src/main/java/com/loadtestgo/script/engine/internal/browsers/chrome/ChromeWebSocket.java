@@ -1028,8 +1028,8 @@ public class ChromeWebSocket extends BrowserWebSocket {
     private void navigationCommitted(JSONObject details) throws JSONException {
         String url = details.getString("url");
         Page page = null;
+        FrameInfo frameInfo = getNavFrameInfo(details);
         if (isAboutUrl(url)) {
-            FrameInfo frameInfo = getNavFrameInfo(details);
             if (frameInfo.parentFrameId == -1) {
                 // Not a top level frame, ignore
                 return;
@@ -1046,6 +1046,13 @@ public class ChromeWebSocket extends BrowserWebSocket {
             if (details.getInt("frameId") != page.getFrameId()) {
                 return;
             }
+        }
+
+        // Chrome stopped sending us the process id on navigationBegin at
+        // around version 52, so we fill out the process id based on this
+        // message.
+        if (page.getProcessId() == -1) {
+            page.setProcessId(frameInfo.processId);
         }
 
         page.setNavigationType(convertNavigationType(details.getString("transitionType")));
