@@ -46,7 +46,7 @@ public class EngineContext {
             if (webSocketServer != null) {
                 webSocketServer.stop(3000);
             }
-        } catch (InterruptedException|IOException e) {
+        } catch (InterruptedException e) {
             Logger.error(e, "while cleaning up");
         }
     }
