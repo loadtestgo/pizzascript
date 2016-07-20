@@ -2,10 +2,7 @@ Requirements
 ------------
 
 + Java 8
-+ Chrome 40+ (*)
-
-* Works with Stable and Release channels for the most part, but the block* and redirect*
-  functions are only supported on the Dev Channel right now.
++ Chrome 40+
 
 
 Setup

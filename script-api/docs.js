@@ -889,21 +889,18 @@ Browser.prototype.selectTopFrame = function() {};
 /**
  * Block requests to the given URL(s)
  *
- * NOTE: Requires dev version of Google Chrome currently.
- *
  * @example
  * var b = pizza.open();
  * // Block any URLs from ad.doubleclick.net
  * // This will actually block any URL with 'ad.doubleclick.net' as part of the URL
- * b.blockUrl("ad.doubleclick.net");
+ * b.blockUrl("*://ad.doubleclick.net/*");
  * b.open("www.mysite.com");
  *
  * @example
- * // Block any URLs from ad.doubleclick.net
- * // This will do a strict match
- * b.blockUrl("^http[s]?://ad\.doubleclick\.net");
+ * // Block any URLs from any doubleclick.net subdomain
+ * b.blockUrl("*://*.doubleclick.net/*");
  *
- * @param {...(String|RegExp)} url The string or regexp to match against
+ * @param {...(String)} url The string to match against
  *
  * @see module:Browser#clearRules
  * @see module:Browser#block3rdPartyUrls
@@ -933,20 +930,23 @@ Browser.prototype.block3rdPartyUrls = function() {};
  *
  * Match groups are supported.  Match groups are referred to via $1, $2, $3, etc.
  *
- * Partial matches are allowed.
+ * The API is a little awkward due to Chrome internals, you essentially have to
+ * provide the url to match twice.  The first parameter will be matched first,
+ * then the urlRegex.
  *
  * @example
  * var b = pizza.open();
  * // Replace 'mario.jpg' with 'wario.jpg'
- * b.rewriteUrl(/(.*)\/mario\.jpg/, '$1/wario.jpg');
+ * b.rewriteUrl('*://www.mysite.com/*mario.jpg', /(.*)\/mario\.jpg/, '$1/wario.jpg');
  * b.open("www.mysite.com");
  *
- * @param {RegExp} urlRegex The set of URLs to match
- * @param {String} rewriteUrl The rewrite rule.
+ * @param {String} url The wildcarded URL to match, not a full regex
+ * @param {RegExp} urlRegex The URL to match with regex match groups
+ * @param {String} rewriteUrl The rewrite rule with regex match groups
  *
  * @see module:Browser#clearRules
  */
-Browser.prototype.rewriteUrl = function(urlRegex, rewriteUrl) {};
+Browser.prototype.rewriteUrl = function(url, urlRegex, rewriteUrl) {};
 
 /**
  * Clears all URL block and rewrite rules.

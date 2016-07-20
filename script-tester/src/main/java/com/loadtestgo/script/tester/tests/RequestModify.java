@@ -41,7 +41,7 @@ public class RequestModify extends JavaScriptTest {
     public void blockUrlMario() {
         String script = String.format(
             "b = pizza.open();\n" +
-            "b.blockUrl('mario\\.jpg');\n" +
+            "b.blockUrl('*://*/*mario\\.jpg');\n" +
             "b.open('%s');\n",
             getTestUrl("files/links.html"));
 
@@ -66,7 +66,7 @@ public class RequestModify extends JavaScriptTest {
     public void blockAll() {
         String script = String.format(
             "b = pizza.open();\n" +
-            "b.blockUrl(/.*/);\n" +
+            "b.blockUrl('*://*/*');\n" +
             "b.open('%s');\n",
             getTestUrl("files/links.html"));
 
@@ -107,7 +107,7 @@ public class RequestModify extends JavaScriptTest {
     public void rewriteUrl() {
         String script = String.format(
             "b = pizza.open();\n" +
-            "b.rewriteUrl(/(.*)\\/mario\\.jpg/, '$1/wario.jpg');\n" +
+            "b.rewriteUrl('*://*/*/mario.jpg', /(.*)\\/mario\\.jpg/, '$1/wario.jpg');\n" +
             "b.open('%s');\n",
             getTestUrl("files/links.html"));
 
@@ -132,7 +132,7 @@ public class RequestModify extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open();\n" +
             "b.blockUrl('.*');\n" +
-            "b.rewriteUrl(/(.*)\\/mario\\.jpg/, '$1/wario.jpg');\n" +
+            "b.rewriteUrl('*://*/*/mario.jpg', /(.*)\\/mario\\.jpg/, '$1/wario.jpg');\n" +
             "b.clearRules();\n" +
             "b.open('%s');\n",
             getTestUrl("files/links.html"));

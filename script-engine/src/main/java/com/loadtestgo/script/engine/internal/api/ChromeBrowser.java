@@ -410,46 +410,24 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public void blockUrl(NativeRegExp url) {
+    public void blockUrl(String... urls) {
         HashMap<String,Object> params = new HashMap<>();
-        params.put("regexUrl", url.toString());
-        checkResponseForErrors(pizzaHandler.sendCommand("blockUrl", params));
-    }
-
-    @Override
-    public void blockUrl(Object... urls) {
-        HashMap<String,Object> params = new HashMap<>();
-        ArrayList<String> regExps = new ArrayList<>();
-        ArrayList<String> strings = new ArrayList<>();
-        for (Object u : urls) {
-            if (u instanceof String) {
-                strings.add((String)u);
-            } else if (u instanceof NativeRegExp) {
-                regExps.add(u.toString());
-            } else {
-                throw new IllegalArgumentException("argument must be String or RexExp");
-            }
-        }
-        params.put("url", strings);
-        params.put("regexUrl", regExps);
+        params.put("url", urls);
         checkResponseForErrors(pizzaHandler.sendCommand("blockUrl", params));
     }
 
     @Override
     public void block3rdPartyUrls() {
         HashMap<String,Object> params = new HashMap<>();
-        ArrayList<String> urls = new ArrayList<>();
-        for (String url : Globals.ThirdParty) {
-            urls.add(url);
-        }
-        params.put("regexUrl", urls);
+        params.put("url", Globals.ThirdParty);
         checkResponseForErrors(pizzaHandler.sendCommand("blockUrl", params));
     }
 
     @Override
-    public void rewriteUrl(NativeRegExp url, String rewriteUrl) {
+    public void rewriteUrl(String url, NativeRegExp urlRegex, String rewriteUrl) {
         HashMap<String,Object> params = new HashMap<>();
-        params.put("regexUrl", url.toString());
+        params.put("url", url);
+        params.put("regexUrl", urlRegex.toString());
         params.put("rewriteUrl", rewriteUrl);
         checkResponseForErrors(pizzaHandler.sendCommand("rewriteUrl", params));
     }

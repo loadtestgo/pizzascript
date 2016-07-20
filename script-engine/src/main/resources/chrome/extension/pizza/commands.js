@@ -13,7 +13,8 @@ pizza.main.commands = function() {
         _automationAPI = null,
         _headers = {},
         _autoDismissDialogs = false,
-        _dialogInfo = null;
+        _dialogInfo = null,
+        _webRequestModifyCallbacks = [];
 
     pizza.contexttracker.addContextDestroyedHandler(function(contextId) {
         if (contextId === _currentContextId) {
@@ -557,47 +558,26 @@ pizza.main.commands = function() {
     };
 
     var _blockUrl = function(id, params) {
-        var rules = [];
+        var urls = [];
 
-        function addRule(url) {
-            rules.push({
-                conditions: [
-                    new chrome.declarativeWebRequest.RequestMatcher({
-                        url: { urlMatches: url }
-                    })
-                ],
-                actions: [
-                    new chrome.declarativeWebRequest.CancelRequest()
-                ]
-            });
-        }
-
-        if (params.url) {
-            if (pizza.isArray(params.url)) {
-                for (var i = 0; i < params.url.length; ++i) {
-                    var url = params.url[i];
-                    addRule(pizza.regexEscape(url));
-                }
-            } else {
-                addRule(pizza.regexEscape(params.url));
+        var url = params.url;
+        if (pizza.isArray(url)) {
+            for (var i = 0; i < url.length; ++i) {
+                urls.push(url[i]);
             }
+        } else {
+            urls.push(url);
         }
 
-        if (params.regexUrl) {
-            if (pizza.isArray(params.regexUrl)) {
-                for (var j = 0; j < params.regexUrl.length; ++j) {
-                    var regex = params.regexUrl[j];
-                    addRule(regex);
-                }
-            } else {
-                addRule(params.regexUrl);
-            }
-        }
+        var cancel = function(details) { return {cancel: true}; };
+        _webRequestModifyCallbacks.push(cancel);
 
-        chrome.declarativeWebRequest.onRequest.addRules(rules,
-            function() {
-                sendResponse(id, {});
-            });
+        chrome.webRequest.onBeforeRequest.addListener(
+            cancel,
+            { urls: urls },
+            [ "blocking" ]);
+
+        sendResponse(id, {});
     };
 
     function cleanRegexp(regex) {
@@ -611,31 +591,35 @@ pizza.main.commands = function() {
     }
 
     var _rewriteUrl = function(id, params) {
-        var match = cleanRegexp(params.regexUrl);
-        var rule = {
-            conditions: [
-                new chrome.declarativeWebRequest.RequestMatcher({
-                    url: { urlMatches: match }
-                })
-            ],
-            actions: [
-                new chrome.declarativeWebRequest.RedirectByRegEx({
-                    from: match,
-                    to: params.rewriteUrl
-                })
-            ]
+        var url = params.url;
+        var match = new RegExp(cleanRegexp(params.regexUrl));
+
+        var rewriteRequest = function(details) {
+            var url = details.url;
+            if (url.match(match)) {
+                return {redirectUrl: url.replace(match, params.rewriteUrl) };
+            } else {
+                return {};
+            }
         };
-        chrome.declarativeWebRequest.onRequest.addRules([rule],
-            function() {
-                sendResponse(id, {});
-            });
+        _webRequestModifyCallbacks.push(rewriteRequest);
+
+        chrome.webRequest.onBeforeRequest.addListener(
+            rewriteRequest,
+            { urls: [url] },
+            [ "blocking" ]);
+
+        sendResponse(id, {});
     };
 
     var _clearRules = function(id, params) {
-        chrome.declarativeWebRequest.onRequest.removeRules(null,
-            function() {
-                sendResponse(id, {});
-            });
+        for (var i = 0; i < _webRequestModifyCallbacks.length; ++ i) {
+            var o = _webRequestModifyCallbacks[i];
+            chrome.webRequest.onBeforeRequest.removeListener(o);
+        }
+        _webRequestModifyCallbacks = [];
+
+        sendResponse(id, {});
     };
 
     var _setHeader = function(id, params) {

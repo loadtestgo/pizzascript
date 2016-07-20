@@ -361,31 +361,18 @@ public interface Browser {
     Object selectTopFrame();
 
     /**
-     * Block requests to the given URL.  Partial matches are allowed.
-     *
-     * @param url
+     * Block requests to the given URL..
      */
     void blockUrl(String url);
 
-    /**
-     * Block requests to the given URL regex.  Partial matches are allowed.
-     *
-     * @param urlRegex
-     */
-    void blockUrl(NativeRegExp urlRegex);
+    void blockUrl(String... urls);
 
     void block3rdPartyUrls();
 
-    void blockUrl(Object... urls);
-
     /**
      * Rewrite requests to the given URL regex, match groups are supported.
-     * Partial matches are allowed.
-     *
-     * @param urlRegex
-     * @param rewriteUrl
      */
-    void rewriteUrl(NativeRegExp urlRegex, String rewriteUrl);
+    void rewriteUrl(String url, NativeRegExp urlRegex, String rewriteUrl);
 
     /**
      * Clears all URL block and rewrite rules.
@@ -394,16 +381,11 @@ public interface Browser {
 
     /**
      * Override/Add a header
-     *
-     * @param name
-     * @param value
      */
     void setHeader(String name, String value);
 
     /**
      * Remove a given header
-     *
-     * @param header
      */
     void removeHeader(String header);
 

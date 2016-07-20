@@ -6,7 +6,6 @@
   "version": "1.0",
 
   "permissions": [
-    "declarativeWebRequest",
     "webRequest",
     "webRequestBlocking",
     "webNavigation",
@@ -17,8 +16,7 @@
     "browsingData",
     "cookies",
     "<all_urls>",
-    "*://*/*",
-    "chrome://*/*"
+    "*://*/*"
   ],
 
   "content_scripts": [ {
