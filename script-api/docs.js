@@ -889,6 +889,12 @@ Browser.prototype.selectTopFrame = function() {};
 /**
  * Block requests to the given URL(s)
  *
+ * Accepts wildcards in each URL, but URL must be of the form:
+ *
+ * "protocol://host/path"
+ *
+ * The protocol, site and path parts can wildcarded partially or fully.
+ *
  * @example
  * var b = pizza.open();
  * // Block any URLs from ad.doubleclick.net
@@ -912,8 +918,6 @@ Browser.prototype.blockUrl = function(url) {};
  *
  * These include analytics, tracking, advertising and RUM beacons.
  *
- * NOTE: Requires dev version of Google Chrome currently.
- *
  * @example
  * var b = pizza.open();
  * // Block known 3rd party beacons and adverts
@@ -928,21 +932,23 @@ Browser.prototype.block3rdPartyUrls = function() {};
 /**
  * Rewrite requests to the given URL
  *
- * Match groups are supported.  Match groups are referred to via $1, $2, $3, etc.
+ * Accepts wildcards in the URL, but the URL must be of the form:
  *
- * The API is a little awkward due to Chrome internals, you essentially have to
- * provide the url to match twice.  The first parameter will be matched first,
- * then the urlRegex.
+ * "protocol://host/path"
+ *
+ * The protocol, site and path parts can wildcarded partially or fully.
+ *
+ * Match groups are supported, just put parenthesis around each group.  In the rewriteUrl string,
+ * match groups can be referred to via $1, $2, $3, etc.
  *
  * @example
  * var b = pizza.open();
  * // Replace 'mario.jpg' with 'wario.jpg'
- * b.rewriteUrl('*://www.mysite.com/*mario.jpg', /(.*)\/mario\.jpg/, '$1/wario.jpg');
+ * b.rewriteUrl('(*://www.mysite.com/*)/mario.jpg',  '$1/wario.jpg');
  * b.open("www.mysite.com");
  *
- * @param {String} url The wildcarded URL to match, not a full regex
- * @param {RegExp} urlRegex The URL to match with regex match groups
- * @param {String} rewriteUrl The rewrite rule with regex match groups
+ * @param {String} url The wildcarded URL to match, can use match groups.
+ * @param {String} rewriteUrl The rewrite rule with match groups.
  *
  * @see module:Browser#clearRules
  */

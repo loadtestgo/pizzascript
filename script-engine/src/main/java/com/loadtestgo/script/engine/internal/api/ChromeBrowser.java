@@ -424,10 +424,9 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public void rewriteUrl(String url, NativeRegExp urlRegex, String rewriteUrl) {
+    public void rewriteUrl(String url, String rewriteUrl) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("url", url);
-        params.put("regexUrl", urlRegex.toString());
         params.put("rewriteUrl", rewriteUrl);
         checkResponseForErrors(pizzaHandler.sendCommand("rewriteUrl", params));
     }

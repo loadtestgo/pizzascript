@@ -580,6 +580,8 @@ pizza.main.commands = function() {
         sendResponse(id, {});
     };
 
+    // Strip the '/'s from the beginning and end of a regex string,
+    // so that the resulting string can be used in RegExp() constructor.
     function cleanRegexp(regex) {
         var firstIndex = regex.indexOf("/");
         var lastIndex = regex.lastIndexOf("/");
@@ -590,12 +592,93 @@ pizza.main.commands = function() {
         }
     }
 
-    var _rewriteUrl = function(id, params) {
-        var url = params.url;
-        var match = new RegExp(cleanRegexp(params.regexUrl));
+    function stripMatchGroups(url) {
+        var PARSE = 1;
+        var ESCAPE = 2;
+        var state = PARSE;
+        var depth = 0;
+        var r = "";
+        for (var i = 0; i < url.length; ++i) {
+            var c = url[i];
+            switch (state) {
+                case PARSE:
+                    if (c == '\\') {
+                        state = "ESCAPE";
+                    } else if (c == '(') {
+                        depth++;
+                    } else if (c == ')') {
+                        depth--;
+                    } else {
+                        r += c;
+                    }
+                    break;
+                case ESCAPE:
+                    r += c;
+                    state = PARSE;
+                    break;
+            }
+        }
+        return r;
+    }
 
+    function regexpifyGlobWithMatchGroups(url) {
+        var PARSE = 1;
+        var ESCAPE = 2;
+        var state = PARSE;
+        var r = "";
+
+        function addChar(c) {
+            switch (c) {
+                case '*':
+                    r += ".*";
+                    break;
+                case '[':
+                case ']':
+                case '(':
+                case ')':
+                case '.':
+                case '+':
+                case '{':
+                case '}':
+                    r += "\\" + c;
+                    break;
+                default:
+                    r += c;
+            }
+        }
+
+        for (var i = 0; i < url.length; ++i) {
+            var c = url[i];
+            switch (state) {
+                case PARSE:
+                    if (c == '\\') {
+                        state = "ESCAPE";
+                    } else if (c == '(' || c == ')') {
+                        r += c;
+                    } else {
+                        addChar(c);
+                    }
+                    break;
+                case ESCAPE:
+                    addChar(c);
+                    state = PARSE;
+                    break;
+            }
+        }
+
+        return new RegExp(r);
+    }
+
+    var _rewriteUrl = function(id, params) {
+        var origUrl = params.url;
+
+        var glob = stripMatchGroups(origUrl);
+        var match = regexpifyGlobWithMatchGroups(origUrl);
+
+        console.log(glob, match, origUrl);
         var rewriteRequest = function(details) {
             var url = details.url;
+            console.log(url);
             if (url.match(match)) {
                 return {redirectUrl: url.replace(match, params.rewriteUrl) };
             } else {
@@ -606,7 +689,7 @@ pizza.main.commands = function() {
 
         chrome.webRequest.onBeforeRequest.addListener(
             rewriteRequest,
-            { urls: [url] },
+            { urls: [glob] },
             [ "blocking" ]);
 
         sendResponse(id, {});

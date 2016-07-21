@@ -370,9 +370,9 @@ public interface Browser {
     void block3rdPartyUrls();
 
     /**
-     * Rewrite requests to the given URL regex, match groups are supported.
+     * Rewrite requests to the given URL, match groups are supported.
      */
-    void rewriteUrl(String url, NativeRegExp urlRegex, String rewriteUrl);
+    void rewriteUrl(String url, String rewriteUrl);
 
     /**
      * Clears all URL block and rewrite rules.
