@@ -579,13 +579,14 @@ pizza.automation = {
 
         function getElementSelector(element) {
             var tag = null;
+            var matches = null;
+            var foundId = false;
             var i = 0;
             for (var e = element; e && e != document.body; e = e.parentElement) {
                 var add = e.tagName.toLowerCase();
-                var done = false;
                 if (e.id) {
                     add = '#' + e.id;
-                    done = true;
+                    foundId = true;
                 } else if (e.classList) {
                     for (i = 0; i < e.classList.length; ++i) {
                         add += "." + e.classList[i];
@@ -598,27 +599,50 @@ pizza.automation = {
                     tag = add;
                 }
 
-                if (done) {
-                    break;
-                }
-            }
-
-            if (tag) {
                 try {
-                    var matches = document.querySelectorAll(tag);
-                    if (matches && matches.length > 0) {
-                        for (i = 0; i < matches.length; ++i) {
-                            if (matches[i] == element) {
-                                if (i > 0) {
-                                    tag += ":nth(" + i + ")";
+                    matches = document.querySelectorAll(tag);
+                    if (matches) {
+                        if (matches.length == 1) {
+                            return tag;
+                        } else if (foundId && matches.length > 0) {
+                            for (i = 0; i < matches.length; ++i) {
+                                if (matches[i] == element) {
+                                    if (i > 0) {
+                                        tag += ":nth(" + i + ")";
+                                    }
+                                    break;
                                 }
-                                break;
                             }
+                            return tag;
                         }
                     }
                 } catch (e) {
                     // HTML allows you to set ids that are not valid selectors,
                     // we should have a fallback for that...
+                }
+            }
+
+            return tag;
+        }
+
+        function getElementPath(element) {
+            var tag = null;
+            for (var e = element; e && e != document.body; e = e.parentElement) {
+                var add = e.tagName.toLowerCase();
+                if (e.id) {
+                    add += '#' + e.id;
+                }
+
+                if (e.classList) {
+                    for (var i = 0; i < e.classList.length; ++i) {
+                        add += "." + e.classList[i];
+                    }
+                }
+
+                if (tag) {
+                    tag = add + ' > ' + tag;
+                } else {
+                    tag = add;
                 }
             }
 
@@ -633,6 +657,10 @@ pizza.automation = {
             }
 
             var sel = getElementSelector(element);
+            if (sel) {
+                v.selector = sel;
+            }
+            sel = getElementPath(element);
             if (sel) {
                 v.path = sel;
             }
