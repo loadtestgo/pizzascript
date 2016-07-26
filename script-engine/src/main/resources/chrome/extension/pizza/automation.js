@@ -119,7 +119,7 @@ pizza.automation = {
             var x = pos.left + (pos.width/2);
             var y = pos.top + (pos.height/2);
             var top = document.elementFromPoint(x, y);
-            if (top != element) {
+            if (top && top != element) {
                 var parent = top;
                 while (true) {
                     parent = parent.parentNode;
