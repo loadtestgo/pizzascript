@@ -1011,7 +1011,7 @@ pizza.main.commands = function() {
             height: tab.height,
             status: tab.status
         };
-    };
+    }
 
     var _newTab = function(id, params) {
         pizza.network.suppressNextNavigation();
@@ -1124,10 +1124,17 @@ pizza.main.commands = function() {
                     pos.width <= 0 || pos.height <= 0) {
                     sendResponse(id, { error: "Unable to click element at " + JSON.stringify(pos) });
                 } else {
-                    var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width/2)));
-                    var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height/2)));
-                    pizza.input.click(x, y, function () {
-                        sendResponse(id, { value: {} });
+                    chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
+                        pos.top *= zoomFactor;
+                        pos.left *= zoomFactor;
+                        pos.width *= zoomFactor;
+                        pos.height *= zoomFactor;
+
+                        var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
+                        var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
+                        pizza.input.click(x, y, function () {
+                            sendResponse(id, {value: {}});
+                        });
                     });
                 }
             },
@@ -1145,10 +1152,17 @@ pizza.main.commands = function() {
                     pos.width <= 0 || pos.height <= 0) {
                     sendResponse(id, { error: "Unable to move mouse to element at " + JSON.stringify(pos) });
                 } else {
-                    var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width/2)));
-                    var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height/2)));
-                    pizza.input.mouseMove(x, y, function () {
-                        sendResponse(id, { value: {} });
+                    chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
+                        pos.top *= zoomFactor;
+                        pos.left *= zoomFactor;
+                        pos.width *= zoomFactor;
+                        pos.height *= zoomFactor;
+
+                        var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
+                        var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
+                        pizza.input.mouseMove(x, y, function () {
+                            sendResponse(id, {value: {}});
+                        });
                     });
                 }
             },
@@ -1526,6 +1540,18 @@ pizza.main.commands = function() {
         check(selector);
     };
 
+    function fixPositionOnElements(elements, zoomFactor) {
+        for (var i = 0; i < elements.length; ++i) {
+            var e = elements[i];
+            if (e.pos) {
+                e.pos.top *= zoomFactor;
+                e.pos.left *= zoomFactor;
+                e.pos.width *= zoomFactor;
+                e.pos.height *= zoomFactor;
+            }
+        }
+    }
+
     var _query = function(id, params) {
         var script = null;
         if (params.visibleOnly) {
@@ -1552,7 +1578,13 @@ pizza.main.commands = function() {
         }
 
         executeAutomationAPI(
-            function(response) { sendResponse(id, { value: response.result.value }); },
+            function(response) {
+                chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
+                    var result = response.result.value;
+                    fixPositionOnElements(result, zoomFactor);
+                    sendResponse(id, { value: result });
+                });
+            },
             function(error) { sendResponse(id, { error: error }); },
             true,
             script,
@@ -1878,7 +1910,8 @@ pizza.main.commands = function() {
      *   https://code.google.com/p/chromium/issues/detail?id=63979
      */
     var _findElementByClick = function() {
-        var script = "" + function() {
+
+        var script = "" + function(zoomFactor) {
             if (!this.findElementListener) {
                 var that = this;
                 this.findElementListener = function (e) {
@@ -1886,6 +1919,12 @@ pizza.main.commands = function() {
                     e.preventDefault();
                     if (e.target) {
                         var details = that.queryElementWrap(e.target);
+                        if (details.pos) {
+                            details.pos.top *= zoomFactor;
+                            details.pos.left *= zoomFactor;
+                            details.pos.width *= zoomFactor;
+                            details.pos.height *= zoomFactor;
+                        }
                         window.postMessage({ type: "PizzaElementSelected", msg: details }, window.location);
                     }
                     if (that.findElementListener) {
@@ -1897,11 +1936,14 @@ pizza.main.commands = function() {
             }
         };
 
-        executeAutomationAPI(
-            function(response) { },
-            function(error) { console.log(error); },
-            true,
-            script);
+        chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
+            executeAutomationAPI(
+                function(response) { },
+                function(error) { console.log(error); },
+                true,
+                script,
+                zoomFactor);
+        });
     };
 
     function handleEvent(method, params) {
