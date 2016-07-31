@@ -11,16 +11,15 @@ public class ConsoleScriptThread {
     private JavaScriptEngine engine;
     private ConsoleCallbacks callbacks;
     private ExecutorService executorService;
-    private EasyTestContext testContext;
+    private EditorTestContext testContext;
 
     public ConsoleScriptThread(ConsoleCallbacks callbacks,
                                ConsoleOutputStream output) {
         this.engine = new JavaScriptEngine();
         this.callbacks = callbacks;
         this.executorService = Executors.newSingleThreadExecutor();
-        this.testContext = new EasyTestContext("Console");
+        this.testContext = new EditorTestContext("Console", 0);
         this.testContext.setResultNotifier(output);
-        this.testContext.setSandboxJavaScript(EngineSettings.sandboxJavaScript());
         output.setTestResult(testContext.getTestResult());
         executorService.submit(new InitTask(engine, testContext, output));
     }
@@ -44,6 +43,10 @@ public class ConsoleScriptThread {
 
     public EasyTestContext getTestContext() {
         return testContext;
+    }
+
+    public void setWindowPosition(EditorTestContext.WindowPosition windowPosition) {
+        this.testContext.setWindowPosition(windowPosition);
     }
 
     static private class InitTask implements Callable<Object> {

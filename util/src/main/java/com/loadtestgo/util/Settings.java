@@ -62,7 +62,7 @@ public class Settings {
      */
     public static void setSettingsFile(File settingsFile) { Settings.settingsFile = settingsFile; }
 
-    protected static IniFile settings() {
+    public static IniFile settings() {
         if (iniFile == null) {
             iniFile = new IniFile();
             if (settingsFile == null) {

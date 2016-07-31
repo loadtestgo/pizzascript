@@ -51,6 +51,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     private FileDialog exportHarFileDialog;
     private JCheckBoxMenuItem breakOnExceptions;
     private JCheckBoxMenuItem keepBrowserOpenToggle;
+    private JCheckBoxMenuItem sideBySideBrowserOpenToggle;
     private JPanel contentPane;
     private HelpWindow helpWindow;
     private int newFileIndex;
@@ -84,6 +85,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     private Action toggleBreakPointAction = new ToggleBreakPointAction();
     private Action breakOnExceptionsAction = new BreakOnExceptionsAction();
     private Action keepBrowserOpenAction = new KeepBrowserOpenAction();
+    private Action openBrowserSideBySideAction = new OpenBrowserSideBySideAction();
 
     private Action gotoConsoleAction = new GotoConsoleAction();
     private Action closeTabAction = new CloseTabAction();
@@ -199,6 +201,11 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         windowMenu.addSeparator();
         windowMenu.add(gotoConsoleAction);
 
+        sideBySideBrowserOpenToggle = new JCheckBoxMenuItem();
+        sideBySideBrowserOpenToggle.setAction(openBrowserSideBySideAction);
+        sideBySideBrowserOpenToggle.setSelected(false);
+        windowMenu.add(sideBySideBrowserOpenToggle);
+
         defaultWindowMenuItems = windowMenu.getItemCount();
 
         helpMenu.add(onlineHelpAction);
@@ -271,6 +278,29 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         ConsoleTextArea consoleTextArea = debugPane.getConsoleArea();
         consoleTextArea.setPageClickListener(this);
         debugger.setOutput(consoleTextArea.getConsoleOut());
+
+        sideBySideBrowserOpenToggle.setState(EditorSettings.sideBySideBrowserWindow());
+
+        EditorTestContext.WindowPosition windowPosition = new EditorTestContext.WindowPosition() {
+            @Override
+            public int[] getWindowPosition() {
+                Dimension dimension = getSize();
+                Point location = getLocation();
+                if (sideBySideBrowserOpenToggle.getState()) {
+                    return new int[]{
+                        location.x + dimension.width,
+                        location.y,
+                        dimension.width,
+                        dimension.height
+                    };
+                } else {
+                    return null;
+                }
+            }
+        };
+
+        debugger.setWindowPosition(windowPosition);
+        console.getScriptThread().setWindowPosition(windowPosition);
 
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, debugPane);
         splitPane.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -1569,6 +1599,17 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             if (filePanel != null) {
                 getDebugger().setCleanupWhenDone(!keepBrowserOpenToggle.isSelected());
             }
+        }
+    }
+
+    private class OpenBrowserSideBySideAction extends AbstractAction {
+        public OpenBrowserSideBySideAction() {
+            super("Open Browser Side by Side");
+            putValue(MNEMONIC_KEY, KeyEvent.VK_K);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
         }
     }
 

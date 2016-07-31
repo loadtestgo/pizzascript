@@ -20,7 +20,7 @@ public class ChromeSettings {
     // Reuse the existing profile if any
     public boolean reuseProfile = false;
 
-    // Unpack the extension everytime chrome is opened, sometimes this is
+    // Unpack the extension every time chrome is opened, sometimes this is
     // not necessary e.g. if you are launching & closing chrome in tight loop
     public boolean unpackExtension = true;
 
@@ -34,5 +34,6 @@ public class ChromeSettings {
     // is not cooperating...
     public int openBrowserRetryCount = 0;
 
+    // Extra args to pass to the chrome process
     public String[] args;
 }

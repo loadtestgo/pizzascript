@@ -1,5 +1,7 @@
 package com.loadtestgo.script.editor.swing;
 
+import com.loadtestgo.script.engine.EngineSettings;
+
 import java.awt.*;
 
 public class EditorSettings {
@@ -15,5 +17,9 @@ public class EditorSettings {
 
     public static int getStackFrameCharWidth() {
         return 50;
+    }
+
+    public static boolean sideBySideBrowserWindow() {
+        return EngineSettings.settings().getBoolean("editor.sidebyside", true);
     }
 }

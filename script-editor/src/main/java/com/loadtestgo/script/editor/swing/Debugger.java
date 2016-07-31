@@ -5,14 +5,16 @@ import com.loadtestgo.script.engine.EasyTestContext;
 import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.JavaScriptEngine;
 import com.loadtestgo.script.engine.ScriptException;
+import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 import com.loadtestgo.script.engine.internal.rhino.DebuggerStopException;
 import com.loadtestgo.util.Path;
-import com.sun.scenario.Settings;
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Debugger {
@@ -87,6 +89,10 @@ public class Debugger {
 
     public void setOutput(ConsoleOutputStream output) {
         debuggerExecution.setOutput(output);
+    }
+
+    public void setWindowPosition(EditorTestContext.WindowPosition windowPosition) {
+        debuggerExecution.setWindowPosition(windowPosition);
     }
 
     public void setGuiCallback(DebuggerCallbacks callback) {
@@ -667,6 +673,7 @@ public class Debugger {
         private SourceFile file;
         private JavaScriptEngine engine;
         private ConsoleOutputStream consoleOutputStream;
+        private EditorTestContext.WindowPosition windowPosition;
         private Map<DebuggableScript, FunctionSource> functionToSource;
         private final Object monitor = new Object();
         private Command command;
@@ -743,9 +750,9 @@ public class Debugger {
             };
 
             Throwable exception = null;
-            EasyTestContext testContext = new EasyTestContext(Path.getFileName(file.getFilePath()), 1);
+            EditorTestContext testContext = new EditorTestContext(Path.getFileName(file.getFilePath()), 1);
+            testContext.setWindowPosition(windowPosition);
             testContext.setResultNotifier(consoleOutputStream);
-            testContext.setSandboxJavaScript(EngineSettings.sandboxJavaScript());
             engine.setConsole(consoleOutputStream);
             testResult = testContext.getTestResult();
             consoleOutputStream.setTestResult(testResult);
@@ -776,6 +783,10 @@ public class Debugger {
 
         public void setOutput(ConsoleOutputStream console) {
             this.consoleOutputStream = console;
+        }
+
+        public void setWindowPosition(EditorTestContext.WindowPosition windowPosition) {
+            this.windowPosition = windowPosition;
         }
     }
 }

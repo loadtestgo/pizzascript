@@ -91,6 +91,10 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
         return scriptThread.getTestContext().getTestResult();
     }
 
+    public ConsoleScriptThread getScriptThread() {
+        return scriptThread;
+    }
+
     @Override
     public void autoCompletions(String source,
                                 int completionStartPos,

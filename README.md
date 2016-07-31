@@ -1,10 +1,11 @@
 [![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)](https://travis-ci.org/loadtestgo/pizzascript)
+[![License](https://img.shields.io/badge/licence-BSD--3--Clause-blue.svg)](https://github.com/loadtestgo/pizzascript/blob/master/LICENSE.BSD)
 
 # PizzaScript - Browser Automation & Performance Monitoring
 
 PizzaScript is a JavaScript browser automation framework with built-in performance monitoring.
 
-It includes a script editor, with a console and debugger for interactively writing tests.
+It includes a script editor, with a REPL and debugger for interactively writing tests.
 
 ## Features
 
@@ -13,7 +14,7 @@ It includes a script editor, with a console and debugger for interactively writi
 - Many useful CSS selector extensions (e.g. "a:contains(Click me!)" selects a link with the
   text "Click me!")
 - Take screenshots
-- Block/redirect certain URLs (or block all beacon URLs)
+- Block/redirect certain URLs (e.g. block 3rd party beacon URLs)
 - Modify request headers
 - Emulate Mobile and Tablet devices
 - Emulate network conditions (e.g. 3G/4G/Offline)
@@ -57,56 +58,62 @@ Run the interactive console:
 
 ## Example: Load Page
 
-    b = pizza.open("www.google.com");
-    b.verifyText("Search");
+```javascript
+b = pizza.open("www.google.com");
+b.verifyText("Search");
+```
 
 ## Example: Site Login
 
-    var b = pizza.open();
-    b.open("loadtestgo.com");
-    b.click("button:contains(Login)");
-    b.waitPageLoad();
-    b.type("#inputUsername", "demo@loadtestgo.com");
-    b.type("#inputPassword", "password");
-    b.click("button:contains(Login):nth(1)");
-    b.waitPageLoad();
+```javascript
+var b = pizza.open();
+b.open("loadtestgo.com");
+b.click("button:contains(Login)");
+b.waitPageLoad();
+b.type("#inputUsername", "demo@loadtestgo.com");
+b.type("#inputPassword", "password");
+b.click("button:contains(Login):nth(1)");
+b.waitPageLoad();
+```
 
 ## Example: Load Mobile Site
 
-    var b = pizza.open();
-    b.emulateDevice("Apple iPhone 6")
-    b.open("cnn.com");
+```javascript
+var b = pizza.open();
+b.emulateDevice("Apple iPhone 6")
+b.open("cnn.com");
+```
 
 ## FAQ
 
 **Q: How does this project differ from Selenium / WebDriver?**
 
-A: The main thing is performance metrics (page load, first render time, http requests)
-are recorded as the page is interacted with.  You can use a proxy with Selenium, but doing
-can cause the timing / concurrency to change and introduce subtle changes to how requests
-are made.
+A: The main thing is performance metrics (page load, first render time, HTTP requests)
+are recorded as the page is interacted with.  You can use a proxy with Selenium,
+but doing can cause the timing / concurrency to change and introduce subtle changes to
+how requests are made.
 
 Other differences include:
 
-- The PizzaScript API is simple and to the point, above all else.  We want you to be
-  able write tests without the API getting in your way.  We're not trying to make the
-  API overly Object Orientated, or limiting what we will automate to what a user can do.
+- The PizzaScript API is simple and use case driven.  We want you to be able write tests
+  without the API getting in your way.  We're not trying to make the API overly Object
+  Orientated, or limiting what you can automate to what a real user would do.
 - It works with modern dynamic apps without requiring complex wait logic and retry
   wrapper functions.
-- Since the API is more focused and use case driven, internally the source code is much
-  much smaller, and easier to work with.
+- You can trigger script failures on HTTP status codes.
+- The source code is much-much smaller and understandable.
 - Element visibility errors are more detailed, making certain failures easier to debug.
+- There's a built-in IDE for debugging and running scripts.
 
-There are tons of things Selenium does better though, not least their browser support,
-bit we still believe we are on the right track as far our API is concerned.
-
+There are things Selenium does better though, not least of which is the compressive
+browser support.  If you want to run scripts on a wide range of browser Selenium based
+testing is a better choice.
 
 **Q: Is there a script recorder?**
 
 A: There's an IDE for writing and debugging scripts. CSS selectors can be generated
 for HTML elements by clicking on them.  This makes it very efficient to write scripts
 once you have a basic understanding of the API.
-
 
 **Q: What browsers are supported?**
 
