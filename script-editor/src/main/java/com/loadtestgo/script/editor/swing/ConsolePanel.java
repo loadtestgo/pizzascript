@@ -17,6 +17,8 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
     private ConsoleTextArea consoleTextArea;
     private ConsoleTextField consoleTextField;
     private ConsoleScriptThread scriptThread;
+    private final Object resetScriptThreadLock = new Object();
+    private EditorTestContext.WindowPosition windowPosition;
 
     public ConsolePanel() {
         super();
@@ -25,22 +27,16 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
 
         consoleTextArea = new ConsoleTextArea();
         consoleTextArea.setEditable(false);
-        consoleTextArea.println(
-                String.format("Welcome to %s Interactive Console %s!",
-                        PizzaScript.AppName,
-                        EngineSettings.getVersion()),
-                "#800000");
-        consoleTextArea.println(
-                "Type JavaScript to evaluate or open a new window in the File menu.",
-                "darkGray");
 
-        scriptThread = new ConsoleScriptThread(this, consoleTextArea.getConsoleOut());
+        printGreeting();
+
+        scriptThread = newScriptThread();
 
         JLabel promptLabel = new JLabel();
         promptLabel.setFont(EditorSettings.getCodeFont());
         promptLabel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
 
-        consoleTextField = new ConsoleTextField(scriptThread, consoleTextArea, promptLabel);
+        consoleTextField = new ConsoleTextField(new CommandExecutor(), consoleTextArea, promptLabel);
         consoleTextField.setFocusTraversalKeysEnabled(false);
         JScrollPane consoleInputScroll = new JScrollPane(consoleTextField,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
@@ -83,12 +79,25 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
         });
     }
 
+    private void printGreeting() {
+        consoleTextArea.println(
+                String.format("Welcome to %s Interactive Console %s!",
+                        PizzaScript.AppName,
+                        EngineSettings.getVersion()),
+                "#800000");
+        consoleTextArea.println(
+                "Type JavaScript to evaluate or open a new window in the File menu.",
+                "darkGray");
+    }
+
     public ConsoleTextArea getTextArea() {
         return consoleTextArea;
     }
 
     public TestResult getTestResult() {
-        return scriptThread.getTestContext().getTestResult();
+        synchronized (resetScriptThreadLock) {
+            return scriptThread.getTestContext().getTestResult();
+        }
     }
 
     public ConsoleScriptThread getScriptThread() {
@@ -246,6 +255,52 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
     }
 
     public void close() {
-        scriptThread.shutdown();
+        synchronized (resetScriptThreadLock) {
+            scriptThread.shutdown();
+        }
+    }
+
+    public void reset() {
+        synchronized (resetScriptThreadLock) {
+            scriptThread.shutdown();
+
+            consoleTextArea.clear();
+            printGreeting();
+
+            scriptThread = newScriptThread();
+        }
+    }
+
+    private ConsoleScriptThread newScriptThread() {
+        ConsoleScriptThread scriptThread = new ConsoleScriptThread(this, consoleTextArea.getConsoleOut());
+        scriptThread.setWindowPosition(windowPosition);
+        return scriptThread;
+    }
+
+    public void setWindowPosition(EditorTestContext.WindowPosition windowPosition) {
+        this.windowPosition = windowPosition;
+    }
+
+    private class CommandExecutor implements ConsoleTextField.CommandExecutor {
+        @Override
+        public boolean stringIsCompilableUnit(String partialLine) {
+            synchronized (resetScriptThreadLock) {
+                return scriptThread.getJavaScriptEngine().stringIsCompilableUnit(partialLine);
+            }
+        }
+
+        @Override
+        public void evalSource(int i, String partialLine) {
+            synchronized (resetScriptThreadLock) {
+                scriptThread.evalSource(i, partialLine);
+            }
+        }
+
+        @Override
+        public void tabComplete(String source, int pos) {
+            synchronized (resetScriptThreadLock) {
+                scriptThread.tabComplete(source, pos);
+            }
+        }
     }
 }

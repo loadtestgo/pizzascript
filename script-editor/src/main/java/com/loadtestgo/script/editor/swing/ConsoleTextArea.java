@@ -145,6 +145,14 @@ public class ConsoleTextArea extends JEditorPane
         }
     }
 
+    public void clear() {
+        try {
+            document.replace(0, document.getLength(), "", null);
+        } catch (BadLocationException e) {
+            // Do nothing
+        }
+    }
+
     private String encodeHtml(String html) {
         if (html != null) {
             return HtmlEntities.encode(html);

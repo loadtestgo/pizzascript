@@ -88,6 +88,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     private Action openBrowserSideBySideAction = new OpenBrowserSideBySideAction();
 
     private Action gotoConsoleAction = new GotoConsoleAction();
+    private Action resetConsoleAction = new ResetConsoleAction();
     private Action closeTabAction = new CloseTabAction();
     private Action nextTabAction = new NextTabAction();
     private Action prevTabAction = new PrevTabAction();
@@ -200,6 +201,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         windowMenu.add(closeTabAction);
         windowMenu.addSeparator();
         windowMenu.add(gotoConsoleAction);
+        windowMenu.add(resetConsoleAction);
 
         sideBySideBrowserOpenToggle = new JCheckBoxMenuItem();
         sideBySideBrowserOpenToggle.setAction(openBrowserSideBySideAction);
@@ -300,7 +302,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         };
 
         debugger.setWindowPosition(windowPosition);
-        console.getScriptThread().setWindowPosition(windowPosition);
+        console.setWindowPosition(windowPosition);
 
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, debugPane);
         splitPane.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -1204,6 +1206,10 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         showTestResultsTab(testResult, pageId);
     }
 
+    private void resetConsole() {
+        console.reset();
+    }
+
     class NewAction extends AbstractAction {
         public NewAction() {
             super("New File");
@@ -1344,6 +1350,17 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
 
         public void actionPerformed(ActionEvent ev) {
             closeAllTabsAndExit();
+        }
+    }
+
+    private class ResetConsoleAction extends AbstractAction {
+        public ResetConsoleAction() {
+            super("Reset Console");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            resetConsole();
         }
     }
 

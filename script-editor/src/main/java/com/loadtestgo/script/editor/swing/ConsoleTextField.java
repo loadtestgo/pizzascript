@@ -14,11 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConsoleTextField extends RSyntaxTextArea implements KeyListener {
-    private JavaScriptEngine engine;
+    private CommandExecutor commandExecutor;
     private java.util.List<String> history;
     private int historyIndex = -1;
     private String lineWas;
-    private ConsoleScriptThread scriptThread;
     private boolean bContinueReading = false;
     private int startLine = 0;
     private String partialLine = "";
@@ -29,7 +28,15 @@ public class ConsoleTextField extends RSyntaxTextArea implements KeyListener {
     private JScrollPane scrollPane;
     private JPanel resizeParent;
 
-    public ConsoleTextField(ConsoleScriptThread scriptThread,
+    interface CommandExecutor {
+        boolean stringIsCompilableUnit(String partialLine);
+
+        void evalSource(int i, String partialLine);
+
+        void tabComplete(String source, int pos);
+    }
+
+    public ConsoleTextField(CommandExecutor commandExecutor,
                             ConsoleTextArea textArea,
                             JLabel promptText)
     {
@@ -39,10 +46,9 @@ public class ConsoleTextField extends RSyntaxTextArea implements KeyListener {
         discardAllEdits();
         setFont(EditorSettings.getCodeFont());
 
-        this.engine = scriptThread.getJavaScriptEngine();
         this.history = new ArrayList<>();
         this.lineWas = "";
-        this.scriptThread = scriptThread;
+        this.commandExecutor = commandExecutor;
         this.promptText = promptText;
         this.textArea = textArea;
         addKeyListener(this);
@@ -151,9 +157,9 @@ public class ConsoleTextField extends RSyntaxTextArea implements KeyListener {
         int lineNo = history.size() + 1;
         partialLine = partialLine + input + "\n";
 
-        bContinueReading = !engine.stringIsCompilableUnit(partialLine);
+        bContinueReading = !commandExecutor.stringIsCompilableUnit(partialLine);
         if (!bContinueReading) {
-            scriptThread.evalSource(startLine + 1, partialLine);
+            commandExecutor.evalSource(startLine + 1, partialLine);
             startLine = lineNo;
             partialLine = "";
         }
@@ -192,7 +198,7 @@ public class ConsoleTextField extends RSyntaxTextArea implements KeyListener {
     }
 
     private void tabComplete(String source, int pos) {
-        scriptThread.tabComplete(source, pos);
+        commandExecutor.tabComplete(source, pos);
     }
 
     public boolean autoComplete(String source, int completionStartPos, int insertPos, String completion) {
