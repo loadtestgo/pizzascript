@@ -278,7 +278,10 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
     }
 
     public void setWindowPosition(EditorTestContext.WindowPosition windowPosition) {
-        this.windowPosition = windowPosition;
+        synchronized (resetScriptThreadLock) {
+            this.windowPosition = windowPosition;
+            scriptThread.setWindowPosition(windowPosition);
+        }
     }
 
     private class CommandExecutor implements ConsoleTextField.CommandExecutor {
