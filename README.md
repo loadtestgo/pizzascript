@@ -43,6 +43,9 @@ Run a script from the console and save a HAR (HTTP Archive) file:
 
 The editor will search the path for Chrome, along with well-known locations.  You can specify the location of Chrome in the settings.ini file included in the top level directory of the zip (this is read from the current working directory when the editor is loaded) 
 
+The editor has been tested on Linux, OSX and Windows.
+
+
 ## Examples
 
 To give you a flavour for the API here are some scripts.  The full API is documented [here](http://docs.loadtestgo.com).
