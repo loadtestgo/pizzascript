@@ -22,17 +22,16 @@ It includes a script editor, with a REPL and debugger for interactively writing 
 - Emulate network conditions (e.g. 3G/4G/Offline)
 - Record WebSocket request/responses
 
+![PizzaScript Editor](script-editor/script-record.gif)
 
 ## Try It!
 
-First install the following:
+First make sure the following are installed.
 
 + Chrome 40+
 + Java 8 JRE
 
-Download the latest [Script Editor](https://github.com/loadtestgo/pizzascript/files/365310/script-editor-0.2.4.zip) release.
-
-![PizzaScript Editor](script-editor/script-record.gif)
+Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/files/365310/script-editor-0.2.4.zip) release.
 
 Open the IDE:
 
@@ -42,8 +41,12 @@ Run a script from the console and save a HAR (HTTP Archive) file:
 
     bin/script-editor -console samples/google.js -har
 
+The editor will search the path for Chrome, along with well-known locations.  You can specify the location of Chrome in the settings.ini file included in the top level directory of the zip (this is read from the current working directory when the editor is loaded) 
 
 ## Examples
+
+To give you a flavour for the API here are some scripts.  The full API is documented [here](http://docs.loadtestgo.com).
+
 
 ### Load Page
 
