@@ -3,6 +3,7 @@ package com.loadtestgo.script.tester.framework;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.engine.EasyTestContext;
 import com.loadtestgo.script.engine.JavaScriptEngine;
+import com.loadtestgo.script.engine.ScriptException;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,6 +40,8 @@ public class JavaScriptTest extends BaseTest {
         javaScriptEngine.init(testContext);
         try {
             javaScriptEngine.runScript(script, test.getMethodName(), timeout);
+        } catch (ScriptException se) {
+            // The exception is captured in TestResults
         } finally {
             javaScriptEngine.finish();
         }

@@ -268,11 +268,11 @@ public class JavaScriptEngine {
         }
     }
 
-    public Object runScript(String script, String filename) {
+    public Object runScript(String script, String filename) throws ScriptException {
         return runScript(script, filename, 0);
     }
 
-    public Object runScript(String script, String filename, long timeout) {
+    public Object runScript(String script, String filename, long timeout) throws ScriptException {
         TestResult result = testContext.getTestResult();
 
         Timer timer = null;
@@ -293,8 +293,7 @@ public class JavaScriptEngine {
                 se.setErrorType(ErrorType.Timeout);
             }
             se.populateResult(result);
-            Logger.info("Error while processing task \"{}\": {}", filename, se.getMessage());
-            return se;
+            throw se;
         } finally {
             long now = System.currentTimeMillis();
             result.setRunTime((int)(now - result.getStartTime().getTime()));

@@ -3,6 +3,7 @@ package com.loadtestgo.util;
 import org.pmw.tinylog.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -70,10 +71,15 @@ public class Settings {
             }
 
             try {
-                Logger.info("Loading settings from {}", settingsFile.getAbsolutePath());
                 iniFile.load(settingsFile);
+                Logger.info("Loaded settings from {}", settingsFile.getAbsolutePath());
             } catch (IOException e) {
-                Logger.info("Unable to read settings file");
+                String msg = e.getMessage();
+                if (e instanceof FileNotFoundException) {
+                    msg = "no such file";
+                }
+                Logger.info("Unable to read settings file '{}', {}", settingsFile.getAbsolutePath(), msg);
+                Logger.info("Using default settings...");
             }
             iniFile.printSettings();
         }

@@ -7,12 +7,15 @@ import com.loadtestgo.util.FileUtils;
 import com.loadtestgo.util.Os;
 import com.loadtestgo.util.Settings;
 import com.loadtestgo.util.StringUtils;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import jline.console.ConsoleReader;
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -125,6 +128,8 @@ public class PizzaScript {
     }
 
     public static void main(String[] args) {
+        boolean success = true;
+
         processArgs(args);
 
         // Make sure the settings are loaded from the current directory
@@ -154,9 +159,9 @@ public class PizzaScript {
             registerExitFunction(engine);
 
             if (fileName != null) {
-                processFile(fileName, engine);
+                success = processFile(fileName, engine);
             } else {
-                interactiveMode(engine);
+                success = interactiveMode(engine);
             }
 
             engine.finish();
@@ -175,9 +180,11 @@ public class PizzaScript {
                 }
             }
         }
+
+        System.exit(success ? 0 : 1);
     }
 
-    private static void interactiveMode(JavaScriptEngine engine) {
+    private static boolean interactiveMode(JavaScriptEngine engine) {
         try {
             ConsoleReader reader = new ConsoleReader();
             reader.setPrompt(PromptNewLine);
@@ -222,20 +229,31 @@ public class PizzaScript {
                 }
                 reader.setPrompt(prompt);
             }
+            return true;
         } catch (IOException e) {
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            return false;
         }
     }
 
-    private static void processFile(String filename, JavaScriptEngine engine) {
+    private static boolean processFile(String filename, JavaScriptEngine engine) {
         try {
-            Object result = engine.runScript(FileUtils.readAllText(filename), filename);
+            File scriptFile  = new File(filename);
+            if (!scriptFile.exists()) {
+                throw new FileNotFoundException("Unable to find file '" + filename + "'");
+            }
+            String scriptContexts = FileUtils.readAllText(filename);
+            if (scriptContexts == null) {
+                throw new IOException("Error reading '" + filename + "'");
+            }
+            Object result = engine.runScript(scriptContexts, filename);
             if (result != null) {
                 System.out.println(engine.valueToString(result));
             }
-        } catch (ScriptException se) {
-            System.out.println(se.getMessage());
-            interactiveMode(engine);
+            return true;
+        } catch (IOException|ScriptException e) {
+            System.err.println(e.getMessage());
+            return false;
         }
     }
 
