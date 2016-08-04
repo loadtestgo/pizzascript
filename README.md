@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)](https://travis-ci.org/loadtestgo/pizzascript)
 [![License](https://img.shields.io/badge/licence-BSD--3--Clause-blue.svg)](https://github.com/loadtestgo/pizzascript/blob/master/LICENSE.BSD)
 
-#### [Homepage](http://pizzascript.org) | [API Reference](http://docs.loadtestgo.com)
+#### [Homepage](http://pizzascript.org) | [API Reference](http://pizzascript.org/docs)
 
 # PizzaScript - Browser Automation & Performance Monitoring
 
@@ -48,7 +48,7 @@ The editor has been tested on Linux, OSX and Windows.
 
 ## Examples
 
-To give you a flavour for the API here are some scripts.  The full API is documented [here](http://docs.loadtestgo.com).
+To give you a flavour for the API here are some scripts.  The full API is documented [here](http://pizzascript.org/docs).
 
 
 ### Load Page
