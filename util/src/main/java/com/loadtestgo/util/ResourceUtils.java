@@ -1,7 +1,6 @@
 package com.loadtestgo.util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import sun.net.www.protocol.file.FileURLConnection;
 
 import java.io.File;

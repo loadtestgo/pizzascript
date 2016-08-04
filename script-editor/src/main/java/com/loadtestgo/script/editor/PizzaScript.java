@@ -7,10 +7,7 @@ import com.loadtestgo.util.FileUtils;
 import com.loadtestgo.util.Os;
 import com.loadtestgo.util.Settings;
 import com.loadtestgo.util.StringUtils;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import jline.console.ConsoleReader;
-import org.pmw.tinylog.Configurator;
-import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
