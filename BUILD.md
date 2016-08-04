@@ -61,6 +61,6 @@ To generate a release build:
 
 JSDocs is used to generate the docs.
 
-    npm install jsdoc3
+    npm install jsdoc
     npm install https://github.com/hegemonic/baseline/tarball/master
     gradle docs

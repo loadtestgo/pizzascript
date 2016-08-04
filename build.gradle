@@ -20,7 +20,7 @@ subprojects {
 
     jar {
         manifest {
-            attributes 'Implementation-Title': 'LoadTestGo', 'Implementation-Version': version
+            attributes 'Implementation-Title': 'PizzaScript', 'Implementation-Version': version
         }
     }
 
@@ -152,10 +152,10 @@ task docs(dependsOn:baseDocs) << {
   tree.include "*.html"
   tree.each { File file ->
     String contents = file.getText( 'UTF-8' )
-    contents = contents.replaceAll('<title>Home</title>', '<title>LoadTestGo | PizzaScript Browser Automation API</title>' )
-    contents = contents.replaceAll('<title>Module:', '<title>LoadTestGo | PizzaScript |' )
-    contents = contents.replaceAll('href="index.html"', 'href="https://loadtestgo.com"')
-    contents = contents.replaceAll('Home</a>', 'LoadTestGo</a><a class="jsdoc-navbar-package-name" href="index.html">PizzaScript</a>')
+    contents = contents.replaceAll('<title>Home</title>', '<title>PizzaScript Browser Automation API</title>' )
+    contents = contents.replaceAll('<title>Module:', '<title>PizzaScript |' )
+    contents = contents.replaceAll('href="index.html"', 'href="http://pizzascript.org"')
+    contents = contents.replaceAll('Home</a>', 'PizzaScript</a><a class="jsdoc-navbar-package-name" href="index.html">Index</a>')
     contents = contents.replaceAll('<span class="label label-kind">module</span>', '')
 
     file.write( contents, 'UTF-8' )
