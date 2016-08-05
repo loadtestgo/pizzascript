@@ -125,8 +125,6 @@ public class PizzaScript {
     }
 
     public static void main(String[] args) {
-        boolean success = true;
-
         processArgs(args);
 
         // Make sure the settings are loaded from the current directory
@@ -150,6 +148,8 @@ public class PizzaScript {
                 editor.openFile(fileName);
             }
         } else {
+            boolean success = true;
+
             EasyTestContext testContext = new EasyTestContext();
             JavaScriptEngine engine = new JavaScriptEngine();
             engine.init(testContext);
@@ -176,9 +176,9 @@ public class PizzaScript {
                     System.out.println(String.format("Unable to save har file: %s", e.getMessage()));
                 }
             }
-        }
 
-        System.exit(success ? 0 : 1);
+            System.exit(success ? 0 : 1);
+        }
     }
 
     private static boolean interactiveMode(JavaScriptEngine engine) {

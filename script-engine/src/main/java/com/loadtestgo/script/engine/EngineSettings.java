@@ -39,6 +39,10 @@ public class EngineSettings extends Settings {
         return location;
     }
 
+    /**
+     * Min supported Chrome version.  Not actually tested yet!  Note this is a hard don't run,
+     * and not an informational message.
+     */
     static public int getChromeMinVersion() {
         return 32;
     }

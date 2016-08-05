@@ -16,7 +16,7 @@ import java.io.IOException;
  *     {
  *         String msg = settings().getString("config.message");
  *         if (msg == null) {
- *            return "defaultMsg""
+ *            return "defaultMsg";
  *         } else {
  *            return msg;
  *         }
@@ -29,8 +29,7 @@ public class Settings {
     protected static String tmpDir;
     protected static File settingsFile;
 
-    public static String getRootDir()
-    {
+    public static String getRootDir() {
         if (rootDir == null) {
             rootDir = System.getProperty("user.dir");
         }
