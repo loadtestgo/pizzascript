@@ -2699,3 +2699,30 @@ console = {};
  * @param {...Object} o The objects to print
  */
 console.log = function(o) {};
+
+/**
+ * Loads a JavaScript file from the local file system and runs it.
+ *
+ * The file is loaded at the same scope so any function or variables
+ * defined in will be available from the calling script.
+ *
+ * If the script is running sandboxed, the file must be specified as one of the
+ * files used by the script.
+ *
+ * @example
+ * // load 'foo.js' from the local file system.
+ * load("foo.js"); // If 'foo.js' contains just 'x = "hello"', then the following will
+ * console.log(x); // display the string 'hello'
+ *
+ * @example
+ * // load 'bar.js' from the local file system.
+ * load("bar.js"); // If 'bar.js' contains:
+ *                 //   function x() {
+ *                 //     console.log("hello");
+ *                 //   }
+ * x();            // then the function x() can be called
+ *
+ * @param file {String} the file to load
+ * @exports load
+ */
+load = function(file) {};

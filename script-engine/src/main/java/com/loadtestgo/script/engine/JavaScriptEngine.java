@@ -21,7 +21,7 @@ public class JavaScriptEngine {
 
     private TestContext testContext;
     private Context context;
-    private Scriptable scope;
+    private ScriptableObject scope;
     private Console console;
     private ConsoleNotifier consoleNotifier;
 
@@ -48,7 +48,8 @@ public class JavaScriptEngine {
         contextFactory.setSandboxed(testContext.sandboxJavaScript());
 
         context = contextFactory.enterContext();
-        scope = context.initStandardObjects();
+        JsRuntimeSupport runtimeSupport = new JsRuntimeSupport(testContext);
+        scope = context.initStandardObjects(runtimeSupport, false);
 
         // Remove access to standard Java classes.
         if (testContext.sandboxJavaScript()) {
@@ -96,6 +97,8 @@ public class JavaScriptEngine {
 
         Object utilsObj = Context.javaToJS(new UtilsImpl(), scope);
         ScriptableObject.putProperty(scope, "utils", utilsObj);
+
+        runtimeSupport.register(scope);
 
         ScriptableObject.putProperty(scope, "Key", defineStaticClass(Key.class));
     }
