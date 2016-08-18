@@ -56,7 +56,9 @@ public class CodeModel {
     }
 
     public SourceFile getSourceFile(String filePath) {
-        return sourceFiles.get(filePath);
+        synchronized (sourceFiles) {
+            return sourceFiles.get(filePath);
+        }
     }
 
     private String getFilePath(DebuggableScript debuggableScript) {
@@ -68,7 +70,7 @@ public class CodeModel {
         // Not to produce window for eval from different lines,
         // strip line numbers, i.e. replace all #[0-9]+\(eval\) by
         // (eval)
-        // Option: similar teatment for Function?
+        // Option: similar treatment for Function?
         char evalSeparator = '#';
         StringBuffer sb = null;
         int urlLength = filePath.length();

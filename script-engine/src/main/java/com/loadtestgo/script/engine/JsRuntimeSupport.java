@@ -1,11 +1,12 @@
 package com.loadtestgo.script.engine;
 
-import com.loadtestgo.script.engine.internal.api.CSVImpl;
 import org.mozilla.javascript.*;
 import org.pmw.tinylog.Logger;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 public class JsRuntimeSupport extends ScriptableObject {
     private TestContext testContext;
@@ -19,23 +20,27 @@ public class JsRuntimeSupport extends ScriptableObject {
         return "top";
     }
 
-    public static Object importFunc(Context cx, Scriptable thisObj, Object[] args, Function notUsed) {
+    public static Object load(Context cx, Scriptable thisObj, Object[] args, Function notUsed) {
         Scriptable newScope = cx.newObject(thisObj);
         newScope.setPrototype(null);
         newScope.setParentScope(thisObj);
 
         if (args.length < 1) {
-            throw new ScriptException("import() filename not specified");
+            throw new ScriptException("load() filename not specified");
         }
 
         String origFilename = Context.toString(args[0]);
         String filename = origFilename;
 
         JsRuntimeSupport dis = (JsRuntimeSupport) getTopLevelScope(thisObj);
-        File file = dis.testContext.getFile(origFilename );
+        File file = dis.testContext.getFile(origFilename);
 
         if (!dis.testContext.getIsFileSystemSandboxed()) {
-            filename = file.getAbsolutePath();
+            try {
+                filename = file.getCanonicalPath();
+            } catch (IOException e) {
+                throw new ScriptException("Unable to find file '" + filename + "'");
+            }
         }
 
         if (!file.exists()) {
@@ -45,7 +50,7 @@ public class JsRuntimeSupport extends ScriptableObject {
         Logger.info("Loading file " + filename + "...");
 
         try {
-            return cx.evaluateReader(newScope, new InputStreamReader(new FileInputStream(file)), filename, 1, null);
+            return cx.evaluateReader(newScope, new InputStreamReader(new FileInputStream(filename)), filename, 1, null);
         } catch (IOException e) {
             if (dis.testContext.getIsFileSystemSandboxed()) {
                 throw new ScriptException(e.getMessage());
@@ -58,11 +63,13 @@ public class JsRuntimeSupport extends ScriptableObject {
     public void register(ScriptableObject scope) {
         Class<?> clazz = getClass();
 
+        List<String> methodsToExpose = Arrays.asList("load");
+
         Method[] methods = clazz.getMethods();
         for (Method method : methods) {
-            if (method.getName().equals("importFunc")) {
-                FunctionObject func = new FunctionObject("import", method, scope);
-                ScriptableObject.putProperty(scope, "import", func);
+            if (methodsToExpose.contains(method.getName())) {
+                FunctionObject func = new FunctionObject(method.getName(), method, scope);
+                ScriptableObject.putProperty(scope, method.getName(), func);
             }
         }
     }

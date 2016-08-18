@@ -95,6 +95,9 @@ public class Debugger {
         debuggerExecution.setWindowPosition(windowPosition);
     }
 
+    public void setSourceFileLookup(SourceFileLookup sourceFileLookup) {
+    }
+
     public void setGuiCallback(DebuggerCallbacks callback) {
         this.callback = callback;
     }
@@ -695,6 +698,18 @@ public class Debugger {
                         firstLine = line;
                     }
                 }
+            }
+
+            SourceFile file = null;
+            String sourceName = fnOrScript.getSourceName();
+            if (sourceName == null || sourceName.equals(this.file.getFilePath())) {
+                file = this.file;
+            } else {
+                file = getSourceFile(sourceName);
+            }
+
+            if (file == null) {
+                file = this.file;
             }
 
             return new FunctionSource(file, firstLine, fnOrScript.getFunctionName());

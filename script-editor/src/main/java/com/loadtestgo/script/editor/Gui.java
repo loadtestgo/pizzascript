@@ -29,6 +29,6 @@ public class Gui {
     }
 
     public void openFile(String fileName) {
-        mainWindow.openFile(fileName);
+        mainWindow.openFile(fileName, false);
     }
 }

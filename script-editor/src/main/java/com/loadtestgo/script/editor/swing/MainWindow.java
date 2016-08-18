@@ -545,15 +545,19 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         }
     }
 
-    public void showFilePanel(String fileName, int lineNumber) {
+    public void showFilePanel(String fileName, int lineNumber, boolean showDebugFrame) {
         FilePanel filePanel = getFilePanel(fileName);
         if (filePanel == null) {
             SourceFile sourceFile = debugger.getSourceFile(fileName);
-            createFilePanel(sourceFile);
-            filePanel = getFilePanel(fileName);
+            if (sourceFile != null) {
+                filePanel = createFilePanel(sourceFile, showDebugFrame);
+            } else {
+                filePanel = openFile(fileName, showDebugFrame);
+            }
         }
 
         filePanel.setDefaultFocus();
+
         showFilePanel(filePanel);
 
         if (lineNumber > 0) {
@@ -565,14 +569,16 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         tabbedPane.setSelectedComponent(panel);
     }
 
-    private void createFilePanel(SourceFile sourceFile) {
+    private FilePanel createFilePanel(SourceFile sourceFile, boolean showDebugFrame) {
         String filePath = sourceFile.getFilePath();
         FilePanel panel = new FilePanel(this, codeModel, sourceFile);
+        panel.setShowDebugFrame(showDebugFrame);
         fileTabs.put(filePath, panel);
         addClosableTab(tabbedPane, panel);
         addFileToMenu(panel);
         tabbedPane.setSelectedComponent(panel);
         updateTabState();
+        return panel;
     }
 
     private void addFileToMenu(FilePanel filePanel) {
@@ -597,6 +603,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
 
     private void closeFileTab(FilePanel filePanel) {
         fileTabs.remove(filePanel.getFilePath());
+        filePanel.getSourceFile().clearBreakpoints();
         closeTab(filePanel);
     }
 
@@ -822,7 +829,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         }
     }
 
-    public void openFile(String filePath) {
+    public FilePanel openFile(String filePath, boolean showDebugPane) {
         String source;
         try {
             Reader r = new FileReader(filePath);
@@ -834,12 +841,13 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             SourceFile sourceFile = codeModel.newFile(source, filePath);
             sourceFile.setNewFile(false);
             sourceFile.setIsModified(false);
-            createFilePanel(sourceFile);
+            return createFilePanel(sourceFile, showDebugPane);
         } catch (IOException ex) {
             MessageDialog.show(MainWindow.this,
                     ex.getMessage(),
                     "Error reading " + filePath,
                     JOptionPane.ERROR_MESSAGE);
+            return null;
         }
     }
 
@@ -856,7 +864,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             String.format("unnamed%s.js", newFileIndex++));
         sourceFile.setNewFile(true);
         sourceFile.setIsModified(true); // It's not saved, so mark it to be saved
-        createFilePanel(sourceFile);
+        createFilePanel(sourceFile, false);
     }
 
     public void enterInterrupt(Debugger.StackFrame lastFrame, Throwable exception) {
@@ -936,7 +944,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         out.logError(String.format("Error: %s", throwable.getMessage()));
 
         if (se != null) {
-            showFilePanel(se.getFile(), se.getLine());
+            showFilePanel(se.getFile(), se.getLine(), true);
 
             if (se.getJSStackTrace() != null) {
                 out.logError(se.prettyJSStackTrace());
@@ -1246,7 +1254,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         public void actionPerformed(ActionEvent ev) {
             String filePath = chooseFile("Select a file to open", FileDialog.LOAD);
             if (filePath != null) {
-                openFile(filePath);
+                openFile(filePath, false);
             }
         }
     }

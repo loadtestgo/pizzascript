@@ -237,4 +237,10 @@ public class SourceFile {
             }
         }
     }
+
+    public void clearBreakpoints() {
+        synchronized (breakpoints) {
+            breakpoints.clear();
+        }
+    }
 }

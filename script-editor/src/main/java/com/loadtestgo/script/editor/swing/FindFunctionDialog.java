@@ -110,7 +110,7 @@ class FindFunctionDialog extends CustomDialog implements ActionListener {
             if (item != null) {
                 SourceFile sourceFile = item.sourceFile();
                 String filePath = sourceFile.getFilePath();
-                mainWindow.showFilePanel(filePath, item.firstLine());
+                mainWindow.showFilePanel(filePath, item.firstLine(), false);
             }
         }
     }
