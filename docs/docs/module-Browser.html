@@ -1,0 +1,6492 @@
+<!doctype html>
+<html>
+        <head>
+                <meta name="generator" content="JSDoc 3.4.0">
+                <meta charset="utf-8">
+                <title>PizzaScript | Browser</title>
+                <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
+                <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
+                <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
+                <link href="css/baseline.css" rel="stylesheet">
+        </head>
+        <body onload="prettyPrint()">
+                <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
+    <div id="jsdoc-navbar-container">
+        <div id="jsdoc-navbar-content">
+            <a href="http://pizzascript.org" class="jsdoc-navbar-package-name">PizzaScript</a><a class="jsdoc-navbar-package-name" href="index.html">Index</a>
+        </div>
+    </div>
+</nav>
+
+                <div id="jsdoc-body-container">
+                        <div id="jsdoc-content">
+                                <div id="jsdoc-content-container">
+                                        <div id="jsdoc-main" role="main">
+                    <header class="page-header">
+<div class="symbol-detail-labels"></div><h1><small></small><span class="symbol-name">Browser</span></h1>        <p class="source-link">Source: <a href="docs.js.html#source-line-464">docs.<wbr>js:464</a></p>
+                <div class="symbol-description">
+                        <p>Browser Automation</p>
+<h3>Element Selectors</h3><p>   Many functions here take selector strings to identify elements.  These selectors
+   are just like CSS selectors but with a few minor additions to make them more
+   convenient for website automation.</p>
+<p>   Additions to CSS selectors:</p>
+<ul>
+<li><p>contains()</p>
+<p> Select only elements containing the given text.  This can be at the end of a selector
+ or in the middle.  The selection is case sensitive.</p>
+<p>Select the set of links containing 'Search':</p>
+<pre class="prettyprint source"><code>a:contains(Search)</code></pre></li>
+<li><p>icontains()</p>
+<p>Case insensitive version of :contains().</p>
+<p>Select the set of links containing 'Search' or 'search' or 'SEARCH':</p>
+<pre class="prettyprint source"><code>a:icontains(Search)</code></pre></li>
+<li><p>nth()/eq()</p>
+<p>Select the elements at the given index.  This can be at the end of a selector or
+in the middle.</p>
+<p>Select the 3rd 'a' element:</p>
+<pre class="prettyprint source"><code>a:nth(2)
+a:eq(2)</code></pre><p>From the set of links containing 'Search', select the 3rd one.</p>
+<pre class="prettyprint source"><code>a:contains(Search):nth(2)
+a:contains(Search):eq(2)</code></pre><p>From the set of 'a' element, select the 3rd one if it contains the string 'Search'.</p>
+<pre class="prettyprint source"><code>a:nth(2):contains(Search)
+a:eq(2):contains(Search)</code></pre></li>
+<li><p>Numeric ids are allowed</p>
+<p>E.g.</p>
+<pre class="prettyprint source"><code>#0</code></pre><p>or:</p>
+<pre class="prettyprint source"><code>#0_0_0</code></pre></li>
+<li><p>XPath</p>
+<p>Selectors starting with 'xpath:' or just '//' will do XPath matching instead of CSS selector
+matching.  Here are some examples&quot;</p>
+<p>Any div element in the document:</p>
+<pre class="prettyprint source"><code>//div
+xpath://div</code></pre><p>Any div element containing a paragraph element:</p>
+<pre class="prettyprint source"><code>//div/p
+xpath://div/p</code></pre><p>The div element with the id 'div1':</p>
+<pre class="prettyprint source"><code>//div[@id=\'div1\']
+xpath://div[@id=\'div1\']</code></pre><p>A div element with the class 'class1':</p>
+<pre class="prettyprint source"><code>//div[@class=\'class1\']
+xpath://div[@class=\'class1\']</code></pre><p>Any button with the text 'Button1':</p>
+<pre class="prettyprint source"><code>//button[text()=\'Button1\']
+xpath://button[text()=\'Button1\']</code></pre></li>
+</ul>
+<h3>Frames, Tabs and Window selections</h3><p>   Frames can be queried and selected.  By default only elements within the top frame
+   are scoped for access.  To interact with elements in a sub frame, select the right
+   frame using <a href="module-Browser.html#selectFrame">module:Browser#selectFrame</a>.</p>
+<p>   The concept of windows does not exists, instead all tabs for all windows are listed.
+   We might break this out in future but for our purposes it doesn't matter if a tab
+   is really a new window or not.</p>
+<h3>Note</h3><p>   It's also important to be aware that while your script is executing the browser is
+   going about its business: loading the page, executing JavaScript, building the DOM,
+   animating elements, etc.  As such elements can appear/disappear, become visible/
+   invisible potentially even after the page has loaded.  Any script you write will
+   have to keep this in mind.  For example it is possible to wait for an element to be
+   visible in the DOM, but then when you try to click on the element it is gone again.
+   In those cases you may need to wait in a loop, catch click failures and try again.
+   We may add some kind of automatic wait for the item to be visible in future.</p>
+
+                </div>
+            
+        <dl class="dl-compact">
+            
+            
+            
+        </dl>
+</header>
+
+
+    <section id="summary">
+                
+
+                
+
+                
+
+                
+
+                
+
+                    <div class="summary-callout">
+            <h2 class="summary-callout-heading">Methods</h2>
+        <div class="summary-content">
+                    <div class="summary-column">
+        <dl class="dl-summary-callout">
+                <dt><a href="module-Browser.html#back">back()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#block3rdPartyUrls">block3rdPartyUrls()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#blockUrl">blockUrl(.<wbr>.<wbr>.<wbr>url)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#check">check(selector[, on])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#clear">clear(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#clearCache">clearCache()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#clearCookies">clearCookies()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#clearHighlight">clearHighlight()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#clearPageLoad">clearPageLoad()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#clearRules">clearRules()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#click">click(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#clickAt">clickAt(selector, x, y)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#close">close()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#dismissDialogs">dismissDialogs()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#doubleClick">doubleClick(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#doubleClickAt">doubleClickAt(selector, x, y)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#emulateDevice">emulateDevice(name)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#emulateNetworkCondition">emulateNetworkCondition(name)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#execute">execute(script)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#exists">exists(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#focus">focus(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#forward">forward()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getBrowserName">getBrowserName()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getBrowserVersion">getBrowserVersion()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getCookie">getCookie(name)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getCookie">getCookie(url, name)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getInnerHTML">getInnerHTML(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getInnerText">getInnerText(selector)</a></dt>
+                <dd>
+                </dd>
+        </dl>
+</div>
+
+                    <div class="summary-column">
+        <dl class="dl-summary-callout">
+                <dt><a href="module-Browser.html#getOpenDialog">getOpenDialog()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getTitle">getTitle()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getUrl">getUrl()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getValue">getValue(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#handleDialog">handleDialog(val)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#highlight">highlight(selector[, color])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#hover">hover(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#hoverAt">hoverAt(selector, x, y)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#ignoreHttpErrors">ignoreHttpErrors([ignore])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#isDialogOpen">isDialogOpen()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#isVisible">isVisible(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#jq">jq(script)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#listAllFrames">listAllFrames()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#listCookies">listCookies()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#listDevices">listDevices()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#listFrames">listFrames([selector])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#listNetworkConditions">listNetworkConditions()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#listTabs">listTabs()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#newPage">newPage([pageName])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#newTab">newTab()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#open">open(url)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#openAsync">openAsync(url)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#query">query(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#queryVisible">queryVisible(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#reload">reload()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#removeCookie">removeCookie(name)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#removeCookie">removeCookie(url, name)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#removeHeader">removeHeader(header)</a></dt>
+                <dd>
+                </dd>
+        </dl>
+</div>
+
+                    <div class="summary-column">
+        <dl class="dl-summary-callout">
+                <dt><a href="module-Browser.html#rewriteUrl">rewriteUrl(url, rewriteUrl)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#screenshot">screenshot([format][, quality])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#select">select(selector, value)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#selectContent">selectContent(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#selectFrame">selectFrame(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#selectFrameCss">selectFrameCss(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#selectLatestTab">selectLatestTab()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#selectMainTab">selectMainTab()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#selectTab">selectTab(obj)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#selectTopFrame">selectTopFrame()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#setCookie">setCookie(name, value[, details])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#setCredentials">setCredentials(username, password)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#setHeader">setHeader(name, value)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#setUserAgent">setUserAgent(userAgent)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#setValue">setValue(selector, value)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#submit">submit(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#type">type(selector, .<wbr>.<wbr>.<wbr>text)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#verifyExists">verifyExists(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#verifyNotExists">verifyNotExists(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#verifyNotText">verifyNotText(text)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#verifyRequest">verifyRequest(url)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#verifyText">verifyText(text)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#verifyTitle">verifyTitle(title)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitForElement">waitForElement(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitForHttpRequests">waitForHttpRequests(idleTimeMS)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitForText">waitForText(selector, text)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitForVisible">waitForVisible(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitPageLoad">waitPageLoad([timeoutMS])</a></dt>
+                <dd>
+                </dd>
+        </dl>
+</div>
+
+        </div>
+    </div>
+
+
+                
+
+                
+    </section>
+
+
+
+
+
+            <section>
+            
+
+            
+
+            
+
+            
+
+                <h2>Methods</h2>
+    <section>
+                <h3 id="back"><span class="symbol-name">back</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Go back to the previous page.</p>
+<p>4xx and 5xx responses on the main document trigger a failure after the page
+has loaded.</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#ignoreHttpErrors">module:Browser#ignoreHttpErrors</a></dd>
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
+main document.</p></dd>
+
+        
+    </dl>
+
+                <h3 id="block3rdPartyUrls"><span class="symbol-name">block3rdPartyUrls</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Block requests to known third party URLs</p>
+<p>These include analytics, tracking, advertising and RUM beacons.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+// Block known 3rd party beacons and adverts
+b.block3rdPartyUrls();
+b.open(&quot;www.mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#blockUrl">module:Browser#blockUrl</a></dd>
+        <dd><a href="module-Browser.html#clearRules">module:Browser#clearRules</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="blockUrl"><span class="symbol-name">blockUrl</span><span class="signature"><span class="signature-params">(...url)</span></span></h3>
+        <p>Block requests to the given URL(s)</p>
+<p>Accepts wildcards in each URL, but URL must be of the form:</p>
+<p>&quot;protocol://host/path&quot;</p>
+<p>The protocol, site and path parts can wildcarded partially or fully.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+// Block any URLs from ad.doubleclick.net
+// This will actually block any URL with &#x27;ad.doubleclick.net&#x27; as part of the URL
+b.blockUrl(&quot;*://ad.doubleclick.net/*&quot;);
+b.open(&quot;www.mysite.com&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Block any URLs from any doubleclick.net subdomain
+b.blockUrl(&quot;*://*.doubleclick.net/*&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The string to match against</p>
+                <p>Value can be repeated.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#clearRules">module:Browser#clearRules</a></dd>
+        <dd><a href="module-Browser.html#block3rdPartyUrls">module:Browser#block3rdPartyUrls</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="check"><span class="symbol-name">check</span><span class="signature"><span class="signature-params">(selector[, on])</span></span></h3>
+        <p>Check the a checkbox matching the given selector</p>
+<p>By default this function will check the checkbox.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Check the checkbox with id &#x27;checkBox1&#x27;
+b.check(&quot;#checkBox1&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the checkbox element to check</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>on</p>
+        </td>
+        <td>
+                <p>Boolean</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>Check on/true(default) or off/false.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="clear"><span class="symbol-name">clear</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Clear the input element text matching the given selector</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Clear the text in an input element with id &#x27;id1&#x27;
+b.clear(&quot;#id1&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Clear the text in an input element with id &#x27;id1&#x27;
+b.clear(&quot;#input1&quot;);
+b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to type text into</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="clearCache"><span class="symbol-name">clearCache</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Clear the browser cache</p>
+<p>Clears both the disk cache and the in memory cache.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Load one page
+var b &#x3D; pizza.open();
+b.open(&quot;www.mysite.com/page1&quot;);
+// Now load another page on the same site, but clear the cache first
+b.clearCache();
+b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="clearCookies"><span class="symbol-name">clearCookies</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Clear all browser cookies</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Load one page
+var b &#x3D; pizza.open();
+b.open(&quot;www.mysite.com/page1&quot;);
+// Now load another page on the same site, but clear the cookies first
+b.clearCookies();
+b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="clearHighlight"><span class="symbol-name">clearHighlight</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Clears the highlight</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.clearHighlight();</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="clearPageLoad"><span class="symbol-name">clearPageLoad</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Forget any page loads that happened before this function, used in conjunction
+with waitPageLoad().</p>
+<p>Normally you should call this before doing something that triggers a new page
+to load.  That way when waitPageLoad() is called you know that waitPageLoad()
+waits on the new page to load, and does not just detect some previous page load.</p>
+<p>Since JavaScript executing on the page can change the URL at any time, it's not
+a sure fire way of making waitPageLoad() wait on the right page load.  You can
+call the version of waitPageLoad() that waits for a specific URL to load, if this
+is an issue.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.openAsync(&quot;www.mysite.com&quot;);
+b.waitForVisible(&quot;#button1&quot;);
+b.clearPageLoad();
+b.click(&quot;#button1&quot;);
+b.waitPageLoad();</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#waitPageLoad">module:Browser#waitPageLoad</a></dd>
+        <dd><a href="module-Browser.html#openAsync">module:Browser#openAsync</a></dd>
+        <dd><a href="module-Browser.html#click">module:Browser#click</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="clearRules"><span class="symbol-name">clearRules</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Clears all URL block and rewrite rules.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Open site with ads blocked, and then without ads blocked
+var b &#x3D; pizza.open();
+b.blockUrl(&quot;ad.doubleclick.net&quot;);
+b.open(&quot;www.mysite.com&quot;);
+// Remove the rule to block ads
+b.clearRules();
+b.open(&quot;www.mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#rewriteUrl">module:Browser#rewriteUrl</a></dd>
+        <dd><a href="module-Browser.html#blockUrl">module:Browser#blockUrl</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="click"><span class="symbol-name">click</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Click the first item matching the given selector.</p>
+<p>If this click() navigates to a new page, call waitPageLoad() to
+wait for the new page to load.  If the page is opened in a new
+tab then you need to select the new tab before waiting.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Click an element with id &#x27;search&#x27;
+b.click(&quot;#search&quot;);
+// Wait for the new page to load
+b.waitPageLoad();</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to click</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+        <dd><p>Throws an exception if the element is not visible</p></dd>
+
+        
+    </dl>
+
+                <h3 id="clickAt"><span class="symbol-name">clickAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>
+        <p>Click the given item at the given location, emulating all JavaScript events</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.clickAt(&quot;#submit&quot;, 20, 20);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to click</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>x</p>
+        </td>
+        <td>
+                <p>Number</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the x offset within the given element to click on</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>y</p>
+        </td>
+        <td>
+                <p>Number</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the y offset within the given element to click on</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+        <dd><p>Throws an exception if the element is not visible</p></dd>
+
+        
+    </dl>
+
+                <h3 id="close"><span class="symbol-name">close</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Close the browser process.</p>
+<p>The browser object cannot be used after this call.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Open the browser at a URL close and open a new URL in a
+// newly launched browser.
+var b &#x3D; pizza.open(&quot;www.google.com&quot;);
+b.close();
+b &#x3D; pizza.open(&quot;www.bing.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#open">module:Browser#open</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="dismissDialogs"><span class="symbol-name">dismissDialogs</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Dismiss all current and future JavaScript dialogs.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+b.dismissDialogs();
+b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#handleDialog">module:Browser#handleDialog</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="doubleClick"><span class="symbol-name">doubleClick</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Double click the given item, emulating all JavaScript events</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.doubleClick(&quot;#submit&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to click</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+        <dd><p>Throws an exception if the element is not visible</p></dd>
+
+        
+    </dl>
+
+                <h3 id="doubleClickAt"><span class="symbol-name">doubleClickAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>
+        <p>Double click the given item at the given location, emulating all JavaScript events</p>
+
+    
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to click</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>x</p>
+        </td>
+        <td>
+                <p>Number</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the x offset within the given element to click on</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>y</p>
+        </td>
+        <td>
+                <p>Number</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the y offset within the given element to click on</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+        <dd><p>Throws an exception if the element is not visible</p></dd>
+
+        
+    </dl>
+
+                <h3 id="emulateDevice"><span class="symbol-name">emulateDevice</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
+        <p>Emulate the given device's rendering.</p>
+<p>The viewport &amp; device pixel ratio will be scaled to match the rendering
+of the device.  The user agent is also changed.</p>
+<p>Only applies to new pages that are loaded (not the current).</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Open &quot;apple.com&quot; while emulating an iPhone 6.
+b &#x3D; pizza.open();
+b.emulateDevice(&quot;Apple iPhone 6&quot;);
+b.open(&quot;apple.com&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Open normally in desktop mode, then reload emulating a Galaxy S4
+b &#x3D; pizza.open(&quot;samsung.com&quot;);
+b.emulateDevice(&quot;Samsung Galaxy S4&quot;);
+b.reload();</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The device to emulate.  Set to null to disable device
+emulation.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#listDevices">module:Browser#listDevices</a></dd>
+        <dd><a href="module-Browser.html#emulateNetworkCondition">module:Browser#emulateNetworkCondition</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="emulateNetworkCondition"><span class="symbol-name">emulateNetworkCondition</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
+        <p>Emulate the given network condition.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Open &quot;bbc.com&quot; emulating 3G latency and bandwidth constraints
+b &#x3D; pizza.open();
+b.emulateNetworkCondition(&quot;Regular 3G&quot;);
+b.open(&quot;bbc.com&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Open &quot;bbc.com&quot; emulating a network latency of 50 milliseconds
+b &#x3D; pizza.open();
+b.emulateNetworkCondition({latency: 50});
+b.open(&quot;bbc.com&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Disable a previously set network condition
+b.emulateNetworkCondition({});
+b.open(&quot;bbc.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>(String or Object)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The network condition to emulate.  Set to {} to
+disable network condition emulation.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#listNetworkConditions">module:Browser#listNetworkConditions</a></dd>
+        <dd><a href="module-Browser.html#emulateDevice">module:Browser#emulateDevice</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="execute"><span class="symbol-name">execute</span><span class="signature"><span class="signature-params">(script)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+        <p>Execute the given JavaScript in the current frame.</p>
+<p>If there is an exception when the script is executed in the
+browser it will be thrown here.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var elementExists &#x3D;
+    b.execute(&quot;document.getElementBy(&#x27;0&#x27;) ? true : false&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>script</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The JavaScript code to execute</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#jq">module:Browser#jq</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Object</code>&nbsp;<p>The result of the script execution</p></p></dd>
+
+    </dl>
+
+                <h3 id="exists"><span class="symbol-name">exists</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>
+        <p>Test if an element matching the given selector exists in the current frame/tab.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Submit form1 if it exists otherwise submit form2.
+if (b.exists(&#x27;#form1&#x27;)) {
+    b.submit(&#x27;#form1&#x27;);
+} else {
+    b.submit(&#x27;#form2&#x27;);
+}</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to search for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Boolean</code>&nbsp;<p>true if the element exists</p></p></dd>
+
+    </dl>
+
+                <h3 id="focus"><span class="symbol-name">focus</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Focus the first item matching the given selector, emulating
+focus/blur JavaScript events.</p>
+
+    
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to focus</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="forward"><span class="symbol-name">forward</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Go forward in the history.</p>
+<p>4xx and 5xx responses on the main document trigger a failure after the page
+has loaded.</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#ignoreHttpErrors">module:Browser#ignoreHttpErrors</a></dd>
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
+main document.</p></dd>
+
+        
+    </dl>
+
+                <h3 id="getBrowserName"><span class="symbol-name">getBrowserName</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+        <p>Get the browser name.</p>
+<p>E.g. &quot;Google Chrome&quot;.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>console.log(&quot;Running test with browser: &quot; + b.getBrowserName());</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>String</code>&nbsp;<p>the browser name</p></p></dd>
+
+    </dl>
+
+                <h3 id="getBrowserVersion"><span class="symbol-name">getBrowserVersion</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+        <p>Get Version of the browser we are using</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>console.log(&quot;Running test with browser version: &quot; + b.getBrowserVersion());</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>String</code>&nbsp;<p>the version of the browser that was launched</p></p></dd>
+
+    </dl>
+
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
+        <p>Get a cookie</p>
+<p>Given a cookie name, get details about the cookie.  The current domain is used.</p>
+
+    
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the name of the cookie to get</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Cookie.html">module:Cookie</a></code>&nbsp;<p>the cookie info</p></p></dd>
+
+    </dl>
+
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(url, name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
+        <p>Get a cookie</p>
+<p>Given a URL and cookie name, get details about the cookie.</p>
+
+    
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the url of the cookie</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the name of the cookie to get</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Cookie.html">module:Cookie</a></code>&nbsp;<p>the cookie info</p></p></dd>
+
+    </dl>
+
+                <h3 id="getInnerHTML"><span class="symbol-name">getInnerHTML</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+        <p>Get the html inside the given element</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var html &#x3D; b.getInnerHTML(&#x27;#input1&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to get the HTML from</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+            <dt>Returns</dt>
+        <dd><p><code>String</code>&nbsp;<p>the inner HTML for the given element</p></p></dd>
+
+    </dl>
+
+                <h3 id="getInnerText"><span class="symbol-name">getInnerText</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+        <p>Get the text inside the given element</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var text &#x3D; b.getInnerText(&#x27;#button1&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to get the inner text from</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+            <dt>Returns</dt>
+        <dd><p><code>String</code>&nbsp;<p>the inner text for the given element</p></p></dd>
+
+    </dl>
+
+                <h3 id="getOpenDialog"><span class="symbol-name">getOpenDialog</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> module:DialogInfo</span></span></h3>
+        <p>Get details about the currently open JavaScript dialog.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Make sure an alert dialog is opened with specific text
+var b &#x3D; pizza.open();
+b.openAsync(&quot;mysitewithdialog.com&quot;);
+var dialog &#x3D; b.getOpenDialog();
+assert.eq(&quot;alert\&quot;, dialog.type);
+assert.eq(&quot;it&#x27;s a dialog!&quot;, dialog.message);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#isDialogOpen">module:Browser#isDialogOpen</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>module:DialogInfo</code>&nbsp;<p>dialog info or null if no dialog open</p></p></dd>
+
+    </dl>
+
+                <h3 id="getTitle"><span class="symbol-name">getTitle</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+        <p>Return the page title.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var title &#x3D; b.getTitle();
+console.log(&quot;Loaded page &#x27;&quot; + title + &quot;&#x27;&quot;);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#verifyTitle">module:Browser#verifyTitle</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>String</code>&nbsp;<p>The page title</p></p></dd>
+
+    </dl>
+
+                <h3 id="getUrl"><span class="symbol-name">getUrl</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+        <p>Get the current URL the browser is pointing to</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open(&quot;www.google.com&quot;);
+var url &#x3D; b.getUrl();</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>String</code>&nbsp;<p>the URL the browser is pointing to</p></p></dd>
+
+    </dl>
+
+                <h3 id="getValue"><span class="symbol-name">getValue</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
+        <p>Gets the value of given input form item</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>assert.eq(b.getValue(&#x27;#checkbox1&#x27;), &#x27;on&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the select element to select from</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+            <dt>Returns</dt>
+        <dd><p><code>Object</code>&nbsp;<p>the value of the given input form item</p></p></dd>
+
+    </dl>
+
+                <h3 id="handleDialog"><span class="symbol-name">handleDialog</span><span class="signature"><span class="signature-params">(val)</span></span></h3>
+        <p>Accept / Reject the currently displayed JavaScript dialog, if any.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+b.openAsync(&quot;mysitewithdialog.com&quot;);
+// Wait for dialog to open
+pizza.waitFor(function() { return b.isDialogOpen(); });
+b.handleDialog();</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>val</p>
+        </td>
+        <td>
+                <p>(Boolean or optional String)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>If true accept the dialog, if false reject, if a string fill out the
+window.prompt() dialog with the given text.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#dismissDialogs">module:Browser#dismissDialogs</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="highlight"><span class="symbol-name">highlight</span><span class="signature"><span class="signature-params">(selector[, color])</span></span></h3>
+        <p>Highlight the first element matching the selector</p>
+<p>Only one item at a time can be highlighted.  Selecting a second will remove the
+highlight from the first.  Call clearHighlight() to remove the highlight.</p>
+<p>An optional color can be specified for the highlight.</p>
+<p>  a - The alpha component, in the [0-1] range
+  r - The red component, in the [0-255] range
+  g - The green component, in the [0-255] range
+  b - The blue component, in the [0-255] range</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Highlight button with id &#x27;button1&#x27;
+b.highlight(&quot;#button1&quot;)</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Transparent blue highlight on first &lt;button&gt;:
+b.highlight(&quot;button&quot;, { a: 0.2, r: 0, g: 0, b: 255 })</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The element to select</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>color</p>
+        </td>
+        <td>
+                <p>Color</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>The color of the highlight</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="hover"><span class="symbol-name">hover</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Hover over the first item matching the given selector, emulating
+all JavaScript events.</p>
+
+    
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to hover over</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="hoverAt"><span class="symbol-name">hoverAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>
+        <p>Hover over the first item matching the given selector at the given
+location, emulating all JavaScript events</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Hover over a drop down
+b.hover(&quot;#myDropDown&quot;);
+// Wait for a link to be displayed
+b.waitForVisible(&quot;#myMenuItem&quot;);
+// Now click the link
+b.click(&quot;#myMenuItem&quot;);
+b.waitPageLoad();</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to hover over</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>x</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the x offset within the given element</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>y</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the y offset within the given element</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+        <dd><p>Throws an exception if the element is not visible</p></dd>
+
+        
+    </dl>
+
+                <h3 id="ignoreHttpErrors"><span class="symbol-name">ignoreHttpErrors</span><span class="signature"><span class="signature-params">([ignore])</span></span></h3>
+        <p>Don't trigger an error on HTTP 4xx or 5xx status codes during a
+call to open(), waitPageLoad(), reload(), back() or forward().</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.ignoreHttpErrors(); // same as b.ignoreHttpErrors(true)
+// Go to a 404 page but don&#x27;t throw an error
+b.open(&quot;mysite.com/404&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Only ignore 404 errors, other 4xx and 5xx status codes will still
+// throw an error
+b.ignoreHttpErrors(404);
+b.open(&quot;mysite.com/404&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Turn back on http errors for all 4xx and 5xx status codes.
+// You only need to do this if you turned off the error check previously.
+b.ignoreHttpErrors(false);
+b.open(&quot;mysite.com/404&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>ignore</p>
+        </td>
+        <td>
+                <p>(Boolean or repeatable Number)</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>if true errors will be ignored (the default)
+if set to false, errors will trigger the above methods to throw an exception again.
+If set to a list of numbers any status codes that match these numbers won't throw
+an exception.</p>
+                <p>Defaults to <code>true</code>.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-pizza.html#.open">module:pizza.open</a></dd>
+        <dd><a href="module-Browser.html#open">module:Browser#open</a></dd>
+        <dd><a href="module-Browser.html#openAsync">module:Browser#openAsync</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="isDialogOpen"><span class="symbol-name">isDialogOpen</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>
+        <p>Is a JavaScript modal dialog open?</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+b.openAsync(&quot;mysitewithdialog.com&quot;);
+// Wait for dialog to open
+pizza.waitFor(function() { return b.isDialogOpen(); });
+b.handleDialog(true);</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#getOpenDialog">module:Browser#getOpenDialog</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Boolean</code>&nbsp;<p>true if a JavaScript modal dialog is open, false otherwise</p></p></dd>
+
+    </dl>
+
+                <h3 id="isVisible"><span class="symbol-name">isVisible</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>
+        <p>Test if an element matching the given selector is visible
+in the current frame/tab.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Click button1 if it exists otherwise click button2.
+if (b.isVisible(&#x27;#button1&#x27;)) {
+    b.click(&#x27;#button1&#x27;);
+} else {
+    b.click(&#x27;#button2&#x27;);
+}</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to search for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Boolean</code>&nbsp;<p>true if the element is visible</p></p></dd>
+
+    </dl>
+
+                <h3 id="jq"><span class="symbol-name">jq</span><span class="signature"><span class="signature-params">(script)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Object</span></span></h3>
+        <p>Execute the given JavaScript jQuery expression.</p>
+<p>Executes on all frames in the current tab.</p>
+<p>If the normal automation functions fail or are limited in some way, jQuery to
+the rescue! (maybe) jQuery selectors are typically a bit richer than the selectors
+provided by us and since any javascript code can be executed, more complex
+queries can be built up.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Click a button using jQuery
+// Note the use of single quotes inside the double quoted string
+b.jq(&quot;$($(&#x27;button&#x27;)[1]).click()&quot;)</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Change the border on certain buttons to highlight them
+b.jq(&quot;$(&#x27;button&#x27;).css(&#x27;border&#x27;, &#x27;2px solid red&#x27;)&quot;)</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>script</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The JavaScript code to execute</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#execute">module:Browser#execute</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Array of Object</code>&nbsp;<p>Returns an array of results for each frame that exists on the current tab</p></p></dd>
+
+    </dl>
+
+                <h3 id="listAllFrames"><span class="symbol-name">listAllFrames</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Frame.html">module:Frame</a></span></span></h3>
+        <p>List all frames for the current window</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var frames &#x3D; b.listAllFrames();
+console.log(JSON.stringify(frames));</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#listFrames">module:Browser#listFrames</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>A nested array of frames</p></p></dd>
+
+    </dl>
+
+                <h3 id="listCookies"><span class="symbol-name">listCookies</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
+        <p>List all cookies set in the browser</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Cookie.html">module:Cookie</a></code>&nbsp;<p>array of cookies</p></p></dd>
+
+    </dl>
+
+                <h3 id="listDevices"><span class="symbol-name">listDevices</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>List devices available for emulation</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b &#x3D; pizza.open();
+b.listDevices();</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#emulateDevice">module:Browser#emulateDevice</a></dd>
+        <dd><a href="module-Browser.html#listNetworkConditions">module:Browser#listNetworkConditions</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="listFrames"><span class="symbol-name">listFrames</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Frame.html">module:Frame</a></span></span></h3>
+        <p>List the sub-frames for the currently selected frame.</p>
+<p>See selectFrame() for details on the selector.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var frames &#x3D; b.listFrames();
+console.log(JSON.stringify(frames));</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>string</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>list any frames matching this selector</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#listAllFrames">module:Browser#listAllFrames</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>An array of frames</p></p></dd>
+
+    </dl>
+
+                <h3 id="listNetworkConditions"><span class="symbol-name">listNetworkConditions</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>List network conditions available for emulation</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b &#x3D; pizza.open();
+b.listNetworkConditions();</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#emulateNetworkCondition">module:Browser#emulateNetworkCondition</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="listTabs"><span class="symbol-name">listTabs</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Tab.html">module:Tab</a></span></span></h3>
+        <p>List all tabs/windows open in browser</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>array of tabs</p></p></dd>
+
+    </dl>
+
+                <h3 id="newPage"><span class="symbol-name">newPage</span><span class="signature"><span class="signature-params">([pageName])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>
+        <p>Starts a new page object.</p>
+<p>This allows you to name the page. HTTP requests made by the browser are added to this new
+page object.  Page names show up in the script/test result page.</p>
+<p>This function is useful to split out XHR or Ajax requests into a separate page which can
+be useful for reporting.  With dynamic or single page apps, often user actions don't result
+in a page navigation, only background HTTP requests.  In these cases you can use this function
+to split of the timings of various actions from each other and from the main page loading.</p>
+<p>If no page navigation occurs the page load time is the total time HTTP content was downloaded.
+That is, the time span from the first item to start downloading until the last item on that
+page is fully downloaded.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.open(&quot;www.mysite.com&quot;);
+// Name a page, before submitting form
+b.newPage(&quot;Submit form&quot;);
+b.click(&quot;#submitButton&quot;);
+b.waitPageLoad();</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Name a page, before opening
+var b &#x3D; pizza.open();
+b.newPage(&quot;Bing Main Page&quot;);
+b.open(&quot;bing.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>pageName</p>
+        </td>
+        <td>
+                <p>string</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>the name of the new page</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Page.html">module:Page</a></code>&nbsp;<p>the page that was navigated to.</p></p></dd>
+
+    </dl>
+
+                <h3 id="newTab"><span class="symbol-name">newTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
+        <p>Open a new tab</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab.</p></p></dd>
+
+    </dl>
+
+                <h3 id="open"><span class="symbol-name">open</span><span class="signature"><span class="signature-params">(url)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>
+        <p>Open the given URL</p>
+<p>Function blocks until the page is open.</p>
+<p>An exception is thrown if the navigation fails.</p>
+<p>4xx and 5xx responses on the main document trigger a failure.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+b.open(&quot;www.google.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the url to open</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#ignoreHttpErrors">module:Browser#ignoreHttpErrors</a></dd>
+        <dd><a href="module-Browser.html#openAsync">module:Browser#openAsync</a></dd>
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
+main document.</p></dd>
+
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Page.html">module:Page</a></code>&nbsp;<p>a new page object for the given page.</p></p></dd>
+
+    </dl>
+
+                <h3 id="openAsync"><span class="symbol-name">openAsync</span><span class="signature"><span class="signature-params">(url)</span></span></h3>
+        <p>Open the given URL</p>
+<p>Does not wait for the page to load.</p>
+<p>Normally you would call this in conjunction with waitForHttpRequests() or waitPageLoad()</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+b.open(&quot;www.google.com&quot;);
+b.waitForVisible(&quot;input[name&#x3D;&#x27;q&#x27;]&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the url to open</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#waitPageLoad">module:Browser#waitPageLoad</a></dd>
+        <dd><a href="module-Browser.html#open">module:Browser#open</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="query"><span class="symbol-name">query</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Element</span></span></h3>
+        <p>Find the elements matching the given selector in the current frame.</p>
+<p>Does <em>not</em> throw an exception if the selector is not matched.  Instead an empty
+array is returned.</p>
+
+    
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the elements to query</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Array of Element</code>&nbsp;<p>an array containing info about each of the elements that matched the selector</p></p></dd>
+
+    </dl>
+
+                <h3 id="queryVisible"><span class="symbol-name">queryVisible</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Element</span></span></h3>
+        <p>Find the elements matching the given selector in the current frame.</p>
+<p>Does <em>not</em> throw an exception if the selector is not matched.  Instead an empty
+array is returned.</p>
+<p>Returns only visible elements.</p>
+
+    
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The elements to query</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>Array of Element</code>&nbsp;<p>An array containing info about each of the elements that matched the selector</p></p></dd>
+
+    </dl>
+
+                <h3 id="reload"><span class="symbol-name">reload</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Reload the current page.</p>
+<p>4xx and 5xx responses on the main document trigger a failure after the page
+has loaded.</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#ignoreHttpErrors">module:Browser#ignoreHttpErrors</a></dd>
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
+main document.</p></dd>
+
+        
+    </dl>
+
+                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
+        <p>Remove a given cookie from the browser for the current domain</p>
+
+    
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the name of the cookie to remove</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(url, name)</span></span></h3>
+        <p>Remove a given cookie from the browser</p>
+
+    
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the domain of the cookie to remove</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the name of the cookie to remove</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="removeHeader"><span class="symbol-name">removeHeader</span><span class="signature"><span class="signature-params">(header)</span></span></h3>
+        <p>Remove a given header</p>
+<p>Removes a header that was previous added/overridden</p>
+<p>Overridden headers are no longer overridden and the original header is still sent.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+// Load the site with the header set
+b.setHeader(&#x27;my-custom-header&#x27;, &#x27;this is the header&#x27;);
+b.open(&quot;mysite.com&quot;);
+// Load the site without the header set
+b.removeHeader(&#x27;my-custom-header&#x27;;
+b.open(&quot;mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>header</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The header to remove</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="rewriteUrl"><span class="symbol-name">rewriteUrl</span><span class="signature"><span class="signature-params">(url, rewriteUrl)</span></span></h3>
+        <p>Rewrite requests to the given URL</p>
+<p>Accepts wildcards in the URL, but the URL must be of the form:</p>
+<p>&quot;protocol://host/path&quot;</p>
+<p>The protocol, site and path parts can wildcarded partially or fully.</p>
+<p>Match groups are supported, just put parenthesis around each group.  In the rewriteUrl string,
+match groups can be referred to via $1, $2, $3, etc.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+// Replace &#x27;mario.jpg&#x27; with &#x27;wario.jpg&#x27;
+b.rewriteUrl(&#x27;(*://www.mysite.com/*)/mario.jpg&#x27;,  &#x27;$1/wario.jpg&#x27;);
+b.open(&quot;www.mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The wildcarded URL to match, can use match groups.</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>rewriteUrl</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The rewrite rule with match groups.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#clearRules">module:Browser#clearRules</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="screenshot"><span class="symbol-name">screenshot</span><span class="signature"><span class="signature-params">([format][, quality])</span></span></h3>
+        <p>Take a screenshot.</p>
+<p>The format can be any of 'webp', 'png' or 'jpeg'.</p>
+<p>If on a high DPI display, the screenshot is scaled down by the devicePixelRatio.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var d &#x3D; b.screenshot();</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>format</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>The format of the image.  Can be any of 'webp', 'png'
+or 'jpeg'.</p>
+                <p>Defaults to <code>'png'</code>.</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>quality</p>
+        </td>
+        <td>
+                <p>Number</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>The quality of the image.  0.0 is least and smallest
+size, 1.0 is best quality and largest image size.</p>
+                <p>Defaults to <code>'1.0'</code>.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="select"><span class="symbol-name">select</span><span class="signature"><span class="signature-params">(selector, value)</span></span></h3>
+        <p>Select the given item/items of a dropdown or combobox</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Select by index
+select(&quot;#toppings&quot;, {index: 1})</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select by value
+select(&quot;#toppings&quot;, {value: &quot;option1&quot;})</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select by text
+select(&quot;#toppings&quot;, {text: &quot;Onions&quot;})</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select by text matching Regex
+select(&quot;#toppings&quot;, {match: &quot;.nions&quot;})</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select multiple
+select(&quot;#toppings&quot;, {value: [&quot;option1&quot;, &quot;option2&quot;]})
+select(&quot;#toppings&quot;, {text: [&quot;Onions&quot;, &quot;Pepperoni&quot;})
+select(&quot;#toppings&quot;, {match: [&quot;.nions&quot;, &quot;.epperoni&quot;})
+select(&quot;#toppings&quot;, {index: [2, 3})</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select multiple (but don&#x27;t clear previous selection)
+select(&quot;#toppings&quot;, {value: [&quot;option1&quot;, &quot;option2&quot;], clear: false})
+select(&quot;#toppings&quot;, {text: [&quot;Onions&quot;, &quot;Pepperoni&quot;], clear: false})
+select(&quot;#toppings&quot;, {match: [&quot;.nions&quot;, &quot;.epperoni&quot;], clear: false})
+select(&quot;#toppings&quot;, {index: [2, 3], clear: false})</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the select element to select from</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>value</p>
+        </td>
+        <td>
+                <p>Select</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the values to select</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="selectContent"><span class="symbol-name">selectContent</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Select the content of the given element</p>
+<p>Right now, basically only useful in combination with type()
+as an alternative to clear().</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Clear the text in an input element with id &#x27;id1&#x27;
+b.selectContent(&quot;#input1&quot;);
+b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to select</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="selectFrame"><span class="symbol-name">selectFrame</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>
+        <p>Select the given frame using a special frame selector.</p>
+<p>An extended/modified css syntax is used.  The :nth operator can be used to
+select the nth element.  For example, b.selectFrame(&quot;iframe:nth(1)&quot;) will
+select the the second iframe in the document.  Spaces are used to select
+nested frames.  Normally a CSS Selector won't traverse sub frames, but this
+function will.  For example b.selectFrame(&quot;iframe iframe&quot;) will select the
+first iframe within an iframe.  Once a frame is selected new calls to
+selectFrame() operate on the previously selected frame.  To switch back to
+the main/top frame for the page call selectTopFrame().</p>
+<p>An exception is thrown if no frame matching the selector can be found.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Select the first iframe
+b.selectFrame(&quot;iframe&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select the second iframe
+b.selectFrame(&quot;iframe:nth(2)&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select the second iframe within the first iframe
+b.selectFrame(&quot;iframe iframe:nth(2)&quot;);
+
+// OR: you can make two calls to get the same result:
+b.selectFrame(&quot;iframe&quot;);
+b.selectFrame(&quot;iframe:nth(2)&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select the iframe with the name &#x27;name1&#x27;
+b.selectFrame(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select the iframe with the name &#x27;name1&#x27;
+b.selectFrame(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>select the first frame matching this selector</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if no frame matching the selector can be found.</p></dd>
+
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>Details about the frame selected.</p></p></dd>
+
+    </dl>
+
+                <h3 id="selectFrameCss"><span class="symbol-name">selectFrameCss</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>
+        <p>Select the given frame using a normal CSS Selector.  None of the special
+syntax allowed by selectFrame() is used.</p>
+<p>An exception is thrown if no frame matching the selector can be found.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Select the first iframe
+b.selectFrameCss(&quot;iframe&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select the iframe with the name &#x27;name1&#x27;
+b.selectFrameCss(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>select the first frame matching this selector</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>Details about the frame selected.</p></p></dd>
+
+    </dl>
+
+                <h3 id="selectLatestTab"><span class="symbol-name">selectLatestTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
+        <p>Select the most recently opened new tab.</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab</p></p></dd>
+
+    </dl>
+
+                <h3 id="selectMainTab"><span class="symbol-name">selectMainTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
+        <p>Select the main tab.</p>
+<p>Select the main tab, this is the first tab opened, if the first tab was closed
+the oldest tab still around is select.</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab.</p></p></dd>
+
+    </dl>
+
+                <h3 id="selectTab"><span class="symbol-name">selectTab</span><span class="signature"><span class="signature-params">(obj)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
+        <p>Select the given tab</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// By partial URL
+selectTab({url: &#x27;url&#x27;});</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// By full URL
+selectTab({url: &#x27;url&#x27;, full&#x3D;true});</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// By regex URL
+selectTab({url: &#x27;regex&#x27;, regex&#x3D;true});</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// By partial title
+selectTab({title: &#x27;title&#x27;});</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// By full title
+selectTab({title: &#x27;title&#x27;, full&#x3D;true});</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// By regex title
+selectTab({title: &#x27;regex&#x27;, regex&#x3D;true});</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// By Index (1st tab starts at 0)
+selectTab({index: 0});</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>obj</p>
+        </td>
+        <td>
+                <p>Object</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the tab selector</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab</p></p></dd>
+
+    </dl>
+
+                <h3 id="selectTopFrame"><span class="symbol-name">selectTopFrame</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>
+        <p>Select the top level/main frame for the current window.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Switch to subframe
+b.selectFrame(&quot;iframe iframe&quot;);
+// Do stuff in the subframe
+...
+// Switch back to the top frame
+b.selectTopFrame();</code></pre>
+</div>
+
+    </section>
+
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>The frame selected</p></p></dd>
+
+    </dl>
+
+                <h3 id="setCookie"><span class="symbol-name">setCookie</span><span class="signature"><span class="signature-params">(name, value[, details])</span></span></h3>
+        <p>Set a cookie</p>
+<p>Set a cookie with the given name/value for the current domain.</p>
+<p>Optional info can be given such as the expiry and the url.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Set a cookie for the &#x27;www.google.com&#x27; domain
+b.setCookie(&quot;a&quot;, &quot;b&quot;, { url: &quot;http://www.google.com&quot; })</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Load the site, then fake a login cookie
+var b &#x3D; pizza.open(&quot;www.mysite.com/&quot;);
+b.setCookie(&quot;loginCreds&quot;, &quot;dj431g5hgk&quot;);
+b.open(&quot;www.mysite.com/&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the name of the cookie to be set, can a new name or and existing</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>value</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the value of the cookie to set</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>details</p>
+        </td>
+        <td>
+                <p><a href="module-Cookie.html">module:Cookie</a></p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>optional extra info such as the expiry and the domain</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="setCredentials"><span class="symbol-name">setCredentials</span><span class="signature"><span class="signature-params">(username, password)</span></span></h3>
+        <p>Set the browser credentials.</p>
+<p>These will be automatically entered whenever a credentials dialog
+would normally show up.  Works with Basic Auth and all other forms
+of HTTP authentication supported by Chrome.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Open with a page with the credentials already set
+var b &#x3D; pizza.open();
+b.setCredentials(&#x27;username&#x27;, &#x27;password&#x27;);
+b.open(&quot;www.mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>username</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The username</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>password</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The password</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="setHeader"><span class="symbol-name">setHeader</span><span class="signature"><span class="signature-params">(name, value)</span></span></h3>
+        <p>Override/Add a header</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Add a custom header
+var b &#x3D; pizza.open();
+b.setHeader(&#x27;my-custom-header&#x27;, &#x27;this is the header&#x27;);
+b.open(&quot;mysite.com&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Overwrite an existing header
+var b &#x3D; pizza.open();
+b.setHeader(&#x27;Host&#x27;, &#x27;mysite2.com&#x27;);
+b.open(&quot;mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The name of the header to set/override</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>value</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The value to set for the header</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="setUserAgent"><span class="symbol-name">setUserAgent</span><span class="signature"><span class="signature-params">(userAgent)</span></span></h3>
+        <p>Set the user agent to something else.</p>
+<p>Set to an empty string to set back to the default.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open();
+// Pretend to be Internet Explorer 11.
+b.setUserAgent(&#x27;Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko&#x27;);
+b.open(&quot;www.mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>userAgent</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The user agent to set</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="setValue"><span class="symbol-name">setValue</span><span class="signature"><span class="signature-params">(selector, value)</span></span></h3>
+        <p>Set the given input form item to the given value</p>
+<p>Directly sets without causing any input events to be fired.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.setValue(&#x27;#textbox1&#x27;, &#x27;something&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the select element to select from</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>value</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the values to select</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="submit"><span class="symbol-name">submit</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Submit a form</p>
+<p>The selector can point to any element in the form as well as the form itself.</p>
+<p>This calls .submit() on the form, if this fails you can also try click() or
+type() on the submit button element.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Submit a form
+b.submit(&#x27;#form1&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the form element to submit</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="type"><span class="symbol-name">type</span><span class="signature"><span class="signature-params">(selector, ...text)</span></span></h3>
+        <p>Type the given text into the first item matching the given selector</p>
+<p>First it focuses the element (blurring the previously focused element),
+then it emulates key presses for the given text.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Type the text &#x27;Hello&#x27; into a text input with id &#x27;id1&#x27;
+b.type(&quot;#id1&quot;, &quot;Hello&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Type Pizza and then press enter, submitting the form.
+b.type(&quot;#search&quot;, &quot;Pizza\n&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Type Pizza and then press tab, moving focus to next input element
+b.type(&quot;#search&quot;, &quot;Pizza\t&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Can also send shortcuts (This only works to web elements, not
+// the browser and certain system shortcuts like copy and paste
+// are disabled).
+b.type(&quot;#search&quot;, [Key.Control, Key.K]);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to type text into</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>text</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the text to type</p>
+                <p>Value can be repeated.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="verifyExists"><span class="symbol-name">verifyExists</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Verify an element matching the given selector exists in the current frame/tab.</p>
+<p>An exception is thrown if the element does not exist.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Verify that the given element exists on the page
+b.verifyExists(&#x27;#button1&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to verify</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="verifyNotExists"><span class="symbol-name">verifyNotExists</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Verify no element matches the given selector exists in the current frame/tab.</p>
+<p>An exception is thrown if the element exists.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Verify that the given element does not exist on the page
+b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to verify</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element is found</p></dd>
+
+        
+    </dl>
+
+                <h3 id="verifyNotText"><span class="symbol-name">verifyNotText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>
+        <p>Verify that the text of the page does not contain the given string.</p>
+<p>An exception is thrown if the given string exists on the page.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.verifyNotText(&quot;Error&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>b.verifyNotText(/Error \d+:/);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>text</p>
+        </td>
+        <td>
+                <p>(string or RegExp)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The text to look for on the page</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
+        <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="verifyRequest"><span class="symbol-name">verifyRequest</span><span class="signature"><span class="signature-params">(url)</span></span></h3>
+        <p>Verify a request was made and had no errors on the current page.</p>
+<p>An exception is thrown in the following cases:</p>
+<ul>
+<li>The request was never made / not found on the current page</li>
+<li>The request had an network/transport error</li>
+<li>The request was not completed yet</li>
+<li>The request had a HTTP status error code (4xx or 5xx status code)</li>
+</ul>
+<p>WebSocket requests do not need to complete (i.e. be closed), but an
+error will thrown if the WebSocket did not successfully connect.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Verify that a websocket connection was made
+b.verifyRequest(/^ws{1,2}:/);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>b.verifyRequest(&quot;https://loadtestgo.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>(string or RegExp)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The request URL to check for.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the request is not found or has an
+error.</p></dd>
+
+        
+    </dl>
+
+                <h3 id="verifyText"><span class="symbol-name">verifyText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>
+        <p>Verify the given text exists on the page.</p>
+<p>An exception is thrown if the text does not exist.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.verifyText(&quot;Sign in&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>b.verifyText(/Hello, \w+/);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>text</p>
+        </td>
+        <td>
+                <p>(string or RegExp)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
+        <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="verifyTitle"><span class="symbol-name">verifyTitle</span><span class="signature"><span class="signature-params">(title)</span></span></h3>
+        <p>Verify the page title matches the given title.</p>
+<p>An exception is thrown if no text matches the title.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.verifyTitle(&quot;Google&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Matches Goooogle
+b.verifyTitle(/Goo+gle/);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>title</p>
+        </td>
+        <td>
+                <p>(string or RegExp)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The title to match</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#getTitle">module:Browser#getTitle</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="waitForElement"><span class="symbol-name">waitForElement</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Wait for the given selector to be matched.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Wait for an element to exist in the DOM
+b.waitForElement(&#x27;#divNew&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The element(s) to wait for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="waitForHttpRequests"><span class="symbol-name">waitForHttpRequests</span><span class="signature"><span class="signature-params">(idleTimeMS)</span></span></h3>
+        <p>Wait for all ongoing HTTP requests to stop.</p>
+<p>idleTimeMS is the minimum time to wait, this function will not return
+before then.</p>
+<p>Waits for Web Socket connections to fully open if there is one ongoing,
+but does not wait for idle time on the WebSocket connection or for it to close.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var b &#x3D; pizza.open(&quot;www.facebook.com&quot;);
+b.waitForHttpRequests(2000);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>idleTimeMS</p>
+        </td>
+        <td>
+                <p>Number</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the time to wait after the last request has completed</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#waitPageLoad">module:Browser#waitPageLoad</a></dd>
+        <dd><a href="module-Browser.html#verifyRequest">module:Browser#verifyRequest</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="waitForText"><span class="symbol-name">waitForText</span><span class="signature"><span class="signature-params">(selector, text)</span></span></h3>
+        <p>Wait for the element matching the given selector to contain the
+given text.</p>
+<p>The element does not need to exist at the time you called this
+function.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.waitForText(&quot;#consoleLog&quot;, &quot;DISCONNECTED&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>string</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to wait for</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>text</p>
+        </td>
+        <td>
+                <p>string</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the text to wait for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
+        <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
+        <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="waitForVisible"><span class="symbol-name">waitForVisible</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
+        <p>Wait for the given selector to match a visible item.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Wait for an element to be visible
+b.waitForVisible(&#x27;#button1&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The element(s) to wait for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="waitPageLoad"><span class="symbol-name">waitPageLoad</span><span class="signature"><span class="signature-params">([timeoutMS])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>
+        <p>Wait for a new page to load on the current tab.</p>
+<p>If a page is recently loaded, and that page was not waited on before (either
+by open() or this function), then the function will just return.  If the
+page opens in a new tab or window be sure to switch to that tab or window
+before calling waitPageLoad().</p>
+<p>4xx and 5xx responses on the main document trigger a failure.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.click(&quot;#button1&quot;);
+b.waitPageLoad();</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>timeoutMS</p>
+        </td>
+        <td>
+                <p>Number</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>the max time to wait in milliseconds</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#openAsync">module:Browser#openAsync</a></dd>
+        <dd><a href="module-Browser.html#click">module:Browser#click</a></dd>
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
+main document.</p></dd>
+
+            <dt>Returns</dt>
+        <dd><p><code><a href="module-Page.html">module:Page</a></code>&nbsp;<p>the page that was navigated to.</p></p></dd>
+
+    </dl>
+
+    </section>
+
+
+            
+
+            
+</section>
+
+                                        </div>
+                                </div>
+                                <nav id="jsdoc-toc-nav" role="navigation"></nav>
+                        </div>
+                </div>
+                    <footer id="jsdoc-footer" class="jsdoc-footer">
+                            <div id="jsdoc-footer-container">
+                                    <p>
+                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on August 17, 2016.
+                                    </p>
+                            </div>
+                    </footer>
+                <script src="scripts/jquery.min.js"></script>
+                <script src="scripts/jquery.cookie.js"></script>
+                <script src="scripts/tree.jquery.js"></script>
+                <script src="scripts/prettify.js"></script>
+                <script src="scripts/jsdoc-toc.js"></script>
+                <script src="scripts/linenumber.js"></script>
+                <script src="scripts/scrollanchor.js"></script>
+        </body>
+</html>

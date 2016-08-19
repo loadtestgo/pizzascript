@@ -1,0 +1,435 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta name="generator" content="JSDoc 3.4.0">
+  <meta charset="utf-8">
+  <title>PizzaScript | assert</title>
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
+  <link href="css/baseline.css" rel="stylesheet">
+</head>
+
+<body onload="prettyPrint()">
+  <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
+    <div id="jsdoc-navbar-container">
+      <div id="jsdoc-navbar-content">
+        <a href="http://pizzascript.org" class="jsdoc-navbar-package-name">PizzaScript</a><a class="jsdoc-navbar-package-name" href="index.html">Index</a>
+      </div>
+    </div>
+  </nav>
+  <div id="jsdoc-body-container">
+    <div id="jsdoc-content">
+      <div id="jsdoc-content-container">
+        <div id="jsdoc-main" role="main">
+          <header class="page-header">
+            <div class="symbol-detail-labels"></div>
+            <h1><small></small><span class="symbol-name">assert</span></h1>
+            <p class="source-link">Source: <a href="docs.js.html#source-line-217">docs.<wbr>js:217</a></p>
+            <div class="symbol-description">
+              <p>Assert Helper Functions</p>
+              <p>Use these functions to verify the script is working as expected.</p>
+            </div>
+            <dl class="dl-compact">
+            </dl>
+          </header>
+          <section id="summary">
+            <div class="summary-callout">
+              <h2 class="summary-callout-heading">Methods</h2>
+              <div class="summary-content">
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
+                    <dt><a href="module-assert.html#.eq">eq(o1, o2)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="module-assert.html#.equal">equal(o1, o2)</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
+                    <dt><a href="module-assert.html#.fail">fail([message])</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="module-assert.html#.ne">ne(o1, o2)</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
+                    <dt><a href="module-assert.html#.notEqual">notEqual(o1, o2)</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="module-assert.html#.ok">ok(object)</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section>
+            <h2>Methods</h2>
+            <section>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".eq"><span class="symbol-name">eq</span><span class="signature"><span class="signature-params">(o1, o2)</span></span></h3>
+              <p>Assert two objects are equal</p>
+              <section>
+                <h4>
+            Example
+        </h4>
+                <div>
+                  <pre class="prettyprint"><code>// Check that an input element is set to 42
+assert.eq(b.getValue(&quot;#input1&quot;), &quot;42&quot;);</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>o1</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>o2</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Throws</dt>
+                <dd>
+                  <p>Throws an assertion when o1 is not equal o2</p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".equal"><span class="symbol-name">equal</span><span class="signature"><span class="signature-params">(o1, o2)</span></span></h3>
+              <p>Assert two objects are equal</p>
+              <section>
+                <h4>
+            Example
+        </h4>
+                <div>
+                  <pre class="prettyprint"><code>// Check that an input element is set to 42
+assert.equal(b.getValue(&quot;#input1&quot;), &quot;42&quot;);</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>o1</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>o2</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Throws</dt>
+                <dd>
+                  <p>Throws an assertion when o1 is not equal o2</p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".fail"><span class="symbol-name">fail</span><span class="signature"><span class="signature-params">([message])</span></span></h3>
+              <p>Always fail by throwing an exception</p>
+              <section>
+                <h4>
+            Example
+        </h4>
+                <div>
+                  <pre class="prettyprint"><code>if (!myCriticalCheck()) {
+    assert.fail(&quot;myCriticalCheck failed&quot;);
+}</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>message</p>
+                      </td>
+                      <td>
+                        <p>string</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>the message to report as part of the exception</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Throws</dt>
+                <dd>
+                  <p>Throws an assertion always</p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".ne"><span class="symbol-name">ne</span><span class="signature"><span class="signature-params">(o1, o2)</span></span></h3>
+              <p>Assert the two objects are not equal</p>
+              <section>
+                <h4>
+            Example
+        </h4>
+                <div>
+                  <pre class="prettyprint"><code>// Check that an input element is not set to 42
+assert.eq(b.getValue(&quot;#input1&quot;), &quot;42&quot;);</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>o1</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>o2</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Throws</dt>
+                <dd>
+                  <p>Throws an assertion when o1 is equal o2</p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".notEqual"><span class="symbol-name">notEqual</span><span class="signature"><span class="signature-params">(o1, o2)</span></span></h3>
+              <p>Assert two objects are not equal</p>
+              <section>
+                <h4>
+            Example
+        </h4>
+                <div>
+                  <pre class="prettyprint"><code>// Check that an input element is not set to 42
+assert.eq(b.getValue(&quot;#input1&quot;), &quot;42&quot;);</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>o1</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>o2</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Throws</dt>
+                <dd>
+                  <p>Throws an assertion when o1 is equal o2</p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".ok"><span class="symbol-name">ok</span><span class="signature"><span class="signature-params">(object)</span></span></h3>
+              <p>Assert the given object evaluates to true.</p>
+              <section>
+                <h4>
+            Examples
+        </h4>
+                <div>
+                  <pre class="prettyprint"><code>// This will succeed every time
+assert.ok(true);</code></pre>
+                </div>
+                <div>
+                  <pre class="prettyprint"><code>// This will throw an exception every time
+assert.ok(false);</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>object</p>
+                      </td>
+                      <td>
+                        <p>Object</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the object to check</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Throws</dt>
+                <dd>
+                  <p>Throws an assertion when check fails</p>
+                </dd>
+              </dl>
+            </section>
+          </section>
+        </div>
+      </div>
+      <nav id="jsdoc-toc-nav" role="navigation"></nav>
+    </div>
+  </div>
+  <footer id="jsdoc-footer" class="jsdoc-footer">
+    <div id="jsdoc-footer-container">
+      <p>
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on August 17, 2016.
+      </p>
+    </div>
+  </footer>
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/jquery.cookie.js"></script>
+  <script src="scripts/tree.jquery.js"></script>
+  <script src="scripts/prettify.js"></script>
+  <script src="scripts/jsdoc-toc.js"></script>
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/scrollanchor.js"></script>
+</body>
+
+</html>

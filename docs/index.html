@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>PizzaScript - Browser Automation &amp; Performance Monitoring</title>
+<link rel="stylesheet" href="stylesheets/styles.css"/>
+<meta name="viewport" content="width=device-width">
+</head>
+<body>
+
+<header>
+<nav>
+<button onclick="window.location='https://github.com/loadtestgo/pizzascript/releases/download/v0.2.5/script-editor-0.2.5.zip';">Download</button>
+<button onclick="window.location='https://github.com/loadtestgo/pizzascript';">Github</button>
+<button onclick="window.location='http://pizzascript.org/docs/';">API</button>
+<button onclick="window.location='https://vimeo.com/177032445';">Tutorial</button>
+</nav>
+</header>
+
+<section class="content">
+<h2>PizzaScript</h2>
+<h4>Browser Automation &amp; Performance Monitoring</h4>
+<br>
+
+<p>PizzaScript is a JavaScript browser automation framework with built-in performance monitoring.</p>
+
+<p>It includes a script editor, with a REPL and debugger, for interactively writing tests.</p>
+
+<br/>
+
+<p><img src="script-record.gif" alt="PizzaScript Editor" style="max-width:100%;"></p>
+
+<br/>
+
+<h2>Features</h2>
+
+<ul>
+<li>Inspect page load times and HTTP traffic</li>
+<li>Take screenshots</li>
+<li>Block/redirect certain URLs (or block all beacon URLs)</li>
+<li>Modify request headers</li>
+<li>Emulate Mobile and Tablet devices</li>
+<li>Emulate network conditions (e.g. 3G/4G/Offline)</li>
+<li>Record WebSocket request/responses</li>
+</ul>
+
+<br/><h2>Try It!</h2>
+
+<p>First make sure the following are installed:</p>
+
+<ul>
+<li>Chrome 40+</li>
+<li>Java 8 JRE</li>
+</ul>
+
+<p>Download the latest <a src="window.location='https://github.com/loadtestgo/pizzascript/releases/download/v0.2.5/script-editor-0.2.5.zip'">Script Editor</a> release.</p>
+
+<p>Open the IDE:</p>
+
+<div class="code">bin/script-editor</div>
+
+<br/>
+<h2>Examples</h2>
+
+<p>These example scripts should give you a flavour for the API.</p>
+
+<br/>
+<h3>Load a Page</h3>
+<br/>
+<div class="code"><span class="v">b</span> = <span class="v">pizza</span>.<span class="f">open</span>(<span class="s">"www.google.com"</span>);<br/>
+<span class="v">b</span>.<span class="f">verifyText</span>(<span class="s">"Search"</span>);<br/>
+</div>
+<br/>
+<h3>Form Submission</h3>
+<br/>
+<div class="code"><span class="v">b</span> = <span class="v">pizza</span>.<span class="f">open();<br/>
+<span class="v">b</span>.<span class="f">open</span>(<span class="s">"loadtestgo.com"</span>);<br/>
+<span class="v">b</span>.<span class="f">click</span>(<span class="s">"button:contains(Login)"</span>);<br/>
+<span class="v">b</span>.<span class="f">waitPageLoad</span>();<br/>
+<span class="v">b</span>.<span class="f">type</span>(<span class="s">"#inputUsername"</span>, <span class="s">"demo@loadtestgo.com"</span>);<br/>
+<span class="v">b</span>.<span class="f">type</span>(<span class="s">"#inputPassword"</span>, <span class="s">"password"</span>);<br/>
+<span class="v">b</span>.<span class="f">click</span>(<span class="s">"button:contains(Login):nth(1)"</span>);<br/>
+<span class="v">b</span>.<span class="f">waitPageLoad</span>();<br/>
+</div>
+<br/>
+<h3>Load a Page While Emulating a Mobile Browser</h3>
+<br/>
+<div class="code"><span class="v">b</span> = <span class="v">pizza</span>.<span class="f">open</span>();<br/>
+<span class="v">b</span>.<span class="f">emulateDevice</span>(<span class="s">"Apple iPhone 6"</span>);<br/>
+<span class="v">b</span>.<span class="f">open</span>(<span class="s">"cnn.com"</span>);<br/>
+</div>
+
+</section>
+
+<footer>
+  </br>
+  <nav>
+    <a href="https://twitter.com/pizzascripting" class="twitter-follow-button" data-show-screen-name="false"></a>
+    <iframe src="https://ghbtns.com/github-btn.html?user=loadtestgo&repo=pizzascript&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></nav>
+  </br>
+</footer>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</body>
+</html>

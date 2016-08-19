@@ -1,0 +1,1514 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta name="generator" content="JSDoc 3.4.0">
+  <meta charset="utf-8">
+  <title>PizzaScript Browser Automation API</title>
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
+  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
+  <link href="css/baseline.css" rel="stylesheet">
+</head>
+
+<body onload="prettyPrint()">
+  <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
+    <div id="jsdoc-navbar-container">
+      <div id="jsdoc-navbar-content">
+        <a href="http://pizzascript.org" class="jsdoc-navbar-package-name">PizzaScript</a><a class="jsdoc-navbar-package-name" href="index.html">Index</a>
+      </div>
+    </div>
+  </nav>
+  <div id="jsdoc-body-container">
+    <div id="jsdoc-content">
+      <div id="jsdoc-content-container">
+        <div id="jsdoc-banner" role="banner">
+        </div>
+        <div id="jsdoc-main" role="main">
+          <article>
+            <h2>PizzaScript</h2>
+            <p>PizzaScript is a JavaScript API for Web Page Automation.</p>
+            <p>Key features:</p>
+            <ul>
+              <li>Inspect page load times and HTTP traffic</li>
+              <li>Wait on page load, HTTP traffic, elements to be visible</li>
+              <li>Reference elements by CSS selector or XPATH</li>
+              <li>CSS selector extensions (e.g. &quot;a:contains(Click me!)&quot; selects a link with the text &quot;Click me!&quot;)</li>
+              <li>Take screenshots</li>
+              <li>Block/redirect certain URLs (or block all beacon URLs)</li>
+              <li>Modify request headers</li>
+              <li>Emulate Mobile and Tablet devices</li>
+              <li>Emulate network conditions (e.g. 3G/4G/Offline)</li>
+              <li>Record WebSockets requests</li>
+            </ul>
+            <h2>Examples</h2>
+            <h3>Website login script:</h3><pre class="prettyprint source"><code>var b = pizza.open();
+b.open(&quot;loadtestgo.com&quot;);
+b.click(&quot;button:contains(Login)&quot;);
+b.waitPageLoad();
+b.type(&quot;#inputUsername&quot;, &quot;demo@loadtestgo.com&quot;);
+b.type(&quot;#inputPassword&quot;, &quot;password&quot;);
+b.click(&quot;button:contains(Login):nth(1)&quot;);
+b.waitPageLoad();</code></pre>
+            <h3>Google 'hot pocket' and click first result:</h3><pre class="prettyprint source"><code>// Load the page and verify that the right page was loaded
+var b = pizza.open(&quot;www.google.com&quot;);
+b.verifyText(/Abou./);
+b.verifyTitle(/Google/);
+
+// Show the search Ajax in another page
+b.newPage();
+b.type(&quot;input[name='q']&quot;, &quot;hot pocket\n&quot;);
+
+// Click on the first link for 'hot pocket'
+b.waitForVisible(&quot;a:icontains(hot pocket)&quot;);
+b.click(&quot;a:icontains(hot pocket)&quot;);
+
+// Wait for content to finish loading
+b.waitPageLoad();</code></pre>
+            <h3>View mobile version of <a href="http://cnn.com/" title="CNN News">cnn.com</a>:</h3><pre class="prettyprint source"><code>var b = pizza.open();
+b.emulateDevice(&quot;Apple iPhone 6&quot;)
+b.open(&quot;cnn.com&quot;);</code></pre></article>
+          <div class="symbol-index">
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="Browser">Browser</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html" class="!symbol-index-name">Browser</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#back" class="!symbol-index-name">Browser#<wbr>back()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#block3rdPartyUrls" class="!symbol-index-name">Browser#<wbr>block3rdPartyUrls()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#blockUrl" class="!symbol-index-name">Browser#<wbr>blockUrl(.<wbr>.<wbr>.<wbr>url)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#check" class="!symbol-index-name">Browser#<wbr>check(selector[, on])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#clear" class="!symbol-index-name">Browser#<wbr>clear(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#clearCache" class="!symbol-index-name">Browser#<wbr>clearCache()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#clearCookies" class="!symbol-index-name">Browser#<wbr>clearCookies()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#clearHighlight" class="!symbol-index-name">Browser#<wbr>clearHighlight()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#clearPageLoad" class="!symbol-index-name">Browser#<wbr>clearPageLoad()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#clearRules" class="!symbol-index-name">Browser#<wbr>clearRules()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#click" class="!symbol-index-name">Browser#<wbr>click(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#clickAt" class="!symbol-index-name">Browser#<wbr>clickAt(selector, x, y)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#close" class="!symbol-index-name">Browser#<wbr>close()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#dismissDialogs" class="!symbol-index-name">Browser#<wbr>dismissDialogs()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#doubleClick" class="!symbol-index-name">Browser#<wbr>doubleClick(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#doubleClickAt" class="!symbol-index-name">Browser#<wbr>doubleClickAt(selector, x, y)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#emulateDevice" class="!symbol-index-name">Browser#<wbr>emulateDevice(name)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#emulateNetworkCondition" class="!symbol-index-name">Browser#<wbr>emulateNetworkCondition(name)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#execute" class="!symbol-index-name">Browser#<wbr>execute(script)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#exists" class="!symbol-index-name">Browser#<wbr>exists(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#focus" class="!symbol-index-name">Browser#<wbr>focus(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#forward" class="!symbol-index-name">Browser#<wbr>forward()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getBrowserName" class="!symbol-index-name">Browser#<wbr>getBrowserName()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getBrowserVersion" class="!symbol-index-name">Browser#<wbr>getBrowserVersion()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getCookie" class="!symbol-index-name">Browser#<wbr>getCookie(name)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getInnerHTML" class="!symbol-index-name">Browser#<wbr>getInnerHTML(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getInnerText" class="!symbol-index-name">Browser#<wbr>getInnerText(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getOpenDialog" class="!symbol-index-name">Browser#<wbr>getOpenDialog()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getTitle" class="!symbol-index-name">Browser#<wbr>getTitle()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getUrl" class="!symbol-index-name">Browser#<wbr>getUrl()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#getValue" class="!symbol-index-name">Browser#<wbr>getValue(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#handleDialog" class="!symbol-index-name">Browser#<wbr>handleDialog(val)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#highlight" class="!symbol-index-name">Browser#<wbr>highlight(selector[, color])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#hover" class="!symbol-index-name">Browser#<wbr>hover(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#hoverAt" class="!symbol-index-name">Browser#<wbr>hoverAt(selector, x, y)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#ignoreHttpErrors" class="!symbol-index-name">Browser#<wbr>ignoreHttpErrors([ignore])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#isDialogOpen" class="!symbol-index-name">Browser#<wbr>isDialogOpen()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#isVisible" class="!symbol-index-name">Browser#<wbr>isVisible(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#jq" class="!symbol-index-name">Browser#<wbr>jq(script)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#listAllFrames" class="!symbol-index-name">Browser#<wbr>listAllFrames()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#listCookies" class="!symbol-index-name">Browser#<wbr>listCookies()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#listDevices" class="!symbol-index-name">Browser#<wbr>listDevices()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#listFrames" class="!symbol-index-name">Browser#<wbr>listFrames([selector])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#listNetworkConditions" class="!symbol-index-name">Browser#<wbr>listNetworkConditions()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#listTabs" class="!symbol-index-name">Browser#<wbr>listTabs()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#newPage" class="!symbol-index-name">Browser#<wbr>newPage([pageName])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#newTab" class="!symbol-index-name">Browser#<wbr>newTab()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#open" class="!symbol-index-name">Browser#<wbr>open(url)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#openAsync" class="!symbol-index-name">Browser#<wbr>openAsync(url)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#query" class="!symbol-index-name">Browser#<wbr>query(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#queryVisible" class="!symbol-index-name">Browser#<wbr>queryVisible(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#reload" class="!symbol-index-name">Browser#<wbr>reload()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#removeCookie" class="!symbol-index-name">Browser#<wbr>removeCookie(name)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#removeHeader" class="!symbol-index-name">Browser#<wbr>removeHeader(header)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#rewriteUrl" class="!symbol-index-name">Browser#<wbr>rewriteUrl(url, rewriteUrl)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#screenshot" class="!symbol-index-name">Browser#<wbr>screenshot([format][, quality])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#select" class="!symbol-index-name">Browser#<wbr>select(selector, value)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#selectContent" class="!symbol-index-name">Browser#<wbr>selectContent(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#selectFrame" class="!symbol-index-name">Browser#<wbr>selectFrame(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#selectFrameCss" class="!symbol-index-name">Browser#<wbr>selectFrameCss(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#selectLatestTab" class="!symbol-index-name">Browser#<wbr>selectLatestTab()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#selectMainTab" class="!symbol-index-name">Browser#<wbr>selectMainTab()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#selectTab" class="!symbol-index-name">Browser#<wbr>selectTab(obj)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#selectTopFrame" class="!symbol-index-name">Browser#<wbr>selectTopFrame()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#setCookie" class="!symbol-index-name">Browser#<wbr>setCookie(name, value[, details])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#setCredentials" class="!symbol-index-name">Browser#<wbr>setCredentials(username, password)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#setHeader" class="!symbol-index-name">Browser#<wbr>setHeader(name, value)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#setUserAgent" class="!symbol-index-name">Browser#<wbr>setUserAgent(userAgent)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#setValue" class="!symbol-index-name">Browser#<wbr>setValue(selector, value)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#submit" class="!symbol-index-name">Browser#<wbr>submit(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#type" class="!symbol-index-name">Browser#<wbr>type(selector, .<wbr>.<wbr>.<wbr>text)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#verifyExists" class="!symbol-index-name">Browser#<wbr>verifyExists(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#verifyNotExists" class="!symbol-index-name">Browser#<wbr>verifyNotExists(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#verifyNotText" class="!symbol-index-name">Browser#<wbr>verifyNotText(text)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#verifyRequest" class="!symbol-index-name">Browser#<wbr>verifyRequest(url)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#verifyText" class="!symbol-index-name">Browser#<wbr>verifyText(text)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#verifyTitle" class="!symbol-index-name">Browser#<wbr>verifyTitle(title)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#waitForElement" class="!symbol-index-name">Browser#<wbr>waitForElement(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#waitForHttpRequests" class="!symbol-index-name">Browser#<wbr>waitForHttpRequests(idleTimeMS)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#waitForText" class="!symbol-index-name">Browser#<wbr>waitForText(selector, text)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#waitForVisible" class="!symbol-index-name">Browser#<wbr>waitForVisible(selector)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Browser.html#waitPageLoad" class="!symbol-index-name">Browser#<wbr>waitPageLoad([timeoutMS])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="CSV">CSV</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-CSV.html" class="!symbol-index-name">CSV</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-CSV.html#getLength" class="!symbol-index-name">CSV#<wbr>getLength()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-CSV.html#randomRow" class="!symbol-index-name">CSV#<wbr>randomRow()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-CSV.html#randomValue" class="!symbol-index-name">CSV#<wbr>randomValue(column)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-CSV.html#row" class="!symbol-index-name">CSV#<wbr>row(row)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-CSV.html#value" class="!symbol-index-name">CSV#<wbr>value(row, column)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="Cookie">Cookie</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html" class="!symbol-index-name">Cookie</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#domain" class="!symbol-index-name">Cookie#<wbr>domain</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#expirationDate" class="!symbol-index-name">Cookie#<wbr>expirationDate</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#hostOnly" class="!symbol-index-name">Cookie#<wbr>hostOnly</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#name" class="!symbol-index-name">Cookie#<wbr>name</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#path" class="!symbol-index-name">Cookie#<wbr>path</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#secure" class="!symbol-index-name">Cookie#<wbr>secure</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#session" class="!symbol-index-name">Cookie#<wbr>session</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#storeId" class="!symbol-index-name">Cookie#<wbr>storeId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Cookie.html#value" class="!symbol-index-name">Cookie#<wbr>value</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="Frame">Frame</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Frame.html" class="!symbol-index-name">Frame</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Frame.html#frame" class="!symbol-index-name">Frame#<wbr>frame</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Frame.html#frameId" class="!symbol-index-name">Frame#<wbr>frameId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Frame.html#src" class="!symbol-index-name">Frame#<wbr>src</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="HttpHeader">HttpHeader</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html" class="!symbol-index-name">HttpHeader</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#CONTENT_LENGTH" class="!symbol-index-name">HttpHeader#<wbr>CONTENT_LENGTH</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#CONTENT_TYPE" class="!symbol-index-name">HttpHeader#<wbr>CONTENT_TYPE</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#COOKIE" class="!symbol-index-name">HttpHeader#<wbr>COOKIE</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#name" class="!symbol-index-name">HttpHeader#<wbr>name</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#SET_COOKIE" class="!symbol-index-name">HttpHeader#<wbr>SET_COOKIE</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#value" class="!symbol-index-name">HttpHeader#<wbr>value</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#~DialogInfo" class="!symbol-index-name">HttpHeader~<wbr>DialogInfo</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#~DialogInfo#.message" class="!symbol-index-name">HttpHeader~<wbr>DialogInfo.<wbr>message</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpHeader.html#~DialogInfo#.type" class="!symbol-index-name">HttpHeader~<wbr>DialogInfo.<wbr>type</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="HttpRequest">HttpRequest</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html" class="!symbol-index-name">HttpRequest</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#blockedTime" class="!symbol-index-name">HttpRequest#<wbr>blockedTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#bodySize" class="!symbol-index-name">HttpRequest#<wbr>bodySize</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#bytesRecvCompressed" class="!symbol-index-name">HttpRequest#<wbr>bytesRecvCompressed</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#connectEnd" class="!symbol-index-name">HttpRequest#<wbr>connectEnd</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#connectionId" class="!symbol-index-name">HttpRequest#<wbr>connectionId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#connectionReused" class="!symbol-index-name">HttpRequest#<wbr>connectionReused</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#connectStart" class="!symbol-index-name">HttpRequest#<wbr>connectStart</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#dnsEnd" class="!symbol-index-name">HttpRequest#<wbr>dnsEnd</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#dnsStart" class="!symbol-index-name">HttpRequest#<wbr>dnsStart</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#error" class="!symbol-index-name">HttpRequest#<wbr>error</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#frameId" class="!symbol-index-name">HttpRequest#<wbr>frameId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#fromCache" class="!symbol-index-name">HttpRequest#<wbr>fromCache</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#host" class="!symbol-index-name">HttpRequest#<wbr>host</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#initiatorUrl" class="!symbol-index-name">HttpRequest#<wbr>initiatorUrl</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#ip" class="!symbol-index-name">HttpRequest#<wbr>ip</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#method" class="!symbol-index-name">HttpRequest#<wbr>method</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#mimeType" class="!symbol-index-name">HttpRequest#<wbr>mimeType</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#parentFrameId" class="!symbol-index-name">HttpRequest#<wbr>parentFrameId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#postData" class="!symbol-index-name">HttpRequest#<wbr>postData</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#protocol" class="!symbol-index-name">HttpRequest#<wbr>protocol</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#recvEnd" class="!symbol-index-name">HttpRequest#<wbr>recvEnd</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#recvHeadersEnd" class="!symbol-index-name">HttpRequest#<wbr>recvHeadersEnd</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#redirectUrl" class="!symbol-index-name">HttpRequest#<wbr>redirectUrl</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#requestBodySize" class="!symbol-index-name">HttpRequest#<wbr>requestBodySize</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#requestHeaders" class="!symbol-index-name">HttpRequest#<wbr>requestHeaders</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#requestHeadersSize" class="!symbol-index-name">HttpRequest#<wbr>requestHeadersSize</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#requestId" class="!symbol-index-name">HttpRequest#<wbr>requestId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#resourceType" class="!symbol-index-name">HttpRequest#<wbr>resourceType</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#responseHeaders" class="!symbol-index-name">HttpRequest#<wbr>responseHeaders</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#responseHeadersSize" class="!symbol-index-name">HttpRequest#<wbr>responseHeadersSize</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#sendEnd" class="!symbol-index-name">HttpRequest#<wbr>sendEnd</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#sendStart" class="!symbol-index-name">HttpRequest#<wbr>sendStart</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#sslEnd" class="!symbol-index-name">HttpRequest#<wbr>sslEnd</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#sslStart" class="!symbol-index-name">HttpRequest#<wbr>sslStart</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#startTime" class="!symbol-index-name">HttpRequest#<wbr>startTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#state" class="!symbol-index-name">HttpRequest#<wbr>state</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#statusCode" class="!symbol-index-name">HttpRequest#<wbr>statusCode</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#statusText" class="!symbol-index-name">HttpRequest#<wbr>statusText</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#tabId" class="!symbol-index-name">HttpRequest#<wbr>tabId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-HttpRequest.html#url" class="!symbol-index-name">HttpRequest#<wbr>url</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="Page">Page</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html" class="!symbol-index-name">Page</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#domContentLoadedTime" class="!symbol-index-name">Page#<wbr>domContentLoadedTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#error" class="!symbol-index-name">Page#<wbr>error</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#firstPaintAfterLoadTime" class="!symbol-index-name">Page#<wbr>firstPaintAfterLoadTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#firstPaintTime" class="!symbol-index-name">Page#<wbr>firstPaintTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#frameId" class="!symbol-index-name">Page#<wbr>frameId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#name" class="!symbol-index-name">Page#<wbr>name</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#navCommitTime" class="!symbol-index-name">Page#<wbr>navCommitTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#navEndTime" class="!symbol-index-name">Page#<wbr>navEndTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#navigationType" class="!symbol-index-name">Page#<wbr>navigationType</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#navStartTime" class="!symbol-index-name">Page#<wbr>navStartTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#numDomElements" class="!symbol-index-name">Page#<wbr>numDomElements</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#numFrames" class="!symbol-index-name">Page#<wbr>numFrames</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#origUrl" class="!symbol-index-name">Page#<wbr>origUrl</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#pageId" class="!symbol-index-name">Page#<wbr>pageId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#processId" class="!symbol-index-name">Page#<wbr>processId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#protocol" class="!symbol-index-name">Page#<wbr>protocol</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#requests" class="!symbol-index-name">Page#<wbr>requests</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#state" class="!symbol-index-name">Page#<wbr>state</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#tabId" class="!symbol-index-name">Page#<wbr>tabId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Page.html#url" class="!symbol-index-name">Page#<wbr>url</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="Tab">Tab</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html" class="!symbol-index-name">Tab</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html#active" class="!symbol-index-name">Tab#<wbr>active</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html#height" class="!symbol-index-name">Tab#<wbr>height</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html#index" class="!symbol-index-name">Tab#<wbr>index</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html#status" class="!symbol-index-name">Tab#<wbr>status</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html#title" class="!symbol-index-name">Tab#<wbr>title</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html#url" class="!symbol-index-name">Tab#<wbr>url</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-Tab.html#width" class="!symbol-index-name">Tab#<wbr>width</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="TestError">TestError</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-TestError.html" class="!symbol-index-name">TestError</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestError.html#column" class="!symbol-index-name">TestError#<wbr>column</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-TestError.html#file" class="!symbol-index-name">TestError#<wbr>file</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestError.html#line" class="!symbol-index-name">TestError#<wbr>line</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-TestError.html#message" class="!symbol-index-name">TestError#<wbr>message</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="TestResult">TestResult</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html" class="!symbol-index-name">TestResult</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#botName" class="!symbol-index-name">TestResult#<wbr>botName</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#browserName" class="!symbol-index-name">TestResult#<wbr>browserName</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#browserVersion" class="!symbol-index-name">TestResult#<wbr>browserVersion</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#error" class="!symbol-index-name">TestResult#<wbr>error</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#ip" class="!symbol-index-name">TestResult#<wbr>ip</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#runTime" class="!symbol-index-name">TestResult#<wbr>runTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#sleepTime" class="!symbol-index-name">TestResult#<wbr>sleepTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#startTime" class="!symbol-index-name">TestResult#<wbr>startTime</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-TestResult.html#testName" class="!symbol-index-name">TestResult#<wbr>testName</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="assert">assert</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-assert.html" class="!symbol-index-name">assert</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-assert.html#.eq" class="!symbol-index-name">assert.<wbr>eq(o1, o2)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-assert.html#.equal" class="!symbol-index-name">assert.<wbr>equal(o1, o2)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-assert.html#.fail" class="!symbol-index-name">assert.<wbr>fail([message])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-assert.html#.ne" class="!symbol-index-name">assert.<wbr>ne(o1, o2)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-assert.html#.notEqual" class="!symbol-index-name">assert.<wbr>notEqual(o1, o2)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-assert.html#.ok" class="!symbol-index-name">assert.<wbr>ok(object)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="console">console</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-console.html" class="!symbol-index-name">console</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-console.html#.log" class="!symbol-index-name">console.<wbr>log(.<wbr>.<wbr>.<wbr>o)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="load">load</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-load.html" class="!symbol-index-name">load</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="pizza">pizza</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html" class="!symbol-index-name">pizza</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.botId" class="!symbol-index-name">pizza.<wbr>botId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.browser" class="!symbol-index-name">pizza.<wbr>browser()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.ip" class="!symbol-index-name">pizza.<wbr>ip</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.loadTestId" class="!symbol-index-name">pizza.<wbr>loadTestId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.location" class="!symbol-index-name">pizza.<wbr>location</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.open" class="!symbol-index-name">pizza.<wbr>open()</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.openCSV" class="!symbol-index-name">pizza.<wbr>openCSV(filename)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.pages" class="!symbol-index-name">pizza.<wbr>pages</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.result" class="!symbol-index-name">pizza.<wbr>result</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.sequenceId" class="!symbol-index-name">pizza.<wbr>sequenceId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.sleep" class="!symbol-index-name">pizza.<wbr>sleep(milliseconds)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.userId" class="!symbol-index-name">pizza.<wbr>userId</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.version" class="!symbol-index-name">pizza.<wbr>version</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-pizza.html#.waitFor" class="!symbol-index-name">pizza.<wbr>waitFor(func[, waitIterationMilliseconds])</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div class="symbol-index-content">
+                <h2 id="utils">utils</h2>
+                <div class="symbol-index-section">
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-utils.html" class="!symbol-index-name">utils</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-utils.html#.date" class="!symbol-index-name">utils.<wbr>date(format, daysOffset)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                      <dt class="symbol-index-name">
+                <a href="module-utils.html#.random" class="!symbol-index-name">utils.<wbr>random(max)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                      <dt class="symbol-index-name">
+                <a href="module-utils.html#.randomElement" class="!symbol-index-name">utils.<wbr>randomElement(array)</a>
+            </dt>
+                      <dd>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="symbol-index-column">
+                    <dl class="symbol-index-list">
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <nav id="jsdoc-toc-nav" role="navigation"></nav>
+    </div>
+  </div>
+  <footer id="jsdoc-footer" class="jsdoc-footer">
+    <div id="jsdoc-footer-container">
+      <p>
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on August 17, 2016.
+      </p>
+    </div>
+  </footer>
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/jquery.cookie.js"></script>
+  <script src="scripts/tree.jquery.js"></script>
+  <script src="scripts/prettify.js"></script>
+  <script src="scripts/jsdoc-toc.js"></script>
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/scrollanchor.js"></script>
+</body>
+
+</html>
