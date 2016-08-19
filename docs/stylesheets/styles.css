@@ -99,15 +99,12 @@ button:hover {
 a {
     border-radius: 4px;
     padding: 0px 4px 0px 4px;
-    color: #000;
-    background: #777;
-    cursor: pointer;
+    color: #bbb;
     border: none;
     outline: none
 }
 
 a:hover {
-    color: #777;
     background: #000;
 }
 

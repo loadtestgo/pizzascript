@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)](https://travis-ci.org/loadtestgo/pizzascript)
 [![License](https://img.shields.io/badge/licence-BSD--3--Clause-blue.svg)](https://github.com/loadtestgo/pizzascript/blob/master/LICENSE.BSD)
 
-#### [Homepage](http://pizzascript.org) | [API Reference](http://pizzascript.org/docs)
+#### [Homepage](http://pizzascript.org) | [API Reference](http://pizzascript.org/api)
 
 # PizzaScript - Browser Automation & Performance Monitoring
 
@@ -48,9 +48,6 @@ The editor has been tested on Linux, OSX and Windows.
 
 ## Examples
 
-To give you a flavour for the API here are some scripts.  The full API is documented [here](http://pizzascript.org/docs).
-
-
 ### Load Page
 
 ```javascript
@@ -78,3 +75,8 @@ var b = pizza.open();
 b.emulateDevice("Apple iPhone 6")
 b.open("cnn.com");
 ```
+
+## Alternatives
+
+* [WebPageTest](https://www.webpagetest.org) - Test a site's peformance from many different locations with a wide variety of browsers.
+* [PhantomJS](http://phantomjs.org) - Drive a headless browser using JavaScript, take screenshots and capture perfromance metrics.
