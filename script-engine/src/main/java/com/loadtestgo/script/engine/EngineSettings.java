@@ -58,7 +58,12 @@ public class EngineSettings extends Settings {
     }
 
     public static String getVersion() {
-        return "0.2";
+        Package thisPackage = EngineSettings.class.getPackage();
+        String version = thisPackage.getImplementationVersion();
+        if (version == null) {
+            version = "dev";
+        }
+        return version;
     }
 
     public static boolean sandboxJavaScript() {

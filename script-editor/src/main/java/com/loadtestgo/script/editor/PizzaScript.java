@@ -99,7 +99,7 @@ public class PizzaScript {
     }
 
     private static void printVersion() {
-        System.out.println(String.format("%s: %s", AppName, EngineSettings.getVersion()));
+        System.out.println(String.format("%s: %s", AppName, PizzaScript.getVersion()));
     }
 
     private static String stripLeadingDashes(String arg) {
@@ -266,6 +266,15 @@ public class PizzaScript {
 
     public static void exit() {
         bExiting = true;
+    }
+
+    public static String getVersion() {
+        Package thisPackage = PizzaScript.class.getPackage();
+        String version = thisPackage.getImplementationVersion();
+        if (version == null) {
+            version = "dev";
+        }
+        return version;
     }
 }
 

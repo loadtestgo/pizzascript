@@ -83,7 +83,7 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
         consoleTextArea.println(
                 String.format("Welcome to %s Interactive Console %s!",
                         PizzaScript.AppName,
-                        EngineSettings.getVersion()),
+                        PizzaScript.getVersion()),
                 "#800000");
         consoleTextArea.println(
                 "Type JavaScript to evaluate or open a new window in the File menu.",
