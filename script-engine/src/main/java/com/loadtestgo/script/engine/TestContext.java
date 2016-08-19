@@ -7,6 +7,7 @@ import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * A context used in a single script/test run.
@@ -116,7 +117,11 @@ public class TestContext {
     }
 
     public File getFile(String filename) {
-        return new File(filename);
+        try {
+            return new File(filename).getCanonicalFile();
+        } catch (IOException e) {
+            throw new ScriptException("Unable to find file '" + filename + "'");
+        }
     }
 
     public boolean sandboxJavaScript() {

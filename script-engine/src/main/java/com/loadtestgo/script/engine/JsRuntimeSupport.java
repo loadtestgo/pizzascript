@@ -29,33 +29,29 @@ public class JsRuntimeSupport extends ScriptableObject {
             throw new ScriptException("load() filename not specified");
         }
 
-        String origFilename = Context.toString(args[0]);
-        String filename = origFilename;
+        String filename = Context.toString(args[0]);
 
         JsRuntimeSupport dis = (JsRuntimeSupport) getTopLevelScope(thisObj);
-        File file = dis.testContext.getFile(origFilename);
 
-        if (!dis.testContext.getIsFileSystemSandboxed()) {
-            try {
-                filename = file.getCanonicalPath();
-            } catch (IOException e) {
+        File file = dis.testContext.getFile(filename);
+        if (!file.exists()) {
+            if (dis.testContext.getIsFileSystemSandboxed()) {
                 throw new ScriptException("Unable to find file '" + filename + "'");
+            } else {
+                throw new ScriptException("Unable to find file '" + file.getPath() + "'");
             }
         }
 
-        if (!file.exists()) {
-            throw new ScriptException("Unable to find file '" + filename + "'");
-        }
-
-        Logger.info("Loading file " + filename + "...");
+        String fullPath = file.getPath();
+        Logger.info("Loading file " + fullPath + "...");
 
         try {
-            return cx.evaluateReader(newScope, new InputStreamReader(new FileInputStream(filename)), filename, 1, null);
+            return cx.evaluateReader(newScope, new InputStreamReader(new FileInputStream(file)), filename, 1, null);
         } catch (IOException e) {
             if (dis.testContext.getIsFileSystemSandboxed()) {
                 throw new ScriptException(e.getMessage());
             } else {
-                throw new ScriptException(e.getMessage().replace(origFilename, filename));
+                throw new ScriptException(e.getMessage().replace(fullPath, filename));
             }
         }
     }
