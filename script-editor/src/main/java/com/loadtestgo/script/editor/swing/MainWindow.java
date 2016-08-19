@@ -93,7 +93,9 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     private Action nextTabAction = new NextTabAction();
     private Action prevTabAction = new PrevTabAction();
 
-    private Action onlineHelpAction = new OnlineHelpAction("Scripting Help", "http://docs.loadtestgo.com");
+    private Action helpHomeAction = new OnlineHelpAction("Home Page", "http://pizzascript.org/");
+    private Action helpApiAction = new OnlineHelpAction("Script API", "http://pizzascript.org/api/");
+    private Action helpWikiAction = new OnlineHelpAction("PizzaScript Wiki", "https://github.com/loadtestgo/pizzascript/wiki");
 
     private int defaultWindowMenuItems;
     private double debugDividerLocation = 0.66;
@@ -210,7 +212,9 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
 
         defaultWindowMenuItems = windowMenu.getItemCount();
 
-        helpMenu.add(onlineHelpAction);
+        helpMenu.add(helpHomeAction);
+        helpMenu.add(helpApiAction);
+        helpMenu.add(helpWikiAction);
 
         return menuBar;
     }
