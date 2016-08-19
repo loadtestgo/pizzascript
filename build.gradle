@@ -144,11 +144,11 @@ project(':script-tester') {
 }
 
 task baseDocs(type:Exec) {
-  commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/docs.js', 'script-api/docs.md', '-d', 'jsdocs'
+  commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/docs.js', 'script-api/docs.md', '-d', 'docs/api'
 }
 
 task docs(dependsOn:baseDocs) << {
-  FileTree tree = fileTree (dir: "jsdocs");
+  FileTree tree = fileTree (dir: "docs/api");
   tree.include "*.html"
   tree.each { File file ->
     String contents = file.getText( 'UTF-8' )

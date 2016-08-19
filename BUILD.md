@@ -64,3 +64,6 @@ JSDocs is used to generate the docs.
     npm install jsdoc
     npm install https://github.com/hegemonic/baseline/tarball/master
     gradle docs
+
+These can be checked in and will appear on pizzascript.org once merged
+with the master branch.
