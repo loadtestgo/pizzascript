@@ -31,7 +31,7 @@ First make sure the following are installed.
 + Chrome 40+
 + Java 8 JRE
 
-Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/files/365310/script-editor-0.2.4.zip) release.
+Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.5/script-editor-0.2.5.zip) release.
 
 Open the IDE:
 
@@ -41,7 +41,7 @@ Run a script from the console and save a HAR (HTTP Archive) file:
 
     bin/script-editor -console samples/google.js -har
 
-The editor will search the path for Chrome, along with well-known locations.  You can specify the location of Chrome in the settings.ini file included in the top level directory of the zip (this is read from the current working directory when the editor is loaded) 
+The editor will search the path for Chrome, along with well-known locations. See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting.
 
 The editor has been tested on Linux, OSX and Windows.
 
