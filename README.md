@@ -79,4 +79,4 @@ b.open("cnn.com");
 ## Alternatives
 
 * [WebPageTest](https://www.webpagetest.org) - Test a site's peformance from many different locations with a wide variety of browsers.
-* [PhantomJS](http://phantomjs.org) - Drive a headless browser using JavaScript, take screenshots and capture perfromance metrics.
+* [PhantomJS](http://phantomjs.org) - Drive a headless browser using JavaScript, take screenshots and capture performance metrics.
