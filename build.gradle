@@ -2,6 +2,11 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
 
+    ext {
+        jacksonVersion = '2.4.3'
+        rhinoVersion = '1.7.7'
+    }
+
     compileJava {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -13,11 +18,6 @@ subprojects {
     version = "$majorVersion.$buildNumber"
     group = "com.loadtestgo";
 
-    ext {
-        jacksonVersion = '2.4.3'
-        rhinoVersion = '1.7.7'
-    }
-
     jar {
         manifest {
             attributes 'Implementation-Title': 'PizzaScript', 'Implementation-Version': version
@@ -28,17 +28,17 @@ subprojects {
         mavenCentral()
     }
 
-    dependencies {
-        testCompile 'junit:junit:4.+'
-        testCompile 'org.jmockit:jmockit:1.20'
-    }
-
     configurations.all {
         resolutionStrategy {
             // Fail if we use multiple version of the same library in the same
             // project.
             failOnVersionConflict()
         }
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.+'
+        testCompile 'org.jmockit:jmockit:1.20'
     }
 }
 
@@ -110,14 +110,22 @@ project(':script-editor') {
     distTar {
         compression = Compression.GZIP
     }
-    applicationDistribution.from(fileTree(dir: '../scripts', includes: ['*.js'])) {
-        into("scripts")
+}
+
+project(':script-runner') {
+    apply plugin: 'application'
+    mainClassName = "com.loadtestgo.script.runner.Main"
+
+    // Compress tar file
+    dependencies {
+        compile project(':script-api')
+        compile project(':script-engine')
+        compile project(':util')
+        compile project(':view-metrics')
+        compile 'jline:jline:2.10'
     }
-    applicationDistribution.from(fileTree(dir: '../jsdocs')) {
-        into("docs")
-    }
-    applicationDistribution.from(file('../script-api/docs.js')) {
-        into(".")
+    distTar {
+        compression = Compression.GZIP
     }
 }
 
@@ -141,6 +149,50 @@ project(':script-tester') {
         compile project(':view-metrics')
         compile 'junit:junit:4.+'
     }
+}
+
+project(':dist') {
+  apply plugin: 'java-library-distribution'
+
+  def projects = [ project(':script-runner'), project(':script-editor') ]
+  distributions {
+      main {
+          baseName = "pizzascript"
+          contents {
+              exclude "dist-${version}.jar"
+              exclude ".gitkeep"
+
+              into('bin') {
+                  projects.each { p->
+                      from { p.startScripts.outputs.files }
+                  }
+                  fileMode = 0755
+              }
+              into('lib') {
+                  def libs = []
+
+                  projects.each { p->
+                    libs.addAll(p.configurations.compile.resolvedConfiguration.resolvedArtifacts.file)
+                    from p.jar
+                  }
+
+                  from libs.unique()
+              }
+              into('scripts') {
+                  from(fileTree(dir: '../scripts', includes: ['*.js']))
+              }
+              into('docs') {
+                  from(fileTree(dir: '../docs/api'))
+              }
+              into(".") {
+                  from(file('../script-api/docs.js'))
+              }
+          }
+      }
+  }
+  distTar {
+      compression = Compression.GZIP
+  }
 }
 
 task baseDocs(type:Exec) {

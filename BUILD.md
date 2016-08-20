@@ -13,13 +13,13 @@
 
 To build the script editor package:
 
-    gradle script-editor:distZip
+    gradle dist:distZip
 
 This will save a zip file to:
 
-    script-editor/build/distributions/script-editor-0.2.zip
+    dist/build/distributions/pizzascript-0.2.5.zip
 
-To build a flat dir:
+To build a flat dir for the editor or runner:
 
     gradle script-editor:install
 
@@ -54,7 +54,7 @@ Install Gulp as follows (sudo is necessary):
 
 To generate a release build:
 
-    gradle clean script-editor:distZip -Prelease
+    gradle clean dist:distZip -Prelease
 
 
 ### Build docs:
@@ -65,5 +65,5 @@ JSDocs is used to generate the docs.
     npm install https://github.com/hegemonic/baseline/tarball/master
     gradle docs
 
-These can be checked in and will appear on pizzascript.org once merged
-with the master branch.
+These can be checked in and will appear on pizzascript.org once merged with the master
+branch.
