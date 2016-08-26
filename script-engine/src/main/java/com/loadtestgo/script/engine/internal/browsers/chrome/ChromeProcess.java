@@ -317,22 +317,20 @@ public class ChromeProcess
         if (process != null) {
             Logger.info("Closing Chrome...");
 
-            // Otherwise fallback to process.destroy()
-
             // Forcibly kill the chrome process, chrome does not exit properly
             // (on OSX at least) when you call Process.destroy().  This causes
             // a problem with our unit tests as there are a ton of chrome processes
             // open hanging our test server (the process keep their TCP connections
             // to our web server open).
-            boolean jave17Fallback = false;
+            boolean java17Fallback = false;
             try {
                 Method method = Process.class.getMethod("destroyForcibly");
                 method.invoke(process);
             } catch (NoSuchMethodException|InvocationTargetException|IllegalAccessException e) {
-                jave17Fallback = true;
+                java17Fallback = true;
             }
 
-            if (jave17Fallback) {
+            if (java17Fallback) {
                 process.destroy();
                 // Don't wait for exit (on OSX it takes 30 seconds for the process to exit),
                 // when we call destroy, this doesn't normally cause problems however.

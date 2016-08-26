@@ -7,7 +7,12 @@
 
 PizzaScript is a JavaScript browser automation framework with built-in performance monitoring.
 
-It includes a script editor, with a REPL and debugger for interactively writing tests.
+It includes:
+
+- A JavaScript IDE, with a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) and debugger for
+  interactively writing tests.
+- A standalone script runner, for running a set of tests, capturing screenshots & performance metrics.
+- A Java API, for embedding the script runner.
 
 ## Features
 
@@ -37,13 +42,13 @@ Open the IDE:
 
     bin/script-editor
 
-Run a script from the console and save a HAR (HTTP Archive) file:
+Run a batch of scripts and saving error messages, HAR (HTTP Archive) and screenshots to a directory:
 
-    bin/script-editor -console samples/google.js -har
+    bin/script-runner scripts
 
-The editor will search the path for Chrome, along with well-known locations. See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting.
+Both will search the path for Chrome, along with well-known Chrome install locations. See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting.
 
-The editor has been tested on Linux, OSX and Windows.
+Tested on Linux, OSX and Windows.
 
 
 ## Examples

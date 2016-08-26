@@ -48,9 +48,8 @@ On Debian (replace \_ with just the underscore):
 
 Install Gulp as follows (sudo is necessary):
 
-    npm install --global gulp
-    npm install --save-dev gulp
-    npm install gulp-uglify gulp-concat gulp-replace event-stream --save-dev
+    npm install gulp
+    npm install gulp-uglify gulp-concat gulp-replace event-stream
 
 To generate a release build:
 

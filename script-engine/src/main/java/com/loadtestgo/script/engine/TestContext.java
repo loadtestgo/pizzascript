@@ -22,6 +22,7 @@ public class TestContext {
     protected ProcessLauncher processLauncher;
     protected BrowserLifeCycleNotifier browserNotifier;
     protected boolean sandboxJavaScript = true;
+    protected File baseDirectory;
 
     public TestContext(UserContext userContext) {
         this.userContext = userContext;
@@ -117,10 +118,11 @@ public class TestContext {
     }
 
     public File getFile(String filename) {
-        try {
-            return new File(filename).getCanonicalFile();
-        } catch (IOException e) {
-            throw new ScriptException("Unable to find file '" + filename + "'");
+        File file = new File(filename);
+        if (file.isAbsolute()) {
+            return file;
+        } else {
+            return new File(baseDirectory, filename);
         }
     }
 
@@ -130,5 +132,13 @@ public class TestContext {
 
     public void setSandboxJavaScript(boolean sandboxJavaScript) {
         this.sandboxJavaScript = sandboxJavaScript;
+    }
+
+    public File getBaseDirectory() {
+        return baseDirectory;
+    }
+
+    public void setBaseDirectory(File baseDirectory) {
+        this.baseDirectory = baseDirectory;
     }
 }

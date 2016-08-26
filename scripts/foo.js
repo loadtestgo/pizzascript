@@ -3,4 +3,4 @@
 a = "hello there,";
 doStuff = function() {
   console.log("stuff is now being done");
-}
+};

@@ -53,12 +53,13 @@ public class ChromeBrowser implements Browser {
                 pizzaHandler = userContext.getPizzaHandler();
             }
 
+            /*
             if (chromeProcess == null) {
                 if (userContext.isChromeProfileInitialSetup()) {
                     settings.unpackExtension = false;
                     settings.reuseProfile = true;
                 }
-            }
+            }*/
 
             // Start the websocket listener
             if (pizzaHandler == null) {

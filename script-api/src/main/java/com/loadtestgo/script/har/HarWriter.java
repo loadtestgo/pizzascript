@@ -35,6 +35,12 @@ public class HarWriter {
         }
     }
 
+    public static void save(TestResult testResult, File filePath) throws IOException {
+        try (OutputStream output = new FileOutputStream(filePath)) {
+            HarWriter.save(testResult, output);
+        }
+    }
+
     /**
      * Save a test result to a file & compress using zip
      *

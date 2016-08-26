@@ -1,33 +1,31 @@
 package com.loadtestgo.script.runner;
 
-import com.loadtestgo.script.api.TestResult;
-import com.loadtestgo.script.engine.*;
-import com.loadtestgo.script.har.HarWriter;
-import com.loadtestgo.util.FileUtils;
-import com.loadtestgo.util.Os;
-import com.loadtestgo.util.Settings;
-import com.loadtestgo.util.StringUtils;
-import jline.console.ConsoleReader;
-import org.pmw.tinylog.Logger;
+import com.loadtestgo.util.*;
 
-import javax.swing.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import org.fusesource.jansi.AnsiConsole;
+
+/**
+ * Run a set of scripts, taking screenshots, saving log info and record HAR data for each.
+ */
 public class Main {
+    private static final double MAX_TIMEOUT_SECONDS = 10 * 1000 * 1000;
     public static String AppName = "PizzaScript Test Runner";
 
-    static boolean saveHar = false;
     static String fileName = null;
     static String outputDir = null;
+    static double timeout = -1;
 
     private static void processArgs(String[] args) {
         for (int i = 0; i < args.length; ++i) {
             String arg = args[i];
             if (arg.startsWith("-")) {
-                String switchName = stripLeadingDashes(arg);
+                String switchName = Args.stripLeadingDashes(arg);
                 switch(switchName) {
                     case "v":
                     case "version":
@@ -45,135 +43,130 @@ public class Main {
                         if (i < args.length) {
                             outputDir = args[i];
                         } else {
-                            printError("-" + switchName + " requires a directory parameter");
-                            System.exit(1);
+                            printErrorWithHelp("-" + switchName + " requires a directory parameter");
+                        }
+                        break;
+                    case "t":
+                    case "timeout":
+                        i++;
+                        if (i < args.length) {
+                            String t = args[i];
+                            try {
+                                timeout = Double.parseDouble(t);
+                                if (timeout < 0) {
+                                    printErrorWithHelp("Timeout must be greater than zero");
+                                } else if (timeout > MAX_TIMEOUT_SECONDS) {
+                                    printErrorWithHelp("Timeout must be less than " + MAX_TIMEOUT_SECONDS);
+                                }
+                            } catch (NumberFormatException e) {
+                                printErrorWithHelp("Timeout " + t + " not a valid number");
+                            }
+                        } else {
+                            printErrorWithHelp("-" + switchName + " requires a timeout parameter");
                         }
                         break;
                     default:
-                        printError("Unknown option " + switchName);
-                        System.exit(1);
+                        printErrorWithHelp("Unknown option " + switchName);
                         break;
                 }
             } else {
                 if (fileName != null) {
-                    printError("Only one file name can be specified.");
-                    System.exit(1);
+                    printErrorWithHelp("Only one file name can be specified.");
                 }
                 fileName = arg;
             }
         }
+        if (fileName == null) {
+            printErrorWithHelp("Must specify a file | directory | config file to run");
+        }
+    }
+
+    private static void printErrorWithHelp(String s) {
+        MainLog.logError(s);
+        printHelp();
+        System.exit(1);
     }
 
     private static void printError(String s) {
-        System.out.println(s);
-
-        printHelp();
+        MainLog.logError(s);
+        System.exit(1);
     }
 
     private static void printHelp() {
         printVersion();
 
-        System.out.println();
-        System.out.println("script-runner [options] [file]|[directory]");
-        System.out.println();
-        System.out.println("  -help / -h           print this help");
-        System.out.println("  -version / -v        print the version number");
-        System.out.println("  -output / -o <dir>   output screenshots and other results to this directory");
-        System.out.println("                       output dir can be specified in json file");
-        System.out.println("                       defaults to results-<timestamp>");
-        System.out.println();
-        System.out.println("Run a file:");
-        System.out.println("  script-runner filename.js");
-        System.out.println();
-        System.out.println("Run all files in a directory (each file is ran as a separate test):");
-        System.out.println("  script-runner dir");
-        System.out.println();
-        System.out.println("Run tests all tests specified by json config file:");
-        System.out.println("  script-runner tests.json");
-        System.out.println();
+        MainLog.logInfo();
+        MainLog.logInfo("script-runner [options] [file]|[directory]");
+        MainLog.logInfo();
+        MainLog.logInfo("  -help / -h           print this help");
+        MainLog.logInfo("  -version / -v        print the version number");
+        MainLog.logInfo("  -timeout / -t        specify the timeout in seconds (resolution ms)");
+        MainLog.logInfo("  -output / -o <dir>   output screenshots and other results to this directory");
+        MainLog.logInfo("                       output dir can be specified in json file");
+        MainLog.logInfo("                       defaults to results-<timestamp>");
+        MainLog.logInfo();
+        MainLog.logInfo("Run a file:");
+        MainLog.logInfo("  script-runner filename.js");
+        MainLog.logInfo();
+        MainLog.logInfo("Run all files in a directory (each file is ran as a separate test):");
+        MainLog.logInfo("  script-runner dir");
+        MainLog.logInfo();
+        MainLog.logInfo("Run all tests specified by json config file:");
+        MainLog.logInfo("  script-runner tests.json");
+        MainLog.logInfo();
+        MainLog.logInfo("Run all files in a directory with a timeout of 7.5 secs per test:");
+        MainLog.logInfo("  script-runner dir -t 7.5");
+        MainLog.logInfo();
     }
 
     private static void printVersion() {
-        System.out.println(String.format("%s: %s", AppName, getVersion()));
-    }
-
-    private static String stripLeadingDashes(String arg) {
-        if (arg == null) {
-            return null;
-        }
-
-        if (arg.length() == 0) {
-            return arg;
-        }
-
-        if (arg.charAt(0) == '-') {
-            int pos = 1;
-            if (arg.length() >= 2) {
-                if (arg.charAt(1) == '-') {
-                    pos = 2;
-                }
-            }
-            return arg.substring(pos);
-        }
-
-        return arg;
+        MainLog.logInfo(String.format("%s: %s", AppName, getVersion()));
     }
 
     public static void main(String[] args) {
+        AnsiConsole.systemInstall();
+
         processArgs(args);
 
-        // Make sure the settings are loaded from the current directory
-        // before before a Swing GUI dialog changes it
-        Settings.loadSettings();
-
-        boolean success = true;
-
-        EasyTestContext testContext = new EasyTestContext();
-        JavaScriptEngine engine = new JavaScriptEngine();
-        engine.init(testContext);
-
-        if (fileName != null) {
-            success = processFile(fileName, engine);
+        if (outputDir == null) {
+            outputDir = "results-" + formatDate(new Date());
         }
 
-        engine.finish();
+        Worker worker = new Worker();
+        RunnerTestResults runnerTestResults = new RunnerTestResults();
+        worker.init(outputDir, runnerTestResults);
 
-        if (saveHar) {
-            TestResult testResult = testContext.getTestResult();
-            String harFile = "results.har";
-            if (StringUtils.isSet(fileName)) {
-                harFile = fileName += ".har";
-            }
-            try {
-                System.out.println(String.format("Saving HAR file %s...", harFile));
-                HarWriter.save(testResult, harFile);
-            } catch (IOException e) {
-                System.out.println(String.format("Unable to save har file: %s", e.getMessage()));
-            }
+        File specifiedFile = new File(fileName);
+        if (!specifiedFile.exists()) {
+            printError("Unable to find file '" + fileName + "'");
         }
 
-        System.exit(success ? 0 : 1);
+        List<File> files = new ArrayList<>();
+
+        if (specifiedFile.isDirectory()) {
+            File[] listOfFiles = specifiedFile.listFiles();
+            if (listOfFiles != null) {
+                for (File file : listOfFiles) {
+                    if (file.isFile() && file.getName().endsWith(".js")) {
+                        files.add(file);
+                    }
+                }
+            }
+        } else {
+            files.add(specifiedFile);
+        }
+
+        long timeoutInMs = 0;
+        if (timeout > 0) {
+            timeoutInMs = (long)(timeout * 1000);
+        }
+
+        System.exit(worker.runJobs(files, timeoutInMs) ? 0 : 1);
     }
 
-    private static boolean processFile(String filename, JavaScriptEngine engine) {
-        try {
-            File scriptFile  = new File(filename);
-            if (!scriptFile.exists()) {
-                throw new FileNotFoundException("Unable to find file '" + filename + "'");
-            }
-            String scriptContexts = FileUtils.readAllText(filename);
-            if (scriptContexts == null) {
-                throw new IOException("Error reading '" + filename + "'");
-            }
-            Object result = engine.runScript(scriptContexts, filename);
-            if (result != null) {
-                System.out.println(engine.valueToString(result));
-            }
-            return true;
-        } catch (IOException|ScriptException e) {
-            System.err.println(e.getMessage());
-            return false;
-        }
+    private static String formatDate(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd-HH.mm.ss");
+        return simpleDateFormat.format(date);
     }
 
     public static String getVersion() {

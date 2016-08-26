@@ -1,6 +1,7 @@
 package com.loadtestgo.script.editor.swing;
 
 import com.loadtestgo.script.engine.*;
+import com.loadtestgo.util.Path;
 import org.pmw.tinylog.Logger;
 
 import java.util.ArrayList;

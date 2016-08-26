@@ -123,6 +123,7 @@ project(':script-runner') {
         compile project(':util')
         compile project(':view-metrics')
         compile 'jline:jline:2.10'
+        compile 'org.fusesource.jansi:jansi-project:1.13'
     }
     distTar {
         compression = Compression.GZIP

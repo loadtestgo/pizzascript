@@ -3,10 +3,7 @@ package com.loadtestgo.script.editor;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.engine.*;
 import com.loadtestgo.script.har.HarWriter;
-import com.loadtestgo.util.FileUtils;
-import com.loadtestgo.util.Os;
-import com.loadtestgo.util.Settings;
-import com.loadtestgo.util.StringUtils;
+import com.loadtestgo.util.*;
 import jline.console.ConsoleReader;
 import org.pmw.tinylog.Logger;
 
@@ -15,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 
 /**
  * Class containing main function.  The name of the class is what shows
@@ -153,10 +151,13 @@ public class PizzaScript {
             EasyTestContext testContext = new EasyTestContext();
             JavaScriptEngine engine = new JavaScriptEngine();
             engine.init(testContext);
+
             registerExitFunction(engine);
 
             if (fileName != null) {
-                success = processFile(fileName, engine);
+                File scriptFile  = new File(fileName);
+                testContext.setBaseDirectory(Path.getParentDirectory(scriptFile));
+                success = processFile(fileName, scriptFile, engine);
             } else {
                 success = interactiveMode(engine);
             }
@@ -233,9 +234,8 @@ public class PizzaScript {
         }
     }
 
-    private static boolean processFile(String filename, JavaScriptEngine engine) {
+    private static boolean processFile(String filename, File scriptFile, JavaScriptEngine engine) {
         try {
-            File scriptFile  = new File(filename);
             if (!scriptFile.exists()) {
                 throw new FileNotFoundException("Unable to find file '" + filename + "'");
             }

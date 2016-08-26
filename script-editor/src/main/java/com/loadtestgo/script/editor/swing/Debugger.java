@@ -768,6 +768,7 @@ public class Debugger {
             EditorTestContext testContext = new EditorTestContext(Path.getFileName(file.getFilePath()), 1);
             testContext.setWindowPosition(windowPosition);
             testContext.setResultNotifier(consoleOutputStream);
+            testContext.setBaseDirectory(Path.getParentDirectory(file.getFilePath()));
             engine.setConsole(consoleOutputStream);
             testResult = testContext.getTestResult();
             consoleOutputStream.setTestResult(testResult);

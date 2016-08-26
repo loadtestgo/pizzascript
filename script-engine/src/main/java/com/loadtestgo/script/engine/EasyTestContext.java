@@ -1,5 +1,6 @@
 package com.loadtestgo.script.engine;
 
+import com.loadtestgo.util.Path;
 import org.pmw.tinylog.Logger;
 
 import java.net.Inet4Address;
@@ -24,6 +25,7 @@ public class EasyTestContext extends TestContext {
     }
 
     private void commonInit() {
+        setBaseDirectory(Path.getCurrentWorkingDirectory());
         this.engineContext = userContext.getEngineContext();
         try {
             engineContext.setLocalPublicIp(Inet4Address.getLocalHost().getHostAddress());

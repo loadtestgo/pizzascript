@@ -2709,18 +2709,24 @@ console.log = function(o) {};
  * If the script is running sandboxed, the file must be specified as one of the
  * files used by the script.
  *
+ * Files are loaded relative to the script file being executed.
+ *
  * @example
- * // load 'foo.js' from the local file system.
+ * // Load the file 'foo.js', and execute it's JavaScript
  * load("foo.js"); // If 'foo.js' contains just 'x = "hello"', then the following will
  * console.log(x); // display the string 'hello'
  *
  * @example
- * // load 'bar.js' from the local file system.
+ * // Load the file 'foo.js', and execute it's JavaScript
  * load("bar.js"); // If 'bar.js' contains:
  *                 //   function x() {
  *                 //     console.log("hello");
  *                 //   }
  * x();            // then the function x() can be called
+ *
+ * @example
+ * // Load 'dir/foo.js'
+ * load("dir/foo.js");
  *
  * @param file {String} the file to load
  * @exports load
