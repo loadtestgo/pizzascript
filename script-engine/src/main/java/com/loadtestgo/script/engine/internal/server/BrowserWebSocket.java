@@ -142,15 +142,11 @@ public class BrowserWebSocket {
     }
 
     public synchronized void onError(Exception ex) {
-        Logger.warn(ex, "BrowserCommsHandler socket error");
+        Logger.warn(ex, "BrowserWebSocket socket error");
     }
 
-    public boolean waitForConnection() {
-        try {
-            return connectLatch.await(20, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new ScriptException("Wait for browser to open interrupted");
-        }
+    public boolean waitForConnection() throws InterruptedException {
+        return connectLatch.await(20, TimeUnit.SECONDS);
     }
 
     public String getVersion() {

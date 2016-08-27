@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.channels.ClosedByInterruptException;
 import java.util.*;
 
 public class ChromeProcess
@@ -241,6 +242,8 @@ public class ChromeProcess
 
             FileUtils.deleteQuietly(configFileSrc);
             FileUtils.moveFile(configFileDest, configFileSrc);
+        } catch (ClosedByInterruptException e) {
+            throw new ScriptException(String.format("Browser setup interrupted"));
         } catch (IOException e) {
             throw new ScriptException(String.format("Unable to copy extension to Chrome temp dir:\n  %s", e.getMessage()));
         }

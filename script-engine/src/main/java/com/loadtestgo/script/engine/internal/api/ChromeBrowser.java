@@ -17,6 +17,7 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.regexp.NativeRegExp;
 import org.pmw.tinylog.Logger;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,7 +134,12 @@ public class ChromeBrowser implements Browser {
         chromeProcess.start(testContext.getProcessLauncher());
 
         // Wait for the Browser to connect back to us
-        return pizzaHandler.waitForConnection();
+        try {
+            return pizzaHandler.waitForConnection();
+        } catch (InterruptedException ie) {
+            chromeProcess.close();
+            throw new ScriptException("Wait for browser to open interrupted");
+        }
     }
 
     public void close() {
