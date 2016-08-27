@@ -25,6 +25,26 @@ public class ExecuteTests extends JavaScriptTest {
         assertNoError(result);
     }
 
+
+    @Test
+    public void globals() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+                "assert.eq(b.execute('myGlobalNumber'), 42);\n" +
+                "assert.eq(b.execute('myGlobalNumber = 43'), 43);\n" +
+                "assert.eq(b.execute('myGlobalNumber'), 43);\n" +
+                "assert.eq(b.execute('myGlobalString'), 'Pizza');\n" +
+                "assert.eq(b.execute('myGlobalString = \"Script\"'), 'Script');\n" +
+                "assert.eq(b.execute('myGlobalString'), 'Script');\n" +
+                "assert.eq(b.execute('myGlobalFunction(1)'), '1');\n" +
+                "assert.eq(b.execute('myGlobalFunction(2)'), '2');\n",
+            getTestUrl("files/globals.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+
     @Test
     public void exception() {
         String script = String.format(

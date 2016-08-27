@@ -8,8 +8,15 @@ pizza.main.contexttracker = function() {
     var _contextDestroyedHandlers = [];
 
     var _executionContextCreated = function(params) {
+        // Ignore injected extension tabs.  We inject our own scripting context and so can other
+        // extensions.  We are not interested in these and we don't want to overwrite the main
+        // context, as we use this as the default context target for commands.execute().
+        // Pre Chrome 52 check for context type
         if (params.context.type && params.context.type == "Extension") {
-            // Ignore injected extension tabs
+            return;
+        }
+        // Post Chrome 52 we can just use 'isDefault' which is exactly for this purpose
+        if (params.context.isDefault != undefined && !params.context.isDefault) {
             return;
         }
 
