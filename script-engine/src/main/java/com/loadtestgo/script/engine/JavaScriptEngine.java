@@ -84,7 +84,7 @@ public class JavaScriptEngine {
         Object pizzaScript = Context.javaToJS(new PizzaImpl(testContext, this), scope);
         ScriptableObject.putProperty(scope, "pizza", pizzaScript);
 
-        this.console = new Console(testContext.getTestResult());
+        this.console = new Console(testContext.getTestResult(), this);
         if (consoleNotifier != null) {
             this.console.setOut(consoleNotifier);
         }

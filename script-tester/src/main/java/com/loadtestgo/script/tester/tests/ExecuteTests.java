@@ -25,7 +25,6 @@ public class ExecuteTests extends JavaScriptTest {
         assertNoError(result);
     }
 
-
     @Test
     public void globals() {
         String script = String.format(

@@ -93,6 +93,9 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 case "Network.loadingFailed":
                     networkLoadingFailed(details);
                     break;
+                case "Network.resourceChangedPriority":
+                    networkResourceChangedPriority(details);
+                    break;
                 case "Network.requestServedFromCache":
                     networkRequestServedFromCache(details);
                     break;
@@ -163,6 +166,10 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
             return true;
         }
+    }
+
+    private void networkResourceChangedPriority(JSONObject details) {
+        // Nothing for now
     }
 
     private void inspectElement(JSONObject details) {

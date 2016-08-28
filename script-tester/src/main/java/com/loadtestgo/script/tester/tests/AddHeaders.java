@@ -72,7 +72,7 @@ public class AddHeaders extends JavaScriptTest {
     public void removeHeader() {
         String script = String.format(
                 "b = pizza.open();\n" +
-                "b.removeHeader('User-Agent');\n" +
+                    "b.removeHeader('User-Agent');\n" +
                 "b.removeHeader('ass');\n" +
                 "b.removeHeader('Connection');\n" +
                 "b.open(\"%s\");\n" +

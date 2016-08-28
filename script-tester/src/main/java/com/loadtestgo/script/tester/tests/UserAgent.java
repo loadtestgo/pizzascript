@@ -25,7 +25,8 @@ public class UserAgent extends JavaScriptTest {
             "b = pizza.open();\n" +
             "b.setUserAgent('blah blah');\n" +
             "b.open(\"%s\");\n" +
-            "b.verifyText(\'blah blah\');\n",
+            "b.verifyText('blah blah');\n" +
+            "assert.eq(b.execute('navigator.userAgent'), 'blah blah');\n",
             getTestUrl("headers/userAgent"));
 
         TestResult result = runScript(script);
@@ -42,7 +43,8 @@ public class UserAgent extends JavaScriptTest {
             "b.setUserAgent('blah blah');\n" +
             "b.setUserAgent('');\n" +
             "b.open(\"%s\");\n" +
-            "b.verifyText(\'Chrome\');\n",
+            "b.verifyText(\'Chrome\');\n" +
+            "assert.ok(b.execute('navigator.userAgent').contains('Chrome'));\n",
             getTestUrl("headers/userAgent"));
 
         TestResult result = runScript(script);

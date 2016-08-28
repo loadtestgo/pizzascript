@@ -545,6 +545,9 @@ Browser.prototype.waitForHttpRequests = function(idleTimeMS) {};
  * page opens in a new tab or window be sure to switch to that tab or window
  * before calling waitPageLoad().
  *
+ * HTTP redirects are waited on too.  So one call on waitPageLoad() will wait
+ * on the page redirects and the main redirected page to be loaded.
+ *
  * 4xx and 5xx responses on the main document trigger a failure.
  *
  * @example
@@ -715,7 +718,7 @@ Browser.prototype.getTitle = function() {};
  *
  * - The request was never made / not found on the current page
  * - The request had an network/transport error
- * - The request was not completed yet
+ * - The request has not completed yet
  * - The request had a HTTP status error code (4xx or 5xx status code)
  *
  * WebSocket requests do not need to complete (i.e. be closed), but an
@@ -1015,6 +1018,8 @@ Browser.prototype.removeHeader = function(header) {};
  * Set the user agent to something else.
  *
  * Set to an empty string to set back to the default.
+ *
+ * Sets both the HTTP request headers and the JavaScript navigator.userAgent
  *
  * @example
  * var b = pizza.open();
@@ -2703,13 +2708,13 @@ console.log = function(o) {};
 /**
  * Loads a JavaScript file from the local file system and runs it.
  *
- * The file is loaded at the same scope so any function or variables
- * defined in will be available from the calling script.
+ * The file is loaded at the same scope, so any function or variables
+ * defined in it will be available from the calling script.
  *
  * If the script is running sandboxed, the file must be specified as one of the
  * files used by the script.
  *
- * Files are loaded relative to the script file being executed.
+ * Files are loaded relative to the main script file being executed.
  *
  * @example
  * // Load the file 'foo.js', and execute it's JavaScript

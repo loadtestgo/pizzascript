@@ -85,3 +85,4 @@ b.open("cnn.com");
 
 * [WebPageTest](https://www.webpagetest.org) - Test a site's peformance from many different locations with a wide variety of browsers.
 * [PhantomJS](http://phantomjs.org) - Drive a headless browser using JavaScript, take screenshots and capture performance metrics.
+* [Browsertime](https://github.com/sitespeedio/browsertime) - Access the Web Performance Timeline, from your browser, in your terminal!

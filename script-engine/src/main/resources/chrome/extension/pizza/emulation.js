@@ -360,12 +360,12 @@ pizza.main.emulation = function() {
             if (params.name) {
                 for (var i = 0; i < networkConditions.length; ++i) {
                     var n = networkConditions[i];
-                    if (n.name == name) {
+                    if (n.name == params.name) {
                         c = getDevToolsNetworkConditions(n);
                     }
                 }
                 if (c == null) {
-                    response({error: "Unknown network condition " + name});
+                    response({error: "Unknown network condition \'" + params.name + "\'"});
                     return;
                 }
             } else {
