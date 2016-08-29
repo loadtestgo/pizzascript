@@ -164,9 +164,11 @@ project(':dist') {
               exclude ".gitkeep"
 
               into('bin') {
+                  def files = []
                   projects.each { p->
-                      from { p.startScripts.outputs.files }
+                      files.addAll(p.startScripts.outputs.files)
                   }
+                  from files
                   fileMode = 0755
               }
               into('lib') {
@@ -174,7 +176,7 @@ project(':dist') {
 
                   projects.each { p->
                     libs.addAll(p.configurations.compile.resolvedConfiguration.resolvedArtifacts.file)
-                    from p.jar
+                    libs << p.jar
                   }
 
                   from libs.unique()
