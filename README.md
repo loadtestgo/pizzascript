@@ -42,11 +42,9 @@ Open the IDE:
 
     bin/script-editor
 
-Run a batch of scripts and saving error messages, HAR (HTTP Archive) and screenshots to a directory:
+From the console you can start editor commands.
 
-    bin/script-runner scripts
-
-Both will search the path for Chrome, along with well-known Chrome install locations. See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting.
+The Chrome executable will be picked from the path, along with well-known Chrome install locations. See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting.
 
 Tested on Linux, OSX and Windows.
 

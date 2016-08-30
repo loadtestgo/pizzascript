@@ -1,10 +1,12 @@
 package com.loadtestgo.script.runner;
 
+import org.omg.CORBA.BAD_CONTEXT;
 import org.pmw.tinylog.Logger;
 
-import static org.fusesource.jansi.Ansi.Color.DEFAULT;
-import static org.fusesource.jansi.Ansi.Color.GREEN;
-import static org.fusesource.jansi.Ansi.Color.RED;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class RunnerTestResults {
@@ -18,27 +20,27 @@ public class RunnerTestResults {
     }
 
     public void endTests() {
-        long duration = System.currentTimeMillis() - allTestsStart;
+        String results =
+            String.format("%d/%d tests succeeded", testsRan - testsFailed, testsRan);
 
-        String finishTime = "Finished after " + (duration / 1000) + " s";
-        System.out.println(finishTime);
-        Logger.info(finishTime);
-
-        String results;
-        if (testsFailed > 0) {
-            results = String.format("%d/%d tests failed", testsFailed, testsRan);
+        System.out.print(ansi().fgBright(BLACK).a(outputFormatDate()));
+        if (testsFailed == 0) {
+            System.out.println(ansi().fg(GREEN).a(results).fg(DEFAULT));
         } else {
-            results = String.format("%d tests succeded", testsRan);
+            System.out.println(ansi().fg(RED).a(results).fg(DEFAULT));
         }
-
-        System.out.println(results);
         Logger.info(results);
+
+        long duration = System.currentTimeMillis() - allTestsStart;
+        String finishTime = "Finished after " + (duration / 1000) + " s";
+        System.out.println(ansi().fgBright(BLACK).a(outputFormatDate()).fg(DEFAULT).a(finishTime));
+        Logger.info(finishTime);
     }
 
     public void startTest(final String filename) {
         testsRan++;
 
-        System.out.print(filename + " ");
+        System.out.print(ansi().fgBright(BLACK).a(outputFormatDate()).fg(DEFAULT).a(filename + " "));
         System.out.flush();
         Logger.info("Starting test \'{}\'", filename);
 
@@ -47,7 +49,7 @@ public class RunnerTestResults {
 
     public void endTest(String result) {
         String duration = getTestDuration();
-        System.out.println(ansi().fg(GREEN).a("[OK]").fg(DEFAULT).a(duration));
+        System.out.println(ansi().fg(GREEN).a("[OK]").fgBright(BLACK).a(duration).fg(DEFAULT));
         Logger.info("Test OK after" + duration);
         Logger.info(result);
     }
@@ -57,8 +59,8 @@ public class RunnerTestResults {
 
         String duration = getTestDuration();
 
-        System.out.println(ansi().fg(RED).a("[FAILED]").fg(DEFAULT).a(duration));
-        System.err.println(message);
+        System.out.println(ansi().fg(RED).a("[FAILED]").fgBright(BLACK).a(duration));
+        System.out.println(ansi().fgBright(BLACK).a(outputFormatDate()).fg(WHITE).a(message).fg(DEFAULT));
         Logger.info("Test FAILED after" + duration);
         Logger.error(message);
     }
@@ -66,7 +68,7 @@ public class RunnerTestResults {
     private String getTestDuration() {
         long duration = System.currentTimeMillis() - testStart;
         testStart = 0;
-        return " " + duration + "ms";
+        return " " + duration + " ms";
     }
 
     public int failedTestsCount() {
@@ -75,5 +77,10 @@ public class RunnerTestResults {
 
     public int testCount() {
         return testsRan;
+    }
+
+    private static String outputFormatDate() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("[HH.mm.ss] ");
+        return simpleDateFormat.format(new Date());
     }
 }

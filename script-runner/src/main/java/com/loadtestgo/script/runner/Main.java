@@ -82,45 +82,45 @@ public class Main {
     }
 
     private static void printErrorWithHelp(String s) {
-        MainLog.logError(s);
+        stderr(s);
         printHelp();
         System.exit(1);
     }
 
     private static void printError(String s) {
-        MainLog.logError(s);
+        stderr(s);
         System.exit(1);
     }
 
     private static void printHelp() {
         printVersion();
 
-        MainLog.logInfo();
-        MainLog.logInfo("script-runner [options] [file]|[directory]");
-        MainLog.logInfo();
-        MainLog.logInfo("  -help / -h           print this help");
-        MainLog.logInfo("  -version / -v        print the version number");
-        MainLog.logInfo("  -timeout / -t        specify the timeout in seconds (resolution ms)");
-        MainLog.logInfo("  -output / -o <dir>   output screenshots and other results to this directory");
-        MainLog.logInfo("                       output dir can be specified in json file");
-        MainLog.logInfo("                       defaults to results-<timestamp>");
-        MainLog.logInfo();
-        MainLog.logInfo("Run a file:");
-        MainLog.logInfo("  script-runner filename.js");
-        MainLog.logInfo();
-        MainLog.logInfo("Run all files in a directory (each file is ran as a separate test):");
-        MainLog.logInfo("  script-runner dir");
-        MainLog.logInfo();
-        MainLog.logInfo("Run all tests specified by json config file:");
-        MainLog.logInfo("  script-runner tests.json");
-        MainLog.logInfo();
-        MainLog.logInfo("Run all files in a directory with a timeout of 7.5 secs per test:");
-        MainLog.logInfo("  script-runner dir -t 7.5");
-        MainLog.logInfo();
+        stdout();
+        stdout("script-runner [options] [file]|[directory]");
+        stdout();
+        stdout("  -help / -h           print this help");
+        stdout("  -version / -v        print the version number");
+        stdout("  -timeout / -t        specify the timeout in seconds (resolution ms)");
+        stdout("  -output / -o <dir>   output screenshots and other results to this directory");
+        stdout("                       output dir can be specified in json file");
+        stdout("                       defaults to results-<timestamp>");
+        stdout();
+        stdout("Run a file:");
+        stdout("  script-runner filename.js");
+        stdout();
+        stdout("Run all files in a directory (each file is ran as a separate test):");
+        stdout("  script-runner dir");
+        stdout();
+        stdout("Run all tests specified by json config file:");
+        stdout("  script-runner tests.json");
+        stdout();
+        stdout("Run all files in a directory with a timeout of 7.5 secs per test:");
+        stdout("  script-runner dir -t 7.5");
+        stdout();
     }
 
     private static void printVersion() {
-        MainLog.logInfo(String.format("%s: %s", AppName, getVersion()));
+        stdout(String.format("%s: %s", AppName, getVersion()));
     }
 
     public static void main(String[] args) {
@@ -129,7 +129,7 @@ public class Main {
         processArgs(args);
 
         if (outputDir == null) {
-            outputDir = "results-" + formatDate(new Date());
+            outputDir = "results-" + outputDirectoryFormatDate(new Date());
         }
 
         Worker worker = new Worker();
@@ -164,7 +164,7 @@ public class Main {
         System.exit(worker.runJobs(files, timeoutInMs) ? 0 : 1);
     }
 
-    private static String formatDate(Date date) {
+    private static String outputDirectoryFormatDate(Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd-HH.mm.ss");
         return simpleDateFormat.format(date);
     }
@@ -176,6 +176,20 @@ public class Main {
             version = "dev";
         }
         return version;
+    }
+
+    private static void stdout() {
+        stdout("");
+    }
+
+    private static void stdout(String message) {
+        System.out.println(message);
+        org.pmw.tinylog.Logger.info(message);
+    }
+
+    private static void stderr(String message) {
+        System.err.println(message);
+        org.pmw.tinylog.Logger.error(message);
     }
 }
 

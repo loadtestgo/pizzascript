@@ -89,6 +89,7 @@ public class Worker {
             File outputText = new File(outputDir, filename + ".txt");
             try {
                 outputWriter = new ConsoleOutputWriter(outputText);
+                outputWriter.setWriteTimestamps(RunnerSettings.consoleWriteTimeStamps());
                 engine.setConsole(outputWriter);
             } catch (IOException e) {
                 Logger.error("Unable to write output {}", outputText);
@@ -99,8 +100,8 @@ public class Worker {
             Browser browser = testContext.getOpenBrowser();
             try {
                 if (browser != null) {
-                    Data screenshot = browser.screenshot("jpeg");
-                    File screenshotFile = new File(outputDir, filename + ".jpeg");
+                    Data screenshot = browser.screenshot(RunnerSettings.screenshotType());
+                    File screenshotFile = new File(outputDir, filename + "." + RunnerSettings.screenshotType());
                     try (FileOutputStream fileOutputStream = new FileOutputStream(screenshotFile)) {
                         DataOutputStream os = new DataOutputStream(fileOutputStream);
                         os.write(screenshot.getBytes());
