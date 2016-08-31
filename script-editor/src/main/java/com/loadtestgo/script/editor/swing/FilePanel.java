@@ -38,7 +38,7 @@ public class FilePanel extends PanelWithHeader {
 
         LanguageSupportFactory.get().register(textArea);
 
-        // TODO: Add auto completion for our docs.js
+        // TODO: Add auto completion for our pizzascript.js
         //
         // RhinoJavaScriptLanguageSupport support1 = new RhinoJavaScriptLanguageSupport();
         // support1.install(textArea);

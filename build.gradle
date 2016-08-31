@@ -186,9 +186,7 @@ project(':dist') {
               }
               into('docs') {
                   from(fileTree(dir: '../docs/api'))
-              }
-              into(".") {
-                  from(file('../script-api/docs.js'))
+                  from(file('../script-api/pizzascript.js'))
               }
           }
       }
@@ -199,7 +197,7 @@ project(':dist') {
 }
 
 task baseDocs(type:Exec) {
-  commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/docs.js', 'script-api/docs.md', '-d', 'docs/api'
+  commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/pizzascript.js', 'script-api/pizzascript.md', '-d', 'docs/api'
 }
 
 task docs(dependsOn:baseDocs) << {
