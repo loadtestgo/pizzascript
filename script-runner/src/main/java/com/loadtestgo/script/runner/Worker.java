@@ -42,7 +42,7 @@ public class Worker {
         Settings.loadSettings();
     }
 
-    public boolean runJobs(List<File> files, long timeout) {
+    public boolean runJobs(List<RunnerTest> tests) {
         EngineContext engineContext = new EngineContext();
         try {
             engineContext.setLocalPublicIp(Inet4Address.getLocalHost().getHostAddress());
@@ -54,8 +54,8 @@ public class Worker {
 
         UserContext userContext = new UserContext(engineContext);
         try {
-            for (File file : files) {
-                processFile(userContext, file, timeout);
+            for (RunnerTest test : tests) {
+                processTest(userContext, test);
             }
         } finally {
             engineContext.cleanup();
@@ -65,22 +65,22 @@ public class Worker {
         return (runnerTestResults.failedTestsCount() == 0);
     }
 
-    private boolean processFile(UserContext userContext, File file, long timeout) {
+    private boolean processTest(UserContext userContext, RunnerTest test) {
         boolean success;
         TestContext testContext = new TestContext(userContext);
-        testContext.setBaseDirectory(Path.getParentDirectory(file));
+        testContext.setBaseDirectory(Path.getParentDirectory(test.getFile()));
         try {
-            success = processFile(file, testContext, timeout);
+            success = processTest(testContext, test);
         } finally {
             testContext.cleanup();
         }
         return success;
     }
 
-    private boolean processFile(File file, TestContext testContext, long timeout) {
+    private boolean processTest(TestContext testContext, RunnerTest test) {
         boolean success = false;
 
-        String filename = file.getName();
+        String filename = test.getName();
 
         JavaScriptEngine engine = new JavaScriptEngine();
         ConsoleOutputWriter outputWriter = null;
@@ -95,7 +95,7 @@ public class Worker {
                 Logger.error("Unable to write output {}", outputText);
             }
 
-            success = runScript(file, engine, timeout);
+            success = runScript(engine, test);
         } finally {
             Browser browser = testContext.getOpenBrowser();
             try {
@@ -131,14 +131,14 @@ public class Worker {
         return success;
     }
 
-    private boolean runScript(File file, JavaScriptEngine engine, long timeout) {
+    private boolean runScript(JavaScriptEngine engine, RunnerTest test) {
         try {
-            runnerTestResults.startTest(file.getName());
-            String scriptContexts = FileUtils.readAllText(file);
+            runnerTestResults.startTest(test.getName());
+            String scriptContexts = FileUtils.readAllText(test.getFile());
             if (scriptContexts == null) {
-                throw new IOException("Error reading '" + file.getPath() + "'");
+                throw new IOException("Error reading '" + test.getFileName() + "'");
             }
-            Object result = engine.runScript(scriptContexts, file.getPath(), timeout);
+            Object result = engine.runScript(scriptContexts, test.getFileName(), test.getTimeout());
             runnerTestResults.endTest(engine.valueToString(result));
             return true;
         } catch (IOException|ScriptException e) {

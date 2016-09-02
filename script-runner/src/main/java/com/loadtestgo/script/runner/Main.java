@@ -1,21 +1,25 @@
 package com.loadtestgo.script.runner;
 
+import com.loadtestgo.script.runner.config.JsonConfig;
+import com.loadtestgo.script.runner.config.JsonConfigParser;
 import com.loadtestgo.util.*;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import org.fusesource.jansi.AnsiConsole;
+import org.json.JSONException;
 
 /**
  * Run a set of scripts, taking screenshots, saving log info and record HAR data for each.
  */
 public class Main {
     private static final double MAX_TIMEOUT_SECONDS = 10 * 1000 * 1000;
-    public static String AppName = "PizzaScript Test Runner";
+    public static String AppName = "PizzaScript Runner";
 
     static String fileName = null;
     static String outputDir = null;
@@ -77,12 +81,13 @@ public class Main {
             }
         }
         if (fileName == null) {
-            printErrorWithHelp("Must specify a file | directory | config file to run");
+            printErrorWithHelp("Must specify a file, directory or config file to run");
         }
     }
 
     private static void printErrorWithHelp(String s) {
         stderr(s);
+        stdout();
         printHelp();
         System.exit(1);
     }
@@ -100,7 +105,8 @@ public class Main {
         stdout();
         stdout("  -help / -h           print this help");
         stdout("  -version / -v        print the version number");
-        stdout("  -timeout / -t        specify the timeout in seconds (resolution ms)");
+        stdout("  -timeout / -t        specify a per test timeout in seconds");
+        stdout("                       default is no timeout");
         stdout("  -output / -o <dir>   output screenshots and other results to this directory");
         stdout("                       output dir can be specified in json file");
         stdout("                       defaults to results-<timestamp>");
@@ -111,7 +117,7 @@ public class Main {
         stdout("Run all files in a directory (each file is ran as a separate test):");
         stdout("  script-runner dir");
         stdout();
-        stdout("Run all tests specified by json config file:");
+        stdout("Run all tests specified by json config file (must end with .json):");
         stdout("  script-runner tests.json");
         stdout();
         stdout("Run all files in a directory with a timeout of 7.5 secs per test:");
@@ -132,18 +138,19 @@ public class Main {
             outputDir = "results-" + outputDirectoryFormatDate(new Date());
         }
 
-        Worker worker = new Worker();
-        RunnerTestResults runnerTestResults = new RunnerTestResults();
-        worker.init(outputDir, runnerTestResults);
-
         File specifiedFile = new File(fileName);
         if (!specifiedFile.exists()) {
             printError("Unable to find file '" + fileName + "'");
         }
 
-        List<File> files = new ArrayList<>();
+        long defaultTimeoutInMs = 0;
+        if (timeout > 0) {
+            defaultTimeoutInMs = (long)(timeout * 1000);
+        }
 
+        List<RunnerTest> tests = null;
         if (specifiedFile.isDirectory()) {
+            List<File> files = new ArrayList<>();
             File[] listOfFiles = specifiedFile.listFiles();
             if (listOfFiles != null) {
                 for (File file : listOfFiles) {
@@ -152,16 +159,52 @@ public class Main {
                     }
                 }
             }
+
+            // Make sure the list of tests are in a consistent order in case there
+            // are order dependencies
+            Collections.sort(files);
+
+            tests = getFilesAsTests(files, defaultTimeoutInMs);
         } else {
-            files.add(specifiedFile);
+            if (specifiedFile.getName().endsWith(".json")) {
+                try {
+                    JsonConfig jsonConfig = JsonConfigParser.parseFile(specifiedFile);
+                    tests = jsonConfig.getTests();
+
+                    // Apply the command line timeout if none specified
+                    for (RunnerTest test : tests) {
+                        if (test.getTimeout() <= 0) {
+                            test.setTimeout(defaultTimeoutInMs);
+                        }
+                    }
+                } catch (JSONException e) {
+                    printError(String.format("Error parsing config file '%s': %s", specifiedFile.getPath(), e.getMessage()));
+                }
+            } else {
+                List<File> files = new ArrayList<>();
+                files.add(specifiedFile);
+                tests = getFilesAsTests(files, defaultTimeoutInMs);
+            }
         }
 
-        long timeoutInMs = 0;
-        if (timeout > 0) {
-            timeoutInMs = (long)(timeout * 1000);
+        Worker worker = new Worker();
+        RunnerTestResults runnerTestResults = new RunnerTestResults();
+        worker.init(outputDir, runnerTestResults);
+
+        System.exit(worker.runJobs(tests) ? 0 : 1);
+    }
+
+    private static List<RunnerTest> getFilesAsTests(List<File> files, long defaultTimeoutInMs) {
+        List<RunnerTest> tests = new ArrayList<>();
+        for (File file : files) {
+            RunnerTest test = new RunnerTest();
+            test.setFile(file);
+            test.setName(file.getName());
+            test.setTimeout(defaultTimeoutInMs);
+            tests.add(test);
         }
 
-        System.exit(worker.runJobs(files, timeoutInMs) ? 0 : 1);
+        return tests;
     }
 
     private static String outputDirectoryFormatDate(Date date) {
@@ -184,12 +227,10 @@ public class Main {
 
     private static void stdout(String message) {
         System.out.println(message);
-        org.pmw.tinylog.Logger.info(message);
     }
 
     private static void stderr(String message) {
         System.err.println(message);
-        org.pmw.tinylog.Logger.error(message);
     }
 }
 

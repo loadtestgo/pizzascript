@@ -28,6 +28,7 @@ public class ChromeBrowser implements Browser {
     private TestContext testContext;
     private boolean ignoreHttpErrors = false;
     private ArrayList<Integer> ignoreHttpErrorCodes = null;
+    private long startTime = -1;
 
     public ChromeBrowser(TestContext testContext)
     {
@@ -43,7 +44,6 @@ public class ChromeBrowser implements Browser {
     {
         this.testContext = testContext;
 
-        long startTime = -1;
         try {
             startTime = System.currentTimeMillis();
 
@@ -54,13 +54,12 @@ public class ChromeBrowser implements Browser {
                 pizzaHandler = userContext.getPizzaHandler();
             }
 
-            /*
             if (chromeProcess == null) {
                 if (userContext.isChromeProfileInitialSetup()) {
                     settings.unpackExtension = false;
                     settings.reuseProfile = true;
                 }
-            }*/
+            }
 
             // Start the websocket listener
             if (pizzaHandler == null) {
@@ -130,6 +129,7 @@ public class ChromeBrowser implements Browser {
     }
 
     private boolean startBrowserAndWaitForConnection(ChromeSettings settings) {
+
         chromeProcess = new ChromeProcess(testContext, settings);
         chromeProcess.start(testContext.getProcessLauncher());
 
@@ -138,7 +138,8 @@ public class ChromeBrowser implements Browser {
             return pizzaHandler.waitForConnection();
         } catch (InterruptedException ie) {
             chromeProcess.close();
-            throw new ScriptException("Wait for browser to open interrupted");
+            throw new ScriptException(String.format("Wait for browser to open interrupted after %d ms",
+                System.currentTimeMillis() - this.startTime));
         }
     }
 

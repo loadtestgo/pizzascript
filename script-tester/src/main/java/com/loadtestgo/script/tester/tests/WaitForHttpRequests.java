@@ -31,7 +31,7 @@ public class WaitForHttpRequests extends JavaScriptTest {
         assertEquals(ErrorType.Timeout, result.getError().type);
 
         if (!result.getError().message.equals("waitForHttpRequests() interrupted") &&
-                !result.getError().message.equals("Wait for browser to open interrupted")) {
+                !result.getError().message.startsWith("Wait for browser to open interrupted")) {
             fail(result.getError().message);
         }
 
@@ -82,7 +82,7 @@ public class WaitForHttpRequests extends JavaScriptTest {
         assertEquals(ErrorType.Timeout, result.getError().type);
 
         if (!result.getError().message.equals("waitForHttpRequests() interrupted") &&
-                !result.getError().message.equals("Wait for browser to open interrupted")) {
+                !result.getError().message.startsWith("Wait for browser to open interrupted")) {
             fail(result.getError().message);
         }
 
