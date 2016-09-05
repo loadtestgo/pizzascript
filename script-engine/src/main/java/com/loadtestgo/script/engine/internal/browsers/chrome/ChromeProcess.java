@@ -65,7 +65,7 @@ public class ChromeProcess
     public void start(ProcessLauncher processLauncher) {
         File executable = findChrome();
         if (executable == null) {
-            throw new RuntimeException("Unable to find Chrome executable.");
+            throw new ScriptException("Unable to find Chrome executable.");
         }
 
         setupProfile();
@@ -355,23 +355,25 @@ public class ChromeProcess
 
     static public File findChrome() {
         String fileName = EngineSettings.getChromeExecutable();
+        String fallingBack = "falling back to looking for Chrome in PATH";
+
         if (fileName != null) {
             File file = new File(fileName);
             if (!file.exists()) {
-                Logger.warn("Settings location does not point to Chrome executable: {}",
-                        file.getAbsolutePath());
+                Logger.warn("Settings location does not point to Chrome executable: {}, {}",
+                        file.getAbsolutePath(), fallingBack);
             } else if (file.isDirectory()) {
-                Logger.warn("Settings location points to directory instead of Chrome executable: {}",
-                        file.getAbsolutePath());
+                Logger.warn("Settings location points to directory instead of Chrome executable: {}, {}",
+                        file.getAbsolutePath(), fallingBack);
             } else if (!file.canExecute()) {
-                Logger.warn("Do not have execute permissions on: {}", file.getAbsolutePath());
+                Logger.warn("Do not have execute permissions on: {}, {}", file.getAbsolutePath(), fallingBack);
             } else {
                 // ok
                 return file;
             }
+        } else {
+            Logger.info("Chrome location not set, {}.", fallingBack);
         }
-
-        Logger.info("Chrome location not set correctly, falling back to looking for Chrome in PATH.");
 
         File file = com.loadtestgo.util.FileUtils.findExecutable(EngineSettings.getChromeFileName());
 

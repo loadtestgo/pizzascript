@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.loadtestgo.script.api.ErrorType;
 import com.loadtestgo.script.api.TestResult;
+import com.loadtestgo.script.editor.Gui;
 import com.loadtestgo.script.engine.ConsoleNotifier;
 import com.loadtestgo.script.engine.ScriptException;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeProcess;
@@ -495,6 +496,11 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     }
 
     public void showTestResultsTab(TestResult testResult, String pageId) {
+        if (!Gui.javaFXInstalled()) {
+            Logger.error("Unable to show results tab, JavaFX is not installed");
+            return;
+        }
+
         ViewResultsPanel panel = getTestResultsPanel(testResult);
 
         if (panel == null) {
@@ -1797,15 +1803,20 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         }
 
         // Ok even that didn't work, use the internal JavaFX browser then...
-        if (helpWindow == null) {
-            helpWindow = new HelpWindow();
-        }
-        if (validPath) {
-            helpWindow.setUrl("file:" + path);
+        if (Gui.javaFXInstalled()) {
+            if (helpWindow == null) {
+                helpWindow = new HelpWindow();
+            }
+            if (validPath) {
+                helpWindow.setUrl("file:" + path);
+            } else {
+                helpWindow.setUrl(url);
+            }
+            helpWindow.setVisible(true);
         } else {
-            helpWindow.setUrl(url);
+            Logger.error("Unable to find Chrome browser to show URL.");
+            Logger.info("    {}", url);
         }
-        helpWindow.setVisible(true);
     }
 
     /**
