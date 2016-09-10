@@ -23,6 +23,7 @@ public class Main {
 
     static String fileName = null;
     static String outputDir = null;
+    static boolean writeJunitXmlFile = false;
     static double timeout = -1;
 
     private static void processArgs(String[] args) {
@@ -69,6 +70,9 @@ public class Main {
                             printErrorWithHelp("-" + switchName + " requires a timeout parameter");
                         }
                         break;
+                    case "junit":
+                        writeJunitXmlFile = true;
+                        break;
                     default:
                         printErrorWithHelp("Unknown option " + switchName);
                         break;
@@ -103,13 +107,15 @@ public class Main {
         stdout();
         stdout("script-runner [options] [file]|[directory]");
         stdout();
-        stdout("  -help / -h           print this help");
-        stdout("  -version / -v        print the version number");
-        stdout("  -timeout / -t        specify a per test timeout in seconds");
+        stdout("  --help / -h          print this help");
+        stdout("  --version / -v       print the version number");
+        stdout("  --timeout / -t       specify a per test timeout in seconds");
         stdout("                       default is no timeout");
-        stdout("  -output / -o <dir>   output screenshots and other results to this directory");
+        stdout("  --output / -o <dir>  output screenshots and other results to this directory");
         stdout("                       output dir can be specified in json file");
         stdout("                       defaults to results-<timestamp>");
+        stdout("  --junit              save output in junit format junit.xml under directory specified by -output");
+        stdout("                       defaults to results-<timestamp>/junit.xml");
         stdout();
         stdout("Run a file:");
         stdout("  script-runner filename.js");
@@ -189,6 +195,7 @@ public class Main {
 
         Worker worker = new Worker();
         RunnerTestResults runnerTestResults = new RunnerTestResults();
+        runnerTestResults.setWriteJUnitXmlFile(writeJunitXmlFile);
         worker.init(outputDir, runnerTestResults);
 
         System.exit(worker.runJobs(tests) ? 0 : 1);

@@ -7,6 +7,10 @@ public class RunnerTest {
     private long timeout;
     private String name;
 
+    private String screenshotFilePath;
+    private String harFilePath;
+    private String consoleLogFilePath;
+
     public long getTimeout() {
         return timeout;
     }
@@ -33,5 +37,29 @@ public class RunnerTest {
 
     public String getFileName() {
         return file.getPath();
+    }
+
+    public String getScreenshotFilePath() {
+        return screenshotFilePath;
+    }
+
+    public String getHarFilePath() {
+        return harFilePath;
+    }
+
+    public String getConsoleLogFilePath() {
+        return consoleLogFilePath;
+    }
+
+    public void setScreenshotFilePath(String screenshotFilePath) {
+        this.screenshotFilePath = screenshotFilePath;
+    }
+
+    public void setHarFilePath(String harFilePath) {
+        this.harFilePath = harFilePath;
+    }
+
+    public void setConsoleLogFilePath(String consoleLogFilePath) {
+        this.consoleLogFilePath = consoleLogFilePath;
     }
 }

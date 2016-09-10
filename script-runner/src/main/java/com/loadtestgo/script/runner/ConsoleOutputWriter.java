@@ -65,4 +65,8 @@ public class ConsoleOutputWriter implements ConsoleNotifier {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH.mm.ss.SSS");
         return simpleDateFormat.format(new Date());
     }
+
+    public boolean outputWritten() {
+        return writer != null;
+    }
 }

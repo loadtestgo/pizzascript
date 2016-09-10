@@ -1,9 +1,8 @@
 // Write to a file using Java APIs
 //
-// For this to run, access to Java APIs has to be enabled in settings.ini.
-// Uncomment the line 'sandbox=false'
+// NOTE: When sandboxing is enabled in the settings.ini this won't run,
+// when sandboxing is enabled access to Java APIs is prohibited
 //
-// This is for local testing only, on our servers these APIs can not be accessed.
 var f = new java.io.FileWriter("example.txt");
 try {
    f.write("Some text!\n");

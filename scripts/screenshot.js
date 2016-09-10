@@ -1,8 +1,8 @@
 //
 // Capture screenshot from Chrome, and then write it to a file using Java API
 //
-// For this to run, access to Java APIs has to be enabled in settings.ini.
-// Uncomment the line 'sandbox=false'
+// NOTE: When sandboxing is enabled in the settings.ini this won't run,
+// when sandboxing is enabled access to Java APIs is prohibited
 //
 var b = pizza.open("www.google.com");
 var screenshot = b.screenshot();

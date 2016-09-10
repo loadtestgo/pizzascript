@@ -67,7 +67,7 @@ public class EngineSettings extends Settings {
     }
 
     public static boolean sandboxJavaScript() {
-        return settings().getBoolean("sandbox", true);
+        return settings().getBoolean("sandbox", false);
     }
 
     public static boolean getVerboseLogging() {

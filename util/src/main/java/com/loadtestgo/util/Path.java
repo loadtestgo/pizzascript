@@ -34,4 +34,18 @@ public class Path {
         }
         return absolute.getParentFile();
     }
+
+    public static String getCanonicalPath(File file) {
+        return getCanonicalFile(file).getPath();
+    }
+
+    public static File getCanonicalFile(File file) {
+        File absolute = null;
+        try {
+            absolute = file.getCanonicalFile();
+        } catch (IOException e) {
+            absolute = file.getAbsoluteFile();
+        }
+        return absolute;
+    }
 }

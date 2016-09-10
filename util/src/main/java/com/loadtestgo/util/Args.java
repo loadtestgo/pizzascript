@@ -1,6 +1,10 @@
 package com.loadtestgo.util;
 
 public class Args {
+    /**
+     * Removes one or two leading dashes, useful when parsing command line
+     * input.
+     */
     public static String stripLeadingDashes(String arg) {
         if (arg == null) {
             return null;

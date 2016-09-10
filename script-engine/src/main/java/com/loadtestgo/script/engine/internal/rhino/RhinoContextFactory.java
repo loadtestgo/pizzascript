@@ -18,7 +18,7 @@ import java.util.*;
  * object as well, as this can be used to create arbitrary classes.
  */
 public class RhinoContextFactory extends ContextFactory {
-    private boolean sandboxed = true;
+    private boolean sandboxed = false;
 
     /**
      * Disable access to these methods for all Java objects

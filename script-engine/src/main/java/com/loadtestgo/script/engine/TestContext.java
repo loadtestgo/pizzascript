@@ -21,7 +21,7 @@ public class TestContext {
     protected ResultsNotifier resultNotifier;
     protected ProcessLauncher processLauncher;
     protected BrowserLifeCycleNotifier browserNotifier;
-    protected boolean sandboxJavaScript = true;
+    protected boolean sandboxJavaScript = false;
     protected File baseDirectory;
 
     public TestContext(UserContext userContext) {

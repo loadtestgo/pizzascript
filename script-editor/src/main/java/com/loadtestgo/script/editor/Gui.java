@@ -49,7 +49,7 @@ public class Gui {
 
             String vmName = System.getProperty("java.vm.name");
             if (vmName != null && vmName.startsWith("OpenJDK")) {
-                Logger.info("Try installing the OpenJFX package for your OS.");
+                Logger.info("Try installing OpenJFX via your package manager.");
             }
         }
     }

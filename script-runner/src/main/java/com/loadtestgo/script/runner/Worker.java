@@ -50,7 +50,7 @@ public class Worker {
             Logger.error(e);
         }
 
-        runnerTestResults.startTests();
+        runnerTestResults.startTests(outputDir);
 
         UserContext userContext = new UserContext(engineContext);
         try {
@@ -83,47 +83,54 @@ public class Worker {
         String filename = test.getName();
 
         JavaScriptEngine engine = new JavaScriptEngine();
-        ConsoleOutputWriter outputWriter = null;
+        ConsoleOutputWriter consoleLogWriter = null;
+
+        File consoleLogFilePath = Path.getCanonicalFile(new File(outputDir, filename + ".txt"));
         try {
             engine.init(testContext);
-            File outputText = new File(outputDir, filename + ".txt");
             try {
-                outputWriter = new ConsoleOutputWriter(outputText);
-                outputWriter.setWriteTimestamps(RunnerSettings.consoleWriteTimeStamps());
-                engine.setConsole(outputWriter);
+                consoleLogWriter = new ConsoleOutputWriter(consoleLogFilePath);
+                consoleLogWriter.setWriteTimestamps(RunnerSettings.consoleWriteTimeStamps());
+                engine.setConsole(consoleLogWriter);
             } catch (IOException e) {
-                Logger.error("Unable to write output {}", outputText);
+                Logger.error("Unable to write output {}", consoleLogFilePath);
             }
 
-            success = runScript(engine, test);
+            success = runScript(testContext, engine, test);
         } finally {
             Browser browser = testContext.getOpenBrowser();
             try {
                 if (browser != null) {
                     Data screenshot = browser.screenshot(RunnerSettings.screenshotType());
-                    File screenshotFile = new File(outputDir, filename + "." + RunnerSettings.screenshotType());
+                    File screenshotFile = Path.getCanonicalFile(
+                        new File(outputDir, filename + "." + RunnerSettings.screenshotType()));
                     try (FileOutputStream fileOutputStream = new FileOutputStream(screenshotFile)) {
                         DataOutputStream os = new DataOutputStream(fileOutputStream);
                         os.write(screenshot.getBytes());
                         os.close();
                     }
+                    test.setScreenshotFilePath(screenshotFile.getPath());
                     Logger.info("Wrote screenshot: {}", screenshotFile.getPath());
                 }
             } catch (Exception e) {
                 Logger.error("Error capturing screenshot: {}", e.getMessage());
             }
 
-            if (outputWriter != null) {
-                outputWriter.close();
-            }
-
             engine.finish();
+
+            if (consoleLogWriter != null) {
+                if (consoleLogWriter.outputWritten()) {
+                    test.setConsoleLogFilePath(consoleLogFilePath.getPath());
+                }
+                consoleLogWriter.close();
+            }
         }
 
         TestResult testResult = testContext.getTestResult();
-        File harFile = new File(outputDir, filename + ".har");
+        File harFile = Path.getCanonicalFile(new File(outputDir, filename + ".har"));
         try {
             HarWriter.save(testResult, harFile);
+            test.setHarFilePath(harFile.getPath());
         } catch (IOException e) {
             Logger.error(String.format("Unable to save har file: %s", e.getMessage()));
         }
@@ -131,18 +138,18 @@ public class Worker {
         return success;
     }
 
-    private boolean runScript(JavaScriptEngine engine, RunnerTest test) {
+    private boolean runScript(TestContext testContext, JavaScriptEngine engine, RunnerTest test) {
         try {
-            runnerTestResults.startTest(test.getName());
+            runnerTestResults.startTest(test, testContext);
             String scriptContexts = FileUtils.readAllText(test.getFile());
             if (scriptContexts == null) {
                 throw new IOException("Error reading '" + test.getFileName() + "'");
             }
             Object result = engine.runScript(scriptContexts, test.getFileName(), test.getTimeout());
-            runnerTestResults.endTest(engine.valueToString(result));
+            runnerTestResults.endTest(testContext, engine.valueToString(result));
             return true;
         } catch (IOException|ScriptException e) {
-            runnerTestResults.endTestFailed(e.getMessage());
+            runnerTestResults.endTestFailed(testContext, e.getMessage());
             return false;
         }
     }
