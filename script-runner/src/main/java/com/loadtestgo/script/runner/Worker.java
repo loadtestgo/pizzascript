@@ -5,6 +5,7 @@ import com.loadtestgo.script.api.Data;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.engine.*;
 import com.loadtestgo.script.har.HarWriter;
+import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.util.FileUtils;
 import com.loadtestgo.util.Path;
 import com.loadtestgo.util.Settings;
@@ -42,7 +43,7 @@ public class Worker {
         Settings.loadSettings();
     }
 
-    public boolean runJobs(List<RunnerTest> tests) {
+    public boolean runJobs(TestConfig testConfig) {
         EngineContext engineContext = new EngineContext();
         try {
             engineContext.setLocalPublicIp(Inet4Address.getLocalHost().getHostAddress());
@@ -50,11 +51,11 @@ public class Worker {
             Logger.error(e);
         }
 
-        runnerTestResults.startTests(outputDir);
+        runnerTestResults.startTests(testConfig, outputDir);
 
         UserContext userContext = new UserContext(engineContext);
         try {
-            for (RunnerTest test : tests) {
+            for (RunnerTest test : testConfig.getTests()) {
                 processTest(userContext, test);
             }
         } finally {

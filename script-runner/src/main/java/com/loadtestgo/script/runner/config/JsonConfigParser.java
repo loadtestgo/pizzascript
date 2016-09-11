@@ -9,19 +9,21 @@ import org.json.JSONObject;
 import java.io.File;
 
 public class JsonConfigParser {
-    public static JsonConfig parseFile(File file) throws JSONException {
-        JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setFileName(file.getName());
+    public static TestConfig parseFile(File file) throws JSONException {
+        TestConfig testConfig = new TestConfig();
+        testConfig.setFileName(file.getName());
 
         String source = FileUtils.readAllText(file);
 
-        parseSource(jsonConfig, source);
+        parseSource(testConfig, source);
 
-        return jsonConfig;
+        return testConfig;
     }
 
-    public static void parseSource(JsonConfig jsonConfig, String source) throws JSONException {
+    public static void parseSource(TestConfig testConfig, String source) throws JSONException {
         JSONObject root = new JSONObject(source);
+
+        testConfig.setName(root.optString("name"));
 
         JSONArray jTests = root.optJSONArray("tests");
         if (jTests == null) {
@@ -52,7 +54,7 @@ public class JsonConfigParser {
                 test.setName(jTest.getString("name"));
             }
 
-            jsonConfig.addTest(test);
+            testConfig.addTest(test);
         }
     }
 }

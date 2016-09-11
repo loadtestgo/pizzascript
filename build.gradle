@@ -88,6 +88,8 @@ project(':script-engine') {
 project(':script-editor') {
     apply plugin: 'application'
     mainClassName = "com.loadtestgo.script.editor.PizzaScript"
+    applicationName = "pizzascript-ide"
+
     configurations.all {
         resolutionStrategy {
             failOnVersionConflict()
@@ -115,6 +117,7 @@ project(':script-editor') {
 project(':script-runner') {
     apply plugin: 'application'
     mainClassName = "com.loadtestgo.script.runner.Main"
+    applicationName = "pizzascript"
 
     // Compress tar file
     dependencies {

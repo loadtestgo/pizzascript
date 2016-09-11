@@ -38,14 +38,14 @@ public class Gui {
 
     private static void checkJavaFXInstalled() {
         try {
-            Class.forName("my.package.Foo");
+            Class.forName("javafx.application.Platform");
             // it exists on the classpath
             isJavaFXInstalled = true;
         } catch(ClassNotFoundException e) {
             // it does not exist on the classpath
             isJavaFXInstalled = false;
 
-            Logger.info("JavaFX is not on classpath. Some features of the editor will not be available.");
+            Logger.info("JavaFX is not in the classpath.  Some features of the editor will not be available.");
 
             String vmName = System.getProperty("java.vm.name");
             if (vmName != null && vmName.startsWith("OpenJDK")) {

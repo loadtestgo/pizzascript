@@ -5,9 +5,14 @@ import com.loadtestgo.script.runner.RunnerTest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonConfig {
+public class TestConfig {
     private String filename;
     private List<RunnerTest> tests;
+    private String name;
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
     public String getFilename() {
         return filename;
@@ -30,5 +35,13 @@ public class JsonConfig {
             tests = new ArrayList<>();
         }
         tests.add(test);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

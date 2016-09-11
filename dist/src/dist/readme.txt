@@ -1,6 +1,6 @@
-------------------------------------
-PizzaScript Editor and Script Runner
-------------------------------------
+-------------------------------
+PizzaScript IDE and Test Runner
+-------------------------------
 
 
 Requirements
@@ -19,8 +19,8 @@ in the settings.ini file.  See the settings.ini file included with this download
 details.
 
 
-Editor
-------
+PizzaScript IDE
+---------------
 
 The PizzaScript Editor makes writing & debugging scripts a breeze.  It features:
 
@@ -33,23 +33,23 @@ The PizzaScript Editor makes writing & debugging scripts a breeze.  It features:
  - Syntax highlighting, with errors underlined
 
 
-To open the editor:
+To open the script editor:
 
-  > bin/script-editor
+  > bin/pizzascript-ide
 
 
 Open a file in IDE:
 
-  > bin/script-editor samples/google.js
+  > bin/pizzascript-ide samples/google.js
 
 
 Run without a GUI:
 
-  > bin/script-editor -console
+  > bin/pizzascript-ide -console
 
 
-Runner
-------
+PizzaScript Runner
+------------------
 
 The PizzaScript Runner will run a set of scripts from the command line.  It features:
 
@@ -64,12 +64,12 @@ The PizzaScript Runner will run a set of scripts from the command line.  It feat
 
 To run all scripts in a directory:
 
-  > bin/script-runner scripts
+  > bin/pizzascript scripts
 
 
 To see a list of options:
 
-  > bin/script-runner -h
+  > bin/pizzascript -h
 
 
 Example Scripts

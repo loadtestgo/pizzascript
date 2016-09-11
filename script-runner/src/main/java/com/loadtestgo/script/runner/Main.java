@@ -1,6 +1,6 @@
 package com.loadtestgo.script.runner;
 
-import com.loadtestgo.script.runner.config.JsonConfig;
+import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.script.runner.config.JsonConfigParser;
 import com.loadtestgo.util.*;
 
@@ -19,7 +19,7 @@ import org.json.JSONException;
  */
 public class Main {
     private static final double MAX_TIMEOUT_SECONDS = 10 * 1000 * 1000;
-    public static String AppName = "PizzaScript Runner";
+    public static String AppName = "PizzaScript";
 
     static String fileName = null;
     static String outputDir = null;
@@ -105,7 +105,7 @@ public class Main {
         printVersion();
 
         stdout();
-        stdout("script-runner [options] [file]|[directory]");
+        stdout("pizzascript [options] [file]|[directory]");
         stdout();
         stdout("  --help / -h          print this help");
         stdout("  --version / -v       print the version number");
@@ -118,16 +118,16 @@ public class Main {
         stdout("                       defaults to results-<timestamp>/junit.xml");
         stdout();
         stdout("Run a file:");
-        stdout("  script-runner filename.js");
+        stdout("  pizzascript filename.js");
         stdout();
         stdout("Run all files in a directory (each file is ran as a separate test):");
-        stdout("  script-runner dir");
+        stdout("  pizzascript dir");
         stdout();
         stdout("Run all tests specified by json config file (must end with .json):");
-        stdout("  script-runner tests.json");
+        stdout("  pizzascript tests.json");
         stdout();
         stdout("Run all files in a directory with a timeout of 7.5 secs per test:");
-        stdout("  script-runner dir -t 7.5");
+        stdout("  pizzascript dir -t 7.5");
         stdout();
     }
 
@@ -154,7 +154,8 @@ public class Main {
             defaultTimeoutInMs = (long)(timeout * 1000);
         }
 
-        List<RunnerTest> tests = null;
+        TestConfig testConfig = null;
+
         if (specifiedFile.isDirectory()) {
             List<File> files = new ArrayList<>();
             File[] listOfFiles = specifiedFile.listFiles();
@@ -170,26 +171,26 @@ public class Main {
             // are order dependencies
             Collections.sort(files);
 
-            tests = getFilesAsTests(files, defaultTimeoutInMs);
+            testConfig = getFilesAsTests(files);
         } else {
             if (specifiedFile.getName().endsWith(".json")) {
                 try {
-                    JsonConfig jsonConfig = JsonConfigParser.parseFile(specifiedFile);
-                    tests = jsonConfig.getTests();
+                    testConfig = JsonConfigParser.parseFile(specifiedFile);
 
-                    // Apply the command line timeout if none specified
-                    for (RunnerTest test : tests) {
-                        if (test.getTimeout() <= 0) {
-                            test.setTimeout(defaultTimeoutInMs);
-                        }
-                    }
                 } catch (JSONException e) {
                     printError(String.format("Error parsing config file '%s': %s", specifiedFile.getPath(), e.getMessage()));
                 }
             } else {
                 List<File> files = new ArrayList<>();
                 files.add(specifiedFile);
-                tests = getFilesAsTests(files, defaultTimeoutInMs);
+                testConfig = getFilesAsTests(files);
+            }
+        }
+
+        // Apply the command line timeout if none specified
+        for (RunnerTest test : testConfig.getTests()) {
+            if (test.getTimeout() <= 0) {
+                test.setTimeout(defaultTimeoutInMs);
             }
         }
 
@@ -198,20 +199,21 @@ public class Main {
         runnerTestResults.setWriteJUnitXmlFile(writeJunitXmlFile);
         worker.init(outputDir, runnerTestResults);
 
-        System.exit(worker.runJobs(tests) ? 0 : 1);
+        System.exit(worker.runJobs(testConfig) ? 0 : 1);
     }
 
-    private static List<RunnerTest> getFilesAsTests(List<File> files, long defaultTimeoutInMs) {
+    private static TestConfig getFilesAsTests(List<File> files) {
+        TestConfig testConfig = new TestConfig();
+
         List<RunnerTest> tests = new ArrayList<>();
         for (File file : files) {
             RunnerTest test = new RunnerTest();
             test.setFile(file);
             test.setName(file.getName());
-            test.setTimeout(defaultTimeoutInMs);
-            tests.add(test);
+            testConfig.addTest(test);
         }
 
-        return tests;
+        return testConfig;
     }
 
     private static String outputDirectoryFormatDate(Date date) {

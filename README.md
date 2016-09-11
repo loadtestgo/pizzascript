@@ -40,7 +40,7 @@ Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript
 
 Open the IDE:
 
-    bin/script-editor
+    bin/pizzascript-ide
 
 From the console you can start editor commands.
 

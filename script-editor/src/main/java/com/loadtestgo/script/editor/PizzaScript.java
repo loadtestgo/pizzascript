@@ -72,7 +72,7 @@ public class PizzaScript {
         printVersion();
 
         System.out.println();
-        System.out.println("script-editor [options] [filename]");
+        System.out.println("pizzascript-ide [options] [filename]");
         System.out.println();
         System.out.println("  -console / -c   start on the console (no gui)");
         System.out.println("  -har            save a HTTP Archive file after running console script");
@@ -80,19 +80,19 @@ public class PizzaScript {
         System.out.println("  -version / -v   print the version number");
         System.out.println();
         System.out.println("Open the IDE:");
-        System.out.println("  script-editor");
+        System.out.println("  pizzascript-ide");
         System.out.println();
         System.out.println("Run a file:");
-        System.out.println("  script-editor -console filename.js");
+        System.out.println("  pizzascript-ide -console filename.js");
         System.out.println();
         System.out.println("Run a file and save HTTP Archive to 'filename.js.har':");
-        System.out.println("  script-editor -har -console filename.js");
+        System.out.println("  pizzascript-ide -har -console filename.js");
         System.out.println();
         System.out.println("Open a file in the editor:");
-        System.out.println("  script-editor filename.js");
+        System.out.println("  pizzascript-ide filename.js");
         System.out.println();
         System.out.println("Open the interactive console debugger:");
-        System.out.println("  script-editor -console");
+        System.out.println("  pizzascript-ide -console");
         System.out.println();
     }
 

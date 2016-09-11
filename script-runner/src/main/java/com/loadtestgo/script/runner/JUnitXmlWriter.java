@@ -3,6 +3,8 @@ package com.loadtestgo.script.runner;
 import com.loadtestgo.script.api.StackElement;
 import com.loadtestgo.script.api.TestError;
 import com.loadtestgo.script.api.TestResult;
+import com.loadtestgo.script.runner.config.TestConfig;
+import com.loadtestgo.util.StringUtils;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -14,18 +16,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * TODO Allow the name to be set
- */
 public class JUnitXmlWriter {
-    private String testSuiteName = "PizzaScript";
-
     public void writeResults(File file,
                              List<RunnerTestResult> tests,
                              long startTime,
-                             long duration) throws FileNotFoundException, XMLStreamException {
+                             long duration,
+                             TestConfig testConfig) throws FileNotFoundException, XMLStreamException {
         XMLOutputFactory output = XMLOutputFactory.newFactory();
+
+        String testSuiteName = testConfig.getName();
+        if (!StringUtils.isSet(testSuiteName)) {
+            testSuiteName = "PizzaScript";
+        }
 
         XMLStreamWriter writer = output.createXMLStreamWriter(new FileOutputStream(file));
         writer.writeStartDocument("UTF-8", "1.0");
@@ -36,7 +38,6 @@ public class JUnitXmlWriter {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss");
         simpleDateFormat.format(time);
         writer.writeAttribute("timestamp", simpleDateFormat.format(time));
-        writer.writeAttribute("package", testSuiteName);
         writer.writeAttribute("id", "0");
         writer.writeAttribute("name", testSuiteName);
         writer.writeAttribute("hostname", "localhost");
@@ -62,7 +63,7 @@ public class JUnitXmlWriter {
 
             writer.writeStartElement("testcase");
             writer.writeAttribute("name", runnerTest.getName());
-            writer.writeAttribute("classname", testSuiteName);
+            writer.writeAttribute("classname", runnerTest.getName().replace(".js", ""));
             writer.writeAttribute("time", formatDurationMS(testResult.getRunTime()));
 
             TestError testError = testResult.getError();

@@ -1,6 +1,7 @@
 package com.loadtestgo.script.runner;
 
 import com.loadtestgo.script.engine.TestContext;
+import com.loadtestgo.script.runner.config.TestConfig;
 import org.pmw.tinylog.Logger;
 
 import javax.xml.stream.XMLStreamException;
@@ -21,13 +22,15 @@ public class RunnerTestResults {
     private boolean writeJUnitXmlFile;
     private List<RunnerTestResult> tests = new ArrayList<>();
     private File outputDir;
+    private TestConfig testConfig;
 
     public void setWriteJUnitXmlFile(boolean writeJUnitXmlFile) {
         this.writeJUnitXmlFile = writeJUnitXmlFile;
     }
 
-    public void startTests(File outputDir) {
+    public void startTests(TestConfig testConfig, File outputDir) {
         this.outputDir = outputDir;
+        this.testConfig = testConfig;
         this.allTestsStart = System.currentTimeMillis();
     }
 
@@ -53,7 +56,7 @@ public class RunnerTestResults {
                 File junitTestResultsFile = new File(outputDir, "junit.xml");
 
                 JUnitXmlWriter jUnitXmlWriter = new JUnitXmlWriter();
-                jUnitXmlWriter.writeResults(junitTestResultsFile, tests, allTestsStart, duration);
+                jUnitXmlWriter.writeResults(junitTestResultsFile, tests, allTestsStart, duration, testConfig);
 
             } catch (FileNotFoundException e) {
                 String error = String.format("Unable to write JUnit test results %s", e.getMessage());

@@ -1,6 +1,6 @@
 package com.loadtestgo.script.runner;
 
-import com.loadtestgo.script.runner.config.JsonConfig;
+import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.script.runner.config.JsonConfigParser;
 import org.json.JSONException;
 import org.junit.Assert;
@@ -13,7 +13,7 @@ public class JsonConfigParserTests {
     public void basic() {
         String json = "{ tests: [ { file: 'abc.js',  'timeout': 1.2 } ] }";
 
-        JsonConfig config = new JsonConfig();
+        TestConfig config = new TestConfig();
         config.setFileName("");
 
         JsonConfigParser.parseSource(config, json);
@@ -58,7 +58,7 @@ public class JsonConfigParserTests {
     }
 
     private void expectException(String expectedError, String json) {
-        JsonConfig config = new JsonConfig();
+        TestConfig config = new TestConfig();
         config.setFileName("");
 
         try {
