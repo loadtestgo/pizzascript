@@ -26,7 +26,14 @@
 
 <p>PizzaScript is a JavaScript browser automation framework with built-in performance monitoring.</p>
 
-<p>It includes a script editor, with a REPL and debugger, for interactively writing tests.</p>
+<p>It includes:</p>
+
+<ul>
+<li>A JavaScript IDE, for interactively writing and debugging tests.</li>
+<li>A standalone script runner, for running a set of tests, capturing screenshots &amp; performance metrics.</li>
+<li>A Java API for embedding the script runner in your own projects.  This is useful if you want customize how scripts
+  are run or if you just want to write the automation scripts directly in Java instead of JavaScript.</li>
+</ul>
 
 <br/>
 
@@ -37,6 +44,7 @@
 <h2>Features</h2>
 
 <ul>
+<li>Run site automation scripts and generate performance reports</li>
 <li>Inspect page load times and HTTP traffic</li>
 <li>Take screenshots</li>
 <li>Block/redirect certain URLs (or block all beacon URLs)</li>
@@ -44,6 +52,7 @@
 <li>Emulate Mobile and Tablet devices</li>
 <li>Emulate network conditions (e.g. 3G/4G/Offline)</li>
 <li>Record WebSocket request/responses</li>
+<li>Jenkins Integration</li>
 </ul>
 
 <br/><h2>Try It!</h2>
@@ -55,16 +64,18 @@
 <li>Java 8 JRE</li>
 </ul>
 
-<p>Download the latest <a href="https://github.com/loadtestgo/pizzascript/releases/download/v0.2.5/script-editor-0.2.5.zip">Script Editor</a> release.</p>
+<p>Download the latest <a href="https://github.com/loadtestgo/pizzascript/releases/download/v0.2.6/pizzascript-0.2.6.zip">PizzaScript</a> release.</p>
 
 <p>Open the IDE:</p>
 
-<div class="code">bin/script-editor</div>
+<div class="code">bin/pizzascript-ide</div>
+
+<p>Run all the example scripts and generate a report:</p>
+
+<div class="code">bin/pizzascript scripts</div>
 
 <br/>
 <h2>Examples</h2>
-
-<p>These example scripts should give you a flavour for the API.</p>
 
 <br/>
 <h3>Load a Page</h3>
@@ -75,7 +86,7 @@
 <br/>
 <h3>Form Submission</h3>
 <br/>
-<div class="code"><span class="v">b</span> = <span class="v">pizza</span>.<span class="f">open();<br/>
+<div class="code"><span class="v">b</span> = <span class="v">pizza</span>.<span class="f">open();</span><br/>
 <span class="v">b</span>.<span class="f">open</span>(<span class="s">"loadtestgo.com"</span>);<br/>
 <span class="v">b</span>.<span class="f">click</span>(<span class="s">"button:contains(Login)"</span>);<br/>
 <span class="v">b</span>.<span class="f">waitPageLoad</span>();<br/>
@@ -92,7 +103,8 @@
 <span class="v">b</span>.<span class="f">open</span>(<span class="s">"cnn.com"</span>);<br/>
 </div>
 
-<br/>
+<a href="https://github.com/loadtestgo/pizzascript/wiki/Examples">More Examples...</a><br/>
+
 <h2>Alternatives</h2>
 
 <ul>
