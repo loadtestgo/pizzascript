@@ -36,7 +36,7 @@ First make sure the following are installed.
 + Chrome 40+
 + Java 8 JRE
 
-Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.5/script-editor-0.2.5.zip) release.
+Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.6/pizzascript-0.2.6.zip) release.
 
 Open the IDE:
 

@@ -83,16 +83,18 @@ h5 {
     font-size: 16px
 }
 
-button {
+button, button a {
     color: #777;
     cursor: pointer;
     background: none;
     border: none;
-    outline: none
+    outline: none;
+    text-decoration: none;
 }
 
-button:hover {
+button:hover, button a:hover {
     color: #ccc;
+    background: #000;
     transition: 300ms
 }
 
