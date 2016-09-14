@@ -6,8 +6,13 @@ import org.mozilla.javascript.NativeArray;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 public class UtilsImpl implements Util {
+    private Random random = new Random();
+    private String alphaNumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+
     public UtilsImpl() {
     }
 
@@ -31,6 +36,30 @@ public class UtilsImpl implements Util {
             return max - 1;
         }
         return r;
+    }
+
+    @Override
+    public String randomString() {
+        return randomString(alphaNumeric, 10);
+    }
+
+    @Override
+    public String randomString(String chars) {
+        return randomString(chars, 10);
+    }
+
+    @Override
+    public String randomString(String chars, int len) {
+        String str = "";
+        for (int i = 0; i < len; ++i) {
+            str += chars.charAt(random.nextInt(chars.length()));
+        }
+        return str;
+    }
+
+    @Override
+    public String randomString(int len) {
+        return randomString(alphaNumeric, len);
     }
 
     @Override

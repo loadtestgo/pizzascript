@@ -321,7 +321,7 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#setCookie">setCookie(name, value[, details])</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#setCredentials">setCredentials(username, password)</a></dt>
+                <dt><a href="module-Browser.html#setAuth">setAuth(username, password)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#setHeader">setHeader(name, value)</a></dt>
@@ -5033,7 +5033,7 @@ b.open(&quot;www.mysite.com/&quot;);</code></pre>
         
     </dl>
 
-                <h3 id="setCredentials"><span class="symbol-name">setCredentials</span><span class="signature"><span class="signature-params">(username, password)</span></span></h3>
+                <h3 id="setAuth"><span class="symbol-name">setAuth</span><span class="signature"><span class="signature-params">(username, password)</span></span></h3>
         <p>Set the browser credentials.</p>
 <p>These will be automatically entered whenever a credentials dialog
 would normally show up.  Works with Basic Auth and all other forms
@@ -5046,7 +5046,7 @@ of HTTP authentication supported by Chrome.</p>
                 <div>
     <pre class="prettyprint"><code>// Open with a page with the credentials already set
 var b &#x3D; pizza.open();
-b.setCredentials(&#x27;username&#x27;, &#x27;password&#x27;);
+b.setAuth(&#x27;username&#x27;, &#x27;password&#x27;);
 b.open(&quot;www.mysite.com&quot;);</code></pre>
 </div>
 

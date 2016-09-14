@@ -30,7 +30,7 @@ public class AuthTests extends JavaScriptTest {
     public void authGiven() {
         String script = String.format(
             "b = pizza.open();\n" +
-            "b.setCredentials('username', 'password');\n" +
+            "b.setAuth('username', 'password');\n" +
             "b.open('%s');\n",
             getTestUrl("auth/check"));
 
@@ -47,7 +47,7 @@ public class AuthTests extends JavaScriptTest {
     public void badAuthGiven() {
         String script = String.format(
             "b = pizza.open();\n" +
-            "b.setCredentials('username', 'password');\n" +
+            "b.setAuth('username', 'password');\n" +
             "b.open('%s');\n",
             getTestUrl("auth/reject"));
 

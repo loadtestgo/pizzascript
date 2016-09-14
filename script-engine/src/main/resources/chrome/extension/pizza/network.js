@@ -154,7 +154,7 @@ pizza.main.network = function() {
         chrome.webRequest.onAuthRequired.addListener(onAuthRequiredCallback, {urls: ["<all_urls>"]}, ['blocking']);
     };
 
-    var _setCredentials = function(username, password) {
+    var _setAuth = function(username, password) {
         _username = username;
         _password = password;
         _authSent = [];
@@ -186,7 +186,7 @@ pizza.main.network = function() {
 
     return {
         init: _init,
-        setCredentials: _setCredentials,
+        setAuth: _setAuth,
         suppressNextNavigation: _suppressNextNavigation,
         addListener: _addListener
     };

@@ -720,8 +720,8 @@ pizza.main.commands = function() {
         _setAllHeaders(id);
     };
 
-    var _setCredentials = function(id, params) {
-        pizza.network.setCredentials(params.username, params.password);
+    var _setAuth = function(id, params) {
+        pizza.network.setAuth(params.username, params.password);
         sendResponse(id, {});
     };
 
@@ -2005,7 +2005,7 @@ pizza.main.commands = function() {
     addCommand("removeHeader", _removeHeader);
     addCommand("setUserAgent", _setUserAgent);
     addCommand("removeAllHeaders", _removeAllHeaders);
-    addCommand("setCredentials", _setCredentials);
+    addCommand("setAuth", _setAuth);
 
     addCommand("clearCookies", _clearCookies);
     addCommand("clearCache", _clearCache);

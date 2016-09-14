@@ -406,7 +406,7 @@ public interface Browser {
      * @param username
      * @param password
      */
-    void setCredentials(String username, String password);
+    void setAuth(String username, String password);
 
     /**
      * Clear the browser cache

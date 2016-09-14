@@ -496,11 +496,11 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public void setCredentials(String username, String password) {
+    public void setAuth(String username, String password) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("username", username);
         params.put("password", password);
-        checkResponseForErrors(pizzaHandler.sendCommand("setCredentials", params));
+        checkResponseForErrors(pizzaHandler.sendCommand("setAuth", params));
     }
 
     @Override

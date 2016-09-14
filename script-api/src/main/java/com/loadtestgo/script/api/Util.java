@@ -7,5 +7,13 @@ public interface Util {
 
     int random(int max);
 
+    String randomString();
+
+    String randomString(String chars);
+
+    String randomString(String chars, int len);
+
+    String randomString(int len);
+
     Object randomElement(NativeArray array);
 }

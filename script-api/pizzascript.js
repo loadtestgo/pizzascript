@@ -1041,13 +1041,13 @@ Browser.prototype.setUserAgent = function(userAgent) {};
  * @example
  * // Open with a page with the credentials already set
  * var b = pizza.open();
- * b.setCredentials('username', 'password');
+ * b.setAuth('username', 'password');
  * b.open("www.mysite.com");
  *
  * @param {String} username The username
  * @param {String} password The password
  */
-Browser.prototype.setCredentials = function(username, password) {};
+Browser.prototype.setAuth = function(username, password) {};
 
 /**
  * Clear the browser cache
