@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.ScriptException;
+import com.loadtestgo.script.engine.TestContext;
 import org.java_websocket.WebSocket;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.json.JSONException;
@@ -29,10 +30,10 @@ public class BrowserWebSocket {
     protected ByteBuffer screenshot = null;
     final protected AtomicBoolean closing = new AtomicBoolean(false);
 
-    public BrowserWebSocket() {
+    public BrowserWebSocket(TestContext testContext) {
         this.commandId.set(0);
         this.commandResponses = new LinkedBlockingQueue<>();
-        this.verboseLogging = EngineSettings.getVerboseLogging();
+        this.verboseLogging = testContext.getEngineContext().isVerbose();
     }
 
     public void initConnection(WebSocket conn, JSONObject json) {

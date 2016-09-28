@@ -1,13 +1,10 @@
 package com.loadtestgo.script.engine;
 
 import com.loadtestgo.script.api.TestResult;
-import com.loadtestgo.script.engine.internal.api.CSVImpl;
 import com.loadtestgo.script.engine.internal.api.ChromeBrowser;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * A context used in a single script/test run.
@@ -50,6 +47,10 @@ public class TestContext {
 
     public UserContext getUserContext() {
         return userContext;
+    }
+
+    public EngineContext getEngineContext() {
+        return userContext.getEngineContext();
     }
 
     public ResultsNotifier getResultNotifier() {

@@ -21,9 +21,10 @@ public class EngineContext {
     private int loadTestBotIndex;
     private int loadTestId;
     private String location;
+    private boolean verbose;
 
-    public EngineContext()
-    {
+    public EngineContext() {
+        this.verbose = EngineSettings.getVerboseLogging();
     }
 
     public synchronized BrowserWebSocketServer getWebSocketServer()
@@ -104,6 +105,14 @@ public class EngineContext {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 }
 

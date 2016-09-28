@@ -29,6 +29,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
     private Map<String, HttpRequest> ongoingRequests = new HashMap<>();
 
     public ChromeWebSocket(TestContext testContext) {
+        super(testContext);
         this.testResult = testContext.getTestResult();
         this.resultNotifier = testContext.getResultNotifier();
         this.internalRequestIds = new HashSet<>();
