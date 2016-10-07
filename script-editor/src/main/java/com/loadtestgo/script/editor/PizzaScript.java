@@ -127,7 +127,7 @@ public class PizzaScript {
 
         // Make sure the settings are loaded from the current directory
         // before before a Swing GUI dialog changes it
-        Settings.loadSettings();
+        IniFile.loadSettings();
 
         if (guiMode) {
             if (Os.isMac()) {

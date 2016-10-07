@@ -4,6 +4,7 @@ import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.engine.EasyTestContext;
 import com.loadtestgo.script.engine.JavaScriptEngine;
 import com.loadtestgo.script.engine.ScriptException;
+import com.loadtestgo.util.Settings;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,7 +12,7 @@ public class JavaScriptTest extends BaseTest {
     public static AtomicInteger testId = new AtomicInteger();
 
     public TestResult basicGetTestUrl(String url) {
-        return basicGetTestUrl(url, TestSettings.getDefaultScriptTimeout());
+        return basicGetTestUrl(url, getDefaultScriptTimeout());
     }
 
     public TestResult basicGetTestUrl(String url, long timeout) {
@@ -19,7 +20,7 @@ public class JavaScriptTest extends BaseTest {
     }
 
     public TestResult basicGetUrl(String url) {
-        return basicGetTestUrl(url, TestSettings.getDefaultScriptTimeout());
+        return basicGetTestUrl(url, getDefaultScriptTimeout());
     }
 
     public TestResult basicGetUrl(String url, long timeout) {
@@ -30,7 +31,7 @@ public class JavaScriptTest extends BaseTest {
     }
 
     public TestResult runScript(String script) {
-        return runScript(script, TestSettings.getDefaultScriptTimeout());
+        return runScript(script, getDefaultScriptTimeout());
     }
 
     public TestResult runScript(String script, long timeout) {

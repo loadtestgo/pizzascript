@@ -6,6 +6,8 @@ import com.loadtestgo.script.api.Page;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.server.TestServer;
 import com.loadtestgo.util.Http;
+import com.loadtestgo.util.IniFile;
+import com.loadtestgo.util.Settings;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.pmw.tinylog.Logger;
@@ -17,6 +19,7 @@ import static org.junit.Assert.*;
 
 public class BaseTest {
     static TestServer server = null;
+    static Settings settings = IniFile.settings();
 
     @Rule
     public TestName test = new TestName();
@@ -189,5 +192,9 @@ public class BaseTest {
         assertEquals(HttpRequest.State.Complete, request.getState());
         assertEquals("OK", request.getStatusText());
         assertEquals(200, request.getStatusCode());
+    }
+
+    static public long getDefaultScriptTimeout() {
+        return settings.getLong("test.timeout", 10000);
     }
 }

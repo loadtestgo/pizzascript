@@ -7,6 +7,7 @@ import com.loadtestgo.script.engine.*;
 import com.loadtestgo.script.har.HarWriter;
 import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.util.FileUtils;
+import com.loadtestgo.util.IniFile;
 import com.loadtestgo.util.Path;
 import com.loadtestgo.util.Settings;
 import org.pmw.tinylog.Configurator;
@@ -25,8 +26,10 @@ import java.util.List;
 public class Worker {
     private File outputDir;
     private RunnerTestResults runnerTestResults;
+    private RunnerSettings runnerSettings;
 
-    public Worker() {
+    public Worker(Settings settings) {
+        runnerSettings = new RunnerSettings(settings);
     }
 
     public void init(String outputDir, RunnerTestResults runnerTestResults) {
@@ -39,8 +42,6 @@ public class Worker {
             .writer(new FileWriter(new File(this.outputDir, "log.txt").getAbsolutePath()))
             .level(Level.INFO)
             .activate();
-
-        Settings.loadSettings();
     }
 
     public boolean runJobs(TestConfig testConfig) {
@@ -91,7 +92,7 @@ public class Worker {
             engine.init(testContext);
             try {
                 consoleLogWriter = new ConsoleOutputWriter(consoleLogFilePath);
-                consoleLogWriter.setWriteTimestamps(RunnerSettings.consoleWriteTimeStamps());
+                consoleLogWriter.setWriteTimestamps(runnerSettings.consoleWriteTimeStamps());
                 engine.setConsole(consoleLogWriter);
             } catch (IOException e) {
                 Logger.error("Unable to write output {}", consoleLogFilePath);
@@ -102,9 +103,9 @@ public class Worker {
             Browser browser = testContext.getOpenBrowser();
             try {
                 if (browser != null) {
-                    Data screenshot = browser.screenshot(RunnerSettings.screenshotType());
+                    Data screenshot = browser.screenshot(runnerSettings.screenshotType());
                     File screenshotFile = Path.getCanonicalFile(
-                        new File(outputDir, filename + "." + RunnerSettings.screenshotType()));
+                        new File(outputDir, filename + "." + runnerSettings.screenshotType()));
                     try (FileOutputStream fileOutputStream = new FileOutputStream(screenshotFile)) {
                         DataOutputStream os = new DataOutputStream(fileOutputStream);
                         os.write(screenshot.getBytes());

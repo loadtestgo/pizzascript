@@ -5,6 +5,8 @@ import org.pmw.tinylog.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Load a settings.ini from the current directory.
@@ -24,64 +26,88 @@ import java.io.IOException;
  * }
  */
 public class Settings {
-    protected static IniFile iniFile;
-    protected static String rootDir;
-    protected static String tmpDir;
-    protected static File settingsFile;
+    private Map<String, String> settings = new HashMap<>();
 
-    public static String getRootDir() {
-        if (rootDir == null) {
-            rootDir = System.getProperty("user.dir");
-        }
-        return rootDir;
+    public String getString(String key) {
+        return settings.get(key);
     }
 
-    public static String getTmpDir() {
-        if (tmpDir == null) {
-            tmpDir = Path.join(getRootDir(), "tmp");
-            File file = new File(tmpDir);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
+    public String getString(String key, String defaultValue) {
+        String value = settings.get(key);
+        if (value == null) {
+            return defaultValue;
         }
-        return tmpDir;
+        return value;
     }
 
-    /**
-     * Force the settings to be loaded.
-     * This is useful if you want the file to be read before the some code
-     * asks for a setting (normally they are lazy loaded).
-     */
-    public static void loadSettings() {
-        settings();
+    public int getInt(String key, int defaultValue) {
+        String value = settings.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
-    /**
-     * Override where the settings are read from default
-     * @param settingsFile
-     */
-    public static void setSettingsFile(File settingsFile) { Settings.settingsFile = settingsFile; }
-
-    public static IniFile settings() {
-        if (iniFile == null) {
-            iniFile = new IniFile();
-            if (settingsFile == null) {
-                settingsFile = new File("settings.ini");
-            }
-
-            try {
-                iniFile.load(settingsFile);
-                Logger.info("Loaded settings from {}", settingsFile.getAbsolutePath());
-            } catch (IOException e) {
-                String msg = e.getMessage();
-                if (e instanceof FileNotFoundException) {
-                    msg = "no such file";
-                }
-                Logger.info("Unable to read settings file '{}', {}", settingsFile.getAbsolutePath(), msg);
-                Logger.info("Using default settings...");
-            }
-            iniFile.printSettings();
+    public long getLong(String key, long defaultValue) {
+        String value = settings.get(key);
+        if (value == null) {
+            return defaultValue;
         }
-        return iniFile;
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public float getFloat(String key, float defaultValue) {
+        String value = settings.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public double getDouble(String key, double defaultValue) {
+        String value = settings.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public boolean getBoolean(String key, boolean defaultValue) {
+        String value = settings.get(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        return Boolean.parseBoolean(value);
+    }
+
+    public void printSettings() {
+        for (Map.Entry<String, String> setting : settings.entrySet()) {
+            Logger.info("{} = {}", setting.getKey(), setting.getValue());
+        }
+    }
+
+    public void set(String key, String value) {
+        settings.put(key, value);
+    }
+
+    public void putAll(Settings overrideSettings) {
+        settings.putAll(overrideSettings.settings);
     }
 }

@@ -13,7 +13,8 @@ public class EditorTestContext extends EasyTestContext {
 
     public EditorTestContext(String name, int userId) {
         super(name, userId);
-        setSandboxJavaScript(EngineSettings.sandboxJavaScript());
+
+        setSandboxJavaScript(getEngineSettings().sandboxJavaScript());
     }
 
     public void setWindowPosition(WindowPosition windowPosition) {

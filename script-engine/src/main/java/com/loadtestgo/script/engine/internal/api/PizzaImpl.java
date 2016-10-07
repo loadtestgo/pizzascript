@@ -115,7 +115,7 @@ public class PizzaImpl implements Pizza {
 
     @Override
     public String getVersion() {
-        return EngineSettings.getVersion();
+        return testContext.getEngineContext().getAPIVersion();
     }
 
     @Override

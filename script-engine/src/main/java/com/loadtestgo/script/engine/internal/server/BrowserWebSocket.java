@@ -2,6 +2,7 @@ package com.loadtestgo.script.engine.internal.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loadtestgo.script.engine.EngineContext;
 import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.ScriptException;
 import com.loadtestgo.script.engine.TestContext;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BrowserWebSocket {
+    protected final int minSupportedVersion;
     protected boolean verboseLogging;
     protected WebSocket conn;
     protected CountDownLatch connectLatch = new CountDownLatch(1);
@@ -28,12 +30,17 @@ public class BrowserWebSocket {
     protected LinkedBlockingQueue<JSONObject> commandResponses;
     protected ObjectMapper mapper = new ObjectMapper();
     protected ByteBuffer screenshot = null;
+    protected EngineSettings engineSettings = null;
     final protected AtomicBoolean closing = new AtomicBoolean(false);
 
     public BrowserWebSocket(TestContext testContext) {
         this.commandId.set(0);
         this.commandResponses = new LinkedBlockingQueue<>();
-        this.verboseLogging = testContext.getEngineContext().isVerbose();
+
+        EngineContext engineContext = testContext.getEngineContext();
+        this.verboseLogging = engineContext.isVerbose();
+        this.minSupportedVersion = engineContext.getChromeMinVersion();
+        this.engineSettings = engineContext.getEngineSettings();
     }
 
     public void initConnection(WebSocket conn, JSONObject json) {
@@ -54,7 +61,6 @@ public class BrowserWebSocket {
     }
 
     private void checkVersionOk() {
-        int minVersion = EngineSettings.getChromeMinVersion();
         int version;
 
         int firstNumEnd = this.version.indexOf(".");
@@ -64,9 +70,9 @@ public class BrowserWebSocket {
             version = Integer.valueOf(this.version);
         }
 
-        if (version < minVersion) {
+        if (version < minSupportedVersion) {
             throw new RuntimeException(
-                    String.format("Chrome version to old.  At least version %d.xx.xx is needed.", minVersion));
+                    String.format("Chrome version too old.  At least version %d.x.x is needed.", minSupportedVersion));
         }
     }
 
@@ -147,7 +153,7 @@ public class BrowserWebSocket {
     }
 
     public boolean waitForConnection() throws InterruptedException {
-        return connectLatch.await(20, TimeUnit.SECONDS);
+        return connectLatch.await(engineSettings.getBrowserWaitConnectionTime(), TimeUnit.MILLISECONDS);
     }
 
     public String getVersion() {

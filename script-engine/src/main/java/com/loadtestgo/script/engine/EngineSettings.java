@@ -6,12 +6,18 @@ import org.pmw.tinylog.Logger;
 
 import java.io.File;
 
-public class EngineSettings extends Settings {
-    private static Boolean verboseLogging;
-    private static Boolean saveChromeLogs;
+public class EngineSettings {
+    private final Settings settings;
+    private Boolean verboseLogging;
+    private Boolean saveChromeLogs;
+    private Long browserWaitConnectionTime;
 
-    static public String getChromeExecutable() {
-        String location = settings().getString("chrome.binary");
+    public EngineSettings(Settings settings) {
+        this.settings = settings;
+    }
+
+    public String getChromeExecutable() {
+        String location = settings.getString("chrome.binary");
         if (location == null) {
             if (Os.isMac()) {
                 return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -43,11 +49,11 @@ public class EngineSettings extends Settings {
      * Min supported Chrome version.  Not actually tested yet!  Note this is a hard don't run,
      * and not an informational message.
      */
-    static public int getChromeMinVersion() {
+    public int getChromeMinVersion() {
         return 32;
     }
 
-    public static String getChromeFileName() {
+    public String getChromeFileName() {
         if (Os.isMac()) {
             return "Google Chrome";
         } else if (Os.isLinux()) {
@@ -57,30 +63,28 @@ public class EngineSettings extends Settings {
         }
     }
 
-    public static String getVersion() {
-        Package thisPackage = EngineSettings.class.getPackage();
-        String version = thisPackage.getImplementationVersion();
-        if (version == null) {
-            version = "dev";
-        }
-        return version;
+    public boolean sandboxJavaScript() {
+        return settings.getBoolean("sandbox", false);
     }
 
-    public static boolean sandboxJavaScript() {
-        return settings().getBoolean("sandbox", false);
-    }
-
-    public static boolean getVerboseLogging() {
+    public boolean getVerboseLogging() {
         if (verboseLogging == null) {
-            verboseLogging = settings().getBoolean("verbose", false);
+            verboseLogging = settings.getBoolean("verbose", false);
         }
         return verboseLogging;
     }
 
-    public static boolean saveChromeLogs() {
+    public boolean saveChromeLogs() {
         if (saveChromeLogs == null) {
-            saveChromeLogs = settings().getBoolean("chrome.logs", false);
+            saveChromeLogs = settings.getBoolean("chrome.logs", false);
         }
         return saveChromeLogs;
+    }
+
+    public long getBrowserWaitConnectionTime() {
+        if (browserWaitConnectionTime == null) {
+            browserWaitConnectionTime = settings.getLong("browser.connection.wait.time", 20 * 1000L);
+        }
+        return browserWaitConnectionTime;
     }
 }

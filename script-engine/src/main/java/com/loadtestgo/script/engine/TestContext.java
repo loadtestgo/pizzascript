@@ -3,6 +3,7 @@ package com.loadtestgo.script.engine;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.engine.internal.api.ChromeBrowser;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
+import com.loadtestgo.util.Dirs;
 
 import java.io.File;
 
@@ -99,7 +100,7 @@ public class TestContext {
     }
 
     public String getTestTmpDir() {
-        return String.format("%s/%d", EngineSettings.getTmpDir(), userContext.getUserId());
+        return String.format("%s/%d", Dirs.getTmp(), userContext.getUserId());
     }
 
     public ChromeSettings getDefaultChromeSettings() {
@@ -141,5 +142,9 @@ public class TestContext {
 
     public void setBaseDirectory(File baseDirectory) {
         this.baseDirectory = baseDirectory;
+    }
+
+    public EngineSettings getEngineSettings() {
+        return getEngineContext().getEngineSettings();
     }
 }

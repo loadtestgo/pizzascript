@@ -2,112 +2,70 @@ package com.loadtestgo.util;
 
 import org.pmw.tinylog.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class IniFile {
-    private Pattern keyValuePattern = Pattern.compile("^([^=]*)=(.*)$");
-    private Map<String, String> settings = new HashMap<>();
+    /**
+     * key = value pattern for parsing property
+     */
+    public static Pattern KeyValuePattern = Pattern.compile("^([^=]*)=(.*)$");
 
-    public IniFile() {
+    public static Settings load(String path) throws IOException {
+        return load(new File(path));
     }
 
-    public void load(String path) throws IOException {
-        load(new File(path));
-    }
-
-    public void load(File path) throws IOException {
+    public static Settings load(File path) throws IOException {
+        Settings settings = new Settings();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
-                Matcher m = keyValuePattern.matcher(line);
+                Matcher m = KeyValuePattern.matcher(line);
                 if (m.matches()) {
                     String key = m.group(1).trim();
                     String value = m.group(2).trim();
-                    settings.put(key, value);
+                    settings.set(key, value);
                 }
             }
         }
+        return settings;
     }
 
-    public String getString(String key) {
-        return settings.get(key);
+    protected static Settings settings;
+    protected static File settingsFile;
+
+    /**
+     * Override where the settings are read from default
+     * @param settingsFile
+     */
+    public static void setSettingsFile(File settingsFile) { IniFile.settingsFile = settingsFile; }
+
+    public static Settings loadSettings() {
+        return settings();
     }
 
-    public String getString(String key, String defaultValue) {
-        String value = settings.get(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        return value;
-    }
+    public static Settings settings() {
+        if (settings == null) {
+            IniFile iniFile = new IniFile();
+            if (settingsFile == null) {
+                settingsFile = new File("settings.ini");
+            }
 
-    public int getInt(String key, int defaultValue) {
-        String value = settings.get(key);
-        if (value == null) {
-            return defaultValue;
-        }
+            try {
+                settings = iniFile.load(settingsFile);
+                settings.printSettings();
 
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+                Logger.info("Loaded settings from {}", settingsFile.getAbsolutePath());
+            } catch (IOException e) {
+                String msg = e.getMessage();
+                if (e instanceof FileNotFoundException) {
+                    msg = "no such file";
+                }
+                Logger.info("Unable to read settings file '{}', {}", settingsFile.getAbsolutePath(), msg);
+                Logger.info("Using default settings...");
+            }
         }
-    }
-
-    public long getLong(String key, long defaultValue) {
-        String value = settings.get(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        try {
-            return Long.parseLong(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-
-    public float getFloat(String key, float defaultValue) {
-        String value = settings.get(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        try {
-            return Float.parseFloat(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-
-    public double getDouble(String key, double defaultValue) {
-        String value = settings.get(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-
-    public boolean getBoolean(String key, boolean defaultValue) {
-        String value = settings.get(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        return Boolean.parseBoolean(value);
-    }
-
-    public void printSettings() {
-        for (Map.Entry<String, String> setting : settings.entrySet()) {
-            Logger.info("{} = {}", setting.getKey(), setting.getValue());
-        }
+        return settings;
     }
 }

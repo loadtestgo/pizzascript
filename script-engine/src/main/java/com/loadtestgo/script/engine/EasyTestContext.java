@@ -1,5 +1,6 @@
 package com.loadtestgo.script.engine;
 
+import com.loadtestgo.util.IniFile;
 import com.loadtestgo.util.Path;
 import org.pmw.tinylog.Logger;
 

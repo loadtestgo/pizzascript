@@ -1,12 +1,13 @@
 package com.loadtestgo.script.engine;
 
 import com.loadtestgo.script.engine.internal.server.BrowserWebSocketServer;
+import com.loadtestgo.util.IniFile;
+import com.loadtestgo.util.Settings;
 import org.pmw.tinylog.Logger;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.io.IOException;
 
 /**
  * The main EngineContext that is shared between multiple browsers all
@@ -21,10 +22,14 @@ public class EngineContext {
     private int loadTestBotIndex;
     private int loadTestId;
     private String location;
-    private boolean verbose;
+    private EngineSettings engineSettings;
 
     public EngineContext() {
-        this.verbose = EngineSettings.getVerboseLogging();
+        this.engineSettings = new EngineSettings(IniFile.settings());
+    }
+
+    public EngineContext(Settings settings) {
+        this.engineSettings = new EngineSettings(settings);
     }
 
     public synchronized BrowserWebSocketServer getWebSocketServer()
@@ -108,11 +113,24 @@ public class EngineContext {
     }
 
     public boolean isVerbose() {
-        return verbose;
+        return engineSettings.getVerboseLogging();
     }
 
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
+    public String getAPIVersion() {
+        Package thisPackage = EngineSettings.class.getPackage();
+        String version = thisPackage.getImplementationVersion();
+        if (version == null) {
+            version = "dev";
+        }
+        return version;
+    }
+
+    public EngineSettings getEngineSettings() {
+        return engineSettings;
+    }
+
+    public int getChromeMinVersion() {
+        return engineSettings.getChromeMinVersion();
     }
 }
 

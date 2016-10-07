@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.fusesource.jansi.AnsiConsole;
 import org.json.JSONException;
@@ -21,12 +23,18 @@ public class Main {
     private static final double MAX_TIMEOUT_SECONDS = 10 * 1000 * 1000;
     public static String AppName = "PizzaScript";
 
-    static String fileName = null;
-    static String outputDir = null;
-    static boolean writeJunitXmlFile = false;
-    static double timeout = -1;
+    private String fileName = null;
+    private String outputDir = null;
+    private boolean writeJunitXmlFile = false;
+    private double timeout = -1;
+    private Settings overrideSettings = new Settings();
 
-    private static void processArgs(String[] args) {
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.instanceMain(args);
+    }
+
+    private void processArgs(String[] args) {
         for (int i = 0; i < args.length; ++i) {
             String arg = args[i];
             if (arg.startsWith("-")) {
@@ -73,6 +81,15 @@ public class Main {
                     case "junit":
                         writeJunitXmlFile = true;
                         break;
+                    case "s":
+                    case "set":
+                        i++;
+                        if (i < args.length) {
+                            addSettingOverride(args[i]);
+                        } else {
+                            printErrorWithHelp("-" + switchName + " requires a parameter");
+                        }
+                        break;
                     default:
                         printErrorWithHelp("Unknown option " + switchName);
                         break;
@@ -89,33 +106,48 @@ public class Main {
         }
     }
 
-    private static void printErrorWithHelp(String s) {
+    private void addSettingOverride(String settingsString) {
+        Matcher m = IniFile.KeyValuePattern.matcher(settingsString);
+        if (m.matches()) {
+            String key = m.group(1).trim();
+            String value = m.group(2).trim();
+            overrideSettings.set(key, value);
+        } else {
+            printErrorWithHelp(String.format("Override setting \'%s\' must match /%s/\n" +
+                "For example this is a valid override: -s \"chrome.logs=true\"",
+                settingsString, IniFile.KeyValuePattern.toString()));
+        }
+    }
+
+    private void printErrorWithHelp(String s) {
         stderr(s);
         stdout();
         printHelp();
         System.exit(1);
     }
 
-    private static void printError(String s) {
+    private void printError(String s) {
         stderr(s);
         System.exit(1);
     }
 
-    private static void printHelp() {
+    private void printHelp() {
         printVersion();
 
         stdout();
         stdout("pizzascript [options] [file]|[directory]");
         stdout();
         stdout("  --help / -h          print this help");
-        stdout("  --version / -v       print the version number");
-        stdout("  --timeout / -t       specify a per test timeout in seconds");
-        stdout("                       default is no timeout");
+        stdout("  --junit              save output in junit format junit.xml under directory specified by -output");
+        stdout("                       defaults to results-<timestamp>/junit.xml");
         stdout("  --output / -o <dir>  output screenshots and other results to this directory");
         stdout("                       output dir can be specified in json file");
         stdout("                       defaults to results-<timestamp>");
-        stdout("  --junit              save output in junit format junit.xml under directory specified by -output");
-        stdout("                       defaults to results-<timestamp>/junit.xml");
+        stdout("  --set / -s <setting> override a setting from settings.ini");
+        stdout("                       --set / -s can be repeated to override multiple settings");
+        stdout("  --timeout / -t <t>   specify a per test timeout in seconds");
+        stdout("                       default is no timeout");
+        stdout("  --version / -v       print the version number");
         stdout();
         stdout("Run a file:");
         stdout("  pizzascript filename.js");
@@ -131,11 +163,11 @@ public class Main {
         stdout();
     }
 
-    private static void printVersion() {
+    private void printVersion() {
         stdout(String.format("%s: %s", AppName, getVersion()));
     }
 
-    public static void main(String[] args) {
+    private void instanceMain(String[] args) {
         AnsiConsole.systemInstall();
 
         processArgs(args);
@@ -194,7 +226,10 @@ public class Main {
             }
         }
 
-        Worker worker = new Worker();
+        Settings settings = IniFile.loadSettings();
+        settings.putAll(overrideSettings);
+
+        Worker worker = new Worker(settings);
         RunnerTestResults runnerTestResults = new RunnerTestResults();
         runnerTestResults.setWriteJUnitXmlFile(writeJunitXmlFile);
         worker.init(outputDir, runnerTestResults);
