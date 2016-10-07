@@ -62,8 +62,11 @@ public class IniFile {
                 if (e instanceof FileNotFoundException) {
                     msg = "no such file";
                 }
+
                 Logger.info("Unable to read settings file '{}', {}", settingsFile.getAbsolutePath(), msg);
                 Logger.info("Using default settings...");
+
+                settings = new Settings();
             }
         }
         return settings;
