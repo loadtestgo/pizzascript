@@ -19,5 +19,5 @@ notifications:
     email: false
 
 script:
-    - bundle exec gradle check
-    - bundle exec gradle script-tester:integration
+    - gradle check
+    - gradle script-tester:integration
