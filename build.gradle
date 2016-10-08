@@ -164,6 +164,9 @@ project(':script-tester') {
         }
     }
     task integration(type: Test) {
+        testLogging {
+            showStandardStreams = true
+        }
         testClassesDir = sourceSets.integration.output.classesDir
         classpath = sourceSets.integration.runtimeClasspath
     }
