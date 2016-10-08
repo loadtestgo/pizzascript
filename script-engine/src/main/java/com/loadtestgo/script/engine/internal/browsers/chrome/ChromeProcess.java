@@ -31,6 +31,7 @@ public class ChromeProcess
     private ChromeSettings settings;
     private ProcessLauncher processLauncher;
     private EngineSettings engineSettings;
+    private EngineContext engineContext;
 
     public ChromeProcess(TestContext testContext) {
         init(testContext, new ChromeSettings());
@@ -59,6 +60,7 @@ public class ChromeProcess
         this.pizzaExtensionPath = Path.join(extensionExpandPath, "pizza");
 
         this.engineSettings = testContext.getEngineSettings();
+        this.engineContext = testContext.getEngineContext();
     }
 
     public void start() {
@@ -66,7 +68,7 @@ public class ChromeProcess
     }
 
     public void start(ProcessLauncher processLauncher) {
-        File executable = findChrome(this.engineSettings);
+        File executable = engineContext.getChromeExecutable();
         if (executable == null) {
             throw new ScriptException("Unable to find Chrome executable.");
         }
@@ -354,37 +356,6 @@ public class ChromeProcess
                 Logger.info("Problem closing browser...", e);
             }
         }
-    }
-
-    static public File findChrome(EngineSettings engineSettings) {
-        String fileName = engineSettings.getChromeExecutable();
-        String fallingBack = "falling back to looking for Chrome in PATH";
-
-        if (fileName != null) {
-            File file = new File(fileName);
-            if (!file.exists()) {
-                Logger.warn("Settings location does not point to Chrome executable: {}, {}",
-                        file.getAbsolutePath(), fallingBack);
-            } else if (file.isDirectory()) {
-                Logger.warn("Settings location points to directory instead of Chrome executable: {}, {}",
-                        file.getAbsolutePath(), fallingBack);
-            } else if (!file.canExecute()) {
-                Logger.warn("Do not have execute permissions on: {}, {}", file.getAbsolutePath(), fallingBack);
-            } else {
-                // ok
-                return file;
-            }
-        } else {
-            Logger.info("Chrome location not set, {}.", fallingBack);
-        }
-
-        File file = com.loadtestgo.util.FileUtils.findExecutable(engineSettings.getChromeFileName());
-
-        if (file != null) {
-            Logger.info("Found Chrome at {}", file.getAbsolutePath());
-        }
-
-        return file;
     }
 
     private String getExtensionId() {

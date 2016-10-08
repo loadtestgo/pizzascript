@@ -1,10 +1,12 @@
 package com.loadtestgo.script.engine;
 
+import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeFinder;
 import com.loadtestgo.script.engine.internal.server.BrowserWebSocketServer;
 import com.loadtestgo.util.IniFile;
 import com.loadtestgo.util.Settings;
 import org.pmw.tinylog.Logger;
 
+import java.io.File;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class EngineContext {
     private int loadTestId;
     private String location;
     private EngineSettings engineSettings;
+    private File chromeExecutable;
 
     public EngineContext() {
         this.engineSettings = new EngineSettings(IniFile.settings());
@@ -131,6 +134,17 @@ public class EngineContext {
 
     public int getChromeMinVersion() {
         return engineSettings.getChromeMinVersion();
+    }
+
+    public void setChromeExecutable(File chromeExecutable) {
+        this.chromeExecutable = chromeExecutable;
+    }
+
+    public File getChromeExecutable() {
+        if (chromeExecutable == null) {
+            return ChromeFinder.findChrome(engineSettings);
+        }
+        return chromeExecutable;
     }
 }
 

@@ -1,5 +1,6 @@
 package com.loadtestgo.script.runner;
 
+import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeFinder;
 import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.script.runner.config.JsonConfigParser;
 import com.loadtestgo.util.*;
@@ -11,8 +12,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import com.loadtestgo.util.log.CustomLogger;
 import org.fusesource.jansi.AnsiConsole;
 import org.json.JSONException;
 
@@ -226,13 +227,41 @@ public class Main {
             }
         }
 
-        Settings settings = IniFile.loadSettings();
-        settings.putAll(overrideSettings);
-
-        Worker worker = new Worker(settings);
         RunnerTestResults runnerTestResults = new RunnerTestResults();
         runnerTestResults.setWriteJUnitXmlFile(writeJunitXmlFile);
-        worker.init(outputDir, runnerTestResults);
+
+        CustomLogger stdoutLogger = new CustomLogger() {
+            @Override
+            public void info(final String str, final Object... arguments) {
+                runnerTestResults.info(str);
+            }
+
+            @Override
+            public void warn(final String str, final Object... arguments) {
+                runnerTestResults.info(str);
+            }
+        };
+
+        Settings settings = IniFile.loadSettings(stdoutLogger);
+        settings.printSettings(stdoutLogger);
+
+        if (overrideSettings.count() > 0) {
+            runnerTestResults.info("Applying overrides");
+            overrideSettings.printSettings(stdoutLogger);
+            settings.putAll(overrideSettings);
+        }
+
+        File chromeExecutable = ChromeFinder.findChrome(settings, stdoutLogger);
+        if (chromeExecutable == null) {
+            System.exit(-1);
+        } else {
+            runnerTestResults.info(String.format("Using Chrome '%s'", chromeExecutable.getAbsolutePath()));
+        }
+
+        runnerTestResults.info("Starting tests");
+
+        Worker worker = new Worker(settings);
+        worker.init(outputDir, runnerTestResults, chromeExecutable);
 
         System.exit(worker.runJobs(testConfig) ? 0 : 1);
     }
@@ -240,7 +269,6 @@ public class Main {
     private static TestConfig getFilesAsTests(List<File> files) {
         TestConfig testConfig = new TestConfig();
 
-        List<RunnerTest> tests = new ArrayList<>();
         for (File file : files) {
             RunnerTest test = new RunnerTest();
             test.setFile(file);

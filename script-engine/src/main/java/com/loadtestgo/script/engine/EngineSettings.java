@@ -87,4 +87,8 @@ public class EngineSettings {
         }
         return browserWaitConnectionTime;
     }
+
+    public Settings getSettings() {
+        return settings;
+    }
 }

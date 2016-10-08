@@ -1,10 +1,7 @@
 package com.loadtestgo.util;
 
-import org.pmw.tinylog.Logger;
+import com.loadtestgo.util.log.CustomLogger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,9 +94,9 @@ public class Settings {
         return Boolean.parseBoolean(value);
     }
 
-    public void printSettings() {
+    public void printSettings(CustomLogger logger) {
         for (Map.Entry<String, String> setting : settings.entrySet()) {
-            Logger.info("{} = {}", setting.getKey(), setting.getValue());
+            logger.info(String.format("   %s = %s", setting.getKey(), setting.getValue()));
         }
     }
 
@@ -109,5 +106,9 @@ public class Settings {
 
     public void putAll(Settings overrideSettings) {
         settings.putAll(overrideSettings.settings);
+    }
+
+    public int count() {
+        return settings.size();
     }
 }

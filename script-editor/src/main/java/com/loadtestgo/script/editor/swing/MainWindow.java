@@ -10,6 +10,7 @@ import com.loadtestgo.script.editor.Gui;
 import com.loadtestgo.script.engine.ConsoleNotifier;
 import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.ScriptException;
+import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeFinder;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeProcess;
 import com.loadtestgo.script.har.HarWriter;
 import com.loadtestgo.util.IniFile;
@@ -1786,9 +1787,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         }
 
         // Fallback to using the configured version of chrome
-        EngineSettings engineSettings = new EngineSettings(IniFile.settings());
-
-        File chrome = ChromeProcess.findChrome(engineSettings);
+        File chrome = ChromeFinder.findChrome(IniFile.settings());
         if (chrome != null) {
             ArrayList<String> args = new ArrayList<>();
             args.add(chrome.getPath());

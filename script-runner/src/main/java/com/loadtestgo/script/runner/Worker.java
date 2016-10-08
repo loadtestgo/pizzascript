@@ -27,13 +27,15 @@ public class Worker {
     private File outputDir;
     private RunnerTestResults runnerTestResults;
     private RunnerSettings runnerSettings;
+    private File chromeExecutable;
 
     public Worker(Settings settings) {
         runnerSettings = new RunnerSettings(settings);
     }
 
-    public void init(String outputDir, RunnerTestResults runnerTestResults) {
+    public void init(String outputDir, RunnerTestResults runnerTestResults, File chromeExecutable) {
         this.runnerTestResults = runnerTestResults;
+        this.chromeExecutable = chromeExecutable;
 
         this.outputDir = new File(outputDir);
         this.outputDir.mkdirs();
@@ -51,6 +53,7 @@ public class Worker {
         } catch (UnknownHostException e) {
             Logger.error(e);
         }
+        engineContext.setChromeExecutable(chromeExecutable);
 
         runnerTestResults.startTests(testConfig, outputDir);
 

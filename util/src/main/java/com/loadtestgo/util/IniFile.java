@@ -1,6 +1,7 @@
 package com.loadtestgo.util;
 
-import org.pmw.tinylog.Logger;
+import com.loadtestgo.util.log.CustomLogger;
+import com.loadtestgo.util.log.TinyLogger;
 
 import java.io.*;
 import java.util.regex.Matcher;
@@ -42,33 +43,39 @@ public class IniFile {
     public static void setSettingsFile(File settingsFile) { IniFile.settingsFile = settingsFile; }
 
     public static Settings loadSettings() {
-        return settings();
+        return loadSettings(new TinyLogger());
     }
 
-    public static Settings settings() {
+    public static Settings loadSettings(CustomLogger logger) {
         if (settings == null) {
-            IniFile iniFile = new IniFile();
             if (settingsFile == null) {
                 settingsFile = new File("settings.ini");
             }
 
             try {
-                settings = iniFile.load(settingsFile);
-                settings.printSettings();
+                logger.info(String.format("Loading settings from %s", settingsFile.getAbsolutePath()));
 
-                Logger.info("Loaded settings from {}", settingsFile.getAbsolutePath());
+                settings = IniFile.load(settingsFile);
             } catch (IOException e) {
                 String msg = e.getMessage();
                 if (e instanceof FileNotFoundException) {
                     msg = "no such file";
                 }
 
-                Logger.info("Unable to read settings file '{}', {}", settingsFile.getAbsolutePath(), msg);
-                Logger.info("Using default settings...");
+                logger.info(String.format("Unable to read settings file '%s', %s", settingsFile.getAbsolutePath(), msg));
+                logger.info("Using default settings...");
 
                 settings = new Settings();
             }
         }
         return settings;
+    }
+
+    public static Settings settings() {
+        if (settings == null) {
+            return loadSettings(new TinyLogger());
+        } else {
+            return settings;
+        }
     }
 }

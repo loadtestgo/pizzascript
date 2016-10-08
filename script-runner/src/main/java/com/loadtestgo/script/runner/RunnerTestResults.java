@@ -121,4 +121,8 @@ public class RunnerTestResults {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("[HH.mm.ss] ");
         return simpleDateFormat.format(new Date());
     }
+
+    public void info(String str) {
+        System.out.println(ansi().fgBright(BLACK).a(outputFormatDate()).fg(DEFAULT).a(str));
+    }
 }
