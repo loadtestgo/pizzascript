@@ -195,6 +195,6 @@ public class BaseTest {
     }
 
     static public long getDefaultScriptTimeout() {
-        return settings.getLong("test.timeout", 10000);
+        return settings.getLong("test.timeout", 20000);
     }
 }

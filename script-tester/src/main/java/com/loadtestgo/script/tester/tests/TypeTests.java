@@ -122,16 +122,18 @@ public class TypeTests extends JavaScriptTest {
     }
 
     /*
-    var b = pizza.open("http://localhost:3000/files/inputHandlers.html");
-b.type("#input1", "\n");
-console.log(b.execute("storedEvents[0].keyCode"));
-console.log(b.execute("storedEvents[1].keyCode"));
-console.log(b.execute("storedEvents[2].keyCode"));
-console.log(b.execute("storedEvents[0].charCode"));
-console.log(b.execute("storedEvents[1].charCode"));
-console.log(b.execute("storedEvents[2].charCode"));
-console.log(b.execute("storedEvents[0].keyIdentifier"));
-console.log(b.execute("storedEvents[1].keyIdentifier"));
-console.log(b.execute("storedEvents[2].keyIdentifier"));
+     * Useful script for testing
+     *
+        var b = pizza.open("http://localhost:3000/files/inputHandlers.html");
+        b.type("#input1", "\n");
+        console.log(b.execute("storedEvents[0].keyCode"));
+        console.log(b.execute("storedEvents[1].keyCode"));
+        console.log(b.execute("storedEvents[2].keyCode"));
+        console.log(b.execute("storedEvents[0].charCode"));
+        console.log(b.execute("storedEvents[1].charCode"));
+        console.log(b.execute("storedEvents[2].charCode"));
+        console.log(b.execute("storedEvents[0].keyIdentifier"));
+        console.log(b.execute("storedEvents[1].keyIdentifier"));
+        console.log(b.execute("storedEvents[2].keyIdentifier"));
      */
 }
