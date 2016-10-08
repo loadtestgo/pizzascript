@@ -31,7 +31,7 @@ public class QueryTests extends JavaScriptTest {
             "assert.eq(v.length, 1);\n" +
             "assert.eq(v[0].tag, 'div');\n" +
             "assert.eq(v[0].attributes.id, 'div1');\n" +
-            "assert.eq(v[0].path, '#div1');\n",
+            "assert.eq(v[0].path, 'div#div1');\n",
             getTestUrl("files/findElements.html"));
 
         TestResult result = runScript(script);

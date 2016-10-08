@@ -153,6 +153,20 @@ project(':script-tester') {
         compile project(':view-metrics')
         compile 'junit:junit:4.+'
     }
+    configurations {
+      integrationCompile.extendsFrom testCompile
+      integrationRuntime.extendsFrom testRuntime
+    }
+    sourceSets {
+        integration {
+            java.srcDir file('src/main/java')
+            resources.srcDir file('src/main/resources')
+        }
+    }
+    task integration(type: Test) {
+        testClassesDir = sourceSets.integration.output.classesDir
+        classpath = sourceSets.integration.runtimeClasspath
+    }
 }
 
 project(':dist') {
