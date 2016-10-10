@@ -179,6 +179,19 @@ public class BaseTest {
         assertEquals(path, Http.parseUrl(url).path);
     }
 
+    /**
+     * Check the first non favicon request (favicon request can really be issued at any time
+     * Linux and OSX differ in favicon request timing pretty consistently!)
+     */
+    public void assertFirstUrlPath(String expectedUrl, Page page) {
+        ArrayList<HttpRequest> requests = page.getRequests();
+        int i = 0;
+        if (isFavIcon(requests.get(i))) {
+            i++;
+        }
+        assertUrlPath(expectedUrl, requests.get(i));
+    }
+
     public void assertPagePath(TestResult result, int pageIndex, String path) {
         Page page = result.getPage(pageIndex);
         assertPagePath(page, path);

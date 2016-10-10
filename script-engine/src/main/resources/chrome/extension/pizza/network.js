@@ -29,8 +29,24 @@ pizza.main.network = function() {
         if (_suppressNextNav) {
             return;
         }
+
+        // Send the nav update first, so the navigation state for the page is updated,
+        // before the navigation is considered completed (in navigation.js)
         _ws.send(JSON.stringify({ event: "navigationCommitted", details: details}));
+
         _callListeners("onCommitted", details);
+    };
+
+    var onNavErrorOccurredCallback = function(details) {
+        if (_suppressNextNav) {
+            return;
+        }
+
+        // Send the nav update first, so the navigation state for the page is updated,
+        // before the navigation is considered completed (in navigation.js)
+        _ws.send(JSON.stringify({ event: "navigationError", details: details}));
+
+        _callListeners("onErrorOccurred", details);
     };
 
     var onNavDOMContentLoadedCallback = function(details) {
@@ -109,15 +125,6 @@ pizza.main.network = function() {
         } else {
             sendEvents();
         }
-    };
-
-    var onNavErrorOccurredCallback = function(details) {
-        if (_suppressNextNav) {
-            return;
-        }
-
-        _callListeners("onErrorOccurred", details);
-        _ws.send(JSON.stringify({ event: "navigationError", details: details}));
     };
 
     var onHistoryStateUpdated = function(details) {

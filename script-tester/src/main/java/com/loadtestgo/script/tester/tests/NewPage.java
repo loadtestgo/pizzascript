@@ -7,6 +7,8 @@ import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 
 public class NewPage extends JavaScriptTest {
@@ -25,8 +27,7 @@ public class NewPage extends JavaScriptTest {
 
         Page page = result.getPages().get(0);
         assertNumRequests(1, page);
-        HttpRequest request = page.getRequests().get(0);
-        assertUrlPath("/files/basic.html", request);
+        assertFirstUrlPath("/files/basic.html", page);
         assertUrlPath("/files/basic.html", page.getUrl());
     }
 
@@ -52,19 +53,17 @@ public class NewPage extends JavaScriptTest {
 
         Page page1 = result.getPages().get(0);
         assertOneRequest(page1);
-        assertUrlPath("/files/buttonNav.html", page1.getRequests().get(0));
+        assertFirstUrlPath("/files/buttonNav.html", page1);
         assertUrlPath("/files/buttonNav.html", page1.getUrl());
 
         Page page2 = result.getPages().get(1);
         assertOneRequest(page2);
-        HttpRequest request2 = page2.getRequests().get(0);
-        assertUrlPath("/files/basic.html", request2);
+        assertFirstUrlPath("/files/basic.html", page2);
         assertUrlPath("/files/basic.html", page2.getUrl());
 
         Page page3 = result.getPages().get(2);
         assertOneRequest(page3);
-        HttpRequest request3 = page3.getRequests().get(0);
-        assertUrlPath("/files/buttonNav.html", request3);
+        assertFirstUrlPath("/files/buttonNav.html", page3);
         assertUrlPath("/files/buttonNav.html", page3.getUrl());
     }
 
@@ -93,8 +92,7 @@ public class NewPage extends JavaScriptTest {
 
         Page page2 = result.getPages().get(1);
         assertOneRequest(page2);
-        HttpRequest request2 = page2.getRequests().get(0);
-        assertUrlPath("/post/echo", request2);
+        assertFirstUrlPath("/post/echo", page2);
 
         // The URL didn't change it is still the same
         assertUrlPath("/files/buttonXhr.html", page2.getUrl());
@@ -119,13 +117,12 @@ public class NewPage extends JavaScriptTest {
 
         Page page1 = result.getPages().get(0);
         assertOneRequest(page1);
-        assertUrlPath("/files/buttonNav.html", page1.getRequests().get(0));
+        assertFirstUrlPath("/files/buttonNav.html", page1);
         assertUrlPath("/files/buttonNav.html", page1.getUrl());
 
         Page page2 = result.getPages().get(1);
         assertOneRequest(page2);
-        HttpRequest request2 = page2.getRequests().get(0);
-        assertUrlPath("/files/basic.html", request2);
+        assertFirstUrlPath("/files/basic.html", page2);
         assertUrlPath("/files/basic.html", page2.getUrl());
     }
 
@@ -186,19 +183,17 @@ public class NewPage extends JavaScriptTest {
 
         Page page1 = result.getPages().get(0);
         assertOneRequest(page1);
-        assertUrlPath("/files/buttonNav.html", page1.getRequests().get(0));
+        assertFirstUrlPath("/files/buttonNav.html", page1);
         assertUrlPath("/files/buttonNav.html", page1.getUrl());
 
         Page page2 = result.getPages().get(1);
         assertOneRequest(page2);
-        HttpRequest request2 = page2.getRequests().get(0);
-        assertUrlPath("/files/basic.html", request2);
+        assertFirstUrlPath("/files/basic.html", page2);
         assertUrlPath("/files/basic.html", page2.getUrl());
 
         Page page3 = result.getPages().get(2);
         assertOneRequest(page2);
-        HttpRequest request3 = page3.getRequests().get(0);
-        assertUrlPath("/files/buttonNav.html", request3);
+        assertFirstUrlPath("/files/buttonNav.html", page3);
         assertUrlPath("/files/buttonNav.html", page3.getUrl());
     }
 
