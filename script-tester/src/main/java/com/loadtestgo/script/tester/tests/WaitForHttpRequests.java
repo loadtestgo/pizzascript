@@ -18,7 +18,7 @@ public class WaitForHttpRequests extends JavaScriptTest {
         assertNoError(result);
         assertNoPages(result);
 
-        assertTrue("Runtime greater the 1000ms", result.getRunTime() > 1000);
+        assertTrue("Runtime less than 1000ms", result.getRunTime() >= 1000);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class WaitForHttpRequests extends JavaScriptTest {
             fail(result.getError().message);
         }
 
-        assertTrue("Runtime greater the 2000ms", result.getRunTime() > 2000);
+        assertTrue("Runtime less than 2000ms", result.getRunTime() >= 2000);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class WaitForHttpRequests extends JavaScriptTest {
         assertNoError(result);
         assertEquals(1, result.getPages().size());
 
-        assertTrue("Runtime greater the 1000ms", result.getRunTime() > 1000);
+        assertTrue("Runtime less than 1000ms", result.getRunTime() >= 1000);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class WaitForHttpRequests extends JavaScriptTest {
         assertEquals(1, result.getPages().size());
         assertMoreThanOneRequest(result);
 
-        assertTrue("Runtime greater the 1000ms", result.getRunTime() > 1000);
+        assertTrue("Runtime less than 1000ms", result.getRunTime() >= 1000);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class WaitForHttpRequests extends JavaScriptTest {
             "b.waitForHttpRequests(1000);",
             getTestUrl("files/backgroundXhrTimeout.html"));
 
-        TestResult result = runScript(script, 4000);
+        TestResult result = runScript(script, 10000);
 
         assertEquals(1, result.getPages().size());
         assertEquals(ErrorType.Timeout, result.getError().type);
@@ -86,6 +86,6 @@ public class WaitForHttpRequests extends JavaScriptTest {
             fail(result.getError().message);
         }
 
-        assertTrue("Runtime greater the 5000ms", result.getRunTime() > 4000);
+        assertTrue("Runtime less than 10000ms", result.getRunTime() >= 10000);
     }
 }
