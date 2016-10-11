@@ -740,15 +740,15 @@ pizza.main.commands = function() {
 
     var _setUserAgent = function(id, params) {
         pizza.devtools.sendCommand(
-                     'Network.setUserAgentOverride',
-                     { 'userAgent': params.userAgent },
-                     function(response) {
-            if (response.error) {
-                sendResponse(id, { error: response.error });
-            } else {
-                sendResponse(id, {});
-            }
-        });
+             'Network.setUserAgentOverride',
+             { 'userAgent': params.userAgent },
+             function(response) {
+                if (response.error) {
+                    sendResponse(id, { error: response.error });
+                } else {
+                    sendResponse(id, {});
+                }
+            });
     };
 
     var _clearCache = function(id, params) {

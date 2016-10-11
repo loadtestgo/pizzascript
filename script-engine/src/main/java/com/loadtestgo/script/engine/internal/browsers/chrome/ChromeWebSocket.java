@@ -1324,8 +1324,8 @@ public class ChromeWebSocket extends BrowserWebSocket {
             return;
         }
 
-        page.setNumDomElements(details.getInt("domElements"));
-        page.setNumFrames(details.getInt("frames"));
+        page.setNumDomElements(details.optInt("nodes"));
+        page.setNumFrames(details.optInt("documents"));
     }
 
     private void consoleMessagesCleared(JSONObject details) throws JSONException {
