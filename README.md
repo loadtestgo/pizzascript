@@ -9,10 +9,10 @@ PizzaScript is a JavaScript browser automation framework with built-in performan
 
 It includes:
 
-- A JavaScript IDE, with a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) and debugger for
-  interactively writing tests.
+- A script recorder / editor, with a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)
+  and debugger for interactively writing tests.
 - A standalone script runner, for running a set of tests, capturing screenshots & performance metrics.
-- A Java API, for embedding the script runner.
+- A Java API, for embedding the script runner in your own projects.
 
 ## Features
 
@@ -31,20 +31,27 @@ It includes:
 
 ## Try It!
 
-First make sure the following are installed.
+First make sure the following are installed:
 
 + Chrome 40+
 + Java 8 JRE
 
 Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.6/pizzascript-0.2.6.zip) release.
 
-Open the IDE:
+
+To open the IDE/script recorder:
 
     bin/pizzascript-ide
 
-From the console you can start editor commands.
 
-The Chrome executable will be picked from the path, along with well-known Chrome install locations. See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting.
+To run a script and generate a report:
+
+    bin/pizzascript scripts/basic.js
+
+
+To run a performance test as a continuous integration job see [Jenkins Setup](https://github.com/loadtestgo/pizzascript/wiki/Jenkins-Setup)
+
+The Chrome executable will be picked up from well-known Chrome install locations, if not found there then the PATH is searched.  See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting and/or manually configuring the Chrome location.
 
 Tested on Linux, OSX and Windows.
 
