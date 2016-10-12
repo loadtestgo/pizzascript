@@ -1108,24 +1108,26 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void navigationDOMContentLoaded(JSONObject details) throws JSONException {
-        Page page = getPageForFrame(details);
-        if (page == null) {
-            return;
-        }
+        synchronized(testResult) {
+            Page page = getPageForFrame(details);
+            if (page == null) {
+                return;
+            }
 
-        if (details.getInt("frameId") != page.getFrameId()) {
-            return;
-        }
+            if (details.getInt("frameId") != page.getFrameId()) {
+                return;
+            }
 
-        page.setDomContentLoadedTime(convertToDateFromMillis(details.getDouble("timeStamp")));
-        page.setState(Page.State.DOMContentLoaded);
+            page.setDomContentLoadedTime(convertToDateFromMillis(details.getDouble("timeStamp")));
+            page.setState(Page.State.DOMContentLoaded);
+        }
     }
 
     private void navigationCompleted(JSONObject details) throws JSONException {
-        Page page = null;
-        Page match = null;
-        FrameInfo frameInfo = getNavFrameInfo(details);
         synchronized(testResult) {
+            Page page = null;
+            Page match = null;
+            FrameInfo frameInfo = getNavFrameInfo(details);
             String url = details.getString("url");
             for (int i = getPages().size() - 1; i >= 0; --i) {
                 page = getPages().get(i);
@@ -1140,16 +1142,16 @@ public class ChromeWebSocket extends BrowserWebSocket {
                     }
                 }
             }
+
+            page = match;
+
+            if (page == null) {
+                return;
+            }
+
+            page.setNavEndTime(convertToDateFromMillis(details.getDouble("timeStamp")));
+            setPageStateAndNotify(page, Page.State.NavigationCompleted);
         }
-
-        page = match;
-
-        if (page == null) {
-            return;
-        }
-
-        page.setNavEndTime(convertToDateFromMillis(details.getDouble("timeStamp")));
-        setPageStateAndNotify(page, Page.State.NavigationCompleted);
     }
 
     private void navigationError(JSONObject details) throws JSONException {

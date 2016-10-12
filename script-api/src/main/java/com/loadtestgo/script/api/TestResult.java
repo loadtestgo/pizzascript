@@ -60,7 +60,9 @@ public class TestResult {
     }
 
     public void setRunTime(int runTime) {
-        this.runTime = runTime;
+        synchronized (this) {
+            this.runTime = runTime;
+        }
     }
 
     public int getSleepTime() {

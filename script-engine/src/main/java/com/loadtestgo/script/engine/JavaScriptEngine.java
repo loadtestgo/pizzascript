@@ -299,7 +299,7 @@ public class JavaScriptEngine {
             throw se;
         } finally {
             long now = System.currentTimeMillis();
-            result.setRunTime((int)(now - result.getStartTime().getTime()));
+            result.setRunTime((int) (now - result.getStartTime().getTime()));
             if (timer != null) {
                 timer.cancel();
             }
