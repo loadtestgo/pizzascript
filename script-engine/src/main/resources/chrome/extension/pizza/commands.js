@@ -295,6 +295,9 @@ pizza.main.commands = function() {
          pizza.devtools.sendCommand('Page.captureScreenshot', null, function(response) {
              if (response.wasThrown) {
                  sendResponse(id, { error: formatWasThrownException(response) });
+             } else if (response.exceptionDetails) {
+                 // Chrome 54+ error
+                 sendResponse(id, { error: formatExceptionDetailsException(response)});
              } else if (response.data) {
                  console.time("encode");
                  var rawData = atob(response.data);
@@ -499,12 +502,16 @@ pizza.main.commands = function() {
 
         pizza.devtools.sendCommand('Runtime.evaluate', loc, function(response) {
             if (response.wasThrown) {
-                console.log(response);
-                sendResponse(id, { error: formatWasThrownException(response) });
+                // Pre Chrome 53, wasThrown and exceptionDetails are set but in
+                // slightly different way than 54+, older versions didn't have
+                // exceptionDetails set.
+                sendResponse(id, {error: formatWasThrownException(response)});
+            } else if (response.exceptionDetails) {
+                // Chrome 54+
+                sendResponse(id, {error: formatExceptionDetailsException(response)});
             } else if (response.result) {
                 sendResponse(id, response.result);
             } else {
-                console.log(response);
                 sendResponse(id, { error: response.message });
             }
         });
@@ -1042,6 +1049,9 @@ pizza.main.commands = function() {
                 } else if (response.wasThrown) {
                     // The script threw an error
                     callback({ error: formatWasThrownException(response) });
+                } else if (response.exceptionDetails) {
+                    // The script threw an error
+                    callback({ error: formatExceptionDetailsException(response) });
                 } else if (response.result) {
                     _automationAPI = response.result.objectId;
                     callback(_automationAPI);
@@ -1049,6 +1059,24 @@ pizza.main.commands = function() {
                     callback(id, { error: "no response for injectAutomationAPI" });
                 }
             });
+        }
+    }
+
+    function stripStackTraceFromError(error) {
+        var stackTraceBeginIx = error.indexOf("\n    at");
+        if (stackTraceBeginIx > 0) {
+            error = error.substr(0, stackTraceBeginIx);
+        }
+        return error;
+    }
+
+    function formatExceptionDetailsException(response) {
+        var ex = response.exceptionDetails.exception;
+        if (ex.description) {
+            return stripStackTraceFromError(ex.description);
+        }
+        if (ex.value) {
+            return ex.value;
         }
     }
 
@@ -1063,11 +1091,7 @@ pizza.main.commands = function() {
                 t = t.substr(uncaught.length);
             }
         } else {
-            t = response.result.description;
-            var stackTraceBeginIx = t.indexOf("\n    at");
-            if (stackTraceBeginIx > 0) {
-                t = t.substr(0, stackTraceBeginIx);
-            }
+            t = stripStackTraceFromError(response.result.description);
         }
         return t;
     }
@@ -1090,6 +1114,8 @@ pizza.main.commands = function() {
         injectAutomationAPI(function(response) {
             if (response && response.error) {
                 errorCallback(response.error);
+            } else if (response.exceptionDetails) {
+                errorCallback(formatExceptionDetailsException(response));
             } else {
                 var loc = {
                     objectId: response,
@@ -1101,8 +1127,9 @@ pizza.main.commands = function() {
                     if (response.message) {
                         errorCallback(response.message);
                     } else if (response.wasThrown) {
-                        console.log(response);
                         errorCallback(formatWasThrownException(response));
+                    } else if (response.exceptionDetails) {
+                        errorCallback(formatExceptionDetailsException(response));
                     } else {
                         try {
                             callback(response);

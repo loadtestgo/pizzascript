@@ -7,16 +7,27 @@ pizza.main.contexttracker = function() {
     var _frameToContextMap = {};
     var _contextDestroyedHandlers = [];
 
+    function isInjectedExtensionTab(params) {
+        // Pre Chrome 52 check for context type
+        if (params.context.type && params.context.type == "Extension") {
+            return true;
+        }
+        // Chrome 52 & 53 we can just use 'isDefault' which is exactly for this purpose
+        if (params.context.isDefault != undefined && !params.context.isDefault) {
+            return true;
+        }
+        // Chrome 54 isDefault has moved to auxData
+        if (params.context.auxData && !params.context.auxData.isDefault) {
+            return true;
+        }
+        return false;
+    }
+
     var _executionContextCreated = function(params) {
         // Ignore injected extension tabs.  We inject our own scripting context and so can other
         // extensions.  We are not interested in these and we don't want to overwrite the main
         // context, as we use this as the default context target for commands.execute().
-        // Pre Chrome 52 check for context type
-        if (params.context.type && params.context.type == "Extension") {
-            return;
-        }
-        // Post Chrome 52 we can just use 'isDefault' which is exactly for this purpose
-        if (params.context.isDefault != undefined && !params.context.isDefault) {
+        if (isInjectedExtensionTab(params)) {
             return;
         }
 
@@ -28,9 +39,15 @@ pizza.main.contexttracker = function() {
 
         // First frame overrides as it usually the main frame
         // except in cases where it is destroyed
-        var frameId = params.context.frameId.split(".");
-        if (frameId.length > 1) {
-            if (frameId[1] === "1") {
+        var frameId;
+        if (params.context.auxData) {
+            frameId = params.context.auxData.frameId;
+        } else {
+            frameId = params.context.frameId;
+        }
+        var frameIdSplit = frameId.split(".");
+        if (frameIdSplit.length > 1) {
+            if (frameIdSplit[1] === "1") {
                 tab.firstContext = params.context.id;
                 console.log("Setting main context", tab.firstContext);
             }
@@ -41,7 +58,7 @@ pizza.main.contexttracker = function() {
             console.log("Setting main context", tab.firstContext);
         }
 
-        tab[params.context.id] = params.context.frameId;
+        tab[params.context.id] = frameId;
     };
 
     var _executionContextDestroyed = function(params) {

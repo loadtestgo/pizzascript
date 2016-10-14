@@ -85,7 +85,7 @@ public class TypeTests extends JavaScriptTest {
             "b = pizza.open(\"%s\");\n" +
             "b.type('#input1', '\\n');\n" +
             "assert.eq(b.execute('storedEvents.length'), 3);\n" +
-            "b.execute('' + function check(event, type, keyCode, charCode, keyIdentifier) {\n" +
+            "b.execute('' + function check(event, type, keyCode, charCode) {\n" +
                 "if (event.type != type)\n" +
                 "  return false;\n" +
                 "else if (event.keyCode != keyCode)\n" +
@@ -94,13 +94,12 @@ public class TypeTests extends JavaScriptTest {
                 "  return false;\n" +
                 "else if (event.charCode != charCode)\n" +
                 "  return false;\n" +
-                "else if (event.keyIdentifier != keyIdentifier)\n" +
-                "  return false;\n" +
                 "else return true;\n" +
             "});\n" +
-            "assert.ok(b.execute('check(storedEvents[0], \\\'keydown\\\', 13, 0, \\'Enter\\')'));\n" +
-            "assert.ok(b.execute('check(storedEvents[1], \\\'keypress\\\', 13, 13, \\'Enter\\')'));\n" +
-            "assert.ok(b.execute('check(storedEvents[2], \\\'keyup\\\', 13, 0, \\'Enter\\')'));\n",
+                "b.execute('console.log(storedEvents[0])');\n" +
+            "assert.ok(b.execute('check(storedEvents[0], \\\'keydown\\\', 13, 0)'));\n" +
+            "assert.ok(b.execute('check(storedEvents[1], \\\'keypress\\\', 13, 13)'));\n" +
+            "assert.ok(b.execute('check(storedEvents[2], \\\'keyup\\\', 13, 0)'));\n",
             getTestUrl("files/inputHandlers.html"));
 
         TestResult result = runScript(script);
