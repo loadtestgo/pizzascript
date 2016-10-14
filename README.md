@@ -14,7 +14,7 @@ It includes:
 - A Java API, for embedding the script runner in your own projects.
 
 
-![PizzaScript](script-editor/cmdline.png)
+![PizzaScript](docs/cmdline.png)
 
 
 ## Features
