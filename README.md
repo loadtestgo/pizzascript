@@ -13,6 +13,10 @@ It includes:
 - A standalone script runner, for running a set of tests, capturing screenshots & performance metrics.
 - A Java API, for embedding the script runner in your own projects.
 
+
+![PizzaScript](script-editor/cmdline.png)
+
+
 ## Features
 
 - Inspect page load times and HTTP traffic
@@ -26,7 +30,6 @@ It includes:
 - Emulate network conditions (e.g. 3G/4G/Offline)
 - Record WebSocket request/responses
 
-![PizzaScript Editor](script-editor/script-record.gif)
 
 ## Try It!
 
@@ -37,8 +40,7 @@ First make sure the following are installed:
 
 Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.7/pizzascript-0.2.7.zip) release.
 
-
-To open the IDE/script recorder:
+To open the script recorder:
 
     bin/pizzascript-ide
 
@@ -54,6 +56,9 @@ The Chrome executable will be picked up from well-known Chrome install locations
 
 Tested on Linux, OSX and Windows.
 
+## Script Recorder
+
+![PizzaScript Editor](script-editor/script-record.gif)
 
 ## Examples
 
