@@ -13,10 +13,6 @@ It includes:
 - A standalone script runner, for running a set of tests, capturing screenshots & performance metrics.
 - A Java API, for embedding the script runner in your own projects.
 
-
-![PizzaScript](docs/cmdline.png)
-
-
 ## Features
 
 - Inspect page load times and HTTP traffic
@@ -29,7 +25,6 @@ It includes:
 - Emulate Mobile and Tablet devices
 - Emulate network conditions (e.g. 3G/4G/Offline)
 - Record WebSocket request/responses
-
 
 ## Try It!
 
@@ -55,6 +50,10 @@ To run a performance test as a continuous integration job see [Jenkins Setup](ht
 The Chrome executable will be picked up from well-known Chrome install locations, if not found there then the PATH is searched.  See [Chrome Setup](https://github.com/loadtestgo/pizzascript/wiki/Chrome-Setup) for troubleshooting and/or manually configuring the Chrome location.
 
 Tested on Linux, OSX and Windows.
+
+## Runner
+
+![PizzaScript](docs/cmdline.png)
 
 ## Script Recorder
 
