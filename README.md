@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)](https://travis-ci.org/loadtestgo/pizzascript)
 [![License](https://img.shields.io/badge/licence-BSD--3--Clause-blue.svg)](https://github.com/loadtestgo/pizzascript/blob/master/LICENSE.BSD)
 
 #### [Homepage](http://pizzascript.org) | [API Reference](http://pizzascript.org/api) | [Examples](https://github.com/loadtestgo/pizzascript/wiki/Examples)
@@ -36,7 +35,7 @@ First make sure the following are installed:
 + Chrome 40+
 + Java 8 JRE
 
-Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.6/pizzascript-0.2.6.zip) release.
+Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.7/pizzascript-0.2.7.zip) release.
 
 
 To open the IDE/script recorder:
