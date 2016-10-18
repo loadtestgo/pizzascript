@@ -5,6 +5,10 @@ import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Tests for the execute command.
  */
@@ -67,6 +71,12 @@ public class ExecuteTests extends JavaScriptTest {
         TestResult result = runScript(script);
 
         assertOnePage(result);
-        assertError("SyntaxError: Invalid or unexpected token", ErrorType.Script, result);
+
+        //
+        assertNotNull("Expected error, but no error", result.getError());
+        assertEquals(ErrorType.Script, result.getError().type);
+        String errorMessage = result.getError().message;
+        assertTrue(errorMessage.equals("SyntaxError: Unexpected token ILLEGAL") ||
+            errorMessage.equals("SyntaxError: Invalid or unexpected token"));
     }
 }
