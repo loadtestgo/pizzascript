@@ -677,10 +677,16 @@ public abstract class WebSocketServer extends WebSocketAdapter implements Runnab
 		public WebSocketWorker() {
 			iqueue = new LinkedBlockingQueue<WebSocketImpl>();
 			setName( "WebSocketWorker-" + getId() );
-			setUncaughtExceptionHandler( new UncaughtExceptionHandler() {
+			setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 				@Override
 				public void uncaughtException( Thread t, Throwable e ) {
-					getDefaultUncaughtExceptionHandler().uncaughtException( t, e );
+					UncaughtExceptionHandler uncaughtExceptionHandler = getDefaultUncaughtExceptionHandler();
+					if (uncaughtExceptionHandler != null) {
+						getDefaultUncaughtExceptionHandler().uncaughtException( t, e );
+					} else {
+						System.err.println(String.format("%s: %s", t.getName(), e.getMessage()));
+						e.printStackTrace();
+					}
 				}
 			} );
 		}
