@@ -1,6 +1,7 @@
 package com.loadtestgo.script.engine.internal.api;
 
 import com.loadtestgo.script.api.*;
+import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.ScriptException;
 import com.loadtestgo.script.engine.TestContext;
 import com.loadtestgo.script.engine.UserContext;
@@ -17,7 +18,6 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.regexp.NativeRegExp;
 import org.pmw.tinylog.Logger;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,27 +25,26 @@ import java.util.HashMap;
 public class ChromeBrowser implements Browser {
     private ChromeWebSocket pizzaHandler;
     private ChromeProcess chromeProcess;
+    private EngineSettings engineSettings;
     private TestContext testContext;
     private boolean ignoreHttpErrors = false;
     private ArrayList<Integer> ignoreHttpErrorCodes = null;
     private long startTime = -1;
 
-    public ChromeBrowser(TestContext testContext)
-    {
+    public ChromeBrowser(TestContext testContext) {
         init(testContext, new ChromeSettings());
     }
 
-    public ChromeBrowser(TestContext testContext, ChromeSettings settings)
-    {
+    public ChromeBrowser(TestContext testContext, ChromeSettings settings) {
         init(testContext, settings);
     }
 
-    private void init(TestContext testContext, ChromeSettings settings)
-    {
+    private void init(TestContext testContext, ChromeSettings settings) {
         this.testContext = testContext;
+        this.engineSettings = testContext.getEngineSettings();
 
         try {
-            startTime = System.currentTimeMillis();
+            testContext.startBrowserOpen();
 
             UserContext userContext = testContext.getUserContext();
 
@@ -63,7 +62,9 @@ public class ChromeBrowser implements Browser {
 
             // Start the websocket listener
             if (pizzaHandler == null) {
-                BrowserWebSocketServer webSocket = userContext.getEngineContext().getWebSocketServer();
+                BrowserWebSocketServer webSocket =
+                    userContext.getEngineContext().getWebSocketServer();
+
                 pizzaHandler = new ChromeWebSocket(testContext);
                 webSocket.initHandler(userContext.getUserId(), pizzaHandler);
             } else {
@@ -89,11 +90,7 @@ public class ChromeBrowser implements Browser {
 
             testContext.setOpenBrowser(this);
         } finally {
-            long endTime = System.currentTimeMillis();
-            TestResult testResult = testContext.getTestResult();
-            if (testResult != null) {
-                testResult.addSleepTime((int)(endTime - startTime));
-            }
+            testContext.endBrowserOpen();
         }
     }
 
@@ -102,7 +99,7 @@ public class ChromeBrowser implements Browser {
             return;
         }
 
-        int retry = settings.openBrowserRetryCount;
+        int retry =  engineSettings.getBrowserOpenRetryCount();
         for (int i = 0; i < retry; ++i) {
             Logger.warn("Chrome didn't start, try #{}...", i);
             if (openBrowserAndWait(settings)) {
@@ -129,7 +126,6 @@ public class ChromeBrowser implements Browser {
     }
 
     private boolean startBrowserAndWaitForConnection(ChromeSettings settings) {
-
         chromeProcess = new ChromeProcess(testContext, settings);
         chromeProcess.start(testContext.getProcessLauncher());
 

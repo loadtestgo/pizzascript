@@ -83,12 +83,16 @@ public class EngineSettings {
 
     public long getBrowserWaitConnectionTime() {
         if (browserWaitConnectionTime == null) {
-            browserWaitConnectionTime = settings.getLong("browser.connection.wait.time", 20 * 1000L);
+            browserWaitConnectionTime = settings.getLong("browser.connection.wait.time", 10 * 1000L);
         }
         return browserWaitConnectionTime;
     }
 
     public Settings getSettings() {
         return settings;
+    }
+
+    public int getBrowserOpenRetryCount() {
+        return settings.getInt("browser.open.retry.count", 3);
     }
 }

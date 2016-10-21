@@ -6,6 +6,7 @@ import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 import com.loadtestgo.util.Dirs;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A context used in a single script/test run.
@@ -21,6 +22,9 @@ public class TestContext {
     protected BrowserLifeCycleNotifier browserNotifier;
     protected boolean sandboxJavaScript = false;
     protected File baseDirectory;
+
+    private final AtomicBoolean duringBrowserOpen = new AtomicBoolean(false);
+    private long browserOpenStartTime;
 
     public TestContext(UserContext userContext) {
         this.userContext = userContext;
@@ -146,5 +150,34 @@ public class TestContext {
 
     public EngineSettings getEngineSettings() {
         return getEngineContext().getEngineSettings();
+    }
+
+    public void startBrowserOpen() {
+        synchronized (duringBrowserOpen) {
+            browserOpenStartTime = System.currentTimeMillis();
+            duringBrowserOpen.set(true);
+        }
+    }
+
+    public void endBrowserOpen() {
+        synchronized (duringBrowserOpen) {
+            long endTime = System.currentTimeMillis();
+            TestResult testResult = getTestResult();
+            if (testResult != null) {
+                testResult.addSetupTime((int) (endTime - browserOpenStartTime));
+            }
+            duringBrowserOpen.set(false);
+        }
+    }
+
+    public long getBrowserOpenTime() {
+        synchronized (duringBrowserOpen) {
+            long sleepTime = testResult.getSetupTime();
+            long currentTime = System.currentTimeMillis();
+            if (duringBrowserOpen.get()) {
+                sleepTime += currentTime - browserOpenStartTime;
+            }
+            return sleepTime;
+        }
     }
 }

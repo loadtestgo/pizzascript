@@ -2213,10 +2213,11 @@ TestResult = {};
 TestResult.prototype.startTime = "";
 
 /**
+ * The time spent opening the browser
  *
  * @type {number}
  */
-TestResult.prototype.sleepTime = "";
+TestResult.prototype.setupTime = "";
 
 /**
  *

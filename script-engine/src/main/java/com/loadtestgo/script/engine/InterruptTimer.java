@@ -2,45 +2,56 @@ package com.loadtestgo.script.engine;
 
 import org.pmw.tinylog.Logger;
 
+import java.util.Timer;
 import java.util.TimerTask;
 
-public class InterruptTimer extends TimerTask {
-    Thread thread;
-    boolean stopped;
-    boolean disabled;
+public class InterruptTimer {
+    private Timer timer;
+    private Thread thread;
+    private TestContext testContext;
+    private long startTime;
+    private long timeout;
+    private boolean stopped;
 
-    public InterruptTimer(Thread thread) {
+    public InterruptTimer(Timer timer, Thread thread, TestContext testContext, long startTime, long timeout) {
+        this.timer = timer;
         this.thread = thread;
+        this.testContext = testContext;
+        this.startTime = startTime;
         this.stopped = false;
-        this.disabled = false;
+        this.timeout = timeout;
+
+        timer.schedule(newTimerTask(), timeout);
     }
 
-    @Override
-    public void run() {
+    public void checkTimerAndRescheduleIfNecessary() {
         synchronized (this) {
-            if (!disabled) {
+            long currentTime = System.currentTimeMillis();
+
+            long runTime = currentTime - startTime;
+            long timeLeft = timeout + testContext.getBrowserOpenTime() - runTime;
+            if (timeLeft <= 0) {
                 Logger.info("Triggering interrupt...");
                 thread.interrupt();
                 stopped = true;
+            } else {
+                timer.schedule(newTimerTask(), timeLeft);
             }
         }
+    }
+
+    private TimerTask newTimerTask() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                checkTimerAndRescheduleIfNecessary();
+            }
+        };
     }
 
     public boolean isStopped() {
         synchronized (this) {
             return stopped;
-        }
-    }
-
-    public void setDisabled(boolean disable) {
-        synchronized (this) {
-            this.disabled = disable;
-        }
-    }
-
-    public boolean isDisabled() {
-        synchronized (this) {
-            return disabled;
         }
     }
 }

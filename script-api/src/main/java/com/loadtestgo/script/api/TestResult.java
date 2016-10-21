@@ -20,7 +20,7 @@ public class TestResult {
     // Total runTime including the time sleeping and spent opening the browser
     public int runTime;
     // number of milliseconds of runTime spent on overhead of opening browser
-    public int sleepTime = 0;
+    public int setupTime = 0;
     public TestError error;
     public String testName;
     public String browserName;
@@ -65,16 +65,16 @@ public class TestResult {
         }
     }
 
-    public int getSleepTime() {
-        return sleepTime;
+    public int getSetupTime() {
+        return setupTime;
     }
 
-    public void setSleepTime(int sleepTime) {
-        this.sleepTime = sleepTime;
+    public void setSetupTime(int setupTime) {
+        this.setupTime = setupTime;
     }
 
-    public void addSleepTime(int sleepTime) {
-        this.sleepTime += sleepTime;
+    public void addSetupTime(int sleepTime) {
+        this.setupTime += sleepTime;
     }
 
     @JsonIgnore
