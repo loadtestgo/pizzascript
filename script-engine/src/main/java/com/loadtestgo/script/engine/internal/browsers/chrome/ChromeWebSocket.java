@@ -1340,7 +1340,12 @@ public class ChromeWebSocket extends BrowserWebSocket {
     private void consoleMessagesAdded(JSONObject details) throws JSONException {
         Page.ConsoleMessage msg = new Page.ConsoleMessage();
         JSONObject messageObj = details.getJSONObject("message");
-        msg.timestamp = convertToMillisFromSeconds(messageObj.getDouble("timestamp"));
+        Double timestamp = messageObj.optDouble("timestamp");
+        if (timestamp.isNaN()) {
+            msg.timestamp = System.currentTimeMillis();
+        } else {
+            msg.timestamp = convertToMillisFromSeconds(messageObj.getDouble("timestamp"));
+        }
         msg.level = messageObj.getString("level");
         msg.text = messageObj.getString("text");
         msg.url = messageObj.getString("url");
