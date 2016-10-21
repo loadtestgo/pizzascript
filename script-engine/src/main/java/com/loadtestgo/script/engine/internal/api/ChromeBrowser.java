@@ -99,9 +99,9 @@ public class ChromeBrowser implements Browser {
             return;
         }
 
-        int retry =  engineSettings.getBrowserOpenRetryCount();
-        for (int i = 0; i < retry; ++i) {
-            Logger.warn("Chrome didn't start, try #{}...", i);
+        int retries =  engineSettings.getBrowserOpenRetryCount();
+        for (int i = 0; i < retries; ++i) {
+            Logger.warn("Chrome didn't start, try #{}...", i + 2);
             if (openBrowserAndWait(settings)) {
                 return;
             }
