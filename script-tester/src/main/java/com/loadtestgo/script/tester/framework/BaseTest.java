@@ -116,7 +116,7 @@ public class BaseTest {
         ArrayList<Page> pages = result.getPages();
         int requests = 0;
         for (Page page : pages) {
-            requests += page.getRequests().size();
+            requests += getNumNonFaviconRequests(page);
         }
         assert(requests > 1);
     }
@@ -127,7 +127,36 @@ public class BaseTest {
 
         ArrayList<HttpRequest> requests = pages.get(0).getRequests();
         assert(requests.size() >= 1);
-        return requests.get(0);
+        for (HttpRequest httpRequest : requests) {
+            if (!isFavIcon(httpRequest)) {
+                return httpRequest;
+            }
+        }
+        fail("http request found but it was the fav icon, which is ignored");
+        return null;
+    }
+
+    private static int getNumNonFaviconRequests(Page page) {
+        int numRequests = 0;
+        for (HttpRequest httpRequest : page.getRequests()) {
+            if (!isFavIcon(httpRequest)) {
+                numRequests++;
+            }
+        }
+        return numRequests;
+    }
+
+    private static HttpRequest getNonFaviconRequest(Page page, int i) {
+        int index = 0;
+        for (HttpRequest httpRequest : page.getRequests()) {
+            if (!isFavIcon(httpRequest)) {
+                if (index == i) {
+                    return httpRequest;
+                }
+                index++;
+            }
+        }
+        return null;
     }
 
     public static HttpRequest getRequest(int i, TestResult result) {
@@ -135,13 +164,13 @@ public class BaseTest {
         assert(pages.size() >= 1);
 
         int j = 0;
-        while (i >= pages.get(j).getRequests().size()) {
-            i -= pages.get(j).getRequests().size();
+        while (i >= getNumNonFaviconRequests(pages.get(j))) {
+            i -= getNumNonFaviconRequests(pages.get(j));
             j++;
             assert(pages.size() > j);
         }
 
-        return pages.get(j).getRequests().get(i);
+        return getNonFaviconRequest(pages.get(j), i);
     }
 
     public static void assertRequestState(HttpRequest.State state, HttpRequest request) {
