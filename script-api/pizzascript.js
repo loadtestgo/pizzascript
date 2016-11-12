@@ -51,7 +51,7 @@ pizza = { };
  * b.ignoreHttpErrors();
  * b.open("mysite.com/404");
  *
- * @params {string=|Object=} url the URL to open, or settings to use when opening the browser
+ * @params {String=|Object=} url the URL to open, or settings to use when opening the browser
  * @return {module:Browser} the newly opened browser
  *
  * @see module:Browser#ignoreHttpErrors
@@ -135,6 +135,26 @@ pizza.openCSV = function(filename) {};
  * @type {module:Page[]}
  */
 pizza.pages = [];
+
+/**
+ * Gets the first request matching the given partial url
+ *
+ * @param {String|Number} pageIndexOrPartialUrl the zero based page index (ordered by when they started loading),
+ * or the partial url to match the request against.
+ * @param {String=} partialUrl the partial url to match against if a page index is specified
+ * @return {module:HttpRequest}
+ */
+pizza.getRequestByFullUrl = function(pageIndexOrPartialUrl, partialUrl) {};
+
+/**
+ * Gets the first request matching the given full url
+ *
+ * @param {String|Number} pageIndexOrFullUrl the zero based page index (ordered by when they started loading),
+ * or the full url to match the request against.
+ * @param {String=} fullUrl the full url to match against if a page index is specified
+ * @return {module:HttpRequest}
+ */
+pizza.getRequestByFullUrl = function(pageIndexOrFullUrl, fullUrl) {};
 
 /**
  * The test results that will be uploaded when the test ends.
@@ -241,7 +261,7 @@ assert.ok = function(object) {};
  *     assert.fail("myCriticalCheck failed");
  * }
  *
- * @param {string=} message the message to report as part of the exception
+ * @param {String=} message the message to report as part of the exception
  * @throws Throws an assertion always
  */
 assert.fail = function(message) {};
@@ -619,7 +639,7 @@ Browser.prototype.clearPageLoad = function() {};
  * b.newPage("Bing Main Page");
  * b.open("bing.com");
  *
- * @param {string=} pageName the name of the new page
+ * @param {String=} pageName the name of the new page
  *
  * @return {module:Page} the page that was navigated to.
  */
@@ -636,7 +656,7 @@ Browser.prototype.newPage = function(pageName) {};
  * @example
  * b.verifyText(/Hello, \w+/);
  *
- * @param {string|RegExp} text
+ * @param {String|RegExp} text
  *
  * @see module:Browser#getInnerText
  * @see module:Browser#verifyNotText
@@ -653,8 +673,8 @@ Browser.prototype.verifyText = function(text) {};
  * @example
  * b.waitForText("#consoleLog", "DISCONNECTED");
  *
- * @param {string} selector the element to wait for
- * @param {string} text the text to wait for
+ * @param {String} selector the element to wait for
+ * @param {String} text the text to wait for
  *
  * @see module:Browser#getInnerText
  * @see module:Browser#verifyText
@@ -673,7 +693,7 @@ Browser.prototype.waitForText = function(selector, text) {};
  * @example
  * b.verifyNotText(/Error \d+:/);
  *
- * @param {string|RegExp} text The text to look for on the page
+ * @param {String|RegExp} text The text to look for on the page
  *
  * @see module:Browser#verifyText
  * @see module:Browser#getInnerText
@@ -692,7 +712,7 @@ Browser.prototype.verifyNotText = function(text) {};
  * // Matches Goooogle
  * b.verifyTitle(/Goo+gle/);
  *
- * @param {string|RegExp} title The title to match
+ * @param {String|RegExp} title The title to match
  *
  * @see module:Browser#getTitle
  */
@@ -731,7 +751,7 @@ Browser.prototype.getTitle = function() {};
  * @example
  * b.verifyRequest("https://loadtestgo.com");
  *
- * @param {string|RegExp} url The request URL to check for.
+ * @param {String|RegExp} url The request URL to check for.
  * @throws Throws an exception if the request is not found or has an
  * error.
  */
@@ -789,7 +809,7 @@ Browser.prototype.jq = function(script) {};
  * var frames = b.listFrames();
  * console.log(JSON.stringify(frames));
  *
- * @param {string=} selector list any frames matching this selector
+ * @param {String=} selector list any frames matching this selector
  *
  * @return {module:Frame[]} An array of frames
  *
@@ -1803,6 +1823,27 @@ Browser.prototype.ignoreHttpErrors = function(ignore) {};
  * var d = b.screenshot();
  */
 Browser.prototype.screenshot = function(format, quality) {};
+
+/**
+ * Grab the response body for the given http request.
+ *
+ * The HTTP requests can be gotten from pizza.result, see the example below.
+ *
+ * Note the HTTP request actually has to be finished before this can be called.
+ *
+ * @param {HttpRequest} [httpRequest] A http request that was previously made by the
+ * browser.
+ *
+ * @example
+ * b.open("www.google.com");
+ * // Get contents of the first request
+ * var d = b.getResponseBody(pizza.result.pages.get(0).requests.get(0));
+ *
+ * @see module:pizza#result
+ * @see module:TestResult#pages
+ * @see module:Page#requests
+ */
+Browser.prototype.getResponseBody = function(httpRequest) {};
 
 /**
  * List devices available for emulation

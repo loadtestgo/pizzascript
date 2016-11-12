@@ -146,7 +146,7 @@ public class PizzaScript {
                 editor.openFile(fileName);
             }
         } else {
-            boolean success = true;
+            boolean success;
 
             EasyTestContext testContext = new EasyTestContext();
             JavaScriptEngine engine = new JavaScriptEngine();

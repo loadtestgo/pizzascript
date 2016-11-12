@@ -31,7 +31,7 @@ public class HttpRequest {
     public String redirectUrl;
 
     // Browser data about the origin of the request
-    public int requestId;
+    public String requestId;
     public int frameId;
     public int parentFrameId;
     public int tabId;
@@ -128,11 +128,11 @@ public class HttpRequest {
         this.redirectUrl = redirectUrl;
     }
 
-    public int getRequestId() {
+    public String getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(int requestId) {
+    public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
 

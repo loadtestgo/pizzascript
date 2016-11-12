@@ -90,6 +90,11 @@ public class Worker {
         JavaScriptEngine engine = new JavaScriptEngine();
         ConsoleOutputWriter consoleLogWriter = null;
 
+        File outputDir = new File(this.outputDir, filename);
+        outputDir.mkdirs();
+
+        testContext.setOutputDirectory(outputDir);
+
         File consoleLogFilePath = Path.getCanonicalFile(new File(outputDir, filename + ".txt"));
         try {
             engine.init(testContext);
@@ -114,7 +119,7 @@ public class Worker {
                         os.write(screenshot.getBytes());
                         os.close();
                     }
-                    test.setScreenshotFilePath(screenshotFile.getPath());
+                    testContext.addFile(screenshotFile);
                     Logger.info("Wrote screenshot: {}", screenshotFile.getPath());
                 }
             } catch (Exception e) {
@@ -125,7 +130,7 @@ public class Worker {
 
             if (consoleLogWriter != null) {
                 if (consoleLogWriter.outputWritten()) {
-                    test.setConsoleLogFilePath(consoleLogFilePath.getPath());
+                    testContext.addFile(consoleLogFilePath);
                 }
                 consoleLogWriter.close();
             }
@@ -135,7 +140,7 @@ public class Worker {
         File harFile = Path.getCanonicalFile(new File(outputDir, filename + ".har"));
         try {
             HarWriter.save(testResult, harFile);
-            test.setHarFilePath(harFile.getPath());
+            testContext.addFile(harFile);
         } catch (IOException e) {
             Logger.error(String.format("Unable to save har file: %s", e.getMessage()));
         }

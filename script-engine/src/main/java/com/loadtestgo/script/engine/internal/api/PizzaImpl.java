@@ -145,6 +145,81 @@ public class PizzaImpl implements Pizza {
     }
 
     @Override
+    public void saveFile(String name, Data data) {
+        testContext.saveFile(name, data);
+    }
+
+    @Override
+    public HttpRequest getRequest(int requestIndex) {
+        Page page = getResult().getPage(0);
+        if (page != null) {
+            if (requestIndex >= 0 && requestIndex < page.getRequests().size()) {
+                return page.getRequests().get(requestIndex);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public HttpRequest getRequestByUrl(String partialUrl) {
+        for (int i = 0; i < getResult().getPages().size(); ++i) {
+            HttpRequest request = getRequestByUrl(i, partialUrl);
+            if (request != null) {
+                return request;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public HttpRequest getRequestByFullUrl(String fullUrl) {
+        for (int i = 0; i < getResult().getPages().size(); ++i) {
+            HttpRequest request = getRequestByFullUrl(i, fullUrl);
+            if (request != null) {
+                return request;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public HttpRequest getRequest(int pageIndex, int requestIndex) {
+        Page page = getResult().getPage(pageIndex);
+        if (page != null) {
+            if (requestIndex >= 0 && requestIndex < page.getRequests().size()) {
+                return page.getRequests().get(requestIndex);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public HttpRequest getRequestByUrl(int pageIndex, String partialUrl) {
+        Page page = getResult().getPage(pageIndex);
+        if (page != null) {
+            for (HttpRequest httpRequest : page.getRequests()) {
+                if (httpRequest.getUrl().contains(partialUrl)) {
+                    return httpRequest;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public HttpRequest getRequestByFullUrl(int pageIndex, String fullUrl) {
+        Page page = getResult().getPage(pageIndex);
+        if (page != null) {
+            for (HttpRequest httpRequest : page.getRequests()) {
+                if (httpRequest.getUrl().equals(fullUrl)) {
+                    return httpRequest;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public int getLoadTestId() {
         return getEngineContext().getLoadTestId();
     }

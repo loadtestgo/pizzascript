@@ -955,6 +955,8 @@ public interface Browser {
     Data screenshot(String format);
     Data screenshot(String format, double quality);
 
+    Data getResponseBody(HttpRequest httpRequest);
+
     void verifyRequest(NativeRegExp regExp);
 
     void verifyRequest(String url);

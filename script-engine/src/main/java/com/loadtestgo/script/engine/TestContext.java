@@ -1,11 +1,20 @@
 package com.loadtestgo.script.engine;
 
+import com.loadtestgo.script.api.Data;
 import com.loadtestgo.script.api.TestResult;
+import com.loadtestgo.script.api.TestResultFile;
 import com.loadtestgo.script.engine.internal.api.ChromeBrowser;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 import com.loadtestgo.util.Dirs;
+import org.apache.commons.io.IOUtils;
+import org.pmw.tinylog.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -21,7 +30,8 @@ public class TestContext {
     protected ProcessLauncher processLauncher;
     protected BrowserLifeCycleNotifier browserNotifier;
     protected boolean sandboxJavaScript = false;
-    protected File baseDirectory;
+    protected File baseDirectory; // base directory for reading files (such as script includes, or CSV files)
+    protected File outputDirectory;
 
     private final AtomicBoolean duringBrowserOpen = new AtomicBoolean(false);
     private long browserOpenStartTime;
@@ -179,5 +189,30 @@ public class TestContext {
             }
             return sleepTime;
         }
+    }
+
+    public void setOutputDirectory(File outputDirectory) {
+        this.outputDirectory = outputDirectory;
+    }
+
+    public File getOutputDirectory() {
+        if (outputDirectory != null) return outputDirectory;
+        if (getIsFileSystemSandboxed()) return new File(getTestTmpDir());
+        return baseDirectory;
+    }
+
+    public void saveFile(String name, Data data) {
+        File file = new File(getOutputDirectory(), name);
+        try (FileOutputStream output = new FileOutputStream(file)) {
+            IOUtils.write(data.getBytes(), output);
+            this.testResult.getSavedFiles().add(new TestResultFile(name, file));
+        } catch (IOException e) {
+            Logger.error(e, "Unable to save script file {}", file);
+            throw new ScriptException(String.format("Unable to save file %s", name));
+        }
+    }
+
+    public void addFile(File file) {
+        this.testResult.getSavedFiles().add(new TestResultFile(file));
     }
 }

@@ -18,6 +18,7 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.regexp.NativeRegExp;
 import org.pmw.tinylog.Logger;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -932,8 +933,26 @@ public class ChromeBrowser implements Browser {
         params.put("format", format);
         params.put("quality", quality);
         checkResponseForErrors(pizzaHandler.sendCommand("screenshot", params));
-        ByteBuffer buffer = pizzaHandler.fetchScreenshot();
+        ByteBuffer buffer = pizzaHandler.getByteBuffer();
         return new Data(String.format("image/%s", format), buffer.array());
+    }
+
+    @Override
+    public Data getResponseBody(HttpRequest httpRequest) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("requestId", httpRequest.requestId);
+        JSONObject value = getResponseJson(pizzaHandler.sendCommand("getResponseBody", params));
+        String format = value.getString("format");
+        if (format.equals("raw")) {
+            ByteBuffer buffer = pizzaHandler.getByteBuffer();
+            return new Data("application/binary", buffer.array());
+        } else {
+            try {
+                return new Data("text/plain", value.getString("body").getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                return null;
+            }
+        }
     }
 
     @Override
@@ -974,6 +993,18 @@ public class ChromeBrowser implements Browser {
                 throw new ScriptException(ErrorType.Script, response.getString("error"));
             }
             return response.getString("value");
+        } catch (JSONException e) {
+            throw new ScriptException(ErrorType.Internal, "Unable to parse command response.");
+        }
+    }
+
+    private JSONObject getResponseJson(JSONObject result) {
+        try {
+            JSONObject response = result.getJSONObject("response");
+            if (response.has("error")) {
+                throw new ScriptException(ErrorType.Script, response.getString("error"));
+            }
+            return response.getJSONObject("value");
         } catch (JSONException e) {
             throw new ScriptException(ErrorType.Internal, "Unable to parse command response.");
         }

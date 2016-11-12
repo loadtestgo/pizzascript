@@ -1,15 +1,15 @@
 package com.loadtestgo.script.runner;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RunnerTest {
     private File file;
     private long timeout;
     private String name;
 
-    private String screenshotFilePath;
-    private String harFilePath;
-    private String consoleLogFilePath;
+    private List<String> attachmentPaths = new ArrayList<>();
 
     public long getTimeout() {
         return timeout;
@@ -39,27 +39,7 @@ public class RunnerTest {
         return file.getPath();
     }
 
-    public String getScreenshotFilePath() {
-        return screenshotFilePath;
-    }
-
-    public String getHarFilePath() {
-        return harFilePath;
-    }
-
-    public String getConsoleLogFilePath() {
-        return consoleLogFilePath;
-    }
-
-    public void setScreenshotFilePath(String screenshotFilePath) {
-        this.screenshotFilePath = screenshotFilePath;
-    }
-
-    public void setHarFilePath(String harFilePath) {
-        this.harFilePath = harFilePath;
-    }
-
-    public void setConsoleLogFilePath(String consoleLogFilePath) {
-        this.consoleLogFilePath = consoleLogFilePath;
+    public List<String> getAttachmentPaths() {
+        return attachmentPaths;
     }
 }

@@ -34,6 +34,8 @@ public class TestResult {
     public boolean hasVideo;
     public boolean hasPacketFile;
 
+    public ArrayList<TestResultFile> savedFiles = new ArrayList<>();
+
     public TestResult() {
     }
 
@@ -189,6 +191,10 @@ public class TestResult {
     @JsonGetter("hasPacketFile")
     public boolean hasPacketFile() {
         return hasPacketFile;
+    }
+
+    public List<TestResultFile> getSavedFiles() {
+        return savedFiles;
     }
 
     static public class OutputMessage {

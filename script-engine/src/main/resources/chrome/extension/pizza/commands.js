@@ -1973,6 +1973,30 @@ pizza.main.commands = function() {
         });
     };
 
+    var _getResponseBody = function(id, params) {
+        pizza.devtools.sendCommand("Network.getResponseBody", { requestId: params.requestId },
+            function(response) {
+                if (response.wasThrown) {
+                    sendResponse(id, { error: formatWasThrownException(response) });
+                } else if (response.exceptionDetails) {
+                    // Chrome 54+ error
+                    sendResponse(id, { error: formatExceptionDetailsException(response)});
+                } else if (response.body) {
+                    sendResponse(id, { value: { format: "string", body: response.body } });
+                } else if (response.base64Encoded) {
+                    var rawData = atob(response.data);
+                    var ab = new Uint8Array(rawData.length);
+                    for (var i = 0; i < rawData.length; i++) {
+                        ab[i] = rawData.charCodeAt(i);
+                    }
+                    _binaryResponseHandler(ab);
+                    sendResponse(id, { value: { format: "raw" } });
+                } else {
+                    sendResponse(id, { error: response.message });
+                }
+            });
+    };
+
     function handleEvent(method, params) {
         switch (method) {
             case 'Page.javascriptDialogOpening':
@@ -2086,6 +2110,8 @@ pizza.main.commands = function() {
 
     addCommand("listNetworkConditions", _listNetworkConditions);
     addCommand("emulateNetworkCondition", _emulateNetworkCondition);
+
+    addCommand("getResponseBody", _getResponseBody);
 
     addCommand("reset", _reset);
 

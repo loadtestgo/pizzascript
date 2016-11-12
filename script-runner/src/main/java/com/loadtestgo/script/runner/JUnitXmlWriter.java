@@ -3,6 +3,7 @@ package com.loadtestgo.script.runner;
 import com.loadtestgo.script.api.StackElement;
 import com.loadtestgo.script.api.TestError;
 import com.loadtestgo.script.api.TestResult;
+import com.loadtestgo.script.api.TestResultFile;
 import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.util.StringUtils;
 
@@ -79,19 +80,16 @@ public class JUnitXmlWriter {
             }
 
             if (testResult.output != null ||
-                runnerTest.getScreenshotFilePath() != null ||
-                runnerTest.getHarFilePath() != null ||
-                runnerTest.getConsoleLogFilePath() != null) {
+                runnerTest.getAttachmentPaths().size() > 0) {
                 writer.writeStartElement("system-out");
                 for (TestResult.OutputMessage outputMessage : testResult.output) {
                     writer.writeCharacters(outputMessage.msg);
                     writer.writeCharacters("\n");
-
                 }
 
-                writeAttachmentIfNecessary(writer, runnerTest.getScreenshotFilePath());
-                writeAttachmentIfNecessary(writer, runnerTest.getHarFilePath());
-                writeAttachmentIfNecessary(writer, runnerTest.getConsoleLogFilePath());
+                for (TestResultFile testResultFile : testResult.getSavedFiles()) {
+                    writeAttachmentIfNecessary(writer, testResultFile.getFile().getPath());
+                }
 
                 writer.writeEndElement();
             }

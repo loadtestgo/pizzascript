@@ -29,7 +29,7 @@ public class BrowserWebSocket {
     protected AtomicInteger commandId = new AtomicInteger();
     protected LinkedBlockingQueue<JSONObject> commandResponses;
     protected ObjectMapper mapper = new ObjectMapper();
-    protected ByteBuffer screenshot = null;
+    protected ByteBuffer byteBuffer = null;
     protected EngineSettings engineSettings = null;
     final protected AtomicBoolean closing = new AtomicBoolean(false);
 
@@ -108,8 +108,8 @@ public class BrowserWebSocket {
     }
 
     public void onMessage(ByteBuffer message) {
-        // It's always a screenshot right now
-        screenshot = message;
+        // Always just one byte buffer
+        byteBuffer = message;
     }
 
     public synchronized void onMessage(String message) {
@@ -265,10 +265,9 @@ public class BrowserWebSocket {
         return conn.isOpen();
     }
 
-    public ByteBuffer fetchScreenshot() {
-        // Grab the screenshot and release
-        ByteBuffer r = screenshot;
-        screenshot = null;
+    public ByteBuffer getByteBuffer() {
+        ByteBuffer r = byteBuffer;
+        byteBuffer = null;
         return r;
     }
 }

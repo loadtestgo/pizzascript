@@ -405,17 +405,17 @@ public class ChromeWebSocket extends BrowserWebSocket {
         int processId;
         int tabId;
         int frameId;
-        int requestId;
+        String requestId;
 
         RequestInfo() {
             this.processId = -1;
             this.tabId = -1;
             this.frameId = -1;
-            this.requestId = -1;
+            this.requestId = null;
         }
 
         String getRequestId() {
-            return String.format("%d:%d:%d", processId, tabId, requestId);
+            return String.format("%d:%s", tabId, requestId);
         }
     }
 
@@ -439,8 +439,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
         int dotPos = longRequestId.indexOf(".");
         if (dotPos > 0) {
             String processId = longRequestId.substring(0, dotPos);
-            String requestId = longRequestId.substring(dotPos + 1, longRequestId.length());
-            requestInfo.requestId = Integer.valueOf(requestId);
+            requestInfo.requestId = longRequestId;
             requestInfo.processId = Integer.valueOf(processId);
         } else {
             Logger.error("Unable to parse requestId {}", longRequestId);
