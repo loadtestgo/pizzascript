@@ -11,6 +11,7 @@ import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeWebSocket;
 import com.loadtestgo.script.engine.internal.rhino.RhinoUtils;
 import com.loadtestgo.script.engine.internal.server.BrowserWebSocketServer;
 import com.loadtestgo.util.Http;
+import com.loadtestgo.util.HttpHeader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
@@ -22,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ChromeBrowser implements Browser {
     private ChromeWebSocket pizzaHandler;
@@ -941,18 +943,34 @@ public class ChromeBrowser implements Browser {
     public Data getResponseBody(HttpRequest httpRequest) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("requestId", httpRequest.requestId);
-        JSONObject value = getResponseJson(pizzaHandler.sendCommand("getResponseBody", params));
-        String format = value.getString("format");
-        if (format.equals("raw")) {
-            ByteBuffer buffer = pizzaHandler.getByteBuffer();
-            return new Data("application/binary", buffer.array());
-        } else {
+
+        // Wait on the request if it is still downloading
+        while (pizzaHandler.checkIsRequestPending(httpRequest)) {
             try {
-                return new Data("text/plain", value.getString("body").getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                return null;
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new ScriptException(ErrorType.Timeout, "getResponseBody() interrupted");
             }
         }
+
+        JSONObject value = getResponseJson(pizzaHandler.sendCommand("getResponseBody", params));
+        String format = value.getString("format");
+        ByteBuffer buffer = pizzaHandler.getByteBuffer();
+        String contentType = findResponseHeader(httpRequest, HttpHeader.CONTENT_TYPE);
+        if (format.equals("raw")) {
+            return new Data(contentType != null ? contentType : "application/binary", buffer.array());
+        } else {
+            return new Data(contentType != null ? contentType : "text/plain", buffer.array());
+        }
+    }
+
+    private String findResponseHeader(HttpRequest httpRequest, String headerName) {
+        for (HttpHeader httpHeader : httpRequest.getResponseHeaders()) {
+            if (httpHeader.name != null && httpHeader.name.equalsIgnoreCase(headerName)) {
+                return httpHeader.value;
+            }
+        }
+        return null;
     }
 
     @Override

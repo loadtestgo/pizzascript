@@ -1831,13 +1831,15 @@ Browser.prototype.screenshot = function(format, quality) {};
  *
  * Note the HTTP request actually has to be finished before this can be called.
  *
+ * If the item is downloading will wait until it is downloaded.
+ *
  * @param {HttpRequest} [httpRequest] A http request that was previously made by the
  * browser.
  *
  * @example
  * b.open("www.google.com");
- * // Get contents of the first request
- * var d = b.getResponseBody(pizza.result.pages.get(0).requests.get(0));
+ * // Get response body of the main HTML request
+ * var d = b.getResponseBody(pizza.getRequestByUrl("www.google.com")));
  *
  * @see module:pizza#result
  * @see module:TestResult#pages

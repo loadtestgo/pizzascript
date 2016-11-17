@@ -1982,15 +1982,18 @@ pizza.main.commands = function() {
                     // Chrome 54+ error
                     sendResponse(id, { error: formatExceptionDetailsException(response)});
                 } else if (response.body) {
-                    sendResponse(id, { value: { format: "string", body: response.body } });
-                } else if (response.base64Encoded) {
-                    var rawData = atob(response.data);
-                    var ab = new Uint8Array(rawData.length);
-                    for (var i = 0; i < rawData.length; i++) {
-                        ab[i] = rawData.charCodeAt(i);
+                    if (response.base64Encoded) {
+                        var rawData = atob(response.body);
+                        var ab = new Uint8Array(rawData.length);
+                        for (var i = 0; i < rawData.length; i++) {
+                            ab[i] = rawData.charCodeAt(i);
+                        }
+                        _binaryResponseHandler(ab);
+                        sendResponse(id, {value: {format: "raw"}});
+                    } else {
+                        _binaryResponseHandler(new TextEncoder("utf-8").encode(response.body));
+                        sendResponse(id, {value: {format: "string"}});
                     }
-                    _binaryResponseHandler(ab);
-                    sendResponse(id, { value: { format: "raw" } });
                 } else {
                     sendResponse(id, { error: response.message });
                 }

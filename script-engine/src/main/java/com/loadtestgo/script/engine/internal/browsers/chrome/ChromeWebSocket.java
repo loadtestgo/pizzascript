@@ -236,18 +236,27 @@ public class ChromeWebSocket extends BrowserWebSocket {
             }
 
             for (HttpRequest request : page.getRequests()) {
-                HttpRequest.State state = request.getState();
-                if (request.isWebSocket()) {
-                    // Once a websocket connection is established don't wait on it,
-                    // it may be kept open for the lifetime of the page.
-                    if (state != HttpRequest.State.Recv &&
-                        state != HttpRequest.State.Complete) {
-                        return true;
-                    }
-                } else {
-                    if (state != HttpRequest.State.Complete) {
-                        return true;
-                    }
+                if (checkIsRequestPending(request)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean checkIsRequestPending(HttpRequest httpRequest) {
+        synchronized (testResult) {
+            HttpRequest.State state = httpRequest.getState();
+            if (httpRequest.isWebSocket()) {
+                // Once a websocket connection is established don't wait on it,
+                // it may be kept open for the lifetime of the page.
+                if (state != HttpRequest.State.Recv &&
+                    state != HttpRequest.State.Complete) {
+                    return true;
+                }
+            } else {
+                if (state != HttpRequest.State.Complete) {
+                    return true;
                 }
             }
         }
