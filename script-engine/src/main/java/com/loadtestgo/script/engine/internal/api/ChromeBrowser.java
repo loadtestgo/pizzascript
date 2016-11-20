@@ -1068,4 +1068,8 @@ public class ChromeBrowser implements Browser {
             throw new ScriptException(ErrorType.Internal, "Unable to parse command response.");
         }
     }
+
+    public ChromeProcess getProcess() {
+        return chromeProcess;
+    }
 }

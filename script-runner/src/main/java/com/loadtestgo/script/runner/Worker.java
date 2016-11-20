@@ -4,12 +4,15 @@ import com.loadtestgo.script.api.Browser;
 import com.loadtestgo.script.api.Data;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.engine.*;
+import com.loadtestgo.script.engine.internal.api.ChromeBrowser;
+import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeProcess;
 import com.loadtestgo.script.har.HarWriter;
 import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.util.FileUtils;
 import com.loadtestgo.util.IniFile;
 import com.loadtestgo.util.Path;
 import com.loadtestgo.util.Settings;
+import org.apache.commons.io.IOUtils;
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
@@ -21,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.util.List;
 
 public class Worker {
@@ -121,6 +125,18 @@ public class Worker {
                     }
                     testContext.addFile(screenshotFile);
                     Logger.info("Wrote screenshot: {}", screenshotFile.getPath());
+
+                    if (testContext.getEngineSettings().saveChromeLogs()) {
+                        ChromeProcess process = ((ChromeBrowser)browser).getProcess();
+                        File browserLogFile = process.getBrowserLogFile();
+
+                        File destFile = Path.getCanonicalFile(
+                            new File(outputDir, browserLogFile.getName()));
+
+                        Files.copy(browserLogFile.toPath(), destFile.toPath());
+
+                        testContext.addFile(destFile);
+                    }
                 }
             } catch (Exception e) {
                 Logger.error("Error capturing screenshot: {}", e.getMessage());

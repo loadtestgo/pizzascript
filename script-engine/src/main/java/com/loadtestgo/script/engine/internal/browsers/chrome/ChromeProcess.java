@@ -19,8 +19,7 @@ import java.net.URL;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.*;
 
-public class ChromeProcess
-{
+public class ChromeProcess {
     private UserContext userContext;
     private String profileDir;
     private String baseTmpDir;
@@ -369,5 +368,9 @@ public class ChromeProcess
 
     public String getCacheDir() {
         return cacheDir;
+    }
+
+    public File getBrowserLogFile() {
+        return new File(getProfileDir(), "chrome_debug.log");
     }
 }
