@@ -2746,11 +2746,23 @@ CSV.prototype.randomValue = function(column) {};
 
 /**
  * An array of bytes with a content type
+ *
+ * @exports Data
  */
 Data = {};
 
+/**
+ * The raw data
+ *
+ * @return {Array}
+ */
 Data.prototype.bytes = function() {};
 
+/**
+ * The content type or mime type
+ *
+ * @return {String}
+ */
 Data.prototype.type = function() {};
 
 /**

@@ -182,10 +182,10 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#getBrowserVersion">getBrowserVersion()</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#getCookie">getCookie(url, name)</a></dt>
+                <dt><a href="module-Browser.html#getCookie">getCookie(name)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#getCookie">getCookie(name)</a></dt>
+                <dt><a href="module-Browser.html#getCookie">getCookie(url, name)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#getInnerHTML">getInnerHTML(selector)</a></dt>
@@ -280,10 +280,10 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#reload">reload()</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#removeCookie">removeCookie(name)</a></dt>
+                <dt><a href="module-Browser.html#removeCookie">removeCookie(url, name)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#removeCookie">removeCookie(url, name)</a></dt>
+                <dt><a href="module-Browser.html#removeCookie">removeCookie(name)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#removeHeader">removeHeader(header)</a></dt>
@@ -1972,13 +1972,13 @@ main document.</p></dd>
 
     </dl>
 
-                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(url, name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
         <p>Get a cookie</p>
-<p>Given a URL and cookie name, get details about the cookie.</p>
+<p>Given a cookie name, get details about the cookie.  The current domain is used.</p>
 
     
         <section>
-        <h4>Parameters</h4>
+        <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
             <tr>
@@ -1989,21 +1989,6 @@ main document.</p></dd>
             </tr>
         </thead>
         <tbody>
-                <tr>
-        <td>
-            <p>url</p>
-        </td>
-        <td>
-                <p>String</p>
-        </td>
-        <td>
-                <p>&nbsp;</p>
-        </td>
-        <td>
-                <p>the url of the cookie</p>
-        </td>
-</tr>
-
                 <tr>
         <td>
             <p>name</p>
@@ -2053,13 +2038,13 @@ main document.</p></dd>
 
     </dl>
 
-                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(url, name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
         <p>Get a cookie</p>
-<p>Given a cookie name, get details about the cookie.  The current domain is used.</p>
+<p>Given a URL and cookie name, get details about the cookie.</p>
 
     
         <section>
-        <h4>Parameter</h4>
+        <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
             <tr>
@@ -2070,6 +2055,21 @@ main document.</p></dd>
             </tr>
         </thead>
         <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the url of the cookie</p>
+        </td>
+</tr>
+
                 <tr>
         <td>
             <p>name</p>
@@ -2398,7 +2398,7 @@ no element specified.</p>
 
     </dl>
 
-                <h3 id="getResponseBody"><span class="symbol-name">getResponseBody</span><span class="signature"><span class="signature-params">([httpRequest])</span>&nbsp;&rarr; <span class="signature-returns"> module:Data</span></span></h3>
+                <h3 id="getResponseBody"><span class="symbol-name">getResponseBody</span><span class="signature"><span class="signature-params">([httpRequest])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Data.html">module:Data</a></span></span></h3>
         <p>Grab the response body for the given http request.</p>
 <p>The HTTP requests can be gotten from pizza.result, see the example below.</p>
 <p>Note the HTTP request actually has to be finished before this can be called.</p>
@@ -2478,7 +2478,7 @@ browser.</p>
         
         
             <dt>Returns</dt>
-        <dd><p><code>module:Data</code>&nbsp;<p>the contents of the request</p></p></dd>
+        <dd><p><code><a href="module-Data.html">module:Data</a></code>&nbsp;<p>the contents of the request</p></p></dd>
 
     </dl>
 
@@ -4063,12 +4063,12 @@ main document.</p></dd>
         
     </dl>
 
-                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
-        <p>Remove a given cookie from the browser for the current domain</p>
+                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(url, name)</span></span></h3>
+        <p>Remove a given cookie from the browser</p>
 
     
         <section>
-        <h4>Parameter</h4>
+        <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
             <tr>
@@ -4079,6 +4079,21 @@ main document.</p></dd>
             </tr>
         </thead>
         <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the domain of the cookie to remove</p>
+        </td>
+</tr>
+
                 <tr>
         <td>
             <p>name</p>
@@ -4126,12 +4141,12 @@ main document.</p></dd>
         
     </dl>
 
-                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(url, name)</span></span></h3>
-        <p>Remove a given cookie from the browser</p>
+                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
+        <p>Remove a given cookie from the browser for the current domain</p>
 
     
         <section>
-        <h4>Parameters</h4>
+        <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
             <tr>
@@ -4142,21 +4157,6 @@ main document.</p></dd>
             </tr>
         </thead>
         <tbody>
-                <tr>
-        <td>
-            <p>url</p>
-        </td>
-        <td>
-                <p>String</p>
-        </td>
-        <td>
-                <p>&nbsp;</p>
-        </td>
-        <td>
-                <p>the domain of the cookie to remove</p>
-        </td>
-</tr>
-
                 <tr>
         <td>
             <p>name</p>
