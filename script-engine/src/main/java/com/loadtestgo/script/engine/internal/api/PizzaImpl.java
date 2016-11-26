@@ -10,6 +10,7 @@ import org.mozilla.javascript.NativeObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class PizzaImpl implements Pizza {
@@ -147,6 +148,15 @@ public class PizzaImpl implements Pizza {
     @Override
     public void saveFile(String name, Data data) {
         testContext.saveFile(name, data);
+    }
+
+    @Override
+    public void saveFile(String name, String data) {
+        try {
+            testContext.saveFile(name, new Data("", data.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            // ignore
+        }
     }
 
     @Override

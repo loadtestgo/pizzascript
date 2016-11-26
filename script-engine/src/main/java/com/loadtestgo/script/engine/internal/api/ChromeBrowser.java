@@ -751,6 +751,18 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
+    public String getOuterHTML(String selector) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        return getResponseString(pizzaHandler.sendCommand("getOuterHTML", params));
+    }
+
+    @Override
+    public String getOuterHTML() {
+        return getResponseString(pizzaHandler.sendCommand("getOuterHTML"));
+    }
+
+    @Override
     public String getInnerText(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);

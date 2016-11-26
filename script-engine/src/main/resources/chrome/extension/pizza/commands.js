@@ -1680,6 +1680,24 @@ pizza.main.commands = function() {
         );
     };
 
+    var _getOuterHTML = function(id, params) {
+        if (!params.selector) {
+            params.selector = "html";
+        }
+
+        var script = "" + function(selector) {
+                return this.findElement(selector).outerHTML;
+            };
+
+        executeAutomationAPI(
+            function(response) { sendResponse(id, { value: response.result.value }); },
+            function(error) { sendResponse(id, { error: error }); },
+            true,
+            script,
+            params.selector
+        );
+    };
+
     var _clearPageLoad = function(id, params) {
         pizza.navigation.reset(_currentTabId, 0);
         sendResponse(id, { });
@@ -2037,6 +2055,7 @@ pizza.main.commands = function() {
     addCommand("getInnerText", _getInnerText);
     addCommand("waitForText", _waitForText);
 
+
     addCommand("verifyTitle", _verifyTitle);
     addCommand("getTitle", _getTitle);
 
@@ -2097,6 +2116,7 @@ pizza.main.commands = function() {
     addCommand("highlight", _highlight);
 
     addCommand("getInnerHTML", _getInnerHTML);
+    addCommand("getOuterHTML", _getOuterHTML);
 
     addCommand("clearPageLoad", _clearPageLoad);
     addCommand("waitPageLoad", _waitPageLoad);

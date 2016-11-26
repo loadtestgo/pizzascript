@@ -122,6 +122,23 @@ pizza.waitFor = function(func, waitIterationMilliseconds) {};
 pizza.openCSV = function(filename) {};
 
 /**
+ * Save a file to the script results.
+ *
+ * When ran with the script runner, these files will be saved along side the script results
+ * and attached to the JUnit tests result.
+ *
+ * @example
+ * b.open("www.google.com");
+ * // Get response body of the main HTML request
+ * var d = b.getResponseBody(pizza.getRequestByUrl("www.google.com")));
+ * pizza.saveFile(d);
+ *
+ * @param {String} filename the filename to save.
+ * @param {String|module:Data} data the file contents to save.
+ */
+pizza.saveFile = function(filename, data) {};
+
+/**
  * Any pages that were loaded during the test (including the current page or pages
  * added with {@link module:Browser#newPage).
  *
@@ -1408,6 +1425,19 @@ Browser.prototype.setValue = function(selector, value) {};
 Browser.prototype.getInnerHTML = function(selector) {};
 
 /**
+ * Get the html for the given element or the entire frame if
+ * no element specified.
+ *
+ * @example
+ * var html = b.getInnerHTML();
+ *
+ * @param {String=} selector the element to get the HTML for
+ * @return {String} the outer HTML for the given element
+ * @throws Throws an exception if the element can not be found
+ */
+Browser.prototype.getOuterHTML = function(selector) {};
+
+/**
  * Get the text inside the given element
  *
  * @example
@@ -1840,6 +1870,8 @@ Browser.prototype.screenshot = function(format, quality) {};
  * b.open("www.google.com");
  * // Get response body of the main HTML request
  * var d = b.getResponseBody(pizza.getRequestByUrl("www.google.com")));
+ *
+ * @returns {module:Data} the contents of the request
  *
  * @see module:pizza#result
  * @see module:TestResult#pages
@@ -2711,6 +2743,15 @@ CSV.prototype.value = function(row, column) {};
  * @return {String}
  */
 CSV.prototype.randomValue = function(column) {};
+
+/**
+ * An array of bytes with a content type
+ */
+Data = {};
+
+Data.prototype.bytes = function() {};
+
+Data.prototype.type = function() {};
 
 /**
  * Debug console for scripts.

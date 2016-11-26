@@ -94,6 +94,8 @@ public interface Pizza {
 
     void saveFile(String name, Data data);
 
+    void saveFile(String name, String data);
+
     HttpRequest getRequest(int requestIndex);
 
     HttpRequest getRequestByUrl(String partialUrl);
