@@ -99,23 +99,32 @@ b.open(&quot;loadtestgo.com&quot;);</code></pre>
                     <dt><a href="module-pizza.html#.browser">browser()</a></dt>
                     <dd>
                     </dd>
+                    <dt><a href="module-pizza.html#.getRequestByFullUrl">getRequestByFullUrl(pageIndexOrFullUrl[, fullUrl])</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="module-pizza.html#.getRequestByFullUrl">getRequestByFullUrl(pageIndexOrPartialUrl[, partialUrl])</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
                     <dt><a href="module-pizza.html#.open">open()</a></dt>
                     <dd>
                     </dd>
-                  </dl>
-                </div>
-                <div class="summary-column">
-                  <dl class="dl-summary-callout">
                     <dt><a href="module-pizza.html#.openCSV">openCSV(filename)</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="module-pizza.html#.sleep">sleep(milliseconds)</a></dt>
+                    <dt><a href="module-pizza.html#.saveFile">saveFile(filename, data)</a></dt>
                     <dd>
                     </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
+                    <dt><a href="module-pizza.html#.sleep">sleep(milliseconds)</a></dt>
+                    <dd>
+                    </dd>
                     <dt><a href="module-pizza.html#.waitFor">waitFor(func[, waitIterationMilliseconds])</a></dt>
                     <dd>
                     </dd>
@@ -240,6 +249,110 @@ var b &#x3D; pizza.browser();</code></pre>
                 </dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".getRequestByFullUrl"><span class="symbol-name">getRequestByFullUrl</span><span class="signature"><span class="signature-params">(pageIndexOrFullUrl[, fullUrl])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-HttpRequest.html">module:HttpRequest</a></span></span></h3>
+              <p>Gets the first request matching the given full url</p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>pageIndexOrFullUrl</p>
+                      </td>
+                      <td>
+                        <p>(String or Number)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the zero based page index (ordered by when they started loading), or the full url to match the request against.</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>fullUrl</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>the full url to match against if a page index is specified</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code><a href="module-HttpRequest.html">module:HttpRequest</a></code>&nbsp;</p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".getRequestByFullUrl"><span class="symbol-name">getRequestByFullUrl</span><span class="signature"><span class="signature-params">(pageIndexOrPartialUrl[, partialUrl])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-HttpRequest.html">module:HttpRequest</a></span></span></h3>
+              <p>Gets the first request matching the given partial url</p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>pageIndexOrPartialUrl</p>
+                      </td>
+                      <td>
+                        <p>(String or Number)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the zero based page index (ordered by when they started loading), or the partial url to match the request against.</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>partialUrl</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>the partial url to match against if a page index is specified</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code><a href="module-HttpRequest.html">module:HttpRequest</a></code>&nbsp;</p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".open"><span class="symbol-name">open</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Browser.html">module:Browser</a></span></span></h3>
               <p>Open the browser.</p>
               <p>Takes an optional URL or browser settings parameter. See the examples below.</p>
@@ -330,6 +443,66 @@ b.open(&quot;mysite.com/404&quot;);</code></pre>
                     <p>The CSV data</p>
                   </p>
                 </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".saveFile"><span class="symbol-name">saveFile</span><span class="signature"><span class="signature-params">(filename, data)</span></span></h3>
+              <p>Save a file to the script results.</p>
+              <p>When ran with the script runner, these files will be saved along side the script results and attached to the JUnit tests result.</p>
+              <section>
+                <h4>
+            Example
+        </h4>
+                <div>
+                  <pre class="prettyprint"><code>b.open(&quot;www.google.com&quot;);
+// Get response body of the main HTML request
+var d &#x3D; b.getResponseBody(pizza.getRequestByUrl(&quot;www.google.com&quot;)));
+pizza.saveFile(d);</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>filename</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the filename to save.</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>data</p>
+                      </td>
+                      <td>
+                        <p>(String or module:Data)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the file contents to save.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".sleep"><span class="symbol-name">sleep</span><span class="signature"><span class="signature-params">(milliseconds)</span></span></h3>
@@ -455,7 +628,7 @@ pizza.waitFor(function() {
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on August 31, 2016.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on November 26, 2016.
       </p>
     </div>
   </footer>

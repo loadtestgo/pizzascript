@@ -82,7 +82,7 @@ pizza &#x3D; { };
  * b.ignoreHttpErrors();
  * b.open(&quot;mysite.com/404&quot;);
  *
- * @params {string&#x3D;|Object&#x3D;} url the URL to open, or settings to use when opening the browser
+ * @params {String&#x3D;|Object&#x3D;} url the URL to open, or settings to use when opening the browser
  * @return {module:Browser} the newly opened browser
  *
  * @see module:Browser#ignoreHttpErrors
@@ -153,6 +153,23 @@ pizza.waitFor &#x3D; function(func, waitIterationMilliseconds) {};
 pizza.openCSV &#x3D; function(filename) {};
 
 /**
+ * Save a file to the script results.
+ *
+ * When ran with the script runner, these files will be saved along side the script results
+ * and attached to the JUnit tests result.
+ *
+ * @example
+ * b.open(&quot;www.google.com&quot;);
+ * // Get response body of the main HTML request
+ * var d &#x3D; b.getResponseBody(pizza.getRequestByUrl(&quot;www.google.com&quot;)));
+ * pizza.saveFile(d);
+ *
+ * @param {String} filename the filename to save.
+ * @param {String|module:Data} data the file contents to save.
+ */
+pizza.saveFile &#x3D; function(filename, data) {};
+
+/**
  * Any pages that were loaded during the test (including the current page or pages
  * added with {@link module:Browser#newPage).
  *
@@ -166,6 +183,26 @@ pizza.openCSV &#x3D; function(filename) {};
  * @type {module:Page[]}
  */
 pizza.pages &#x3D; [];
+
+/**
+ * Gets the first request matching the given partial url
+ *
+ * @param {String|Number} pageIndexOrPartialUrl the zero based page index (ordered by when they started loading),
+ * or the partial url to match the request against.
+ * @param {String&#x3D;} partialUrl the partial url to match against if a page index is specified
+ * @return {module:HttpRequest}
+ */
+pizza.getRequestByFullUrl &#x3D; function(pageIndexOrPartialUrl, partialUrl) {};
+
+/**
+ * Gets the first request matching the given full url
+ *
+ * @param {String|Number} pageIndexOrFullUrl the zero based page index (ordered by when they started loading),
+ * or the full url to match the request against.
+ * @param {String&#x3D;} fullUrl the full url to match against if a page index is specified
+ * @return {module:HttpRequest}
+ */
+pizza.getRequestByFullUrl &#x3D; function(pageIndexOrFullUrl, fullUrl) {};
 
 /**
  * The test results that will be uploaded when the test ends.
@@ -272,7 +309,7 @@ assert.ok &#x3D; function(object) {};
  *     assert.fail(&quot;myCriticalCheck failed&quot;);
  * }
  *
- * @param {string&#x3D;} message the message to report as part of the exception
+ * @param {String&#x3D;} message the message to report as part of the exception
  * @throws Throws an assertion always
  */
 assert.fail &#x3D; function(message) {};
@@ -650,7 +687,7 @@ Browser.prototype.clearPageLoad &#x3D; function() {};
  * b.newPage(&quot;Bing Main Page&quot;);
  * b.open(&quot;bing.com&quot;);
  *
- * @param {string&#x3D;} pageName the name of the new page
+ * @param {String&#x3D;} pageName the name of the new page
  *
  * @return {module:Page} the page that was navigated to.
  */
@@ -667,7 +704,7 @@ Browser.prototype.newPage &#x3D; function(pageName) {};
  * @example
  * b.verifyText(/Hello, \w+/);
  *
- * @param {string|RegExp} text
+ * @param {String|RegExp} text
  *
  * @see module:Browser#getInnerText
  * @see module:Browser#verifyNotText
@@ -684,8 +721,8 @@ Browser.prototype.verifyText &#x3D; function(text) {};
  * @example
  * b.waitForText(&quot;#consoleLog&quot;, &quot;DISCONNECTED&quot;);
  *
- * @param {string} selector the element to wait for
- * @param {string} text the text to wait for
+ * @param {String} selector the element to wait for
+ * @param {String} text the text to wait for
  *
  * @see module:Browser#getInnerText
  * @see module:Browser#verifyText
@@ -704,7 +741,7 @@ Browser.prototype.waitForText &#x3D; function(selector, text) {};
  * @example
  * b.verifyNotText(/Error \d+:/);
  *
- * @param {string|RegExp} text The text to look for on the page
+ * @param {String|RegExp} text The text to look for on the page
  *
  * @see module:Browser#verifyText
  * @see module:Browser#getInnerText
@@ -723,7 +760,7 @@ Browser.prototype.verifyNotText &#x3D; function(text) {};
  * // Matches Goooogle
  * b.verifyTitle(/Goo+gle/);
  *
- * @param {string|RegExp} title The title to match
+ * @param {String|RegExp} title The title to match
  *
  * @see module:Browser#getTitle
  */
@@ -762,7 +799,7 @@ Browser.prototype.getTitle &#x3D; function() {};
  * @example
  * b.verifyRequest(&quot;https://loadtestgo.com&quot;);
  *
- * @param {string|RegExp} url The request URL to check for.
+ * @param {String|RegExp} url The request URL to check for.
  * @throws Throws an exception if the request is not found or has an
  * error.
  */
@@ -820,7 +857,7 @@ Browser.prototype.jq &#x3D; function(script) {};
  * var frames &#x3D; b.listFrames();
  * console.log(JSON.stringify(frames));
  *
- * @param {string&#x3D;} selector list any frames matching this selector
+ * @param {String&#x3D;} selector list any frames matching this selector
  *
  * @return {module:Frame[]} An array of frames
  *
@@ -1419,6 +1456,19 @@ Browser.prototype.setValue &#x3D; function(selector, value) {};
 Browser.prototype.getInnerHTML &#x3D; function(selector) {};
 
 /**
+ * Get the html for the given element or the entire frame if
+ * no element specified.
+ *
+ * @example
+ * var html &#x3D; b.getInnerHTML();
+ *
+ * @param {String&#x3D;} selector the element to get the HTML for
+ * @return {String} the outer HTML for the given element
+ * @throws Throws an exception if the element can not be found
+ */
+Browser.prototype.getOuterHTML &#x3D; function(selector) {};
+
+/**
  * Get the text inside the given element
  *
  * @example
@@ -1836,6 +1886,31 @@ Browser.prototype.ignoreHttpErrors &#x3D; function(ignore) {};
 Browser.prototype.screenshot &#x3D; function(format, quality) {};
 
 /**
+ * Grab the response body for the given http request.
+ *
+ * The HTTP requests can be gotten from pizza.result, see the example below.
+ *
+ * Note the HTTP request actually has to be finished before this can be called.
+ *
+ * If the item is downloading will wait until it is downloaded.
+ *
+ * @param {HttpRequest} [httpRequest] A http request that was previously made by the
+ * browser.
+ *
+ * @example
+ * b.open(&quot;www.google.com&quot;);
+ * // Get response body of the main HTML request
+ * var d &#x3D; b.getResponseBody(pizza.getRequestByUrl(&quot;www.google.com&quot;)));
+ *
+ * @returns {module:Data} the contents of the request
+ *
+ * @see module:pizza#result
+ * @see module:TestResult#pages
+ * @see module:Page#requests
+ */
+Browser.prototype.getResponseBody &#x3D; function(httpRequest) {};
+
+/**
  * List devices available for emulation
  *
  * @example
@@ -2244,6 +2319,7 @@ TestResult &#x3D; {};
 TestResult.prototype.startTime &#x3D; &quot;&quot;;
 
 /**
+ * The time spent opening the browser
  *
  * @type {number}
  */
@@ -2700,6 +2776,15 @@ CSV.prototype.value &#x3D; function(row, column) {};
 CSV.prototype.randomValue &#x3D; function(column) {};
 
 /**
+ * An array of bytes with a content type
+ */
+Data &#x3D; {};
+
+Data.prototype.bytes &#x3D; function() {};
+
+Data.prototype.type &#x3D; function() {};
+
+/**
  * Debug console for scripts.
  *
  * Can be used to debug scripts.  The debug output is displayed in the results page
@@ -2777,7 +2862,7 @@ load &#x3D; function(file) {};</code></pre>
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on August 31, 2016.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on November 26, 2016.
       </p>
     </div>
   </footer>

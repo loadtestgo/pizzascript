@@ -23,7 +23,7 @@
                                 <div id="jsdoc-content-container">
                                         <div id="jsdoc-main" role="main">
                     <header class="page-header">
-<div class="symbol-detail-labels"></div><h1><small></small><span class="symbol-name">Browser</span></h1>        <p class="source-link">Source: <a href="pizzascript.js.html#source-line-464">pizzascript.<wbr>js:464</a></p>
+<div class="symbol-detail-labels"></div><h1><small></small><span class="symbol-name">Browser</span></h1>        <p class="source-link">Source: <a href="pizzascript.js.html#source-line-501">pizzascript.<wbr>js:501</a></p>
                 <div class="symbol-description">
                         <p>Browser Automation</p>
 <h3>Element Selectors</h3><p>   Many functions here take selector strings to identify elements.  These selectors
@@ -182,10 +182,10 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#getBrowserVersion">getBrowserVersion()</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#getCookie">getCookie(name)</a></dt>
+                <dt><a href="module-Browser.html#getCookie">getCookie(url, name)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#getCookie">getCookie(url, name)</a></dt>
+                <dt><a href="module-Browser.html#getCookie">getCookie(name)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#getInnerHTML">getInnerHTML(selector)</a></dt>
@@ -194,12 +194,18 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#getInnerText">getInnerText(selector)</a></dt>
                 <dd>
                 </dd>
+                <dt><a href="module-Browser.html#getOpenDialog">getOpenDialog()</a></dt>
+                <dd>
+                </dd>
         </dl>
 </div>
 
                     <div class="summary-column">
         <dl class="dl-summary-callout">
-                <dt><a href="module-Browser.html#getOpenDialog">getOpenDialog()</a></dt>
+                <dt><a href="module-Browser.html#getOuterHTML">getOuterHTML([selector])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#getResponseBody">getResponseBody([httpRequest])</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#getTitle">getTitle()</a></dt>
@@ -318,10 +324,10 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#selectTopFrame">selectTopFrame()</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#setCookie">setCookie(name, value[, details])</a></dt>
+                <dt><a href="module-Browser.html#setAuth">setAuth(username, password)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#setAuth">setAuth(username, password)</a></dt>
+                <dt><a href="module-Browser.html#setCookie">setCookie(name, value[, details])</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#setHeader">setHeader(name, value)</a></dt>
@@ -1966,13 +1972,13 @@ main document.</p></dd>
 
     </dl>
 
-                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(url, name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
         <p>Get a cookie</p>
-<p>Given a cookie name, get details about the cookie.  The current domain is used.</p>
+<p>Given a URL and cookie name, get details about the cookie.</p>
 
     
         <section>
-        <h4>Parameter</h4>
+        <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
             <tr>
@@ -1983,6 +1989,21 @@ main document.</p></dd>
             </tr>
         </thead>
         <tbody>
+                <tr>
+        <td>
+            <p>url</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the url of the cookie</p>
+        </td>
+</tr>
+
                 <tr>
         <td>
             <p>name</p>
@@ -2032,13 +2053,13 @@ main document.</p></dd>
 
     </dl>
 
-                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(url, name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
         <p>Get a cookie</p>
-<p>Given a URL and cookie name, get details about the cookie.</p>
+<p>Given a cookie name, get details about the cookie.  The current domain is used.</p>
 
     
         <section>
-        <h4>Parameters</h4>
+        <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
             <tr>
@@ -2049,21 +2070,6 @@ main document.</p></dd>
             </tr>
         </thead>
         <tbody>
-                <tr>
-        <td>
-            <p>url</p>
-        </td>
-        <td>
-                <p>String</p>
-        </td>
-        <td>
-                <p>&nbsp;</p>
-        </td>
-        <td>
-                <p>the url of the cookie</p>
-        </td>
-</tr>
-
                 <tr>
         <td>
             <p>name</p>
@@ -2312,6 +2318,167 @@ assert.eq(&quot;it&#x27;s a dialog!&quot;, dialog.message);</code></pre>
         
             <dt>Returns</dt>
         <dd><p><code>module:DialogInfo</code>&nbsp;<p>dialog info or null if no dialog open</p></p></dd>
+
+    </dl>
+
+                <h3 id="getOuterHTML"><span class="symbol-name">getOuterHTML</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+        <p>Get the html for the given element or the entire frame if
+no element specified.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>var html &#x3D; b.getInnerHTML();</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>the element to get the HTML for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+            <dt>Returns</dt>
+        <dd><p><code>String</code>&nbsp;<p>the outer HTML for the given element</p></p></dd>
+
+    </dl>
+
+                <h3 id="getResponseBody"><span class="symbol-name">getResponseBody</span><span class="signature"><span class="signature-params">([httpRequest])</span>&nbsp;&rarr; <span class="signature-returns"> module:Data</span></span></h3>
+        <p>Grab the response body for the given http request.</p>
+<p>The HTTP requests can be gotten from pizza.result, see the example below.</p>
+<p>Note the HTTP request actually has to be finished before this can be called.</p>
+<p>If the item is downloading will wait until it is downloaded.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.open(&quot;www.google.com&quot;);
+// Get response body of the main HTML request
+var d &#x3D; b.getResponseBody(pizza.getRequestByUrl(&quot;www.google.com&quot;)));</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>httpRequest</p>
+        </td>
+        <td>
+                <p>HttpRequest</p>
+        </td>
+        <td>
+                <p>Yes</p>
+        </td>
+        <td>
+                <p>A http request that was previously made by the
+browser.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd>module:pizza#result</dd>
+        <dd>module:TestResult#pages</dd>
+        <dd><a href="module-Page.html#requests">module:Page#requests</a></dd>
+
+
+
+        
+        
+        
+        
+        
+            <dt>Returns</dt>
+        <dd><p><code>module:Data</code>&nbsp;<p>the contents of the request</p></p></dd>
 
     </dl>
 
@@ -3307,7 +3474,7 @@ console.log(JSON.stringify(frames));</code></pre>
             <p>selector</p>
         </td>
         <td>
-                <p>string</p>
+                <p>String</p>
         </td>
         <td>
                 <p>Yes</p>
@@ -3481,7 +3648,7 @@ b.open(&quot;bing.com&quot;);</code></pre>
             <p>pageName</p>
         </td>
         <td>
-                <p>string</p>
+                <p>String</p>
         </td>
         <td>
                 <p>Yes</p>
@@ -4921,6 +5088,99 @@ b.selectTopFrame();</code></pre>
 
     </dl>
 
+                <h3 id="setAuth"><span class="symbol-name">setAuth</span><span class="signature"><span class="signature-params">(username, password)</span></span></h3>
+        <p>Set the browser credentials.</p>
+<p>These will be automatically entered whenever a credentials dialog
+would normally show up.  Works with Basic Auth and all other forms
+of HTTP authentication supported by Chrome.</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Open with a page with the credentials already set
+var b &#x3D; pizza.open();
+b.setAuth(&#x27;username&#x27;, &#x27;password&#x27;);
+b.open(&quot;www.mysite.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>username</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The username</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>password</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The password</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
                 <h3 id="setCookie"><span class="symbol-name">setCookie</span><span class="signature"><span class="signature-params">(name, value[, details])</span></span></h3>
         <p>Set a cookie</p>
 <p>Set a cookie with the given name/value for the current domain.</p>
@@ -4998,99 +5258,6 @@ b.open(&quot;www.mysite.com/&quot;);</code></pre>
         </td>
         <td>
                 <p>optional extra info such as the expiry and the domain</p>
-        </td>
-</tr>
-
-        </tbody>
-</table>
-
-    </section>
-
-    
-
-    <dl class="dl-compact">
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        
-        
-        
-        
-        
-    </dl>
-
-                <h3 id="setAuth"><span class="symbol-name">setAuth</span><span class="signature"><span class="signature-params">(username, password)</span></span></h3>
-        <p>Set the browser credentials.</p>
-<p>These will be automatically entered whenever a credentials dialog
-would normally show up.  Works with Basic Auth and all other forms
-of HTTP authentication supported by Chrome.</p>
-
-        <section>
-        <h4>
-            Example
-        </h4>
-                <div>
-    <pre class="prettyprint"><code>// Open with a page with the credentials already set
-var b &#x3D; pizza.open();
-b.setAuth(&#x27;username&#x27;, &#x27;password&#x27;);
-b.open(&quot;www.mysite.com&quot;);</code></pre>
-</div>
-
-    </section>
-
-        <section>
-        <h4>Parameters</h4>
-            <table class="jsdoc-details-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Optional</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-                <tr>
-        <td>
-            <p>username</p>
-        </td>
-        <td>
-                <p>String</p>
-        </td>
-        <td>
-                <p>&nbsp;</p>
-        </td>
-        <td>
-                <p>The username</p>
-        </td>
-</tr>
-
-                <tr>
-        <td>
-            <p>password</p>
-        </td>
-        <td>
-                <p>String</p>
-        </td>
-        <td>
-                <p>&nbsp;</p>
-        </td>
-        <td>
-                <p>The password</p>
         </td>
 </tr>
 
@@ -5763,7 +5930,7 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
             <p>text</p>
         </td>
         <td>
-                <p>(string or RegExp)</p>
+                <p>(String or RegExp)</p>
         </td>
         <td>
                 <p>&nbsp;</p>
@@ -5852,7 +6019,7 @@ b.verifyRequest(/^ws{1,2}:/);</code></pre>
             <p>url</p>
         </td>
         <td>
-                <p>(string or RegExp)</p>
+                <p>(String or RegExp)</p>
         </td>
         <td>
                 <p>&nbsp;</p>
@@ -5932,7 +6099,7 @@ error.</p></dd>
             <p>text</p>
         </td>
         <td>
-                <p>(string or RegExp)</p>
+                <p>(String or RegExp)</p>
         </td>
         <td>
                 <p>&nbsp;</p>
@@ -6012,7 +6179,7 @@ b.verifyTitle(/Goo+gle/);</code></pre>
             <p>title</p>
         </td>
         <td>
-                <p>(string or RegExp)</p>
+                <p>(String or RegExp)</p>
         </td>
         <td>
                 <p>&nbsp;</p>
@@ -6242,7 +6409,7 @@ function.</p>
             <p>selector</p>
         </td>
         <td>
-                <p>string</p>
+                <p>String</p>
         </td>
         <td>
                 <p>&nbsp;</p>
@@ -6257,7 +6424,7 @@ function.</p>
             <p>text</p>
         </td>
         <td>
-                <p>string</p>
+                <p>String</p>
         </td>
         <td>
                 <p>&nbsp;</p>
@@ -6480,7 +6647,7 @@ main document.</p></dd>
                     <footer id="jsdoc-footer" class="jsdoc-footer">
                             <div id="jsdoc-footer-container">
                                     <p>
-                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on August 31, 2016.
+                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on November 26, 2016.
                                     </p>
                             </div>
                     </footer>
