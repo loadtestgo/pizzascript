@@ -52,9 +52,6 @@ public class UnknownSampleDescriptionEntry extends SampleDescriptionEntry {
 	 * 
 	 */
 	public SampleDescriptionEntry convert() {
-		if(data.length==20 && type.equals("sowt")) {
-			return new SoundSampleDescriptionEntry0(type, dataReference, data);
-		}
 		return this;
 	}
 	

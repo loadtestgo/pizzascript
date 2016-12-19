@@ -182,8 +182,6 @@ class AtomFactory {
 			atom = new MovieHeaderAtom(parent,atomIn);
 		} else if(type.equals("mdhd")) {
 			atom = new MediaHeaderAtom(parent,atomIn);
-		} else if(type.equals("smhd")) {
-			atom = new SoundMediaInformationHeaderAtom(parent,atomIn);
 		} else if(type.equals("hdlr")) {
 			atom = new HandlerReferenceAtom(parent,atomIn);
 		} else if(type.equals("vmhd")) {
@@ -202,8 +200,6 @@ class AtomFactory {
 			
 			if(parent.getParent()!=null && ((Atom)parent.getParent()).getChild(VideoMediaInformationHeaderAtom.class)!=null) {
 				atom = new VideoSampleDescriptionAtom(parent,atomIn);
-			} else if(parent.getParent()!=null && ((Atom)parent.getParent()).getChild(SoundMediaInformationHeaderAtom.class)!=null) {
-				atom = new SoundSampleDescriptionAtom(parent,atomIn);
 			} else {
 				atom = new SampleDescriptionAtom(parent,atomIn);
 			}
@@ -241,7 +237,7 @@ class AtomFactory {
 				e.printStackTrace();
 			}
 			byte[] newCopy = out.toByteArray();
-			
+
 			for(int a = 0; a<debugCopy.length; a++) {
 				if(debugCopy[a]!=newCopy[a]) {
 					ByteArrayInputStream in2 = new ByteArrayInputStream(newCopy);
@@ -259,7 +255,7 @@ class AtomFactory {
 			}
 		}
 
-		if(parentTypes.contains(type)==false) {
+		if(!parentTypes.contains(type)) {
 			System.out.println(padding+type+", "+size+", "+atom);
 		}
 		
