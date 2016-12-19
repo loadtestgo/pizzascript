@@ -19,11 +19,9 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.regexp.NativeRegExp;
 import org.pmw.tinylog.Logger;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class ChromeBrowser implements Browser {
     private ChromeWebSocket pizzaHandler;
@@ -205,6 +203,11 @@ public class ChromeBrowser implements Browser {
     public Page open(String url) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("url", Http.prependHttpToUrl(url));
+
+        if (testContext.getCaptureVideo()) {
+            startVideoCapture();
+        }
+
         return checkNavigationSuccess(pizzaHandler.sendCommand("open", params));
     }
 
@@ -995,8 +998,14 @@ public class ChromeBrowser implements Browser {
         pizzaHandler.verifyRequest(url);
     }
 
-    public void record() {
-        checkResponseForErrors(pizzaHandler.sendCommand("record"));
+    @Override
+    public void startVideoCapture() {
+        pizzaHandler.startVideoCapture();
+    }
+
+    @Override
+    public void stopVideoCapture() {
+        pizzaHandler.stopVideoCapture();
     }
 
     @Override

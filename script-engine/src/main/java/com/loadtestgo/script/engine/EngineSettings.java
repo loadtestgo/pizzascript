@@ -10,6 +10,7 @@ public class EngineSettings {
     private final Settings settings;
     private Boolean verboseLogging;
     private Boolean saveChromeLogs;
+    private Boolean captureVideo;
     private Long browserWaitConnectionTime;
 
     public EngineSettings(Settings settings) {
@@ -94,5 +95,12 @@ public class EngineSettings {
 
     public int getBrowserOpenRetryCount() {
         return settings.getInt("browser.open.retry.count", 3);
+    }
+
+    public boolean captureVideo() {
+        if (captureVideo == null) {
+            captureVideo = settings.getBoolean("capture.video", true);
+        }
+        return captureVideo;
     }
 }

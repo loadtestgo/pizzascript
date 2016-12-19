@@ -57,6 +57,9 @@ project(':util') {
     }
 }
 
+project(':mov-writer') {
+}
+
 project(':websocket') {
 }
 
@@ -65,6 +68,7 @@ project(':script-engine') {
         compile project(':script-api')
         compile project(':util')
         compile project(':websocket')
+        compile project(':mov-writer')
         compile "org.mozilla:rhino:$rhinoVersion"
         compile 'commons-io:commons-io:2.4'
         compile 'javax.servlet:javax.servlet-api:3.1.0'

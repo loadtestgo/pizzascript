@@ -13,6 +13,7 @@ pizza.main.commands = function() {
         _automationAPI = null,
         _headers = {},
         _autoDismissDialogs = false,
+        _videoCapture = false,
         _dialogInfo = null,
         _webRequestModifyCallbacks = [];
 
@@ -241,53 +242,35 @@ pizza.main.commands = function() {
         });
     };
 
-    var _record = function(id, params) {
-        var connection;
-        function setupRTCMultiConnection(stream) {
-            connection = new RTCMultiConnection('webrtc-tab-sharing');
-            connection.bandwidth.video = false;
-            connection.session = {
-                video: true,
-                oneway: true
-            };
-            connection.openSignalingChannel = openSignalingChannel;
-            connection.dontAttachStream = true;
-            connection.attachStreams.push(stream);
-            connection.open();
-        }
+    var _startVideoCapture = function(id, params) {
+        pizza.devtools.sendCommand("Page.startScreencast",
+            { format: "jpeg",
+                quality: 50,
+                everyNthFrame: 1
+            },
+            function(r1,r2) {
+                if (chrome.runtime.lastError) {
+                    sendResponse(id, { error: chrome.runtime.lastError });
+                } else {
+                    _videoCapture = true;
+                    sendResponse(id, { a: r1, b: r2});
+                }
+            });
+    };
 
-        // using websockets for signaling
-        function openSignalingChannel(config) {
-            config.channel = config.channel || this.channel;
-            var websocket = new WebSocket('wss://www.webrtc-experiment.com:8563');
-            websocket.onopen = function() {
-                websocket.push(JSON.stringify({
-                    open: true,
-                    channel: config.channel
-                }));
-                if (config.callback) config.callback(websocket);
-            };
-            websocket.onmessage = function(event) {
-                config.onmessage(JSON.parse(event.data));
-            };
-            websocket.push = websocket.send;
-            websocket.send = function(data) {
-                websocket.push(JSON.stringify({
-                    data: data,
-                    channel: config.channel
-                }));
-            };
-        }
+    var _stopVideoCapture = function(id, params) {
+        pizza.devtools.sendCommand("Page.stopScreencast", { },
+            function() {
+                _videoCapture = false;
+                sendResponse(id, { });
+            });
+    };
 
-        chrome.tabCapture.capture({
-                audio: true,
-                video: true },
-            function(stream) {
-                var src = window.URL.createObjectURL(stream);
-                console.log(src);
-                console.log(stream);
-                setupRTCMultiConnection(stream);
-                sendResponse(id, { url: src, success: true });
+    var _screencastAck = function(id, params) {
+        pizza.devtools.sendCommand("Page.screencastFrameAck",
+            { sessionId: params.sessionId },
+            function(r1,r2) {
+                console.log(r1, r2);
             });
     };
 
@@ -1786,6 +1769,15 @@ pizza.main.commands = function() {
 
         _autoDismissDialogs = false;
 
+        function stopVideo() {
+            if (_videoCapture) {
+                pizza.devtools.sendCommand("Page.stopScreencast", {},
+                    function () {
+                        _videoCapture = false;
+                    });
+            }
+        }
+
         // close all tabs & windows but the current
         function closeTabs(next) {
             var wait = pizza.waitAll();
@@ -1853,6 +1845,7 @@ pizza.main.commands = function() {
         }
 
         var operations = [
+            stopVideo,
             closeTabs,
             gotoAboutBlank,
             clearBrowsingData,
@@ -2059,8 +2052,10 @@ pizza.main.commands = function() {
     addCommand("verifyTitle", _verifyTitle);
     addCommand("getTitle", _getTitle);
 
-    addCommand("record", _record);
+    addCommand("startVideoCapture", _startVideoCapture);
+    addCommand("stopVideoCapture", _stopVideoCapture);
     addCommand("screenshot", _screenshot);
+    addCommand("screencastAck", _screencastAck);
 
     addCommand("selectFrame", _selectFrame);
     addCommand("selectFrameCss", _selectFrameCss);

@@ -108,11 +108,11 @@ import org.mozilla.javascript.regexp.NativeRegExp;
 public interface Browser {
     /**
      * Open the given URL
-     *
+     * <p>
      * Function blocks until the page is open.
-     *
+     * <p>
      * An exception is thrown if the navigation fails.
-     *
+     * <p>
      * 4xx and 5xx responses don't trigger a failure, you have to check those
      * yourself.
      *
@@ -123,9 +123,9 @@ public interface Browser {
 
     /**
      * Open the given URL
-     *
+     * <p>
      * Does not wait for the page to load.
-     *
+     * <p>
      * Normally you would call this in conjunction with waitForHttpRequests() or waitPageLoad()
      *
      * @param url the url to open
@@ -141,7 +141,7 @@ public interface Browser {
 
     /**
      * Wait for all ongoing HTTP requests to stop.
-     *
+     * <p>
      * idleTimeMS is the minimum time to wait, this function will not return
      * before then.
      *
@@ -151,7 +151,7 @@ public interface Browser {
 
     /**
      * Wait for a new page to load on current tab.
-     *
+     * <p>
      * If a page recently loaded, and that page was not waited on before (either
      * by open() or this function), then the function will just return.  If the
      * page opens in a new tab or window be sure to switch to that tab or window
@@ -161,7 +161,7 @@ public interface Browser {
 
     /**
      * Wait for a new page to load on the current tab.
-     *
+     * <p>
      * If a page is recently loaded, and that page was not waited on before (either
      * by open() or this function), then the function will just return.  If the
      * page opens in a new tab or window be sure to switch to that tab or window
@@ -174,11 +174,11 @@ public interface Browser {
     /**
      * Tells the browser to disregard any page loads that happened before this function
      * when waiting with waitPageLoad().
-     *
+     * <p>
      * Normally you should call this before calling a function that triggers a new page
      * to load.  That way when waitPageLoad() is called you know that waitPageLoad()
      * waits on the new page to load, and does not just detect some previous page load.
-     *
+     * <p>
      * Since JavaScript executing on the page can change the URL at any time, there
      * still be race conditions of course.  If you suspect this may happen or are
      * concerned that it may, then you can call the version of waitPageLoad() that
@@ -196,14 +196,14 @@ public interface Browser {
 
     /**
      * Starts a new page object.
-     *
+     * <p>
      * Newly made requests are added to this page object.
-     *
+     * <p>
      * Mostly you will only need to call this for single page apps or when a page
      * makes XHR or Ajax requests in the background in response to user interaction.
      * In these cases the page won't have any of the navigation info filled out because
      * a navigation did not occur.
-     *
+     * <p>
      * If no page navigation occurs the page load time is the total time content is
      * being downloaded.  That the time span from the first item to start download
      * until the last item is fully downloaded.
@@ -214,7 +214,7 @@ public interface Browser {
 
     /**
      * Verify the given text exists on the page.
-     *
+     * <p>
      * An exception is thrown if the text does not exist.
      *
      * @param text
@@ -223,7 +223,7 @@ public interface Browser {
 
     /**
      * Verify some text on the page matches the given regular expression.
-     *
+     * <p>
      * An exception is thrown if no text matches the regexp.
      *
      * @param regexp the regex to search for in the page text
@@ -232,7 +232,7 @@ public interface Browser {
 
     /**
      * Verify that the text of the page does not contain the given string.
-     *
+     * <p>
      * An exception is thrown if the given string exists on the page.
      *
      * @param text the text to look for on the page
@@ -241,7 +241,7 @@ public interface Browser {
 
     /**
      * Verify that the text of the page does not match the given regular expression.
-     *
+     * <p>
      * An exception is thrown if there is a match.
      *
      * @param regexp the regex to search for in the page text
@@ -250,7 +250,7 @@ public interface Browser {
 
     /**
      * Verify the page title matches the given title.
-     *
+     * <p>
      * An exception is thrown if no text matches the regexp.
      *
      * @param title the title to match
@@ -271,7 +271,7 @@ public interface Browser {
 
     /**
      * Execute the given JavaScript in the current frame.
-     *
+     * <p>
      * If there is an exception when the script is executed in the
      * browser it will be thrown here.
      *
@@ -282,18 +282,18 @@ public interface Browser {
 
     /**
      * Execute the given JavaScript jQuery expression.
-     *
+     * <p>
      * Executes on all frames in the current tab.
-     *
+     * <p>
      * If the normal automation functions fail or are limited in some way, jQuery to
      * the rescue!  jQuery selectors are typically a bit richer than the selectors
      * provided by us and since any javascript code can be executed, more complex
      * queries can be built up.
-     *
+     * <p>
      * Some examples:
-     *
-     *   b.jq("$($('button')[1]).click()")
-     *   b.jq("$('button').css('border', '2px solid red')")
+     * <p>
+     * b.jq("$($('button')[1]).click()")
+     * b.jq("$('button').css('border', '2px solid red')")
      *
      * @param script the JavaScript code to execute
      * @return returns an array of results for each frame that exists on the current tab
@@ -309,7 +309,7 @@ public interface Browser {
 
     /**
      * List the sub-frames matching the given selector.
-     *
+     * <p>
      * See selectFrame() for details on the selector.
      *
      * @param selector list any frames matching this selector
@@ -326,7 +326,7 @@ public interface Browser {
 
     /**
      * Select the given frame using a special frame selector.
-     *
+     * <p>
      * An extended/modified css syntax is used.  The :nth operator can be used to
      * select the nth element.  For example, b.selectFrame("iframe:nth(1)") will
      * select the the second iframe in the document.  Spaces are used to select
@@ -335,7 +335,7 @@ public interface Browser {
      * within an iframe.  Once a frame is selected new calls to selectFrame()
      * operate on the previously selected frame.  To switch back to the main/top
      * frame for the page call selectTopFrame().
-     *
+     * <p>
      * An exception is thrown if no frame matching the selector can be found.
      *
      * @param selector select the first frame matching this selector
@@ -346,8 +346,9 @@ public interface Browser {
     /**
      * Select the given frame using a normal CSS selector.  None of the special
      * syntax allowed by selectFrame() is used.
-     *
+     * <p>
      * An exception is thrown if no frame matching the selector can be found.
+     *
      * @param selector select the first frame matching this selector
      * @return Details about the frame selected.
      */
@@ -399,7 +400,7 @@ public interface Browser {
 
     /**
      * Set the browser credentials.
-     *
+     * <p>
      * These will be automatically entered whenever a credentials dialog
      * would normally show up.
      *
@@ -420,32 +421,32 @@ public interface Browser {
 
     /**
      * Set a cookie
-     *
+     * <p>
      * Set a cookie with the given name/value for the current domain.
      *
-     * @param name the name of the cookie to set
+     * @param name  the name of the cookie to set
      * @param value the value of the cookie to set
      */
     void setCookie(String name, String value);
 
     /**
      * Set a cookie.
-     *
+     * <p>
      * Set a cookie with the given name/value for the current domain.
-     *
+     * <p>
      * Optional info can be given such as the expiry and the url.
+     * <p>
+     * b.setCookie("a", "b", { url: "http://www.google.com" })
      *
-     *   b.setCookie("a", "b", { url: "http://www.google.com" })
-     *
-     * @param name the name of the cookie to be set, can a new name or and existing.
-     * @param value the value to assign to the cookie
+     * @param name    the name of the cookie to be set, can a new name or and existing.
+     * @param value   the value to assign to the cookie
      * @param details optional extra info such as the expiry and the domain
      */
     void setCookie(String name, String value, NativeObject details);
 
     /**
      * Get a cookie
-     *
+     * <p>
      * Given a cookie name, get details about the cookie.  The current domain is used.
      *
      * @param name the name of the cookie to get
@@ -455,10 +456,10 @@ public interface Browser {
 
     /**
      * Get a cookie
-     *
+     * <p>
      * Given a URL and cookie name, get details about the cookie.
      *
-     * @param url the url of the cookie
+     * @param url  the url of the cookie
      * @param name the name of the cookie to get
      * @return the cookie info
      */
@@ -474,14 +475,14 @@ public interface Browser {
     /**
      * Remove a given cookie from the browser
      *
-     * @param url the domain of the cookie to remove
+     * @param url  the domain of the cookie to remove
      * @param name the name of the cookie to remove
      */
     void removeCookie(String url, String name);
 
     /**
      * Click the first item matching the given selector.
-     *
+     * <p>
      * If this click() navigates to a new page, call waitPageLoad() to
      * wait for the new page to load.  If the page is opened in a new
      * tab then you need to select the new tab before waiting.
@@ -494,8 +495,8 @@ public interface Browser {
      * Click the given item at the given location, emulating all JavaScript events
      *
      * @param selector the element to click
-     * @param x the x offset within the given element to click on
-     * @param y the y offset within the given element to click on
+     * @param x        the x offset within the given element to click on
+     * @param y        the y offset within the given element to click on
      */
     void clickAt(String selector, int x, int y);
 
@@ -510,8 +511,8 @@ public interface Browser {
      * Double click the given item at the given location, emulating all JavaScript events
      *
      * @param selector the element to click
-     * @param x the x offset within the given element to click on
-     * @param y the y offset within the given element to click on
+     * @param x        the x offset within the given element to click on
+     * @param y        the y offset within the given element to click on
      */
     void doubleClickAt(String selector, int x, int y);
 
@@ -536,8 +537,8 @@ public interface Browser {
      * location, emulating all JavaScript events
      *
      * @param selector the element to hover over
-     * @param x the x offset within the given element
-     * @param y the y offset within the given element
+     * @param x        the x offset within the given element
+     * @param y        the y offset within the given element
      */
     void hoverAt(String selector, int x, int y);
 
@@ -545,11 +546,14 @@ public interface Browser {
      * Type the given text into the first item matching the given selector
      *
      * @param selector the element to type text into
-     * @param text the text to type
+     * @param text     the text to type
      */
     void type(String selector, String text);    // Overloads are needed to get the right behavior
+
     void type(String selector, Number text);    // otherwise arrays are expanded to be the argument list
+
     void type(String selector, NativeArray text);
+
     void type(String selector, Object... text); // in this function <-
 
     /**
@@ -561,15 +565,13 @@ public interface Browser {
 
     /**
      * Select the content of the given element
-     *
+     * <p>
      * Basically only useful in combination with type() as an alternative to clear().
      *
-     * @example
-     *    // Clear a textbox with id 'input1'
-     *    b.selectConnect("#input1");
-     *    b.type("#input1", Keys.Backspace);
-     *
      * @param selector the element to select
+     * @example // Clear a textbox with id 'input1'
+     * b.selectConnect("#input1");
+     * b.type("#input1", Keys.Backspace);
      */
     void selectContent(String selector);
 
@@ -584,39 +586,39 @@ public interface Browser {
      * Check/Uncheck the a checkbox matching the given selector
      *
      * @param selector the checkbox element to check on/off
-     * @param on check on(true)/off(false)
+     * @param on       check on(true)/off(false)
      */
     void check(String selector, boolean on);
 
     /**
      * Select the given item/items of a dropdown or combobox
-     *
+     * <p>
      * Select by index:
-     *   select("#toppings", {index: 1})
-     *
+     * select("#toppings", {index: 1})
+     * <p>
      * Select by value:
-     *   select("#toppings", {value: "option1"})
-     *
+     * select("#toppings", {value: "option1"})
+     * <p>
      * Select by text:
-     *   select("#toppings", {text: "Onions"})
-     *
+     * select("#toppings", {text: "Onions"})
+     * <p>
      * Select by text matching Regex:
-     *   select("#toppings", {match: ".nions"})
-     *
+     * select("#toppings", {match: ".nions"})
+     * <p>
      * Select multiple:
-     *   select("#toppings", {value: ["option1", "option2"]})
-     *   select("#toppings", {text: ["Onions", "Pepperoni"]})
-     *   select("#toppings", {match: [".nions", ".epperoni"]})
-     *   select("#toppings", {index: [2, 3})
-     *
+     * select("#toppings", {value: ["option1", "option2"]})
+     * select("#toppings", {text: ["Onions", "Pepperoni"]})
+     * select("#toppings", {match: [".nions", ".epperoni"]})
+     * select("#toppings", {index: [2, 3})
+     * <p>
      * Select multiple (but don't clear previous selection):
-     *   select("#toppings", {value: ["option1", "option2"], clear: false})
-     *   select("#toppings", {text: ["Onions", "Pepperoni"], clear: false})
-     *   select("#toppings", {match: [".nions", ".epperoni"], clear: false})
-     *   select("#toppings", {index: [2, 3], clear: false})
+     * select("#toppings", {value: ["option1", "option2"], clear: false})
+     * select("#toppings", {text: ["Onions", "Pepperoni"], clear: false})
+     * select("#toppings", {match: [".nions", ".epperoni"], clear: false})
+     * select("#toppings", {index: [2, 3], clear: false})
      *
      * @param selector the select element to select from
-     * @param value the values to select
+     * @param value    the values to select
      */
     void select(String selector, NativeObject value);
 
@@ -630,11 +632,11 @@ public interface Browser {
 
     /**
      * Set the given input form item to the given value
-     *
+     * <p>
      * Directly sets without causing any input events to be fired.
      *
      * @param selector the select element to select from
-     * @param value the values to select
+     * @param value    the values to select
      */
     void setValue(String selector, String value);
 
@@ -656,9 +658,9 @@ public interface Browser {
 
     /**
      * Get the html for the entire currently selected frame.
-     *
+     * <p>
      * By default the main frame of the page.
-
+     *
      * @return the outer HTML for the current frame.
      */
     String getOuterHTML();
@@ -673,9 +675,9 @@ public interface Browser {
 
     /**
      * Submit a form
-     *
+     * <p>
      * The selector can point to any item in the form.
-     *
+     * <p>
      * This calls .submit() on the form, if this fails you can also try click() or
      * keys() on the submit button element.
      *
@@ -699,7 +701,7 @@ public interface Browser {
 
     /**
      * Verify an element matching the given selector exists in the current frame/tab.
-     *
+     * <p>
      * An exception is thrown if the element does not exist.
      *
      * @param selector the element to verify
@@ -708,7 +710,7 @@ public interface Browser {
 
     /**
      * Verify no element matches the given selector exists in the current frame/tab.
-     *
+     * <p>
      * An exception is thrown if the element exists.
      *
      * @param selector the element to verify
@@ -717,7 +719,7 @@ public interface Browser {
 
     /**
      * Find the elements matching the given selector in the current frame.
-     *
+     * <p>
      * Does *not* throw an exception if the selector is not matched.  Instead an empty
      * array is returned.
      *
@@ -728,10 +730,10 @@ public interface Browser {
 
     /**
      * Find the elements matching the given selector in the current frame.
-     *
+     * <p>
      * Does *not* throw an exception if the selector is not matched.  Instead an empty
      * array is returned.
-     *
+     * <p>
      * Returns only visible elements.
      *
      * @param selector the elements to query
@@ -758,13 +760,13 @@ public interface Browser {
      * given text
      *
      * @param selector the element(s) to wait for
-     * @param text the text to wait for
+     * @param text     the text to wait for
      */
     void waitForText(String selector, String text);
 
     /**
      * Highlight the first element matching the selector
-     *
+     * <p>
      * Only one item at a time can be highlighted.  Selecting a second will remove the
      * highlight from the first.  Call clearHighlight() to remove the highlight.
      *
@@ -774,22 +776,22 @@ public interface Browser {
 
     /**
      * Highlight the first element matching the selector
-     *
+     * <p>
      * Only one item at a time can be highlighted.  Selecting a second will remove the
      * highlight from the first.  Call clearHighlight() to remove the highlight.
-     *
+     * <p>
      * An optional color can be specified for the highlight.
-     *
+     * <p>
      * a - The alpha component, in the [0-1] range
      * r - The red component, in the [0-255] range
      * g - The green component, in the [0-255] range
      * b - The blue component, in the [0-255] range
-     *
+     * <p>
      * E.g. for a transparent blue highlight:
-     *   highlight("button", { a: 0.2, r: 0, g: 0, b: 255 })
+     * highlight("button", { a: 0.2, r: 0, g: 0, b: 255 })
      *
      * @param selector the element to select
-     * @param color the color
+     * @param color    the color
      */
     void highlight(String selector, NativeObject color);
 
@@ -820,7 +822,7 @@ public interface Browser {
 
     /**
      * Get details about the currently open JavaScript dialog.
-     *
+     * <p>
      * Returns null if no dialog open.
      */
     Object getOpenDialog();
@@ -841,30 +843,30 @@ public interface Browser {
 
     /**
      * Select the given tab
-     *
+     * <p>
      * Some examples:
-     *
-     *   By partial URL:
-     *     {url: 'url'}
-     *
-     *   By full URL:
-     *     {url: 'url', full=true}
-     *
-     *   By regex URL:
-     *     {url: 'regex', regex=true}
-     *
-     *   By partial title:
-     *     {title: 'title'}
-     *
-     *   By full title
-     *     {title: 'title', full=true}
-     *
-     *   By regex title:
-     *     {title: 'regex', regex=true}
-     *
-     *   By Index (1st tab starts at 0):
-     *     {index: 0}
-     *
+     * <p>
+     * By partial URL:
+     * {url: 'url'}
+     * <p>
+     * By full URL:
+     * {url: 'url', full=true}
+     * <p>
+     * By regex URL:
+     * {url: 'regex', regex=true}
+     * <p>
+     * By partial title:
+     * {title: 'title'}
+     * <p>
+     * By full title
+     * {title: 'title', full=true}
+     * <p>
+     * By regex title:
+     * {title: 'regex', regex=true}
+     * <p>
+     * By Index (1st tab starts at 0):
+     * {index: 0}
+     * <p>
      * Returns info about the selected tab.
      */
     Object selectTab(NativeObject tab);
@@ -878,7 +880,7 @@ public interface Browser {
 
     /**
      * Select the main tab.
-     *
+     * <p>
      * Select the main tab, this is the first tab opened, if the first tab was closed
      * the oldest tab still around is select.
      *
@@ -895,7 +897,7 @@ public interface Browser {
 
     /**
      * Get the browser name.
-     *
+     * <p>
      * E.g. "Google Chrome".
      *
      * @return the browser name
@@ -926,7 +928,7 @@ public interface Browser {
 
     /**
      * Close the browser process.
-     *
+     * <p>
      * The browser object cannot be used after this call.
      */
     void close();
@@ -958,7 +960,9 @@ public interface Browser {
      * call to open(), waitPageLoad(), reload(), back() or forward().
      */
     void ignoreHttpErrors();
+
     void ignoreHttpErrors(boolean ignore);
+
     void ignoreHttpErrors(Integer... statusCodesToIgnore);
 
     /*
@@ -969,7 +973,9 @@ public interface Browser {
      * If on a high DPI display, the screenshot is scaled down by the devicePixelRatio.
      */
     Data screenshot();
+
     Data screenshot(String format);
+
     Data screenshot(String format, double quality);
 
     Data getResponseBody(HttpRequest httpRequest);
@@ -977,4 +983,8 @@ public interface Browser {
     void verifyRequest(NativeRegExp regExp);
 
     void verifyRequest(String url);
+
+    void startVideoCapture();
+
+    void stopVideoCapture();
 }

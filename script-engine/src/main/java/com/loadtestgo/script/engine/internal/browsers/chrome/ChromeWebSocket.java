@@ -1,7 +1,7 @@
 package com.loadtestgo.script.engine.internal.browsers.chrome;
 
+import com.bric.qt.io.JPEGMovWriter;
 import com.loadtestgo.script.api.*;
-import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.ResultsNotifier;
 import com.loadtestgo.script.engine.ScriptException;
 import com.loadtestgo.script.engine.TestContext;
@@ -15,12 +15,14 @@ import org.json.JSONObject;
 import org.mozilla.javascript.regexp.NativeRegExp;
 import org.pmw.tinylog.Logger;
 
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChromeWebSocket extends BrowserWebSocket {
     private TestResult testResult;
+    private TestContext testContext;
     private ResultsNotifier resultNotifier;
 
     // Requests that we've decided are chrome internal requests and shouldn't be logged
@@ -28,8 +30,15 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
     private Map<String, HttpRequest> ongoingRequests = new HashMap<>();
 
+    private JPEGMovWriter videoWriter;
+    private byte[] previousImage;
+    private long previousFrameTime;
+    private boolean capturingVideo;
+    private Object videoLock = new Object();
+
     public ChromeWebSocket(TestContext testContext) {
         super(testContext);
+        this.testContext = testContext;
         this.testResult = testContext.getTestResult();
         this.resultNotifier = testContext.getResultNotifier();
         this.internalRequestIds = new HashSet<>();
@@ -38,12 +47,36 @@ public class ChromeWebSocket extends BrowserWebSocket {
     public void reset() {
         this.testResult = null;
         this.resultNotifier = null;
+
+        closeVideo();
     }
 
     public void reset(TestContext testContext) {
+        this.testContext = testContext;
         this.testResult = testContext.getTestResult();
         this.resultNotifier = testContext.getResultNotifier();
         this.internalRequestIds = new HashSet<>();
+
+        closeVideo();
+    }
+
+    public void close() {
+        closeVideo();
+    }
+
+    private void closeVideo() {
+        synchronized (videoLock) {
+            capturingVideo = false;
+            if (videoWriter != null) {
+                try {
+                    writeLastFrame();
+                    videoWriter.close();
+                } catch (IOException e) {
+                    Logger.error("Unable to save video", e);
+                }
+                videoWriter = null;
+            }
+        }
     }
 
     @Override
@@ -151,6 +184,9 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 case "Console.messageRepeatCountUpdated":
                     messageRepeatCountUpdated(details);
                     break;
+                case "Page.screencastFrame":
+                    screencastFrame(details);
+                    break;
                 case "Pizza.inspectElement":
                     inspectElement(details);
                     break;
@@ -166,6 +202,65 @@ public class ChromeWebSocket extends BrowserWebSocket {
             }
 
             return true;
+        }
+    }
+
+    private void screencastFrame(JSONObject details) {
+        String data = details.getString("data");
+
+        synchronized (videoLock) {
+            if (capturingVideo) {
+                JSONObject metadata = details.getJSONObject("metadata");
+                double timestamp = metadata.getDouble("timestamp");
+
+                long frameTime = convertToMillisFromSeconds(timestamp);
+
+                Base64.Decoder decoder = Base64.getDecoder();
+
+                byte[] rawData = decoder.decode(data);
+
+                try {
+                    if (videoWriter == null) {
+                        String filePath = testContext.getVideoFilePath();
+                        File file = null;
+                        if (filePath == null) {
+                            file = new File(testContext.getOutputDirectory(), "video.mov");
+                        } else {
+                            file = new File(filePath);
+                        }
+                        Logger.info("Saving video to {}", file);
+                        videoWriter = new JPEGMovWriter(file);
+                    }
+
+                    if (previousImage != null) {
+                        int diff = (int) (frameTime - this.previousFrameTime);
+                        videoWriter.addFrame(diff, previousImage);
+                    }
+
+                    previousImage = rawData;
+                    previousFrameTime = frameTime;
+                } catch (IOException e) {
+                    Logger.error("unable to add frame to video", e);
+                }
+            }
+        }
+        int sessionId = details.getInt("sessionId");
+        sendMessage(String.format("{ \"name\": \"screencastAck\", \"id\": null, \"type\": \"pizza\"," +
+            "\"params\": {\"sessionId\": %d} }", sessionId));
+    }
+
+    private void writeLastFrame() {
+        try {
+            if (videoWriter != null && previousImage != null) {
+                long timestamp = System.currentTimeMillis();
+                int diff = (int) (timestamp - this.previousFrameTime);
+                videoWriter.addFrame(diff, previousImage);
+            }
+
+            previousImage = null;
+            previousFrameTime = 0;
+        } catch (IOException e) {
+            Logger.error("Problem writing last frame of video", e);
         }
     }
 
@@ -382,6 +477,20 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 throw new ScriptException(
                     String.format("%s: request not completed (%s)", url, request.state));
             }
+        }
+    }
+
+    public void startVideoCapture() {
+        synchronized (videoLock) {
+            capturingVideo = true;
+        }
+        sendCommand("startVideoCapture");
+    }
+
+    public void stopVideoCapture() {
+        sendCommand("stopVideoCapture");
+        synchronized (videoLock) {
+            capturingVideo = false;
         }
     }
 

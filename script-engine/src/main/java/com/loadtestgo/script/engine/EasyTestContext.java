@@ -7,8 +7,6 @@ import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
 public class EasyTestContext extends TestContext {
-    protected EngineContext engineContext;
-
     public EasyTestContext() {
         super(new UserContext(new EngineContext()));
         commonInit();
@@ -26,9 +24,8 @@ public class EasyTestContext extends TestContext {
 
     private void commonInit() {
         setBaseDirectory(Path.getCurrentWorkingDirectory());
-        this.engineContext = userContext.getEngineContext();
         try {
-            engineContext.setLocalPublicIp(Inet4Address.getLocalHost().getHostAddress());
+            getEngineContext().setLocalPublicIp(Inet4Address.getLocalHost().getHostAddress());
         } catch (UnknownHostException e) {
             Logger.info(e);
         }
@@ -38,9 +35,5 @@ public class EasyTestContext extends TestContext {
         super.cleanup();
         userContext.cleanup();
         userContext.getEngineContext().cleanup();
-    }
-
-    public EngineContext getEngineContext() {
-        return engineContext;
     }
 }

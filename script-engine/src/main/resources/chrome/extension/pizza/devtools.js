@@ -17,6 +17,8 @@ pizza.main.devtools = function() {
             if (method == 'Page.javascriptDialogOpening' ||
                 method == 'Page.javascriptDialogClosed') {
                 pizza.commands.handleEvent(method, params);
+            } else if (method == 'Page.screencastFrame') {
+                _ws.send(JSON.stringify({event: method, details: params}));
             }
         } else {
             // Network events go directly to browser

@@ -10,11 +10,8 @@ import org.apache.commons.io.IOUtils;
 import org.pmw.tinylog.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -35,6 +32,8 @@ public class TestContext {
 
     private final AtomicBoolean duringBrowserOpen = new AtomicBoolean(false);
     private long browserOpenStartTime;
+    private String videoFilePath;
+    private boolean captureVideo = true;
 
     public TestContext(UserContext userContext) {
         this.userContext = userContext;
@@ -58,6 +57,7 @@ public class TestContext {
         EngineContext engineContext = userContext.getEngineContext();
         this.testResult.setIp(engineContext.getLocalPublicIp());
         this.testResult.setBotName(engineContext.getBotName());
+        captureVideo = getEngineSettings().captureVideo();
     }
 
     public UserContext getUserContext() {
@@ -214,5 +214,21 @@ public class TestContext {
 
     public void addFile(File file) {
         this.testResult.getSavedFiles().add(new TestResultFile(file));
+    }
+
+    public void setVideoFilePath(String videoFilePath) {
+        this.videoFilePath = videoFilePath;
+    }
+
+    public String getVideoFilePath() {
+        return videoFilePath;
+    }
+
+    public void setCaptureVideo(boolean captureVideo) {
+        this.captureVideo = captureVideo;
+    }
+
+    public boolean getCaptureVideo() {
+        return captureVideo;
     }
 }

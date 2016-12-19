@@ -1959,6 +1959,56 @@ Browser.prototype.listNetworkConditions = function() {};
 Browser.prototype.emulateNetworkCondition = function(name) {};
 
 /**
+ * Start a video capture.
+ *
+ * Starts a video capture if one is not already started.  A video capture will
+ * normally be started as soon as Browser.protoype.open() is called.
+ *
+ * Can be used to resume a stopped video recording.
+ *
+ * @see module:Browser#stopVideoCapture
+ * @see module:Browser#open
+ */
+Browser.prototype.startVideoCapture = function() {};
+
+/**
+ * Stops a video capture.
+ *
+ * Stop an ongoing video capture.
+ *
+ * @see module:Browser#startVideoCapture
+ */
+Browser.prototype.stopVideoCapture = function() {};
+
+/**
+ * Emulate the given network condition.
+ *
+ * @param {String|Object} name The network condition to emulate.  Set to {} to
+ * disable network condition emulation.
+ *
+ * @example
+ * // Open "bbc.com" emulating 3G latency and bandwidth constraints
+ * b = pizza.open();
+ * b.emulateNetworkCondition("Regular 3G");
+ * b.open("bbc.com");
+ *
+ * @example
+ * // Open "bbc.com" emulating a network latency of 50 milliseconds
+ * b = pizza.open();
+ * b.emulateNetworkCondition({latency: 50});
+ * b.open("bbc.com");
+ *
+ * @example
+ * // Disable a previously set network condition
+ * b.emulateNetworkCondition({});
+ * b.open("bbc.com");
+ *
+ * @see module:Browser#listNetworkConditions
+ * @see module:Browser#emulateDevice
+ */
+Browser.prototype.stopVideoCapture = function(name) {};
+
+/**
  * Close the browser process.
  *
  * The browser object cannot be used after this call.
