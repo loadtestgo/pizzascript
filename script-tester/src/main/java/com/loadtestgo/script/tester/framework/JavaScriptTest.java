@@ -36,6 +36,8 @@ public class JavaScriptTest extends BaseTest {
 
     public TestResult runScript(String script, long timeout) {
         EasyTestContext testContext = new EasyTestContext();
+        // Don't bother capturing video, it just slows the tests down.
+        testContext.setCaptureVideo(false);
         TestResult results = testContext.getTestResult();
         JavaScriptEngine javaScriptEngine = new JavaScriptEngine();
         javaScriptEngine.init(testContext);
