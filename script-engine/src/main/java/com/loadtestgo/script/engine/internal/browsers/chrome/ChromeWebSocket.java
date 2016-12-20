@@ -1410,6 +1410,8 @@ public class ChromeWebSocket extends BrowserWebSocket {
             return Page.Error.BlockedByClient;
         case "net::ERR_NETWORK_CHANGED":
             return Page.Error.NetworkChanged;
+        case "net::ERR_INVALID_HTTP_RESPONSE":
+            return Page.Error.InvalidResponse;
         default:
             Logger.error("Unknown page load error type {}", error);
             return Page.Error.Unclassified;
