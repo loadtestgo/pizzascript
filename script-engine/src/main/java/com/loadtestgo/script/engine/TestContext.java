@@ -30,10 +30,10 @@ public class TestContext {
     protected File baseDirectory; // base directory for reading files (such as script includes, or CSV files)
     protected File outputDirectory;
 
-    private final AtomicBoolean duringBrowserOpen = new AtomicBoolean(false);
-    private long browserOpenStartTime;
-    private String videoFilePath;
-    private boolean captureVideo = true;
+    protected final AtomicBoolean duringBrowserOpen = new AtomicBoolean(false);
+    protected long browserOpenStartTime;
+    protected String videoFilePath;
+    protected boolean captureVideo = true;
 
     public TestContext(UserContext userContext) {
         this.userContext = userContext;
@@ -230,5 +230,9 @@ public class TestContext {
 
     public boolean getCaptureVideo() {
         return captureVideo;
+    }
+
+    public String getTestName() {
+        return testResult.getTestName();
     }
 }

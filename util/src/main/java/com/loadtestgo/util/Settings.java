@@ -4,6 +4,7 @@ import com.loadtestgo.util.log.CustomLogger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Load a settings.ini from the current directory.
@@ -23,7 +24,7 @@ import java.util.Map;
  * }
  */
 public class Settings {
-    private Map<String, String> settings = new HashMap<>();
+    private Map<String, String> settings = new ConcurrentHashMap<>();
 
     public String getString(String key) {
         return settings.get(key);
@@ -104,11 +105,19 @@ public class Settings {
         settings.put(key, value);
     }
 
+    public void set(String key, boolean value) {
+        settings.put(key, value ? "true" : "false");
+    }
+
     public void putAll(Settings overrideSettings) {
         settings.putAll(overrideSettings.settings);
     }
 
     public int count() {
         return settings.size();
+    }
+
+    public boolean has(String setting) {
+        return settings.containsKey(setting);
     }
 }

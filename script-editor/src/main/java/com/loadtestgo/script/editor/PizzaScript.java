@@ -127,7 +127,10 @@ public class PizzaScript {
 
         // Make sure the settings are loaded from the current directory
         // before before a Swing GUI dialog changes it
-        IniFile.loadSettings();
+        Settings settings = IniFile.loadSettings();
+        if (!settings.has(EngineSettings.CAPTURE_VIDEO)) {
+            settings.set(EngineSettings.CAPTURE_VIDEO, false);
+        }
 
         if (guiMode) {
             if (Os.isMac()) {

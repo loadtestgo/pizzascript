@@ -76,7 +76,7 @@ public class Worker {
 
     private boolean processTest(UserContext userContext, RunnerTest test) {
         boolean success;
-        TestContext testContext = new TestContext(userContext);
+        TestContext testContext = new TestContext(userContext, test.getName());
         testContext.setBaseDirectory(Path.getParentDirectory(test.getFile()));
         try {
             success = processTest(testContext, test);

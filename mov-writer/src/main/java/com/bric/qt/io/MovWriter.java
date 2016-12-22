@@ -53,7 +53,7 @@ import com.bric.io.MeasuredOutputStream;
  *
  */
 public abstract class MovWriter {
-	
+
 	/** This is used to indicate that a frame requested an unacceptable duration, such as 0 or -1. */
 	public static class InvalidDurationException extends IllegalArgumentException {
 		public InvalidDurationException(String msg) {
@@ -202,7 +202,7 @@ public abstract class MovWriter {
 	
 	/** The file we're writing to. */
 	File dest;
-	
+
 	/** Whether close() has been called yet. */
 	private boolean closed = false;
 	
@@ -289,6 +289,10 @@ public abstract class MovWriter {
 		} finally {
 			raf.close();
 		}
+	}
+
+	public File getFile() {
+		return dest;
 	}
 
 	/** Adds an image to this animation.

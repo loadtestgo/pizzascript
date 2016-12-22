@@ -71,6 +71,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 try {
                     writeLastFrame();
                     videoWriter.close();
+                    testContext.addFile(videoWriter.getFile().getAbsoluteFile());
                 } catch (IOException e) {
                     Logger.error("Unable to save video", e);
                 }
@@ -224,7 +225,11 @@ public class ChromeWebSocket extends BrowserWebSocket {
                         String filePath = testContext.getVideoFilePath();
                         File file = null;
                         if (filePath == null) {
-                            file = new File(testContext.getOutputDirectory(), "video.mov");
+                            String baseName = testContext.getTestName();
+                            if (baseName == null) {
+                                baseName = "video";
+                            }
+                            file = new File(testContext.getOutputDirectory(), baseName + ".mov");
                         } else {
                             file = new File(filePath);
                         }

@@ -7,6 +7,8 @@ import org.pmw.tinylog.Logger;
 import java.io.File;
 
 public class EngineSettings {
+    public static final String CAPTURE_VIDEO = "capture.video";
+
     private final Settings settings;
     private Boolean verboseLogging;
     private Boolean saveChromeLogs;
@@ -99,7 +101,7 @@ public class EngineSettings {
 
     public boolean captureVideo() {
         if (captureVideo == null) {
-            captureVideo = settings.getBoolean("capture.video", true);
+            captureVideo = settings.getBoolean(CAPTURE_VIDEO, true);
         }
         return captureVideo;
     }
