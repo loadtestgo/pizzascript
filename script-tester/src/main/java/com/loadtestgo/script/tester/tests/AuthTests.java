@@ -3,6 +3,8 @@ package com.loadtestgo.script.tester.tests;
 import com.loadtestgo.script.api.ErrorType;
 import com.loadtestgo.script.api.HttpRequest;
 import com.loadtestgo.script.api.TestResult;
+import com.loadtestgo.script.engine.EngineSettings;
+import com.loadtestgo.script.engine.TestContext;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
 import com.loadtestgo.util.Os;
 import org.junit.Test;
@@ -53,8 +55,16 @@ public class AuthTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open();\n" +
             "b.setAuth('username', 'password');\n" +
-            "b.open('%s');\n",
+            "b.open('%s');" +
+            "b.waitForHttpRequests();\n",
             getTestUrl("auth/reject"));
+
+
+        TestContext testContext = newTestContext();
+
+        // Add verbose logging just for this test to help debug failures,
+        // this test sometimes fails during CI on Debian, but doesn't locally!
+        testContext.getEngineSettings().setVerboseLogging(true);
 
         TestResult result = runScript(script, 5000);
 

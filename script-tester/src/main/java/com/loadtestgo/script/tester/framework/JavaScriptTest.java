@@ -4,6 +4,7 @@ import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.engine.EasyTestContext;
 import com.loadtestgo.script.engine.JavaScriptEngine;
 import com.loadtestgo.script.engine.ScriptException;
+import com.loadtestgo.script.engine.TestContext;
 import com.loadtestgo.util.Settings;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,9 +36,11 @@ public class JavaScriptTest extends BaseTest {
     }
 
     public TestResult runScript(String script, long timeout) {
-        EasyTestContext testContext = new EasyTestContext();
-        // Don't bother capturing video, it just slows the tests down.
-        testContext.setCaptureVideo(false);
+        TestContext testContext = newTestContext();
+        return runScript(testContext, script, timeout);
+    }
+
+    public TestResult runScript(TestContext testContext, String script, long timeout) {
         TestResult results = testContext.getTestResult();
         JavaScriptEngine javaScriptEngine = new JavaScriptEngine();
         javaScriptEngine.init(testContext);
@@ -49,5 +52,12 @@ public class JavaScriptTest extends BaseTest {
             javaScriptEngine.finish();
         }
         return results;
+    }
+
+    public TestContext newTestContext() {
+        EasyTestContext testContext = new EasyTestContext();
+        // Don't bother capturing video, it just slows the tests down.
+        testContext.setCaptureVideo(false);
+        return testContext;
     }
 }
