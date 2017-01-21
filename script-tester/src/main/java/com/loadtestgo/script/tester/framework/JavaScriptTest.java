@@ -36,8 +36,7 @@ public class JavaScriptTest extends BaseTest {
     }
 
     public TestResult runScript(String script, long timeout) {
-        TestContext testContext = newTestContext();
-        return runScript(testContext, script, timeout);
+        return runScript(newTestContext(), script, timeout);
     }
 
     public TestResult runScript(TestContext testContext, String script, long timeout) {
@@ -56,8 +55,13 @@ public class JavaScriptTest extends BaseTest {
 
     public TestContext newTestContext() {
         EasyTestContext testContext = new EasyTestContext();
+
         // Don't bother capturing video, it just slows the tests down.
         testContext.setCaptureVideo(false);
+
+        // Add verbose logging to help debug failures
+        testContext.getEngineSettings().setVerboseLogging(true);
+
         return testContext;
     }
 }

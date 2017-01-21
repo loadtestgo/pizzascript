@@ -59,13 +59,6 @@ public class AuthTests extends JavaScriptTest {
             "b.waitForHttpRequests();\n",
             getTestUrl("auth/reject"));
 
-
-        TestContext testContext = newTestContext();
-
-        // Add verbose logging just for this test to help debug failures,
-        // this test sometimes fails during CI on Debian, but doesn't locally!
-        testContext.getEngineSettings().setVerboseLogging(true);
-
         TestResult result = runScript(script, 5000);
 
         assertOnePage(result);
