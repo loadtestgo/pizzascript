@@ -16,7 +16,9 @@ jdk:
     - oraclejdk8
 
 notifications:
-    email: false
+    email:
+        recipients:
+            - watsonmw@gmail.com
 
 script:
     - gradle check
