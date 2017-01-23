@@ -22,9 +22,10 @@ It includes:
 - Wait on page load, HTTP traffic, elements to be visible
 - Many useful CSS selector extensions (e.g. "a:contains(Click me!)" selects a link with the
   text "Click me!")
-- Take screenshots
+- Take screenshots / Record video of page load
 - Block/redirect certain URLs (e.g. block 3rd party beacon URLs)
 - Modify request headers
+- HTTP auth (Basic/Digest/NTLM)
 - Emulate Mobile and Tablet devices
 - Emulate network conditions (e.g. 3G/4G/Offline)
 - Record WebSocket request/responses
