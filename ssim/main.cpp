@@ -44,11 +44,11 @@ static void free_yuv_buffer(YV12_BUFFER_CONFIG* buffer) {
     free(buffer->v_buffer); buffer->v_buffer = 0;
 }
 
-static double process_file(YV12_BUFFER_CONFIG* dest, unsigned char* raw2, int width, int height, int depth) {
+static double process_file(SSIM_CONTEXT* context, YV12_BUFFER_CONFIG* dest, unsigned char* raw2, int width, int height, int depth) {
     YV12_BUFFER_CONFIG src = convert(raw2, width, height, depth);
 
     double weight;
-    double p = vp8_calc_ssim(&src, dest, 1, &weight);
+    double p = ssim_calc(context, &src, dest);
 
     free_yuv_buffer(&src);
 
@@ -150,6 +150,8 @@ int main(int argc, char** argv) {
 
             unsigned char* buffer = nullptr;
 
+            SSIM_CONTEXT* ssimContext = ssim_init(4096,4096);
+
             ml_uint64 bufferSize = sampleSize[numSamples - 1];
 
             buffer = new unsigned char[bufferSize];
@@ -170,7 +172,7 @@ int main(int argc, char** argv) {
                 }
                 buffer = read_file(context, offsets[k], size, buffer);
                 unsigned char* raw2 = stbi_load_from_memory(buffer, size, &w2, &h2, &c2, STBI_ycbcr);
-                double ssim = process_file(&dest, raw2, w1, h1, c1);
+                double ssim = process_file(ssimContext, &dest, raw2, w1, h1, c1);
                 if (k == 0) {
                     firstValue = ssim;
                 }
@@ -179,13 +181,15 @@ int main(int argc, char** argv) {
                 stbi_image_free(raw2);
             }
 
+            clock_t end = clock();
+
             delete buffer;
 
             stbi_image_free(raw1);
 
-            clock_t end = clock();
+            ssim_destroy(ssimContext);
 
-            printf("Processing time: %lu ms\n", (end - start)/ 1000);
+            printf("Processing time: %lu ms\n", (end - start) / 1000);
         } else {
             printf("File contains no mjpeg video data.\n");
         }

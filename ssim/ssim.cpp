@@ -1,4 +1,7 @@
 /*
+ * PizzaScript SSIM for browser filmstrips.  Adapted from a version
+ * include with VP8 that takes color components into account.
+ *
  *  Copyright (c) 2010 The VP8 project authors. All Rights Reserved.
  *
  *  Use of this source code is governed by a BSD-style license
@@ -11,33 +14,40 @@
 #include <math.h>
 #include "ssim.h"
 
+// Constants in the SSIM index formula defualt value: K = [0.01 0.03]
+// C1 = (K(1)*L)^2  where L is the dynamic range
+// C2 = (K(2)*L)^2
 #define C1 (float)(64 * 64 * 0.01*255*0.01*255)
 #define C2 (float)(64 * 64 * 0.03*255*0.03*255)
 
-static int width_y;
-static int height_y;
-static int width_uv;
-static int lumimask;
-static int luminance;
-static double plane_summed_weights = 0;
+SSIM_CONTEXT* ssim_init(int maxWidth, int maxHeight) {
+    SSIM_CONTEXT* context = new SSIM_CONTEXT();
+    context->width_uv = 0;
+    context->width_y = 0;
+    context->height_y = 0;
 
-static short img12_sum_block[8*4096*4096*2] ;
+    int k = 8;
+    int rows = k + 1;
 
-static short img1_sum[8*4096*2];
-static short img2_sum[8*4096*2];
-static int   img1_sq_sum[8*4096*2];
-static int   img2_sq_sum[8*4096*2];
-static int   img12_mul_sum[8*4096*2];
+    context->img1_sum = new short[rows*maxWidth];
+    context->img2_sum = new short[rows*maxWidth];
+    context->img1_sq_sum = new int[rows*maxWidth];
+    context->img2_sq_sum = new int[rows*maxWidth];
+    context->img12_mul_sum = new int[rows*maxWidth];
 
+    return context;
+}
 
-double vp8_similarity
-(
-    int mu_x,
-    int mu_y,
-    int pre_mu_x2,
-    int pre_mu_y2,
-    int pre_mu_xy2
-)
+void ssim_destroy(SSIM_CONTEXT* context) {
+    delete [] context->img1_sum; context->img1_sum = 0;
+    delete [] context->img2_sum; context->img2_sum = 0;
+    delete [] context->img1_sq_sum; context->img1_sq_sum = 0;
+    delete [] context->img2_sq_sum; context->img2_sq_sum = 0;
+    delete [] context->img12_mul_sum; context->img12_mul_sum = 0;
+    delete context;
+}
+
+static double vp8_similarity(int mu_x, int mu_y, int pre_mu_x2, int pre_mu_y2,int pre_mu_xy2)
 {
     int mu_x2, mu_y2, mu_xy, theta_x2, theta_y2, theta_xy;
 
@@ -52,15 +62,8 @@ double vp8_similarity
     return (2 * mu_xy + C1) * (2 * theta_xy + C2) / ((mu_x2 + mu_y2 + C1) * (theta_x2 + theta_y2 + C2));
 }
 
-double vp8_ssim
-(
-    const unsigned char *img1,
-    const unsigned char *img2,
-    int stride_img1,
-    int stride_img2,
-    int width,
-    int height
-)
+double vp8_ssim(SSIM_CONTEXT* context, const unsigned char *img1, const unsigned char *img2,
+    int stride_img1, int stride_img2, int width, int height)
 {
     int x, y, x2, y2, img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block, temp;
 
@@ -74,27 +77,23 @@ double vp8_ssim
 
     plane_quality = 0;
 
-    if (lumimask)
-        plane_summed_weights = 0.0f;
-    else
-        plane_summed_weights = (height - 7) * (width - 7);
+    double plane_summed_weights = (height - 7) * (width - 7);
 
     //some prologue for the main loop
     temp = 8 * width;
 
-    img1_sum_ptr1      = img1_sum + temp;
-    img2_sum_ptr1      = img2_sum + temp;
-    img1_sq_sum_ptr1   = img1_sq_sum + temp;
-    img2_sq_sum_ptr1   = img2_sq_sum + temp;
-    img12_mul_sum_ptr1 = img12_mul_sum + temp;
+    img1_sum_ptr1      = context->img1_sum + temp;
+    img2_sum_ptr1      = context->img2_sum + temp;
+    img1_sq_sum_ptr1   = context->img1_sq_sum + temp;
+    img2_sq_sum_ptr1   = context->img2_sq_sum + temp;
+    img12_mul_sum_ptr1 = context->img12_mul_sum + temp;
 
-    for (x = 0; x < width; x++)
-    {
-        img1_sum[x]      = img1[x];
-        img2_sum[x]      = img2[x];
-        img1_sq_sum[x]   = img1[x] * img1[x];
-        img2_sq_sum[x]   = img2[x] * img2[x];
-        img12_mul_sum[x] = img1[x] * img2[x];
+    for (x = 0; x < width; x++) {
+        context->img1_sum[x]      = img1[x];
+        context->img2_sum[x]      = img2[x];
+        context->img1_sq_sum[x]   = img1[x] * img1[x];
+        context->img2_sq_sum[x]   = img2[x] * img2[x];
+        context->img12_mul_sum[x] = img1[x] * img2[x];
 
         img1_sum_ptr1[x]      = 0;
         img2_sum_ptr1[x]      = 0;
@@ -104,29 +103,27 @@ double vp8_ssim
     }
 
     //the main loop
-    for (y = 1; y < height; y++)
-    {
+    for (y = 1; y < height; y++) {
         img1 += stride_img1;
         img2 += stride_img2;
 
         temp = (y - 1) % 9 * width;
 
-        img1_sum_ptr1      = img1_sum + temp;
-        img2_sum_ptr1      = img2_sum + temp;
-        img1_sq_sum_ptr1   = img1_sq_sum + temp;
-        img2_sq_sum_ptr1   = img2_sq_sum + temp;
-        img12_mul_sum_ptr1 = img12_mul_sum + temp;
+        img1_sum_ptr1      = context->img1_sum + temp;
+        img2_sum_ptr1      = context->img2_sum + temp;
+        img1_sq_sum_ptr1   = context->img1_sq_sum + temp;
+        img2_sq_sum_ptr1   = context->img2_sq_sum + temp;
+        img12_mul_sum_ptr1 = context->img12_mul_sum + temp;
 
         temp = y % 9 * width;
 
-        img1_sum_ptr2      = img1_sum + temp;
-        img2_sum_ptr2      = img2_sum + temp;
-        img1_sq_sum_ptr2   = img1_sq_sum + temp;
-        img2_sq_sum_ptr2   = img2_sq_sum + temp;
-        img12_mul_sum_ptr2 = img12_mul_sum + temp;
+        img1_sum_ptr2      = context->img1_sum + temp;
+        img2_sum_ptr2      = context->img2_sum + temp;
+        img1_sq_sum_ptr2   = context->img1_sq_sum + temp;
+        img2_sq_sum_ptr2   = context->img2_sq_sum + temp;
+        img12_mul_sum_ptr2 = context->img12_mul_sum + temp;
 
-        for (x = 0; x < width; x++)
-        {
+        for (x = 0; x < width; x++) {
             img1_sum_ptr2[x]      = img1_sum_ptr1[x] + img1[x];
             img2_sum_ptr2[x]      = img2_sum_ptr1[x] + img2[x];
             img1_sq_sum_ptr2[x]   = img1_sq_sum_ptr1[x] + img1[x] * img1[x];
@@ -134,19 +131,17 @@ double vp8_ssim
             img12_mul_sum_ptr2[x] = img12_mul_sum_ptr1[x] + img1[x] * img2[x];
         }
 
-        if (y > 6)
-        {
+        if (y > 6) {
             //calculate the sum of the last 8 lines by subtracting the total sum of 8 lines back from the present sum
             temp = (y + 1) % 9 * width;
 
-            img1_sum_ptr1      = img1_sum + temp;
-            img2_sum_ptr1      = img2_sum + temp;
-            img1_sq_sum_ptr1   = img1_sq_sum + temp;
-            img2_sq_sum_ptr1   = img2_sq_sum + temp;
-            img12_mul_sum_ptr1 = img12_mul_sum + temp;
+            img1_sum_ptr1      = context->img1_sum + temp;
+            img2_sum_ptr1      = context->img2_sum + temp;
+            img1_sq_sum_ptr1   = context->img1_sq_sum + temp;
+            img2_sq_sum_ptr1   = context->img2_sq_sum + temp;
+            img12_mul_sum_ptr1 = context->img12_mul_sum + temp;
 
-            for (x = 0; x < width; x++)
-            {
+            for (x = 0; x < width; x++) {
                 img1_sum_ptr1[x]      = img1_sum_ptr2[x] - img1_sum_ptr1[x];
                 img2_sum_ptr1[x]      = img2_sum_ptr2[x] - img2_sum_ptr1[x];
                 img1_sq_sum_ptr1[x]   = img1_sq_sum_ptr2[x] - img1_sq_sum_ptr1[x];
@@ -164,8 +159,7 @@ double vp8_ssim
             img12_mul_block = 0;
 
             //prologue, and calculation of simularity measure from the first 8 column sums
-            for (x = 0; x < 8; x++)
-            {
+            for (x = 0; x < 8; x++) {
                 img1_block      += img1_sum_ptr1[x];
                 img2_block      += img2_sum_ptr1[x];
                 img1_sq_block   += img1_sq_sum_ptr1[x];
@@ -173,124 +167,46 @@ double vp8_ssim
                 img12_mul_block += img12_mul_sum_ptr1[x];
             }
 
-            if (lumimask)
-            {
-                y2 = y - 7;
-                x2 = 0;
-
-                if (luminance)
-                {
-                    mean = (img2_block + img1_block) / 128.0f;
-
-                    if (!(y2 % 2 || x2 % 2))
-                        *(img12_sum_block + y2 / 2 * width_uv + x2 / 2) = img2_block + img1_block;
-                }
-                else
-                {
-                    mean = *(img12_sum_block + y2 * width_uv + x2);
-                    mean += *(img12_sum_block + y2 * width_uv + x2 + 4);
-                    mean += *(img12_sum_block + (y2 + 4) * width_uv + x2);
-                    mean += *(img12_sum_block + (y2 + 4) * width_uv + x2 + 4);
-
-                    mean /= 512.0f;
-                }
-
-                weight = mean < 40 ? 0.0f :
-                         (mean < 50 ? (mean - 40.0f) / 10.0f : 1.0f);
-                plane_summed_weights += weight;
-
-                plane_quality += weight * vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
-            }
-            else
-                plane_quality += vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
+            plane_quality += vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
 
             //and for the rest
-            for (x = 8; x < width; x++)
-            {
+            for (x = 8; x < width; x++) {
                 img1_block      = img1_block + img1_sum_ptr1[x] - img1_sum_ptr1[x - 8];
                 img2_block      = img2_block + img2_sum_ptr1[x] - img2_sum_ptr1[x - 8];
                 img1_sq_block   = img1_sq_block + img1_sq_sum_ptr1[x] - img1_sq_sum_ptr1[x - 8];
                 img2_sq_block   = img2_sq_block + img2_sq_sum_ptr1[x] - img2_sq_sum_ptr1[x - 8];
                 img12_mul_block = img12_mul_block + img12_mul_sum_ptr1[x] - img12_mul_sum_ptr1[x - 8];
 
-                if (lumimask)
-                {
-                    y2 = y - 7;
-                    x2 = x - 7;
-
-                    if (luminance)
-                    {
-                        mean = (img2_block + img1_block) / 128.0f;
-
-                        if (!(y2 % 2 || x2 % 2))
-                            *(img12_sum_block + y2 / 2 * width_uv + x2 / 2) = img2_block + img1_block;
-                    }
-                    else
-                    {
-                        mean = *(img12_sum_block + y2 * width_uv + x2);
-                        mean += *(img12_sum_block + y2 * width_uv + x2 + 4);
-                        mean += *(img12_sum_block + (y2 + 4) * width_uv + x2);
-                        mean += *(img12_sum_block + (y2 + 4) * width_uv + x2 + 4);
-
-                        mean /= 512.0f;
-                    }
-
-                    weight = mean < 40 ? 0.0f :
-                             (mean < 50 ? (mean - 40.0f) / 10.0f : 1.0f);
-                    plane_summed_weights += weight;
-
-                    plane_quality += weight * vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
-                }
-                else
-                    plane_quality += vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
+                plane_quality += vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
             }
         }
     }
 
-    if (plane_summed_weights == 0)
-        return 1.0f;
-    else
-        return plane_quality / plane_summed_weights;
+    return plane_quality / plane_summed_weights;
 }
 
-double vp8_calc_ssim(
-    YV12_BUFFER_CONFIG *source,
-    YV12_BUFFER_CONFIG *dest,
-    int lumamask,
-    double *weight
-)
+double ssim_calc(SSIM_CONTEXT* context, YV12_BUFFER_CONFIG *source, YV12_BUFFER_CONFIG *dest)
 {
     double a, b, c;
-    double frame_weight;
     double ssimv;
 
-    width_y = source->y_width;
-    height_y = source->y_height;
-    width_uv = source->uv_width;
+    context->width_y = source->y_width;
+    context->height_y = source->y_height;
+    context->width_uv = source->uv_width;
 
-    lumimask = lumamask;
-
-    luminance = 1;
-    a = vp8_ssim(source->y_buffer, dest->y_buffer,
+    a = vp8_ssim(context, source->y_buffer, dest->y_buffer,
                  source->y_stride, dest->y_stride, source->y_width, source->y_height);
-    luminance = 0;
 
-    frame_weight = plane_summed_weights / ((width_y - 7) * (height_y - 7));
+    // In the orginal VP8 source, the luminance informed how much attention to pay
+    // to the color, which makes sense for image compression tests.  For browser
+    // screenshots I don't think this extra computation is worth it.
+    b = vp8_ssim(context, source->u_buffer, dest->u_buffer,
+                 source->uv_stride, dest->uv_stride, source->uv_width, source->uv_height);
 
-    if (frame_weight == 0)
-        a = b = c = 1.0f;
-    else
-    {
-        b = vp8_ssim(source->u_buffer, dest->u_buffer,
-                     source->uv_stride, dest->uv_stride, source->uv_width, source->uv_height);
+    c = vp8_ssim(context, source->v_buffer, dest->v_buffer,
+                 source->uv_stride, dest->uv_stride, source->uv_width, source->uv_height);
 
-        c = vp8_ssim(source->v_buffer, dest->v_buffer,
-                     source->uv_stride, dest->uv_stride, source->uv_width, source->uv_height);
-    }
-
-    ssimv = a * .8 + .1 * (b + c);
-
-    *weight = frame_weight;
+    ssimv = a * .6 + .2 * (b + c);
 
     return ssimv;
 }
