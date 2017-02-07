@@ -197,6 +197,16 @@ public class TestResult {
         return savedFiles;
     }
 
+    @JsonIgnore
+    public Integer getBrowserVersionMajor() {
+        String[] versions = browserVersion.split("\\.");
+        if (versions.length > 0) {
+            return Integer.parseInt(versions[0]);
+        } else {
+            return null;
+        }
+    }
+
     static public class OutputMessage {
         public long time;
         public String msg;

@@ -509,7 +509,7 @@ public class ChromeBrowser implements Browser {
     public void waitForHttpRequests(long idleTimeMS) {
         long startTime = System.currentTimeMillis();
         while (true) {
-            long now =  System.currentTimeMillis();
+            long now = System.currentTimeMillis();
             if (!pizzaHandler.isOpen()) {
                 throw new ScriptException(ErrorType.Internal, "Browser closed");
             }
