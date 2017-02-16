@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "stb/stb_image.h"
+#include "stb/stb_image_write.h"
 #include "ssim.h"
 #include "mjpegreader.h"
 
@@ -22,9 +23,9 @@ static YV12_BUFFER_CONFIG convert(unsigned char* raw, int width, int height, int
     src.uv_height = height;
     src.uv_width = width;
     src.uv_stride = width;
-    src.y_buffer = (unsigned char *) malloc((size_t) (height * width));
-    src.u_buffer = (unsigned char *) malloc((size_t) (height * width));
-    src.v_buffer = (unsigned char *) malloc((size_t) (height * width));
+    src.y_buffer = ML_ALLOC(unsigned char, height * width);
+    src.u_buffer = ML_ALLOC(unsigned char, height * width);
+    src.v_buffer = ML_ALLOC(unsigned char, height * width);
 
     for (int y = 0; y< height; y++) {
         unsigned char* row1 = raw + (y*width*depth);
@@ -39,9 +40,9 @@ static YV12_BUFFER_CONFIG convert(unsigned char* raw, int width, int height, int
 }
 
 static void free_yuv_buffer(YV12_BUFFER_CONFIG* buffer) {
-    free(buffer->y_buffer); buffer->y_buffer = 0;
-    free(buffer->u_buffer); buffer->u_buffer = 0;
-    free(buffer->v_buffer); buffer->v_buffer = 0;
+    ML_FREE(buffer->y_buffer);
+    ML_FREE(buffer->u_buffer);
+    ML_FREE(buffer->v_buffer);
 }
 
 static double process_file(SSIM_CONTEXT* context, YV12_BUFFER_CONFIG* dest, unsigned char* raw2, int width, int height, int depth) {
@@ -64,7 +65,7 @@ static unsigned char *read_file(QtMjpegContext *c, ml_uint64 offset, ml_uint64 s
 
     ml_uint64 pos = 0;
     while (true) {
-        ml_uint64 n = fread(buffer + pos, 1, size, c->fp);
+        ml_uint64 n = fread(buffer + pos, 1, size - pos, c->fp);
         pos += n;
         if (pos == size) {
             return buffer;
@@ -83,6 +84,9 @@ int main(int argc, char** argv) {
     }
 
     QtMjpegContext* context = qt_open_mjpeg(argv[1]);
+    if (context == NULL) {
+        return 1;
+    }
 
     QtAtom qtAtom;
 
@@ -122,14 +126,15 @@ int main(int argc, char** argv) {
             ml_uint64* sampleSize = track.sampleSize;
             QtSampleTime* sampleTimes = track.sampleTimes;
 
-            ml_uint64* offsets = new ml_uint64[numSamples];
-            ml_uint64* sizes = new ml_uint64[numSamples];
-            ml_uint64* timestamps = new ml_uint64[numSamples];
+            ml_uint64* offsets = ML_ALLOC(ml_uint64, numSamples);
+            ml_uint64* sizes = ML_ALLOC(ml_uint64, numSamples);
+            ml_uint64* timestamps = ML_ALLOC(ml_uint64, numSamples);
 
             int i = 0; int c = 0;
             for (int j = 0; j < numSamples; j++) {
                 ml_uint64 size = sampleSize[j];
-                printf("frame %d offset %llu timestamp: %d\n", j, offset, timestamp);
+
+                printf("frame %d offset %llu timestamp: %d %d\n", j, offset, timestamp, size);
 
                 offsets[j] = offset;
                 timestamps[j] = timestamp;
@@ -142,48 +147,56 @@ int main(int argc, char** argv) {
                 offset += size;
             }
 
-            int w1,w2;
-            int h1,h2;
-            int c1,c2;
+            int w1, w2;
+            int h1, h2;
+            int c1, c2;
 
             clock_t start = clock();
 
-            unsigned char* buffer = nullptr;
+            ml_uint64 size = sampleSize[numSamples - 1];
+            ml_uint64 bufferSize = size;
 
-            SSIM_CONTEXT* ssimContext = ssim_init(4096,4096);
+            unsigned char* buffer = ML_ALLOC(unsigned char, bufferSize);
 
-            ml_uint64 bufferSize = sampleSize[numSamples - 1];
+            read_file(context, offsets[numSamples-1], size, buffer);
 
-            buffer = new unsigned char[bufferSize];
-            read_file(context, offsets[numSamples-1], bufferSize, buffer);
-
-            unsigned char* raw1 = stbi_load_from_memory(buffer, bufferSize, &w1, &h1, &c1, STBI_ycbcr);
+            unsigned char* raw1 = stbi_load_from_memory(buffer, size, &w1, &h1, &c1, STBI_ycbcr);
 
             YV12_BUFFER_CONFIG dest = convert(raw1, w1, h1, c1);
+
+            SSIM_CONTEXT* ssimContext = ssim_init(ML_MAX(4096, w1), ML_MAX(4096, h1));
 
             double firstValue;
 
             for (int k = 0; k < numSamples - 1; ++k) {
-                ml_uint64 size = sampleSize[k];
+                size = sampleSize[k];
                 if (size > bufferSize) {
-                    delete buffer;
-                    buffer = new unsigned char[size];
+                    ML_FREE(buffer);
+                    buffer = ML_ALLOC(unsigned char, size);
                     bufferSize = size;
                 }
-                buffer = read_file(context, offsets[k], size, buffer);
+
+                read_file(context, offsets[k], size, buffer);
+
                 unsigned char* raw2 = stbi_load_from_memory(buffer, size, &w2, &h2, &c2, STBI_ycbcr);
-                double ssim = process_file(ssimContext, &dest, raw2, w1, h1, c1);
+
+                double ssim = process_file(ssimContext, &dest, raw2, w2, h2, c2);
+
                 if (k == 0) {
                     firstValue = ssim;
                 }
-                ssim -= firstValue;
-                printf("%llu %f\n", timestamps[k], ssim * (1/ (1-firstValue)));
+
+                printf("%llu, %f\n", timestamps[k], ssim);
                 stbi_image_free(raw2);
             }
 
             clock_t end = clock();
 
-            delete buffer;
+            ML_FREE(buffer);
+
+            ML_FREE(offsets);
+            ML_FREE(sizes);
+            ML_FREE(timestamps);
 
             stbi_image_free(raw1);
 

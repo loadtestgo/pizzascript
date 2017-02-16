@@ -130,7 +130,12 @@ static ml_uint64 qt_get64(QtMjpegContext* context) {
 }
 
 static CC4 qt_read_CC4(QtMjpegContext* context) {
-    return CC4(qt_get8(context), qt_get8(context), qt_get8(context), qt_get8(context));
+    ml_uint8 a = qt_get8(context);
+    ml_uint8 b = qt_get8(context);
+    ml_uint8 c = qt_get8(context);
+    ml_uint8 d = qt_get8(context);
+
+    return CC4(a, b, c, d);
 }
 
 static ml_uint64 qt_get_offset(QtMjpegContext* context) {
@@ -254,9 +259,9 @@ static void qt_parse_tkhd(QtMjpegContext *context, QtAtom atom) {
     ml_uint8 version = qt_get8(context);
 
     ml_uint8 flags[] = {
-            qt_get8(context),
-            qt_get8(context),
-            qt_get8(context)
+        qt_get8(context),
+        qt_get8(context),
+        qt_get8(context)
     };
 
     ml_uint32 creationTime = qt_get32(context);
@@ -289,9 +294,9 @@ static void qt_parse_hdlr(QtMjpegContext *context, QtAtom atom) {
     ml_uint8 version = qt_get8(context);
 
     ml_uint8 flags[] = {
-            qt_get8(context),
-            qt_get8(context),
-            qt_get8(context)
+        qt_get8(context),
+        qt_get8(context),
+        qt_get8(context)
     };
 
     CC4 componentType = qt_read_CC4(context);
@@ -302,7 +307,7 @@ static void qt_parse_hdlr(QtMjpegContext *context, QtAtom atom) {
 
     ml_uint8 count = qt_get8(context);
 
-    char* name = new char[count + 1];
+    char* name = ML_ALLOC(char, count + 1);
     int i = 0;
     for (; i < count; ++i) {
         name[i] = qt_get8(context);
@@ -315,9 +320,9 @@ static void qt_parse_stts(QtMjpegContext *context, QtAtom atom) {
     ml_uint8 version = qt_get8(context);
 
     ml_uint8 flags[] = {
-            qt_get8(context),
-            qt_get8(context),
-            qt_get8(context)
+        qt_get8(context),
+        qt_get8(context),
+        qt_get8(context)
     };
 
     // Number of entries
@@ -325,7 +330,7 @@ static void qt_parse_stts(QtMjpegContext *context, QtAtom atom) {
 
     ml_uint32 numEntries = qt_get32(context);
 
-    context->mjpeg.track.sampleTimes = new QtSampleTime[numEntries];
+    context->mjpeg.track.sampleTimes = ML_ALLOC(QtSampleTime, numEntries);
 
     for (int i = 0; i < numEntries; ++i) {
         ml_uint32 sampleCount = qt_get32(context);
@@ -343,9 +348,9 @@ static void qt_parse_stsd(QtMjpegContext *context, QtAtom atom) {
     ml_uint8 version = qt_get8(context);
 
     ml_uint8 flags[] = {
-            qt_get8(context),
-            qt_get8(context),
-            qt_get8(context)
+        qt_get8(context),
+        qt_get8(context),
+        qt_get8(context)
     };
 
     ml_uint32 numEntries = qt_get32(context);
@@ -434,9 +439,9 @@ static void qt_parse_stsc(QtMjpegContext *context, QtAtom atom) {
     ml_uint8 version = qt_get8(context);
 
     ml_uint8 flags[] = {
-            qt_get8(context),
-            qt_get8(context),
-            qt_get8(context)
+        qt_get8(context),
+        qt_get8(context),
+        qt_get8(context)
     };
 
     ml_uint32 numEntries = qt_get32(context);
@@ -456,9 +461,9 @@ static void qt_parse_stsz(QtMjpegContext *context, QtAtom atom) {
     ml_uint8 version = qt_get8(context);
 
     ml_uint8 flags[] = {
-            qt_get8(context),
-            qt_get8(context),
-            qt_get8(context)
+        qt_get8(context),
+        qt_get8(context),
+        qt_get8(context)
     };
 
     // A 32-bit integer specifying the sample size. If all the samples are the same size,
@@ -469,13 +474,13 @@ static void qt_parse_stsz(QtMjpegContext *context, QtAtom atom) {
     ml_uint32 numEntries = qt_get32(context);
 
     if (numEntries > 0) {
-        context->mjpeg.track.sampleSize = new ml_uint64[numEntries];
+        context->mjpeg.track.sampleSize = ML_ALLOC(ml_uint64, numEntries);
         context->mjpeg.track.numSamples = numEntries;
         for (int i = 0; i < numEntries; ++i) {
             context->mjpeg.track.sampleSize[i] = qt_get32(context);
         }
     } else {
-        context->mjpeg.track.sampleSize = new ml_uint64[1];
+        context->mjpeg.track.sampleSize = ML_ALLOC(ml_uint64, 1);
         context->mjpeg.track.sampleSize[0] = commonSampleSize;
         context->mjpeg.track.numSamples = 1;
     }
@@ -485,9 +490,9 @@ static void qt_parse_stco(QtMjpegContext *context, QtAtom atom) {
     ml_uint8 version = qt_get8(context);
 
     ml_uint8 flags[] = {
-            qt_get8(context),
-            qt_get8(context),
-            qt_get8(context)
+        qt_get8(context),
+        qt_get8(context),
+        qt_get8(context)
     };
 
     // There is one table entry for each chunk in the media. The offset contains the byte
@@ -497,7 +502,7 @@ static void qt_parse_stco(QtMjpegContext *context, QtAtom atom) {
 
     ml_uint32 numEntries = qt_get32(context);
 
-    context->mjpeg.track.chunkOffset = new ml_uint64[numEntries];
+    context->mjpeg.track.chunkOffset = ML_ALLOC(ml_uint64, numEntries);
 
     for (int i = 0; i < numEntries; ++i) {
         ml_uint32 chunkOffset = qt_get32(context);
@@ -608,15 +613,22 @@ static void qt_parse_trak(QtMjpegContext *context, QtAtom atom) {
         remain -= child.size + atom.headerSize;
     }
 
-    if (context->mjpeg.track.type == TRACK_TYPE_MJPA || context->mjpeg.track.type == TRACK_TYPE_MJPB ||
+    if (context->mjpeg.track.type == TRACK_TYPE_MJPA ||
+            context->mjpeg.track.type == TRACK_TYPE_MJPB ||
             context->mjpeg.track.type == TRACK_TYPE_JPEG) {
         context->mjpeg.video = context->mjpeg.track;
     }
 }
 
 QtMjpegContext* qt_open_mjpeg(char* file) {
-    QtMjpegContext *context = new QtMjpegContext();
-    context->fp = ml_fopen(file, "rb");
+    FILE* fp = ml_fopen(file, "rb");
+    if (fp == NULL) {
+        printf("Unable to open file: %s\n", file);
+        return NULL;
+    }
+
+    QtMjpegContext *context = ML_ALLOC_S(QtMjpegContext);
+    context->fp = fp;
     context->buffer = context->bufferStart;
     context->buflen = sizeof(context->bufferStart);
     context->eof = 0;
@@ -630,7 +642,7 @@ void qt_close_mjpeg(QtMjpegContext* context) {
         fclose(context->fp);
     }
 
-    delete context;
+    ML_FREE(context);
 }
 
 bool qt_cmp_CC4(CC4 atomType, const char *val) {

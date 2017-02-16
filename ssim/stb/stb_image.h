@@ -3605,6 +3605,7 @@ static stbi_uc *load_jpeg_image(stbi__jpeg *z, int *out_x, int *out_y, int *comp
    // resample and color-convert
    {
       int k;
+      int w;
       unsigned int i,j;
       stbi_uc *output;
       stbi_uc *coutput[4];
@@ -3634,12 +3635,18 @@ static stbi_uc *load_jpeg_image(stbi__jpeg *z, int *out_x, int *out_y, int *comp
       }
 
       // can't error after this so, this is safe
-      output = (stbi_uc *) stbi__malloc_mad3(n, z->s->img_x, z->s->img_y, 1);
+
+      w = n;
+      if (n == STBI_ycbcr) {
+          w = 3;
+      }
+
+      output = (stbi_uc *) stbi__malloc_mad3(w, z->s->img_x, z->s->img_y, 1);
       if (!output) { stbi__cleanup_jpeg(z); return stbi__errpuc("outofmem", "Out of memory"); }
 
       // now go ahead and resample
       for (j=0; j < z->s->img_y; ++j) {
-         stbi_uc *out = output + n * z->s->img_x * j;
+         stbi_uc *out = output + w * z->s->img_x * j;
          for (k=0; k < decode_n; ++k) {
             stbi__resample *r = &res_comp[k];
             int y_bot = r->ystep >= (r->vs >> 1);

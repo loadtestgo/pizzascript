@@ -4,6 +4,9 @@
 #include "stb/stb.h"
 #include "stb/stb_image.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb/stb_image_write.h"
+
 // Our own lib of common funcitons and definitions
 #define MLB_IMPLEMENTATION
 #include "mlib.h"

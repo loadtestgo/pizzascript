@@ -12,7 +12,11 @@
  */
 
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "ssim.h"
+#include "mlib.h"
 
 // Constants in the SSIM index formula defualt value: K = [0.01 0.03]
 // C1 = (K(1)*L)^2  where L is the dynamic range
@@ -21,7 +25,7 @@
 #define C2 (float)(64 * 64 * 0.03*255*0.03*255)
 
 SSIM_CONTEXT* ssim_init(int maxWidth, int maxHeight) {
-    SSIM_CONTEXT* context = new SSIM_CONTEXT();
+    SSIM_CONTEXT* context = ML_ALLOC_S(SSIM_CONTEXT);
     context->width_uv = 0;
     context->width_y = 0;
     context->height_y = 0;
@@ -29,22 +33,22 @@ SSIM_CONTEXT* ssim_init(int maxWidth, int maxHeight) {
     int k = 8;
     int rows = k + 1;
 
-    context->img1_sum = new short[rows*maxWidth];
-    context->img2_sum = new short[rows*maxWidth];
-    context->img1_sq_sum = new int[rows*maxWidth];
-    context->img2_sq_sum = new int[rows*maxWidth];
-    context->img12_mul_sum = new int[rows*maxWidth];
+    context->img1_sum = ML_ALLOC(short, rows*maxWidth);
+    context->img2_sum = ML_ALLOC(short, rows*maxWidth);
+    context->img1_sq_sum = ML_ALLOC(int, rows*maxWidth);
+    context->img2_sq_sum = ML_ALLOC(int, rows*maxWidth);
+    context->img12_mul_sum = ML_ALLOC(int, rows*maxWidth);
 
     return context;
 }
 
 void ssim_destroy(SSIM_CONTEXT* context) {
-    delete [] context->img1_sum; context->img1_sum = 0;
-    delete [] context->img2_sum; context->img2_sum = 0;
-    delete [] context->img1_sq_sum; context->img1_sq_sum = 0;
-    delete [] context->img2_sq_sum; context->img2_sq_sum = 0;
-    delete [] context->img12_mul_sum; context->img12_mul_sum = 0;
-    delete context;
+    ML_FREE(context->img1_sum);
+    ML_FREE(context->img2_sum);
+    ML_FREE(context->img1_sq_sum);
+    ML_FREE(context->img2_sq_sum);
+    ML_FREE(context->img12_mul_sum);
+    ML_FREE(context);
 }
 
 static double vp8_similarity(int mu_x, int mu_y, int pre_mu_x2, int pre_mu_y2,int pre_mu_xy2)
@@ -167,7 +171,9 @@ double vp8_ssim(SSIM_CONTEXT* context, const unsigned char *img1, const unsigned
                 img12_mul_block += img12_mul_sum_ptr1[x];
             }
 
-            plane_quality += vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
+            double plane = vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
+
+            plane_quality += plane;
 
             //and for the rest
             for (x = 8; x < width; x++) {
@@ -177,7 +183,8 @@ double vp8_ssim(SSIM_CONTEXT* context, const unsigned char *img1, const unsigned
                 img2_sq_block   = img2_sq_block + img2_sq_sum_ptr1[x] - img2_sq_sum_ptr1[x - 8];
                 img12_mul_block = img12_mul_block + img12_mul_sum_ptr1[x] - img12_mul_sum_ptr1[x - 8];
 
-                plane_quality += vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
+                plane = vp8_similarity(img1_block, img2_block, img1_sq_block, img2_sq_block, img12_mul_block);
+                plane_quality += plane;
             }
         }
     }
@@ -200,6 +207,7 @@ double ssim_calc(SSIM_CONTEXT* context, YV12_BUFFER_CONFIG *source, YV12_BUFFER_
     // In the orginal VP8 source, the luminance informed how much attention to pay
     // to the color, which makes sense for image compression tests.  For browser
     // screenshots I don't think this extra computation is worth it.
+
     b = vp8_ssim(context, source->u_buffer, dest->u_buffer,
                  source->uv_stride, dest->uv_stride, source->uv_width, source->uv_height);
 
