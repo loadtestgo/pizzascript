@@ -1,6 +1,12 @@
 machine:
     java:
         version: oraclejdk8
+    environment:
+        # Java will use a percentage of the memory available, but circle ci will
+        # cut us off after our container uses 4G or more, resulting in build that timesout.
+        JAVA_OPTS: "-Xms512m -Xmx1024m"
+        # Gradle also doesn't repect JAVA_OPTS.
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
 test:
     pre:
