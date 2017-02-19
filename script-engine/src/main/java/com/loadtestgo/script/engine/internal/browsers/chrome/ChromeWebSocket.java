@@ -305,8 +305,6 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
             request.setMethod(details.getString("method"));
 
-            setRequestStartTime(details, request);
-
             request.setStartTime((long)endTime);
 
             String requestId = details.getString("requestId");
