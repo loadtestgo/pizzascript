@@ -16,3 +16,4 @@ tmp/
 util/build/
 view-metrics/build/
 websocket/build/
+mov-writer/build/

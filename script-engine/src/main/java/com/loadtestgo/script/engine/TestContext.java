@@ -182,12 +182,12 @@ public class TestContext {
 
     public long getBrowserOpenTime() {
         synchronized (duringBrowserOpen) {
-            long sleepTime = testResult.getSetupTime();
+            long setupTime = testResult.getSetupTime();
             long currentTime = System.currentTimeMillis();
             if (duringBrowserOpen.get()) {
-                sleepTime += currentTime - browserOpenStartTime;
+                setupTime += currentTime - browserOpenStartTime;
             }
-            return sleepTime;
+            return setupTime;
         }
     }
 

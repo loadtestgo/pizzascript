@@ -75,8 +75,8 @@ public class TestResult {
         this.setupTime = setupTime;
     }
 
-    public void addSetupTime(int sleepTime) {
-        this.setupTime += sleepTime;
+    public void addSetupTime(int setupTime) {
+        this.setupTime += setupTime;
     }
 
     @JsonIgnore
