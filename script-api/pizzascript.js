@@ -319,7 +319,7 @@ assert.eq = function(o1, o2) {};
  *
  * @example
  * // Check that an input element is not set to 42
- * assert.eq(b.getValue("#input1"), "42");
+ * assert.notEqual(b.getValue("#input1"), "42");
  *
  * @throws Throws an assertion when o1 is equal o2
  */
@@ -330,7 +330,7 @@ assert.notEqual = function(o1, o2) {};
  *
  * @example
  * // Check that an input element is not set to 42
- * assert.eq(b.getValue("#input1"), "42");
+ * assert.ne(b.getValue("#input1"), "42");
  *
  * @param {Object} o1
  * @param {Object} o2
