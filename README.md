@@ -1,11 +1,16 @@
-[![Build Status](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)](https://travis-ci.org/loadtestgo/pizzascript)
+[![Travis](https://travis-ci.org/loadtestgo/pizzascript.svg?branch=master)](https://travis-ci.org/loadtestgo/pizzascript)
+[![CircleCI](https://circleci.com/gh/loadtestgo/pizzascript.svg?style=shield)](https://circleci.com/gh/loadtestgo/pizzascript)
+[![Appveyor](https://ci.appveyor.com/api/projects/status/9tykv1ta0647gu77?svg=true)](https://ci.appveyor.com/project/loadtestgo/pizzascript)
 [![License](https://img.shields.io/badge/licence-BSD--3--Clause-blue.svg)](https://github.com/loadtestgo/pizzascript/blob/master/LICENSE.BSD)
+[![Chat](https://badges.gitter.im/loadtestgo/pizzascipt.svg)](https://gitter.im/pizzascript/Lobby)
 
 #### [Homepage](http://pizzascript.org) | [API Reference](http://pizzascript.org/api) | [Examples](https://github.com/loadtestgo/pizzascript/wiki/Examples)
 
-# PizzaScript - Browser Automation & Performance Monitoring
+# PizzaScript - Browser Automation & Webpage Performance Testing
 
-PizzaScript is a JavaScript browser automation framework with built-in performance monitoring.
+PizzaScript is a JavaScript browser automation framework that records detailed webpage performance metrics.
+
+It uses the Chrome DevTools Extensions API, so no external driver is required.
 
 It includes:
 
@@ -16,16 +21,18 @@ It includes:
 
 ## Features
 
-- Inspect page load times and HTTP traffic
+- Inspect page load times and HTTP traffic.
 - Wait on page load, HTTP traffic, elements to be visible
-- Many useful CSS selector extensions (e.g. "a:contains(Click me!)" selects a link with the
-  text "Click me!")
-- Take screenshots
 - Block/redirect certain URLs (e.g. block 3rd party beacon URLs)
 - Modify request headers
+- HTTP authenication support (Basic/Digest/NTLM)
 - Emulate Mobile and Tablet devices
 - Emulate network conditions (e.g. 3G/4G/Offline)
 - Record WebSocket request/responses
+- Take screenshots / Record video of page load
+- Many useful CSS selector extensions (e.g. "a:contains(Click me!)" selects a link with the
+  text "Click me!")
+- Easy integration with Jenkins / CircleCI / Appveyor / Travis
 
 ## Try It!
 

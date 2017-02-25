@@ -75,8 +75,8 @@ public class TestResult {
         this.setupTime = setupTime;
     }
 
-    public void addSetupTime(int sleepTime) {
-        this.setupTime += sleepTime;
+    public void addSetupTime(int setupTime) {
+        this.setupTime += setupTime;
     }
 
     @JsonIgnore
@@ -195,6 +195,16 @@ public class TestResult {
 
     public List<TestResultFile> getSavedFiles() {
         return savedFiles;
+    }
+
+    @JsonIgnore
+    public Integer getBrowserVersionMajor() {
+        String[] versions = browserVersion.split("\\.");
+        if (versions.length > 0) {
+            return Integer.parseInt(versions[0]);
+        } else {
+            return null;
+        }
     }
 
     static public class OutputMessage {

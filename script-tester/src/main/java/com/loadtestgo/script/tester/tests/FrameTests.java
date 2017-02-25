@@ -14,7 +14,7 @@ public class FrameTests extends JavaScriptTest {
             "assert.equal(r.name, 'name_1');\n" +
             "assert.equal(r.src, 'http://www.w3schools.com');\n" +
             "url = b.execute('document.URL');\n" +
-            "assert.ok(url.indexOf('http://www.w3schools.com') == 0);",
+            "assert.ok(url.indexOf('https://www.w3schools.com') == 0);",
             getTestUrl("files/frames/nested.html"));
 
         TestResult result = runScript(script);

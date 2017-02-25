@@ -24,6 +24,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
     private TestResult testResult;
     private TestContext testContext;
     private ResultsNotifier resultNotifier;
+    private String authRequestId;
 
     // Requests that we've decided are chrome internal requests and shouldn't be logged
     private Set<String> internalRequestIds;
@@ -239,6 +240,9 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
                     if (previousImage != null) {
                         int diff = (int) (frameTime - this.previousFrameTime);
+                        if (diff <= 0) {
+                            diff = 1;
+                        }
                         videoWriter.addFrame(diff, previousImage);
                     }
 
@@ -259,6 +263,9 @@ public class ChromeWebSocket extends BrowserWebSocket {
             if (videoWriter != null && previousImage != null) {
                 long timestamp = System.currentTimeMillis();
                 int diff = (int) (timestamp - this.previousFrameTime);
+                if (diff <= 0) {
+                    diff = 1;
+                }
                 videoWriter.addFrame(diff, previousImage);
             }
 
@@ -284,9 +291,38 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void onAuthRequired(JSONObject details) throws JSONException {
-        HttpRequest request = getWebRequestHttpRequest(details);
+        double endTime = details.getDouble("timeStamp");
+
+        HttpRequest request = getHttpRequestByUrl(details);
         if (request == null) {
-            return;
+            request = new HttpRequest();
+
+            int tabId = details.getInt("tabId");
+            request.setTabId(tabId);
+
+            String url = details.getString("url");
+            request.parseUrl(url);
+
+            request.setMethod(details.getString("method"));
+
+            request.setStartTime((long)endTime);
+
+            String requestId = details.getString("requestId");
+
+            Page page = getCurrentPageForTab(tabId);
+            if (page == null) {
+                Logger.error("Unable to find page for tab: {}", tabId);
+                return;
+            }
+
+            synchronized (testResult) {
+                authRequestId = requestId;
+                page.addRequest(request);
+                ongoingRequests.put(requestId, request);
+            }
+        } else {
+            request.setRecvEnd((int)((long)endTime - request.getStartTime()));
+            request.setState(HttpRequest.State.Complete);
         }
 
         request.setResourceType(convertResourceType(details.getString("type")));
@@ -299,10 +335,6 @@ public class ChromeWebSocket extends BrowserWebSocket {
         request.setProtocol(response.httpVersion);
         request.setStatusCode(response.statusCode);
         request.setStatusText(response.statusText);
-
-        double endTime = details.getDouble("timeStamp");
-        request.setRecvEnd((int)((long)endTime - request.getStartTime()));
-        request.setState(HttpRequest.State.Complete);
     }
 
     public void newPage() {
@@ -570,7 +602,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
         return requestInfo;
     }
 
-    private HttpRequest getWebRequestHttpRequest(JSONObject details) throws JSONException {
+    private HttpRequest getHttpRequestByUrl(JSONObject details) throws JSONException {
         String url = details.getString("url");
         int tabId = details.getInt("tabId");
         Page page = getCurrentPageForTab(tabId);
@@ -617,15 +649,36 @@ public class ChromeWebSocket extends BrowserWebSocket {
             }
         }
 
-        HttpRequest request = new HttpRequest();
+        HttpRequest request;
+        boolean authRequestAlreadyMade = false;
+
+        synchronized (testResult) {
+            // Handle the case where the auth request is received before 'requestWillBeSent'
+            if (authRequestId != null) {
+                request = ongoingRequests.remove(authRequestId);
+                authRequestId = null;
+                authRequestAlreadyMade = true;
+            } else {
+                request = new HttpRequest();
+            }
+        }
+
         request.setTabId(requestInfo.tabId);
         request.setFrameId(requestInfo.frameId);
         request.setRequestId(requestInfo.requestId);
 
         request.parseUrl(url);
         request.setMethod(requestObj.getString("method"));
-        setRequestStartTime(details, request);
-        request.setState(HttpRequest.State.Send);
+
+        if (authRequestAlreadyMade) {
+            long endTime = request.getStartTime();
+            setRequestStartTime(details, request);
+            request.setRecvEnd((int)(endTime - request.getStartTime()));
+            request.setState(HttpRequest.State.Complete);
+        } else {
+            request.setState(HttpRequest.State.Send);
+            setRequestStartTime(details, request);
+        }
 
         if (requestObj.has("postData")) {
             request.setPostData(requestObj.getString("postData"));
@@ -1649,27 +1702,11 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private Page getPageForFrame(FrameInfo frameInfo) throws JSONException {
-        synchronized(testResult) {
-            for (int i = getPages().size() - 1; i >= 0; --i) {
-                Page page = getPages().get(i);
-                if (page.getTabId() == frameInfo.tabId) {
-                    return page;
-                }
-            }
-            return null;
-        }
+        return getCurrentPageForTab(frameInfo.tabId);
     }
 
     private Page getPageForRequest(RequestInfo requestInfo) {
-        synchronized(testResult) {
-            for (int i = getPages().size() - 1; i >= 0; --i) {
-                Page page = getPages().get(i);
-                if (page.getTabId() == requestInfo.tabId) {
-                    return page;
-                }
-            }
-            return null;
-        }
+        return getCurrentPageForTab(requestInfo.tabId);
     }
 
     private HttpRequest getRequestForTab(RequestInfo requestInfo) {

@@ -1,7 +1,6 @@
 ## Requirements
 
-+ Java 8
-+ Gradle 2.x
++ Java 8 (Oracle JDK or OpenJDK w/ OpenJFX)
 + NodeJS (if you need to build release package or docs)
 + Gulp (if you need to build release package)
 
@@ -13,7 +12,7 @@
 
 To build the script editor package:
 
-    gradle dist:distZip
+    ./gradlew dist:distZip
 
 This will save a zip file to:
 
@@ -21,7 +20,7 @@ This will save a zip file to:
 
 To build a flat dir for the editor or runner:
 
-    gradle script-editor:install
+    ./gradlew script-editor:install
 
 This will package the shell scripts and all dependent JARS to the following directory:
 

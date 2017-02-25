@@ -1769,12 +1769,15 @@ pizza.main.commands = function() {
 
         _autoDismissDialogs = false;
 
-        function stopVideo() {
+        function stopVideo(next) {
             if (_videoCapture) {
                 pizza.devtools.sendCommand("Page.stopScreencast", {},
                     function () {
                         _videoCapture = false;
+                        next();
                     });
+            } else {
+                next();
             }
         }
 

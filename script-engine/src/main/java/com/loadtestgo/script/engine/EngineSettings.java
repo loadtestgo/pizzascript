@@ -106,6 +106,10 @@ public class EngineSettings {
         return captureVideo;
     }
 
+    public void setCaptureVideo(Boolean captureVideo) {
+        this.captureVideo = captureVideo;
+    }
+
     public void setVerboseLogging(boolean verboseLogging) {
         this.verboseLogging = verboseLogging;
     }

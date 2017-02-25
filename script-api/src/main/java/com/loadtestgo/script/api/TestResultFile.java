@@ -7,6 +7,10 @@ public class TestResultFile {
     private File file;
     private Data data;
 
+    public TestResultFile()
+    {
+    }
+
     public TestResultFile(String name, Data data) {
         this.name = name;
         this.data = data;

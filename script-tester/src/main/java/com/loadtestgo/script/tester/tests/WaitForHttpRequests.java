@@ -24,10 +24,11 @@ public class WaitForHttpRequests extends JavaScriptTest {
     @Test
     public void basicWaitNoPageTimeout() {
         String script = "b = pizza.open();\n" +
-            "b.waitForHttpRequests(2000);\n";
+            "b.waitForHttpRequests(3000);\n";
 
         TestResult result = runScript(script, 2000);
 
+        assertNotNull(result.getError());
         assertEquals(ErrorType.Timeout, result.getError().type);
 
         if (!result.getError().message.equals("waitForHttpRequests() interrupted") &&
