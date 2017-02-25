@@ -7,7 +7,8 @@ var domains = ['walmart.com', 'amazon.com'];
 
 b.type('#domain', domains[Math.floor((Math.random() * domains.length - 1) + 1)]);
 
-b.click('xpath://input[@value="NS"]');
+var records = ['A', 'AAAA', 'ANY', 'CNAME', 'MX', 'NS', 'PTR', 'SOA', 'SRV', 'TXT'];
+b.click('xpath://input[@value="' + records[5] + '"]');
 
 b.waitForVisible('#response-text');
 
