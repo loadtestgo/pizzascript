@@ -1,3 +1,6 @@
+// Script using Google's hosted DIG (DNS) utility to log
+// the Authoritative nameservers of the requested domain
+
 var b = pizza.open("https://toolbox.googleapps.com/apps/dig/");
 
 b.waitForVisible("#domain");
