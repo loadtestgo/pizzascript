@@ -125,7 +125,11 @@ public class BaseTest {
         ArrayList<Page> pages = result.getPages();
         assert(pages.size() >= 1);
 
-        ArrayList<HttpRequest> requests = pages.get(0).getRequests();
+        return getFirstRequest(pages.get(0));
+    }
+
+    public static HttpRequest getFirstRequest(Page page) {
+        ArrayList<HttpRequest> requests = page.getRequests();
         assert(requests.size() >= 1);
         for (HttpRequest httpRequest : requests) {
             if (!isFavIcon(httpRequest)) {

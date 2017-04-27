@@ -365,6 +365,20 @@ pizza.main.frametracker = function() {
         _sendCommand('DOM.hideHighlight', {}, function() {});
     };
 
+    var _setFileInputFiles = function(objectId, files, callback) {
+        _getRootId(function(rootId) {
+            _sendCommand('DOM.requestNode', { objectId: objectId },
+                function(response) {
+                    _sendCommand('DOM.setFileInputFiles',
+                        { nodeId: response.nodeId,
+                            files: files },
+                        function (result) {
+                            callback(result);
+                        });
+                });
+        });
+    };
+
     var _queryAllFrames = function(selector, callback) {
         _getRootId(function(rootId) {
             _queryFramesRecursive(selector, rootId, callback);
@@ -384,6 +398,7 @@ pizza.main.frametracker = function() {
         queryAllFrames: _queryAllFrames,
         highlight: _highlight,
         clearHighlight: _clearHighlight,
+        setFileInputFiles: _setFileInputFiles,
         setTab: _setTab
     };
 };

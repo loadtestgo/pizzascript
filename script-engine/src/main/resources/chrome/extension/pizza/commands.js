@@ -1284,6 +1284,25 @@ pizza.main.commands = function() {
         );
     };
 
+    var _setFiles = function(id, params) {
+        var script = "" + function(selector) {
+            return this.findElement(selector);
+        };
+
+        executeAutomationAPI(
+            function(response) {
+                pizza.frametracker.setFileInputFiles(response.result.objectId, params.files, function(response) {
+                    console.log(response);
+                    sendResponse(id, { value: {} });
+                });
+            },
+            function(error) { sendResponse(id, { error: error }); },
+            false,
+            script,
+            params.selector
+        );
+    };
+
     var scriptSelectSingle = "" + function(selector, jsonParams) {
       var i, o;
       var e = this.findElement(selector);
@@ -2101,6 +2120,7 @@ pizza.main.commands = function() {
     addCommand("check", _check);
     addCommand("getValue", _getValue);
     addCommand("setValue", _setValue);
+    addCommand("setFiles", _setFiles);
     addCommand("select", _select);
     addCommand("submit", _submit);
 

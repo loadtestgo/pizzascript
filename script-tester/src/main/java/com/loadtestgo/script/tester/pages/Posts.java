@@ -32,4 +32,31 @@ public class Posts {
         request.writeln();
         request.write(body);
     }
+
+    @Page(desc = "Called with file upload data")
+    public void fileUpload(HttpRequest request) throws IOException {
+        HttpHeaders headers = request.readHeaders();
+
+        if (!request.requestLine.getType().equals("POST")) {
+            request.write500Page();
+            return;
+        }
+
+        String lengthStr = headers.get(HttpHeader.CONTENT_LENGTH);
+        if (lengthStr == null) {
+            request.write411();
+            return;
+        }
+
+        // multipart/form-data; boundary=----WebKitFormBoundaryAorU7nFLVmOIEXKp
+
+        int length = Integer.valueOf(lengthStr);
+        String body = request.in.readString(length);
+
+        request.writeOk();
+        request.writeDefaultHeaders();
+        request.writeHeader(HttpHeader.CONTENT_TYPE, "text/plain");
+        request.writeln();
+        request.write(body);
+    }
 }

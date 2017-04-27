@@ -1,10 +1,7 @@
 package com.loadtestgo.script.engine.internal.api;
 
 import com.loadtestgo.script.api.*;
-import com.loadtestgo.script.engine.EngineSettings;
-import com.loadtestgo.script.engine.ScriptException;
-import com.loadtestgo.script.engine.TestContext;
-import com.loadtestgo.script.engine.UserContext;
+import com.loadtestgo.script.engine.*;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeProcess;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeWebSocket;
@@ -19,8 +16,12 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.regexp.NativeRegExp;
 import org.pmw.tinylog.Logger;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ChromeBrowser implements Browser {
@@ -744,6 +745,24 @@ public class ChromeBrowser implements Browser {
         params.put("selector", selector);
         params.put("value", value);
         checkResponseForErrors(pizzaHandler.sendCommand("setValue", params));
+    }
+
+    @Override
+    public void setFile(String selector, String filename) {
+        File file = testContext.getFile(filename);
+        if (!file.exists()) {
+            if (testContext.getIsFileSystemSandboxed()) {
+                throw new ScriptException("file " + filename + " not found");
+            } else {
+                throw new ScriptException("file " + file.getAbsolutePath() + " not found");
+            }
+        }
+        // net::ERR_FILE_NOT_FOUND will be returned for the page navigation error if the file doesn't
+        // exist when submitted.
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        params.put("files", Arrays.asList(file.getAbsolutePath()));
+        checkResponseForErrors(pizzaHandler.sendCommand("setFiles", params));
     }
 
     @Override

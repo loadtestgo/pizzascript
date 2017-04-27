@@ -280,7 +280,8 @@ public class Page {
         InvalidUrl,
         BlockedByClient,
         NetworkChanged,
-        UnsafePort
+        UnsafePort,
+        UploadFileNotFound
     }
 
     public void setError(Error error) {

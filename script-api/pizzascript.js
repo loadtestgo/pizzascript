@@ -1399,18 +1399,33 @@ Browser.prototype.select = function(selector, value) {};
 Browser.prototype.getValue = function(selector) {};
 
 /**
- * Set the given input form item to the given value
+ * Set the given input form element value.
  *
- * Directly sets without causing any input events to be fired.
+ * Directly sets the value without causing any input events to be fired.
  *
  * @example
- * b.setValue('#textbox1', 'something');
+ * b.setValue('input#textbox1', 'something');
  *
- * @param {String} selector the select element to select from
- * @param {String} value the values to select
+ * @param {String} selector the selector to find the input element
+ * @param {String} value the value to set
  * @throws Throws an exception if the element can not be found
  */
 Browser.prototype.setValue = function(selector, value) {};
+
+/**
+ * Set the file on a file input element.
+ *
+ * The file path can be relative, or absolute (when the script
+ * is not sandboxed).
+ *
+ * @example
+ * b.setFile('#fileInput', 'file.png');
+ *
+ * @param {String} selector the select element to select from
+ * @param {String} file the file path of the file to uploaded
+ * @throws Throws an exception if either the element or file can not be found
+ */
+Browser.prototype.setFile = function(selector, file) {};
 
 /**
  * Get the html inside the given element

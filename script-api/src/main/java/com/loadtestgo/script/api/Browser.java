@@ -641,6 +641,14 @@ public interface Browser {
     void setValue(String selector, String value);
 
     /**
+     * Set the file name for the given input element
+     *
+     * @param selector the input file element to set
+     * @param file     the file path of the file to upload
+     */
+    void setFile(String selector, String file);
+
+    /**
      * Get the html inside the given element
      *
      * @param selector the element to get the HTML from

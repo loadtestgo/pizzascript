@@ -1470,6 +1470,8 @@ public class ChromeWebSocket extends BrowserWebSocket {
             return Page.Error.NetworkChanged;
         case "net::ERR_INVALID_HTTP_RESPONSE":
             return Page.Error.InvalidResponse;
+        case "net::ERR_FILE_NOT_FOUND":
+            return Page.Error.UploadFileNotFound;
         default:
             Logger.error("Unknown page load error type {}", error);
             return Page.Error.Unclassified;
