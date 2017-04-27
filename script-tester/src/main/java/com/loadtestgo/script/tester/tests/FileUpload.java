@@ -6,6 +6,7 @@ import com.loadtestgo.script.api.Page;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
 import com.loadtestgo.util.Dirs;
+import com.loadtestgo.util.Os;
 import org.junit.Test;
 
 import java.io.*;
@@ -33,7 +34,7 @@ public class FileUpload extends JavaScriptTest {
                 "b.submit('#fileUploadForm');\n" +
                 "b.waitPageLoad();\n",
             formUrl,
-            fileToUpload.getAbsolutePath());
+            escapeWindowsPath(fileToUpload.getAbsolutePath()));
 
         TestResult result = runScript(script);
 
@@ -51,15 +52,26 @@ public class FileUpload extends JavaScriptTest {
     @Test
     public void submitFormFileNotFound() throws IOException {
         String formUrl = getTestUrl("files/fileUpload.html");
+
+        String dummyFile = "/tmp/not_actually_a_file/that/should/exist";
+        if (Os.isWin()) {
+            dummyFile = "C:\\tmp\\not_actually_a_file\\that\\should\\exist";
+        }
+
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
-                "b.setFile('#file', '/tmp/not_actually_a_file/that/should/exist');\n" +
+                "b.setFile('#file', '%s');\n" +
                 "b.submit('#fileUploadForm');\n" +
                 "b.waitPageLoad();\n",
-            formUrl);
+            formUrl,
+            escapeWindowsPath(dummyFile));
 
         TestResult result = runScript(script);
 
-        assertError("file /tmp/not_actually_a_file/that/should/exist not found", result);
+        assertError(String.format("file %s not found", dummyFile), result);
+    }
+
+    private String escapeWindowsPath(String path) {
+        return path.replace("\\", "\\\\");
     }
 }
