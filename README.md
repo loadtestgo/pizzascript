@@ -99,7 +99,8 @@ b.open("cnn.com");
 
 ## Alternatives
 
-* [Browsertime](https://github.com/sitespeedio/browsertime) - Access the Web Performance Timeline, from your browser, in your terminal!
-* [Lighthouse](https://github.com/GoogleChrome/lighthouse) - Auditing and performance metrics for Progressive Web Apps.
-* [PhantomJS](http://phantomjs.org) - Drive a headless browser using JavaScript, take screenshots and capture performance metrics.
-* [WebPageTest](https://www.webpagetest.org) - Test a site's peformance from many different locations with a wide variety of browsers.
+* [Browsertime](https://github.com/sitespeedio/browsertime) - "Access the Web Performance Timeline, from your browser, in your terminal!"
+* [Lighthouse](https://github.com/GoogleChrome/lighthouse) - "Auditing and performance metrics for Progressive Web Apps."
+* [PhantomJS](http://phantomjs.org) - "Drive a headless browser using JavaScript, take screenshots and capture performance metrics."
+* [WebPageTest](https://www.webpagetest.org) - "Test a site's peformance from many different locations with a wide variety of browsers."
+* [ChromeDP](https://github.com/knq/chromedp) - "Faster, simpler way to drive browsers that support Chrome Debugger Protocol."
