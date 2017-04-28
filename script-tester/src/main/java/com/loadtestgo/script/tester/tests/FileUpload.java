@@ -19,12 +19,13 @@ public class FileUpload extends JavaScriptTest {
     public void submitForm() throws IOException {
         File fileToUpload = new File(Dirs.getTmp(), "upload.txt");
 
+        String fileContents = "This is the content of the file";
         try (
             BufferedWriter bw = new BufferedWriter(
                 new OutputStreamWriter(
                     new FileOutputStream(fileToUpload))))
         {
-            bw.write("This is the content of the file");
+            bw.write(fileContents);
         }
 
         String formUrl = getTestUrl("files/fileUpload.html");
@@ -32,9 +33,11 @@ public class FileUpload extends JavaScriptTest {
             "b = pizza.open(\"%s\");\n" +
                 "b.setFile('#file', '%s');\n" +
                 "b.submit('#fileUploadForm');\n" +
-                "b.waitPageLoad();\n",
+                "b.waitPageLoad();" +
+                "b.verifyText('%s');\n",
             formUrl,
-            escapeWindowsPath(fileToUpload.getAbsolutePath()));
+            escapeWindowsPath(fileToUpload.getAbsolutePath()),
+            fileContents);
 
         TestResult result = runScript(script);
 

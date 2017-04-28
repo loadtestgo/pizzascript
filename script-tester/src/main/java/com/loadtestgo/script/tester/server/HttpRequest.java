@@ -102,6 +102,14 @@ public class HttpRequest {
         write("<html><head></head><body><h1>404 Not Found</h1></body></html>");
     }
 
+    public void write400Page(String s) throws IOException {
+        readHeaders();
+        write("HTTP/1.1 400 Bad Request\r\n");
+        writeHtmlHeaders();
+        writeln();
+        write(String.format("<html><head></head><body><h1>400 Bad Request</h1>%s</body></html>", s));
+    }
+
     public void redirect(String url) throws IOException {
         readHeaders();
         write("HTTP/1.1 301 Moved Permanently\r\n");

@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Form</title>
+    <title>File Upload Form</title>
 </head>
 <body>
-    <h4>Simple Form</h4>
+    <h4>File Upload Form</h4>
     <form id="fileUploadForm" method="post" action="/post/fileUpload" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="file">Upload</label>
-            <div>
-                <span class="btn">Browse<input type="file" id="file" name="file" class="file"></span>
-                <input type="text" class="form-control" id="fileName" readonly>
-            </div>
-        </div
+        <div>
+            <input type="file" id="file" name="file" class="file">
+        </div>
 
-        <button type="submit" class="submit-button">Upload</button>
+        <button type="submit">Upload</button>
     </form>
 </body>
 </html>
