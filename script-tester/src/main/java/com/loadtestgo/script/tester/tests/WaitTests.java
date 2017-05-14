@@ -28,7 +28,7 @@ public class WaitTests extends JavaScriptTest {
         TestResult result = runScript(script, 2000);
 
         assertError("sleep() interrupted", ErrorType.Timeout, result);
-        assertTrue("Runtime greater than 2000ms", result.getRunTime() > 2000);
+        assertTrue("Runtime greater than 2000ms", result.getRunTime() >= 2000);
     }
 
     @Test
