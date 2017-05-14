@@ -36,7 +36,7 @@ public class RunnerTest {
     }
 
     public String getFileName() {
-        return file.getPath();
+        return file.getName();
     }
 
     public List<String> getAttachmentPaths() {

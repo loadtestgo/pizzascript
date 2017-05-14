@@ -1778,7 +1778,7 @@ pizza.main.commands = function() {
         });
     };
 
-    var _reset = function(id) {
+    var _reset = function(id, params) {
         // close dialogs
         var firstTab = null;
 
@@ -1866,14 +1866,25 @@ pizza.main.commands = function() {
             next();
         }
 
-        var operations = [
-            stopVideo,
-            closeTabs,
-            gotoAboutBlank,
-            clearBrowsingData,
-            resetEmulation,
-            enableMessages
-        ];
+        var operations;
+        if (params.reuseSession) {
+            operations = [
+                stopVideo,
+                closeTabs,
+                gotoAboutBlank,
+                resetEmulation,
+                enableMessages
+            ];
+        } else {
+            operations = [
+                stopVideo,
+                closeTabs,
+                gotoAboutBlank,
+                clearBrowsingData,
+                resetEmulation,
+                enableMessages
+            ];
+        }
 
         var j = 0;
         function next() {

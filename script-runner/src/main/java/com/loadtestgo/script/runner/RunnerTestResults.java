@@ -99,9 +99,26 @@ public class RunnerTestResults {
         String duration = getTestDuration(testContext);
 
         System.out.println(ansi().fg(RED).a("[FAILED]").fgBright(BLACK).a(duration));
-        System.out.println(ansi().fgBright(BLACK).a(outputFormatDate()).fg(WHITE).a(message).fg(DEFAULT));
+        System.out.println(ansi().fgBright(BLACK).a(outputFormatDate()).fg(WHITE).a(indent(message, 4, 11)).fg(DEFAULT));
         Logger.info("Test FAILED after" + duration);
         Logger.error(message);
+    }
+
+    private String indent(String message, int firstIndent, int indent) {
+        String[] lines = message.split("\n");
+        StringBuilder indented = new StringBuilder();
+        for (int i = 0; i < lines.length; ++i) {
+            int in = indent;
+            if (i == 0) in = firstIndent;
+            for (int j = 0; j < in; ++j) {
+                indented.append(' ');
+            }
+            indented.append(lines[i]);
+            if (i < lines.length - 1) {
+                indented.append('\n');
+            }
+        }
+        return indented.toString();
     }
 
     private String getTestDuration(TestContext testContext) {

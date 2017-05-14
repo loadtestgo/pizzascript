@@ -6,6 +6,8 @@
   "profile": {
       "password_manager_enabled": false
   },
+  "credentials_enable_autosignin": false,
+  "credentials_enable_service": false,
   "extensions": {
     "ui": {
       // Enable developer mode for easier debugging of our extension.

@@ -146,6 +146,8 @@ public class ChromeProcess {
         // args.add("--extensions-on-chrome-urls");
 
         // Disable save password popup
+        // The following no longer works with current versions of Chrome 56+
+        // Instead we disable this in Preferences.json that we use to create the chrome profile
         args.add("--disable-save-password-bubble");
 
         // Load our profile
@@ -200,7 +202,7 @@ public class ChromeProcess {
     }
 
     private void savePreferences() {
-        InputStream input = ChromeProcess.class.getResourceAsStream("/chrome/Preferences.js");
+        InputStream input = ChromeProcess.class.getResourceAsStream("/chrome/Preferences.json");
         if (input == null) {
             Logger.error("Unable to find internal Chrome preferences template, using default instead");
             return;

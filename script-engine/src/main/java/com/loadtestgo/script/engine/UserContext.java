@@ -16,6 +16,7 @@ public class UserContext {
     private ChromeProcess chromeProcess;
     private ChromeWebSocket pizzaHandler;
     private boolean keepBrowserOpen = false;
+    private boolean reuseSession = false;
 
     public UserContext(EngineContext engineContext)
     {
@@ -101,5 +102,16 @@ public class UserContext {
 
     public void setPizzaHandler(ChromeWebSocket pizzaHandler) {
         this.pizzaHandler = pizzaHandler;
+    }
+
+    /**
+     * Should we reuse the session (keep cookies and local session data) between script runs.
+     */
+    public boolean reuseSession() {
+        return reuseSession;
+    }
+
+    public void setReuseSession(boolean reuseSession) {
+        this.reuseSession = reuseSession;
     }
 }

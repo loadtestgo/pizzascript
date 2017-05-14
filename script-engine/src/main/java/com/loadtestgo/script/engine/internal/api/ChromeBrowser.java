@@ -17,8 +17,6 @@ import org.mozilla.javascript.regexp.NativeRegExp;
 import org.pmw.tinylog.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,7 +141,9 @@ public class ChromeBrowser implements Browser {
 
     public void close() {
         if (testContext.getUserContext().keepBrowserOpen()) {
-            checkResponseForErrors(pizzaHandler.sendCommand("reset"));
+            HashMap<String,Object> params = new HashMap<>();
+            params.put("reuseSession", testContext.getUserContext().reuseSession());
+            checkResponseForErrors(pizzaHandler.sendCommand("reset", params));
             pizzaHandler.reset();
         } else {
             pizzaHandler.close();

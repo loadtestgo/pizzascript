@@ -1,6 +1,5 @@
 package com.loadtestgo.script.runner;
 
-import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeFinder;
 import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.script.runner.config.JsonConfigParser;

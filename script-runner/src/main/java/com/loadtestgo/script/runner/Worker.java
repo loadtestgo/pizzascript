@@ -9,10 +9,8 @@ import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeProcess;
 import com.loadtestgo.script.har.HarWriter;
 import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.util.FileUtils;
-import com.loadtestgo.util.IniFile;
 import com.loadtestgo.util.Path;
 import com.loadtestgo.util.Settings;
-import org.apache.commons.io.IOUtils;
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
@@ -25,7 +23,6 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
-import java.util.List;
 
 public class Worker {
     private File outputDir;
@@ -62,11 +59,16 @@ public class Worker {
         runnerTestResults.startTests(testConfig, outputDir);
 
         UserContext userContext = new UserContext(engineContext);
+        userContext.setKeepBrowserOpen(testConfig.getKeepBrowserOpen());
+        userContext.setReuseSession(testConfig.getReuseSession());
+
         try {
+            testConfig.initTestNames();
             for (RunnerTest test : testConfig.getTests()) {
                 processTest(userContext, test);
             }
         } finally {
+            userContext.cleanup();
             engineContext.cleanup();
             runnerTestResults.endTests();
         }
@@ -89,17 +91,17 @@ public class Worker {
     private boolean processTest(TestContext testContext, RunnerTest test) {
         boolean success = false;
 
-        String filename = test.getName();
+        String name = test.getName();
 
         JavaScriptEngine engine = new JavaScriptEngine();
         ConsoleOutputWriter consoleLogWriter = null;
 
-        File outputDir = new File(this.outputDir, filename);
+        File outputDir = new File(this.outputDir, name);
         outputDir.mkdirs();
 
         testContext.setOutputDirectory(outputDir);
 
-        File consoleLogFilePath = Path.getCanonicalFile(new File(outputDir, filename + ".txt"));
+        File consoleLogFilePath = Path.getCanonicalFile(new File(outputDir, name + ".txt"));
         try {
             engine.init(testContext);
             try {
@@ -117,7 +119,7 @@ public class Worker {
                 if (browser != null) {
                     Data screenshot = browser.screenshot(runnerSettings.screenshotType());
                     File screenshotFile = Path.getCanonicalFile(
-                        new File(outputDir, filename + "." + runnerSettings.screenshotType()));
+                        new File(outputDir, name + "." + runnerSettings.screenshotType()));
                     try (FileOutputStream fileOutputStream = new FileOutputStream(screenshotFile)) {
                         DataOutputStream os = new DataOutputStream(fileOutputStream);
                         os.write(screenshot.getBytes());
@@ -153,7 +155,7 @@ public class Worker {
         }
 
         TestResult testResult = testContext.getTestResult();
-        File harFile = Path.getCanonicalFile(new File(outputDir, filename + ".har"));
+        File harFile = Path.getCanonicalFile(new File(outputDir, name + ".har"));
         try {
             HarWriter.save(testResult, harFile);
             testContext.addFile(harFile);
@@ -167,9 +169,12 @@ public class Worker {
     private boolean runScript(TestContext testContext, JavaScriptEngine engine, RunnerTest test) {
         try {
             runnerTestResults.startTest(test, testContext);
+            if (!test.getFile().exists()) {
+                throw new IOException("File not found '" + test.getFile().getAbsolutePath() + "'");
+            }
             String scriptContexts = FileUtils.readAllText(test.getFile());
             if (scriptContexts == null) {
-                throw new IOException("Error reading '" + test.getFileName() + "'");
+                throw new IOException("Error reading '" + test.getFile().getAbsolutePath() + "'");
             }
             Object result = engine.runScript(scriptContexts, test.getFileName(), test.getTimeout());
             runnerTestResults.endTest(testContext, engine.valueToString(result));

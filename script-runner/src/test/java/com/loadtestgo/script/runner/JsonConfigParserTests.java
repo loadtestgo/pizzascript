@@ -16,10 +16,10 @@ public class JsonConfigParserTests {
         TestConfig config = new TestConfig();
         config.setFileName("");
 
-        JsonConfigParser.parseSource(config, json);
+        JsonConfigParser.parseSource(config, json, new File("a"));
         Assert.assertEquals(1, config.getTests().size());
         Assert.assertEquals(1200, config.getTests().get(0).getTimeout());
-        Assert.assertEquals(new File("abc.js"), config.getTests().get(0).getFile());
+        Assert.assertEquals(new File("a/abc.js"), config.getTests().get(0).getFile());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class JsonConfigParserTests {
         config.setFileName("");
 
         try {
-            JsonConfigParser.parseSource(config, json);
+            JsonConfigParser.parseSource(config, json, new File("a"));
             Assert.fail("Parse exception expected");
         } catch (JSONException e) {
             Assert.assertEquals(expectedError, e.getMessage());
