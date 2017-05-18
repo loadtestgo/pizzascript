@@ -159,7 +159,22 @@ public class ChromeProcess {
         // Disable chrome apps and extensions
         args.add("--disable-default-apps");
         args.add("--disable-component-update");
+
+        // From the Chrome command line docs:
+        //   "Disable default component extensions with background pages - useful for performance
+        //    tests where these pages may interfere with perf results."
         args.add("--disable-component-extensions-with-background-pages");
+
+        // Disable google account sync (you'd have to login to google for this to be active)
+        args.add("--disable-sync");
+
+        // Disable auto translation
+        args.add("--disable-translate");
+
+        // From the Chrome command line docs:
+        //   "Disable several subsystems which run network requests in the background. This is
+        //    for use when doing network performance testing to avoid noise in the measurements."
+        args.add("--disable-background-networking");
 
         if (settings.args != null) {
             for (String arg : settings.args) {
