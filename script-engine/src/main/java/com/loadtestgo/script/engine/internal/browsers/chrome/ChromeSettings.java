@@ -1,5 +1,7 @@
 package com.loadtestgo.script.engine.internal.browsers.chrome;
 
+import java.util.Map;
+
 public class ChromeSettings {
     // Ignore certificate errors, a big warning page will be displayed
     // and Chrome will not allow to navigate to page with invalid certs
@@ -36,4 +38,12 @@ public class ChromeSettings {
 
     // Extra args to pass to the chrome process
     public String[] args;
+
+    // Override Chrome preferences in set in either <profiledir>/userdata/Default/Preferences
+    // (OSX/Linux) or <profiledir>/User Data/Default/Preferences (Windows).
+    //
+    // Full list of preferences can be found here at the time of writing:
+    //    https://src.chromium.org/viewvc/chrome/trunk/src/chrome/common/pref_names.cc?view=markup
+    //
+    public Map<String,Object> preferences;
 }

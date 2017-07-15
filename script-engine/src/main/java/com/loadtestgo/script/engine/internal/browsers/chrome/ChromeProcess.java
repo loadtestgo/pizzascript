@@ -7,12 +7,11 @@ import com.loadtestgo.util.ResourceUtils;
 import com.loadtestgo.util.Template;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.pmw.tinylog.Logger;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -226,10 +225,57 @@ public class ChromeProcess {
         String preferencesFile = Path.join(profileDir, "Default/Preferences");
         File file = new File(preferencesFile);
         file.getParentFile().mkdirs();
-        try (FileOutputStream output = new FileOutputStream(file)) {
-            IOUtils.copy(input, output);
-        } catch (Exception e) {
-            Logger.error(e, "Unable to copy Chrome preferences template, using default instead");
+
+        // Merge preferences file
+        if (settings.preferences == null) {
+            try (FileOutputStream output = new FileOutputStream(file)) {
+                IOUtils.copy(input, output);
+            } catch (Exception e) {
+                Logger.error(e, "Unable to copy Chrome preferences template, using default instead");
+            }
+        } else {
+            try {
+                List<String> lines = IOUtils.readLines(input);
+                StringBuffer jsonInAsString = new StringBuffer();
+
+                // Remove comments
+                for (String line : lines) {
+                    jsonInAsString.append(line.replaceAll("//.*$", ""));
+                }
+
+                JSONObject jsonPreferences = new JSONObject(jsonInAsString.toString());
+                mergeJson(jsonPreferences, settings.preferences);
+
+                final int INDENT_SPACES = 2;
+                String mergedJsonAsString = jsonPreferences.toString(INDENT_SPACES);
+
+                try (FileOutputStream output = new FileOutputStream(file)) {
+                    output.write(mergedJsonAsString.getBytes("UTF-8"));
+                }
+            } catch (IOException e) {
+                Logger.error(e, "Unable to merge Chrome preferences with template, using default preferences instead");
+            }
+        }
+    }
+
+    private void mergeJson(JSONObject orig, Map<String, Object> overrides) {
+        for (Map.Entry<String, Object> entry : overrides.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof String ||
+                value instanceof Number ||
+                value instanceof Boolean) {
+                orig.put(entry.getKey(), value);
+            } else if (value instanceof Object[]){
+                orig.put(entry.getKey(), new JSONArray(value));
+            } else if (value instanceof Map){
+                JSONObject object = orig.optJSONObject(key);
+                if (object == null) {
+                    object = new JSONObject();
+                    orig.put(key, object);
+                }
+                mergeJson(object, (Map<String, Object>)value);
+            }
         }
     }
 

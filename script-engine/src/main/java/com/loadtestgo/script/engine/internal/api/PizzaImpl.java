@@ -51,6 +51,13 @@ public class PizzaImpl implements Pizza {
 
             chromeSettings.args =
                 RhinoUtils.toStringList(settings.get("args"));
+
+            // Deserialize preference overrides into Map<String,Object>
+            Object preferences = settings.get("preferences");
+            if (preferences instanceof NativeObject) {
+                chromeSettings.preferences =
+                    RhinoUtils.deserialize((NativeObject) preferences);
+            }
         }
 
         browser = new ChromeBrowser(testContext, chromeSettings);
