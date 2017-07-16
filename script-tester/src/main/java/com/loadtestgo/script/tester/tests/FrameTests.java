@@ -12,9 +12,9 @@ public class FrameTests extends JavaScriptTest {
             "r = b.selectFrame(\"iframe\");\n" +
             "assert.equal(r.type, 'iframe');\n" +
             "assert.equal(r.name, 'name_1');\n" +
-            "assert.equal(r.src, 'http://www.w3schools.com');\n" +
+            "assert.equal(r.src, '/files/basic.html');\n" +
             "url = b.execute('document.URL');\n" +
-            "assert.ok(url.indexOf('https://www.w3schools.com') == 0);",
+            "assert.ok(url.indexOf('/files/basic.html') >= 0);",
             getTestUrl("files/frames/nested.html"));
 
         TestResult result = runScript(script);
@@ -61,7 +61,7 @@ public class FrameTests extends JavaScriptTest {
             "b = pizza.open(\"%s\");\n" +
             "r = b.selectFrame(\"iframe\");\n" +
             "url = b.execute('document.URL');\n" +
-            "assert.ok(url.indexOf('www.w3schools.com') > 0);" +
+            "assert.ok(url.indexOf('basic.html') > 0);" +
             "b.selectTopFrame();\n" +
             "url = b.execute('document.URL');\n" +
             "assert.ok(url.indexOf('nested.html') > 0);",
