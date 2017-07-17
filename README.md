@@ -41,7 +41,7 @@ First make sure the following are installed:
 + Chrome 40+
 + Java 8 JRE
 
-Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.8/pizzascript-0.2.8.zip) release.
+Then download the latest [PizzaScript](https://github.com/loadtestgo/pizzascript/releases/download/v0.2.9/pizzascript-0.2.9.zip) release.
 
 To open the script recorder:
 

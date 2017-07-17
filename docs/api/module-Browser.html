@@ -197,14 +197,14 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#getOpenDialog">getOpenDialog()</a></dt>
                 <dd>
                 </dd>
+                <dt><a href="module-Browser.html#getOuterHTML">getOuterHTML([selector])</a></dt>
+                <dd>
+                </dd>
         </dl>
 </div>
 
                     <div class="summary-column">
         <dl class="dl-summary-callout">
-                <dt><a href="module-Browser.html#getOuterHTML">getOuterHTML([selector])</a></dt>
-                <dd>
-                </dd>
                 <dt><a href="module-Browser.html#getResponseBody">getResponseBody([httpRequest])</a></dt>
                 <dd>
                 </dd>
@@ -289,17 +289,17 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#removeHeader">removeHeader(header)</a></dt>
                 <dd>
                 </dd>
-        </dl>
-</div>
-
-                    <div class="summary-column">
-        <dl class="dl-summary-callout">
                 <dt><a href="module-Browser.html#rewriteUrl">rewriteUrl(url, rewriteUrl)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#screenshot">screenshot([format][, quality])</a></dt>
                 <dd>
                 </dd>
+        </dl>
+</div>
+
+                    <div class="summary-column">
+        <dl class="dl-summary-callout">
                 <dt><a href="module-Browser.html#select">select(selector, value)</a></dt>
                 <dd>
                 </dd>
@@ -330,6 +330,9 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#setCookie">setCookie(name, value[, details])</a></dt>
                 <dd>
                 </dd>
+                <dt><a href="module-Browser.html#setFile">setFile(selector, file)</a></dt>
+                <dd>
+                </dd>
                 <dt><a href="module-Browser.html#setHeader">setHeader(name, value)</a></dt>
                 <dd>
                 </dd>
@@ -337,6 +340,15 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#setValue">setValue(selector, value)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#startVideoCapture">startVideoCapture()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#stopVideoCapture">stopVideoCapture()</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#stopVideoCapture">stopVideoCapture(name)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#submit">submit(selector)</a></dt>
@@ -5293,6 +5305,97 @@ b.open(&quot;www.mysite.com/&quot;);</code></pre>
         
     </dl>
 
+                <h3 id="setFile"><span class="symbol-name">setFile</span><span class="signature"><span class="signature-params">(selector, file)</span></span></h3>
+        <p>Set the file on a file input element.</p>
+<p>The file path can be relative, or absolute (when the script
+is not sandboxed).</p>
+
+        <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.setFile(&#x27;#fileInput&#x27;, &#x27;file.png&#x27;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the select element to select from</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>file</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the file path of the file to uploaded</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+            <dt>Throws</dt>
+        <dd><p>Throws an exception if either the element or file can not be found</p></dd>
+
+        
+    </dl>
+
                 <h3 id="setHeader"><span class="symbol-name">setHeader</span><span class="signature"><span class="signature-params">(name, value)</span></span></h3>
         <p>Override/Add a header</p>
 
@@ -5468,15 +5571,15 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
     </dl>
 
                 <h3 id="setValue"><span class="symbol-name">setValue</span><span class="signature"><span class="signature-params">(selector, value)</span></span></h3>
-        <p>Set the given input form item to the given value</p>
-<p>Directly sets without causing any input events to be fired.</p>
+        <p>Set the given input form element value.</p>
+<p>Directly sets the value without causing any input events to be fired.</p>
 
         <section>
         <h4>
             Example
         </h4>
                 <div>
-    <pre class="prettyprint"><code>b.setValue(&#x27;#textbox1&#x27;, &#x27;something&#x27;);</code></pre>
+    <pre class="prettyprint"><code>b.setValue(&#x27;input#textbox1&#x27;, &#x27;something&#x27;);</code></pre>
 </div>
 
     </section>
@@ -5504,7 +5607,7 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
                 <p>&nbsp;</p>
         </td>
         <td>
-                <p>the select element to select from</p>
+                <p>the selector to find the input element</p>
         </td>
 </tr>
 
@@ -5519,7 +5622,7 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
                 <p>&nbsp;</p>
         </td>
         <td>
-                <p>the values to select</p>
+                <p>the value to set</p>
         </td>
 </tr>
 
@@ -5554,6 +5657,171 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
             <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
+        
+    </dl>
+
+                <h3 id="startVideoCapture"><span class="symbol-name">startVideoCapture</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Start a video capture.</p>
+<p>Starts a video capture if one is not already started.  A video capture will
+normally be started as soon as Browser.protoype.open() is called.</p>
+<p>Can be used to resume a stopped video recording.</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#stopVideoCapture">module:Browser#stopVideoCapture</a></dd>
+        <dd><a href="module-Browser.html#open">module:Browser#open</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="stopVideoCapture"><span class="symbol-name">stopVideoCapture</span><span class="signature"><span class="signature-params">()</span></span></h3>
+        <p>Stops a video capture.</p>
+<p>Stop an ongoing video capture.</p>
+
+    
+    
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#startVideoCapture">module:Browser#startVideoCapture</a></dd>
+
+
+
+        
+        
+        
+        
+        
+        
+    </dl>
+
+                <h3 id="stopVideoCapture"><span class="symbol-name">stopVideoCapture</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
+        <p>Emulate the given network condition.</p>
+
+        <section>
+        <h4>
+            Examples
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Open &quot;bbc.com&quot; emulating 3G latency and bandwidth constraints
+b &#x3D; pizza.open();
+b.emulateNetworkCondition(&quot;Regular 3G&quot;);
+b.open(&quot;bbc.com&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Open &quot;bbc.com&quot; emulating a network latency of 50 milliseconds
+b &#x3D; pizza.open();
+b.emulateNetworkCondition({latency: 50});
+b.open(&quot;bbc.com&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Disable a previously set network condition
+b.emulateNetworkCondition({});
+b.open(&quot;bbc.com&quot;);</code></pre>
+</div>
+
+    </section>
+
+        <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>(String or Object)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The network condition to emulate.  Set to {} to
+disable network condition emulation.</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+    
+
+    <dl class="dl-compact">
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#listNetworkConditions">module:Browser#listNetworkConditions</a></dd>
+        <dd><a href="module-Browser.html#emulateDevice">module:Browser#emulateDevice</a></dd>
+
+
+
+        
+        
+        
+        
+        
         
     </dl>
 
@@ -6647,7 +6915,7 @@ main document.</p></dd>
                     <footer id="jsdoc-footer" class="jsdoc-footer">
                             <div id="jsdoc-footer-container">
                                     <p>
-                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on November 26, 2016.
+                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on July 16, 2017.
                                     </p>
                             </div>
                     </footer>
