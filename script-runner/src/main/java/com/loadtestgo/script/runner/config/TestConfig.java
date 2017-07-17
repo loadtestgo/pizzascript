@@ -4,6 +4,7 @@ import com.loadtestgo.script.runner.RunnerTest;
 import com.loadtestgo.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public class TestConfig {
     private String filename;
     private List<RunnerTest> tests;
     private String name;
-    private Map<String, Object> settings;
+    private Map<String, Object> settings = new HashMap<>();
 
     public void initTestNames() {
         for (RunnerTest test : tests) {
