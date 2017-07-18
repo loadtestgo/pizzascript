@@ -258,10 +258,10 @@ public class Main {
             runnerTestResults.info(String.format("Using Chrome '%s'", chromeExecutable.getAbsolutePath()));
         }
 
-        runnerTestResults.info("Starting tests");
-
         Worker worker = new Worker(settings);
         worker.init(outputDir, runnerTestResults, chromeExecutable);
+
+        runnerTestResults.info("Starting tests");
 
         System.exit(worker.runJobs(testConfig) ? 0 : 1);
     }

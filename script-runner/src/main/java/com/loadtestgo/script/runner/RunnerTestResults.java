@@ -32,6 +32,8 @@ public class RunnerTestResults {
         this.outputDir = outputDir;
         this.testConfig = testConfig;
         this.allTestsStart = System.currentTimeMillis();
+
+        info(String.format("Saving results to '%s'...", outputDir.getAbsolutePath()));
     }
 
     public void endTests() {
