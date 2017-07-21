@@ -63,8 +63,16 @@ public class JUnitXmlWriter {
             TestResult testResult = test.getResult();
 
             writer.writeStartElement("testcase");
-            writer.writeAttribute("name", runnerTest.getName());
-            writer.writeAttribute("classname", runnerTest.getName().replace(".js", ""));
+
+            String testName = runnerTest.getName();
+            if (StringUtils.isEmpty(testName)) {
+                testName = runnerTest.getFileName();
+            }
+            writer.writeAttribute("name", testName);
+
+            String className = runnerTest.getFileName();
+            writer.writeAttribute("classname", className.replaceAll("\\.js$", ""));
+
             writer.writeAttribute("time", formatDurationMS(testResult.getRunTime()));
 
             TestError testError = testResult.getError();

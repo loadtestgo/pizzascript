@@ -2,6 +2,7 @@ package com.loadtestgo.script.runner;
 
 import com.loadtestgo.script.engine.TestContext;
 import com.loadtestgo.script.runner.config.TestConfig;
+import com.loadtestgo.util.StringUtils;
 import org.pmw.tinylog.Logger;
 
 import javax.xml.stream.XMLStreamException;
@@ -81,7 +82,12 @@ public class RunnerTestResults {
 
         tests.add(new RunnerTestResult(runnerTest, testContext.getTestResult()));
 
-        String testName = runnerTest.getName();
+        String testName;
+        if (StringUtils.isSet(runnerTest.getName())) {
+            testName = runnerTest.getName() + " (" + runnerTest.getFileName() + ")";
+        } else {
+            testName = runnerTest.getFileName();
+        }
 
         System.out.print(ansi().fgBright(BLACK).a(outputFormatDate()).fg(DEFAULT).a(testName + " "));
         System.out.flush();

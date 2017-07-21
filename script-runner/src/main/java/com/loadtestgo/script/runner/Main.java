@@ -6,6 +6,7 @@ import com.loadtestgo.script.runner.config.JsonConfigParser;
 import com.loadtestgo.util.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,13 +22,14 @@ import org.json.JSONException;
  * Run a set of scripts, taking screenshots, saving log info and record HAR data for each.
  */
 public class Main {
-    private static final double MAX_TIMEOUT_SECONDS = 10 * 1000 * 1000;
+    private static final double MAX_SCRIPT_TIMEOUT_SECONDS = 10 * 1000 * 1000;
+    private static final double DEFAULT_SCRIPT_TIMEOUT_SECONDS = 60;
     public static String AppName = "PizzaScript";
 
     private String fileName = null;
     private String outputDir = null;
     private boolean writeJunitXmlFile = false;
-    private double timeout = -1;
+    private double timeout = DEFAULT_SCRIPT_TIMEOUT_SECONDS;
     private Settings overrideSettings = new Settings();
 
     public static void main(String[] args) {
@@ -68,9 +70,9 @@ public class Main {
                             try {
                                 timeout = Double.parseDouble(t);
                                 if (timeout < 0) {
-                                    printErrorWithHelp("Timeout must be greater than zero");
-                                } else if (timeout > MAX_TIMEOUT_SECONDS) {
-                                    printErrorWithHelp("Timeout must be less than " + MAX_TIMEOUT_SECONDS);
+                                    printErrorWithHelp("Timeout must be greater or equal to zero");
+                                } else if (timeout > MAX_SCRIPT_TIMEOUT_SECONDS) {
+                                    printErrorWithHelp("Timeout must be less than " + MAX_SCRIPT_TIMEOUT_SECONDS);
                                 }
                             } catch (NumberFormatException e) {
                                 printErrorWithHelp("Timeout " + t + " not a valid number");
@@ -146,8 +148,9 @@ public class Main {
         stdout("                       defaults to results-<timestamp>");
         stdout("  --set / -s <setting> override a setting from settings.ini");
         stdout("                       --set / -s can be repeated to override multiple settings");
-        stdout("  --timeout / -t <t>   specify a per test timeout in seconds");
-        stdout("                       default is no timeout");
+        stdout("  --timeout / -t <t>   specify the per test/script timeout in seconds");
+        stdout("                       default timeout is 60 seconds");
+        stdout("                       set to 0 to disable the timeout");
         stdout("  --version / -v       print the version number");
         stdout();
         stdout("Run a file:");
@@ -212,6 +215,8 @@ public class Main {
 
                 } catch (JSONException e) {
                     printError(String.format("Error parsing config file '%s': %s", specifiedFile.getPath(), e.getMessage()));
+                } catch (IOException e) {
+                    printError(String.format("Error reading config file '%s': %s", specifiedFile.getPath(), e.getMessage()));
                 }
             } else {
                 List<File> files = new ArrayList<>();
@@ -245,6 +250,8 @@ public class Main {
         Settings settings = IniFile.loadSettings(stdoutLogger);
         settings.printSettings(stdoutLogger);
 
+        settings.putAll(testConfig.getSettings());
+
         if (overrideSettings.count() > 0) {
             runnerTestResults.info("Applying overrides");
             overrideSettings.printSettings(stdoutLogger);
@@ -272,7 +279,6 @@ public class Main {
         for (File file : files) {
             RunnerTest test = new RunnerTest();
             test.setFile(file);
-            test.setName(file.getName());
             testConfig.addTest(test);
         }
 

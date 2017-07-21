@@ -37,6 +37,9 @@ public class ChromeWebSocket extends BrowserWebSocket {
     private boolean capturingVideo;
     private Object videoLock = new Object();
 
+    // These events are not written out as they make the verbose logs too busy
+    static List<String> DONT_LOG_THESE_EVENTS = Arrays.asList("Page.screencastFrame", "Network.dataReceived");
+
     public ChromeWebSocket(TestContext testContext) {
         super(testContext);
         this.testContext = testContext;
@@ -101,8 +104,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
             JSONObject details = json.getJSONObject("details");
 
             if (verboseLogging) {
-                // Too much logging if we log every Network.dataReceived
-                if (!event.equals("Network.dataReceived")) {
+                if (!DONT_LOG_THESE_EVENTS.contains(event)) {
                     Logger.info("{} {}", event, details.toString());
                 }
             }

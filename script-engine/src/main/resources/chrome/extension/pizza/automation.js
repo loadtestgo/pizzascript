@@ -137,7 +137,7 @@ pizza.automation = {
             var element = _findElement(selector);
             element.scrollIntoView(false);
 
-            var pos = getElementRegion(element);
+            var pos = getElementRegion(element, selector);
             var e = findTopElement(element, pos);
             if (e) {
                 throw "Element '" + selector +"' hidden by '" + e +  "'";
@@ -146,7 +146,7 @@ pizza.automation = {
             return pos;
         };
 
-        function getElementRegion(element) {
+        function getElementRegion(element, selector) {
             // We try 2 methods to determine element region. Try the first client rect,
             // and then the bounding client rect.
             // SVG is one case that doesn't have a first client rect.
@@ -154,13 +154,13 @@ pizza.automation = {
             if (clientRects.length == 0) {
                 var box = element.getBoundingClientRect();
                 if (box.width == 0 && box.height == 0) {
-                    throw "Element found but not visible";
+                    throw "Element '" + selector + "' found but not visible";
                 }
                 if (element.tagName.toLowerCase() == 'area') {
                     var coords = element.coords.split(',');
                     if (element.shape.toLowerCase() == 'rect') {
                         if (coords.length != 4) {
-                            throw "Failed to detect the region of the area";
+                            throw "Failed to detect the region of the area for element '" + selector + "'"
                         }
                         var leftX = Number(coords[0]);
                         var topY = Number(coords[1]);
@@ -174,7 +174,7 @@ pizza.automation = {
                         };
                     } else if (element.shape.toLowerCase() == 'circle') {
                         if (coords.length != 3) {
-                            throw "Failed to detect the region of the area";
+                            throw "Failed to detect the region of the area for element '" + selector + "'";
                         }
                         var centerX = Number(coords[0]);
                         var centerY = Number(coords[1]);
@@ -187,7 +187,7 @@ pizza.automation = {
                         };
                     } else if (element.shape.toLowerCase() == 'poly') {
                         if (coords.length < 2) {
-                            throw "Failed to detect the region of the area";
+                            throw "Failed to detect the region of the area for element '" + selector + "'";
                         }
                         var minX = Number(coords[0]);
                         var minY = Number(coords[1]);
@@ -208,7 +208,7 @@ pizza.automation = {
                             'height': maxY - minY
                         };
                     } else {
-                        throw "shape=" + element.shape + " is not supported";
+                        throw "Element '" + selector + "' shape=" + element.shape + " is not supported";
                     }
                 }
                 return {

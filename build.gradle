@@ -191,7 +191,8 @@ project(':dist') {
               into('bin') {
                   def files = []
                   projects.each { p->
-                      files.addAll(p.startScripts.outputs.files)
+                      Task t = p.tasks.getByName("startScripts")
+                      files.addAll(t.outputs)
                   }
                   from files
                   fileMode = 0755

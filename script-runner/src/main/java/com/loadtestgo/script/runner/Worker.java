@@ -11,6 +11,7 @@ import com.loadtestgo.script.runner.config.TestConfig;
 import com.loadtestgo.util.FileUtils;
 import com.loadtestgo.util.Path;
 import com.loadtestgo.util.Settings;
+import com.loadtestgo.util.StringUtils;
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
@@ -63,7 +64,6 @@ public class Worker {
         userContext.setReuseSession(testConfig.getReuseSession());
 
         try {
-            testConfig.initTestNames();
             for (RunnerTest test : testConfig.getTests()) {
                 processTest(userContext, test);
             }
@@ -78,7 +78,11 @@ public class Worker {
 
     private boolean processTest(UserContext userContext, RunnerTest test) {
         boolean success;
-        TestContext testContext = new TestContext(userContext, test.getName());
+        String testName = test.getName();
+        if (StringUtils.isEmpty(testName)) {
+            testName = test.getFileName();
+        }
+        TestContext testContext = new TestContext(userContext, testName);
         testContext.setBaseDirectory(Path.getParentDirectory(test.getFile()));
         try {
             success = processTest(testContext, test);
@@ -91,17 +95,17 @@ public class Worker {
     private boolean processTest(TestContext testContext, RunnerTest test) {
         boolean success = false;
 
-        String name = test.getName();
+        String fileName = test.getFileName();
 
         JavaScriptEngine engine = new JavaScriptEngine();
         ConsoleOutputWriter consoleLogWriter = null;
 
-        File outputDir = new File(this.outputDir, name);
+        File outputDir = new File(this.outputDir, fileName);
         outputDir.mkdirs();
 
         testContext.setOutputDirectory(outputDir);
 
-        File consoleLogFilePath = Path.getCanonicalFile(new File(outputDir, name + ".txt"));
+        File consoleLogFilePath = Path.getCanonicalFile(new File(outputDir, fileName + ".txt"));
         try {
             engine.init(testContext);
             try {
@@ -119,7 +123,7 @@ public class Worker {
                 if (browser != null) {
                     Data screenshot = browser.screenshot(runnerSettings.screenshotType());
                     File screenshotFile = Path.getCanonicalFile(
-                        new File(outputDir, name + "." + runnerSettings.screenshotType()));
+                        new File(outputDir, fileName + "." + runnerSettings.screenshotType()));
                     try (FileOutputStream fileOutputStream = new FileOutputStream(screenshotFile)) {
                         DataOutputStream os = new DataOutputStream(fileOutputStream);
                         os.write(screenshot.getBytes());
@@ -155,7 +159,7 @@ public class Worker {
         }
 
         TestResult testResult = testContext.getTestResult();
-        File harFile = Path.getCanonicalFile(new File(outputDir, name + ".har"));
+        File harFile = Path.getCanonicalFile(new File(outputDir, fileName + ".har"));
         try {
             HarWriter.save(testResult, harFile);
             testContext.addFile(harFile);

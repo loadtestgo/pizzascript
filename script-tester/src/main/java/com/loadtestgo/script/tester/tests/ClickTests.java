@@ -77,7 +77,7 @@ public class ClickTests extends JavaScriptTest {
 
         TestResult result = runScript(script);
 
-        assertError("Element found but not visible", ErrorType.Script, result);
+        assertError("Element '#link2' found but not visible", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
 

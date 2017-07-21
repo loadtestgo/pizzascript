@@ -1,0 +1,21 @@
+// Test suite that can ran from by the 'pizzascript' commmand:
+//
+//  > pizzascript scripts/testsuite.json
+//
+// BTW: comments are allowed :)
+{
+  "name": "My Test Suite",          // the test suite name
+  "timeout": 60,                    // the default timeout in seconds for each test
+  "settings": {                     // any settings.ini settings can be overridden here
+    "verbose": true
+  },
+  "tests": [                        // the list of tests
+    {
+      "file": "basic.js",           // path to script file relative to json file
+      "timeout": 10,                // optional timeout of script in seconds
+      "name": "open url"            // optional name for the test, displayed in test output
+    },
+    { "file": "sitelogin.js" },
+    { "file": "verifytext.js" }
+  ]
+}

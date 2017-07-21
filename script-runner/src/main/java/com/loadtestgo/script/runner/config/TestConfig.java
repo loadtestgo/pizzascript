@@ -12,15 +12,8 @@ public class TestConfig {
     private String filename;
     private List<RunnerTest> tests;
     private String name;
-    private Map<String, Object> settings = new HashMap<>();
-
-    public void initTestNames() {
-        for (RunnerTest test : tests) {
-            if (StringUtils.isEmpty(test.getName())) {
-                test.setName(test.getFileName());
-            }
-        }
-    }
+    private Map<String, String> settings = new HashMap<>();
+    private double defaultTimeout;
 
     public String getFileName() {
         return filename;
@@ -53,11 +46,11 @@ public class TestConfig {
         this.name = name;
     }
 
-    public void setSettings(Map<String, Object> settings) {
+    public void setSettings(Map<String, String> settings) {
         this.settings = settings;
     }
 
-    public Map<String, Object> getSettings() {
+    public Map<String, String> getSettings() {
         return settings;
     }
 
@@ -74,5 +67,13 @@ public class TestConfig {
             return (Boolean)resuseSession;
         }
         return false;
+    }
+
+    public void setDefaultTimeout(double defaultTimeout) {
+        this.defaultTimeout = defaultTimeout;
+    }
+
+    public double getDefaultTimeout() {
+        return defaultTimeout;
     }
 }

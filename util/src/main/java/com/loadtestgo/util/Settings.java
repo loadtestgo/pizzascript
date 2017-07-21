@@ -110,7 +110,11 @@ public class Settings {
     }
 
     public void putAll(Settings overrideSettings) {
-        settings.putAll(overrideSettings.settings);
+        putAll(overrideSettings.settings);
+    }
+
+    public void putAll(Map<String, String> overrideSettings) {
+        this.settings.putAll(overrideSettings);
     }
 
     public int count() {
