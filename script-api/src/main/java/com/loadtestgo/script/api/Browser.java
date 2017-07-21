@@ -654,7 +654,7 @@ public interface Browser {
      * @param selector the element to get the HTML from
      * @return the inner HTML for the given element
      */
-    String getInnerHTML(String selector);
+    String getInnerHtml(String selector);
 
     /**
      * Get the html for the given element
@@ -662,7 +662,7 @@ public interface Browser {
      * @param selector the element to get the HTML for
      * @return the outer HTML for the given element
      */
-    String getOuterHTML(String selector);
+    String getOuterHtml(String selector);
 
     /**
      * Get the html for the entire currently selected frame.
@@ -671,7 +671,7 @@ public interface Browser {
      *
      * @return the outer HTML for the current frame.
      */
-    String getOuterHTML();
+    String getOuterHtml();
 
     /**
      * Get the text inside the given element

@@ -1431,26 +1431,26 @@ Browser.prototype.setFile = function(selector, file) {};
  * Get the html inside the given element
  *
  * @example
- * var html = b.getInnerHTML('#input1');
+ * var html = b.getInnerHtml('#input1');
  *
  * @param {String} selector the element to get the HTML from
  * @return {String} the inner HTML for the given element
  * @throws Throws an exception if the element can not be found
  */
-Browser.prototype.getInnerHTML = function(selector) {};
+Browser.prototype.getInnerHtml = function(selector) {};
 
 /**
  * Get the html for the given element or the entire frame if
  * no element specified.
  *
  * @example
- * var html = b.getInnerHTML();
+ * var html = b.getInnerHtml();
  *
  * @param {String=} selector the element to get the HTML for
  * @return {String} the outer HTML for the given element
  * @throws Throws an exception if the element can not be found
  */
-Browser.prototype.getOuterHTML = function(selector) {};
+Browser.prototype.getOuterHtml = function(selector) {};
 
 /**
  * Get the text inside the given element
