@@ -51,7 +51,7 @@ public interface Pizza {
      * change to the DOM to happen, that having a hard wait.  If you run the
      * test enough times it's likely the sleep time won't be enough.
      * <p>
-     * See also: waitFor(), Browser.waitForVisible(), Browser.waitHttpTraffic()
+     * See also: waitFor(), Browser.waitForVisible(), Browser.waitForHttpRequests()
      *
      * @param milliseconds
      */

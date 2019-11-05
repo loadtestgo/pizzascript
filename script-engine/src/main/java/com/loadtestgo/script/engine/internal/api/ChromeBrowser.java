@@ -257,7 +257,7 @@ public class ChromeBrowser implements Browser {
     private void checkPageForInvalidHttpStatusCodes(Page page) {
         ArrayList<HttpRequest> requests = page.getRequests();
         for (HttpRequest request : requests) {
-            if (request.getParentFrameId() == 0 &&
+            if (request.getParentFrameId() == null &&
                 request.getResourceType() == ResourceType.Document) {
                 int statusCode = request.getStatusCode();
                 if (statusCode >= 400 && statusCode <= 600) {

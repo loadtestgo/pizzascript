@@ -561,13 +561,13 @@ public class ChromeWebSocket extends BrowserWebSocket {
     class RequestInfo {
         int processId;
         int tabId;
-        int frameId;
+        String frameId;
         String requestId;
 
         RequestInfo() {
             this.processId = -1;
             this.tabId = -1;
-            this.frameId = -1;
+            this.frameId = null;
             this.requestId = null;
         }
 
@@ -580,26 +580,42 @@ public class ChromeWebSocket extends BrowserWebSocket {
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.tabId = details.getInt("tabId");
         if (details.has("frameId")) {
-            String longFrameId = details.getString("frameId");
-            int dotPos = longFrameId.indexOf(".");
+            String frameId = details.getString("frameId");
+            int dotPos = frameId.indexOf(".");
             if (dotPos > 0) {
-                String processId = longFrameId.substring(0, dotPos);
-                String frameId = longFrameId.substring(dotPos + 1, longFrameId.length());
-                requestInfo.frameId = Integer.valueOf(frameId);
+                // Old style was "x.y" where x was the process id and y was the frame id (unique only per process)
+                String processId = frameId.substring(0, dotPos);
+                String shortFrameId = frameId.substring(dotPos + 1);
+                requestInfo.frameId = shortFrameId;
                 requestInfo.processId = Integer.valueOf(processId);
             } else {
-                Logger.error("Unable to parse frameId {}", longFrameId);
+                // New style - process id is not available and string is long
+                requestInfo.frameId = frameId;
             }
         }
 
         String longRequestId = details.getString("requestId");
         int dotPos = longRequestId.indexOf(".");
         if (dotPos > 0) {
-            String processId = longRequestId.substring(0, dotPos);
+            // Old style, < chrome 60 ?
             requestInfo.requestId = longRequestId;
-            requestInfo.processId = Integer.valueOf(processId);
+            String processId = longRequestId.substring(0, dotPos);
+            try {
+                requestInfo.processId = Integer.valueOf(processId);
+            } catch (NumberFormatException e) {
+                Logger.error("Unable to parse processId {} as int", processId);
+            }
         } else {
-            Logger.error("Unable to parse requestId {}", longRequestId);
+            // New style, > chrome 70 ?
+            requestInfo.requestId = longRequestId;
+            String processId = details.optString("processId", null);
+            if (StringUtils.isSet(processId)) {
+                try {
+                    requestInfo.processId = Integer.valueOf(processId);
+                } catch (NumberFormatException e) {
+                    Logger.error("Unable to parse processId {} as int", processId);
+                }
+            }
         }
         return requestInfo;
     }
@@ -1215,7 +1231,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
         Page page = null;
         FrameInfo frameInfo = getNavFrameInfo(details);
         if (isAboutUrl(url)) {
-            if (frameInfo.parentFrameId == -1) {
+            if (frameInfo.parentFrameId != -1) {
                 // Not a top level frame, ignore
                 return;
             }

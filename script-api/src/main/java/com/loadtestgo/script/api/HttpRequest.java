@@ -32,8 +32,8 @@ public class HttpRequest {
 
     // Browser data about the origin of the request
     public String requestId;
-    public int frameId;
-    public int parentFrameId;
+    public String frameId;
+    public String parentFrameId;
     public int tabId;
     public ResourceType resourceType;
 
@@ -136,19 +136,19 @@ public class HttpRequest {
         this.requestId = requestId;
     }
 
-    public int getFrameId() {
+    public String getFrameId() {
         return frameId;
     }
 
-    public void setFrameId(int frameId) {
+    public void setFrameId(String frameId) {
         this.frameId = frameId;
     }
 
-    public int getParentFrameId() {
+    public String getParentFrameId() {
         return parentFrameId;
     }
 
-    public void setParentFrameId(int parentFrameId) {
+    public void setParentFrameId(String parentFrameId) {
         this.parentFrameId = parentFrameId;
     }
 

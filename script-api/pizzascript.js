@@ -367,7 +367,7 @@ utils.date = function(format, daysOffset) {};
  * @example
  * // get a random element from an array
  * var airports = ['san', 'sfo', 'pdx', 'smf', 'lax'];
- * var origin = airports[util.random(airports.length)];
+ * var origin = airports[utils.random(airports.length)];
  *
  * @param {Number} max The (max - 1) of the returned random number
  * @return {Number} Random integer between 0 - (max - 1)
@@ -380,7 +380,7 @@ utils.random = function(max) {};
  * @example
  * // get a random element from an array
  * var airports = ['san', 'sfo', 'pdx', 'smf', 'lax'];
- * var origin = util.randomElement(airports);
+ * var origin = utils.randomElement(airports);
  *
  * @param {Array} array The array to select a random element from
  * @return {Object} Random element from the given array, or null if the array is empty

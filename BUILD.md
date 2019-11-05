@@ -20,7 +20,7 @@ This will save a zip file to:
 
 To build a flat dir for the editor or runner:
 
-    ./gradlew script-editor:install
+    ./gradlew script-editor:installApp
 
 This will package the shell scripts and all dependent JARS to the following directory:
 
