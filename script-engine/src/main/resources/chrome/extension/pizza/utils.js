@@ -24,6 +24,16 @@ pizza.isExternalUrl = function(url) {
 };
 
 /**
+ * Are base urls equal (base url meaning url minus #fragment)
+ */
+pizza.baseUrlEquals = function(url1, url2) {
+    var stripFragment = /#[^#]*$/;
+    var baseUrl1 = url1.replace(stripFragment, "");
+    var baseUrl2 = url2.replace(stripFragment, "");
+    return baseUrl1 === baseUrl2;
+};
+
+/**
  * Strip out just the hostname from a URL
  * @param url
  * @returns {*}

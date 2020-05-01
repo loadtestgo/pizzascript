@@ -25,7 +25,7 @@ It includes:
 - Wait on page load, HTTP traffic, elements to be visible
 - Block/redirect certain URLs (e.g. block 3rd party beacon URLs)
 - Modify request headers
-- HTTP authenication support (Basic/Digest/NTLM)
+- HTTP authentication support (Basic/Digest/NTLM)
 - Emulate Mobile and Tablet devices
 - Emulate network conditions (e.g. 3G/4G/Offline)
 - Record WebSocket request/responses
@@ -81,9 +81,9 @@ b.verifyText("Search");
 ```javascript
 var b = pizza.open();
 b.open("loadtestgo.com");
-b.click("button:contains(Login)");
+b.click("button:contains(Sign In)");
 b.waitPageLoad();
-b.type("#inputUsername", "demo@loadtestgo.com");
+b.type("#inputEmail", "demo@loadtestgo.com");
 b.type("#inputPassword", "password");
 b.click("button:contains(Login):nth(1)");
 b.waitPageLoad();

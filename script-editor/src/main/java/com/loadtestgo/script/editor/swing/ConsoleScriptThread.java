@@ -22,6 +22,7 @@ public class ConsoleScriptThread {
         this.executorService = Executors.newSingleThreadExecutor();
         this.testContext = new EditorTestContext("Console", 0);
         this.testContext.setResultNotifier(output);
+        this.testContext.setCaptureVideo(false);
         output.setTestResult(testContext.getTestResult());
         executorService.submit(new InitTask(engine, testContext, output));
     }

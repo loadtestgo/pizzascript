@@ -14,6 +14,7 @@ public class EditorTestContext extends EasyTestContext {
     public EditorTestContext(String name, int userId) {
         super(name, userId);
 
+        setCaptureVideo(false);
         setSandboxJavaScript(getEngineSettings().sandboxJavaScript());
     }
 

@@ -123,4 +123,26 @@ public class TabTests extends JavaScriptTest {
         assertPagePath(result, 0, "/files/openNew.html");
         assertPagePath(result, 1, "/files/basic.html");
     }
+
+    @Test
+    public void newWindowBasicOps() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.click('#newWindowButton');\n" +
+            "pizza.sleep(1000);\n" +
+            "var t = b.listTabs();\n" +
+            "assert.eq(t.length, 2);\n" +
+            "b.selectTab({ index: 1 });\n" +
+            "b.verifyText('This is the HTML body.');\n" +
+            "b.query('button');\n" +
+            "b.execute('console.log(10)');\n",
+            getTestUrl("files/openNew.html"));
+
+        TestResult result = runScript(script);
+
+        assertNoError(result);
+        assertEquals(2, result.getPages().size());
+        assertPagePath(result, 0, "/files/openNew.html");
+        assertPagePath(result, 1, "/files/basic.html");
+    }
 }

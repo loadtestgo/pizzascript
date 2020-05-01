@@ -888,6 +888,8 @@ pizza.main.commands = function() {
     function selectTab(id, windowId, tabId) {
         chrome.windows.update(windowId, { focused: true }, function(window) {
             chrome.tabs.update(tabId, { active: true }, function(tab) {
+                _currentContextId = null;
+                _automationAPI = null;
                 pizza.devtools.setTab(tabId);
                 sendResponse(id, { value: convertTab(tab) });
             });

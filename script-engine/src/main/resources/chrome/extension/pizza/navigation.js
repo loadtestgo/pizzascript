@@ -22,27 +22,26 @@ pizza.main.navigation = function() {
     };
 
     var _onNavBeforeCallback = function(details) {
-        if (_tabId == details.tabId && _frameId == details.frameId) {
+        if (_tabId === details.tabId && _frameId === details.frameId) {
             _isNavigating = true;
             _url = details.url;
         }
     };
 
     var _onNavCommittedCallback = function(details) {
-        if (_tabId == details.tabId && _frameId == details.frameId) {
+        if (_tabId === details.tabId && _frameId === details.frameId) {
             _url = details.url;
         }
     };
 
     var _onNHistoryUpdatedCallback = function(details) {
-        if (_tabId == details.tabId && _frameId == details.frameId) {
+        if (_tabId === details.tabId && _frameId === details.frameId) {
             _url = details.url;
         }
     };
 
     var _onNavCompletedCallback = function(details) {
-        if (_tabId == details.tabId && _frameId == details.frameId
-                && _url === details.url) {
+        if (_tabId === details.tabId && _frameId === details.frameId && pizza.baseUrlEquals(_url, details.url)) {
             _isNavigating = false;
             _url = null;
             _navDetails = details;
@@ -57,8 +56,7 @@ pizza.main.navigation = function() {
     };
 
     var _onNavErrorOccurredCallback = function(details) {
-        if (_tabId == details.tabId && _frameId == details.frameId
-                && _url === details.url) {
+        if (_tabId === details.tabId && _frameId === details.frameId && pizza.baseUrlEquals(_url, details.url)) {
             _error(details);
         }
     };
@@ -68,7 +66,7 @@ pizza.main.navigation = function() {
     };
 
     var _isNavigationPending = function(tabId) {
-        return (tabId == _tabId && _isNavigating && _loadedHandler);
+        return (tabId === _tabId && _isNavigating && _loadedHandler);
     };
 
     var _error = function(details) {
