@@ -9,11 +9,11 @@ pizza.main.contexttracker = function() {
 
     function isInjectedExtensionTab(params) {
         // Pre Chrome 52 check for context type
-        if (params.context.type && params.context.type == "Extension") {
+        if (params.context.type && params.context.type === "Extension") {
             return true;
         }
         // Chrome 52 & 53 we can just use 'isDefault' which is exactly for this purpose
-        if (params.context.isDefault != undefined && !params.context.isDefault) {
+        if (params.context.isDefault !== undefined && !params.context.isDefault) {
             return true;
         }
         // Chrome 54 isDefault has moved to auxData
@@ -63,12 +63,12 @@ pizza.main.contexttracker = function() {
 
     var _executionContextDestroyed = function(params) {
         for (var i = 0; i < _contextDestroyedHandlers.length; ++i) {
-            _contextDestroyedHandlers[i].apply(null, [params.executionContextId]);
+            _contextDestroyedHandlers[i].apply(null, [[params.executionContextId]]);
         }
         var tab = _frameToContextMap[params.tabId];
         if (tab) {
             delete tab[params.executionContextId];
-            if (tab.firstContext == params.executionContextId) {
+            if (tab.firstContext === params.executionContextId) {
                 console.log("Main context deleted", params.executionContextId);
                 delete tab.firstContext;
                 var firstId = null;
@@ -88,6 +88,20 @@ pizza.main.contexttracker = function() {
         if (params.parentId) {
             return;
         }
+
+        var tab = _frameToContextMap[params.tabId];
+        if (tab) {
+            var contexts = [];
+            for (var executionContextId in tab) {
+                if (executionContextId !== 'firstContext') {
+                    contexts.push(Number(executionContextId));
+                }
+            }
+            for (var i = 0; i < _contextDestroyedHandlers.length; ++i) {
+                _contextDestroyedHandlers[i].apply(null, [contexts]);
+            }
+        }
+
         _frameToContextMap[params.tabId] = {};
     };
 
@@ -111,7 +125,7 @@ pizza.main.contexttracker = function() {
     };
 
     var _handleEvent = function(method, params) {
-        // console.log(method, params);
+        // console.log("handle event", JSON.stringify(method), JSON.stringify(params));
         switch (method) {
             case 'Runtime.executionContextDestroyed':
                 _executionContextDestroyed(params);

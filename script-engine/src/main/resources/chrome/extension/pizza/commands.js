@@ -17,10 +17,13 @@ pizza.main.commands = function() {
         _dialogInfo = null,
         _webRequestModifyCallbacks = [];
 
-    pizza.contexttracker.addContextDestroyedHandler(function(contextId) {
-        if (contextId === _currentContextId) {
-            _automationAPI = null;
-            _currentContextId = null;
+    pizza.contexttracker.addContextDestroyedHandler(function(contextIds) {
+        for (var i = 0; i < contextIds.length; ++i) {
+            var contextId = contextIds[i];
+            if (contextId === _currentContextId) {
+                _automationAPI = null;
+                _currentContextId = null;
+            }
         }
     });
 
@@ -1018,6 +1021,8 @@ pizza.main.commands = function() {
         } else {
             _currentContextId =
                 pizza.contexttracker.getContextIdForFrame(_currentTabId, _currentFrameId);
+
+            console.log("injectAutomationAPI", _currentTabId, _currentFrameId, _currentContextId);
 
             var loc = {
                 expression: "(" + pizza.automation.init.toString() + ")();",

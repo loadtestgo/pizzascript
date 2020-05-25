@@ -1198,7 +1198,7 @@ Browser.prototype.removeCookie = function(url, name) {};
  * @example
  * // Click an element with id 'search', and adjust the wait for the
  * // element to be scrolled on-screen.
- * b.click("#search", { "retry": 3, "retryWaitTime": 300 });
+ * b.click("#search", { "retry": 10, "retryWaitTime": 500 });
  * // Wait for the new page to load
  * b.waitPageLoad();
  *

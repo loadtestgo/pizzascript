@@ -14,10 +14,10 @@ pizza.main.devtools = function() {
         } else if (method.startsWith('DOM')) {
             pizza.frametracker.handleEvent(method, params);
         } else if (method.startsWith('Page')) {
-            if (method == 'Page.javascriptDialogOpening' ||
-                method == 'Page.javascriptDialogClosed') {
+            if (method === 'Page.javascriptDialogOpening' ||
+                method === 'Page.javascriptDialogClosed') {
                 pizza.commands.handleEvent(method, params);
-            } else if (method == 'Page.screencastFrame') {
+            } else if (method === 'Page.screencastFrame') {
                 _ws.send(JSON.stringify({event: method, details: params}));
             }
         } else {

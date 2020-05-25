@@ -98,9 +98,12 @@ public class ChromeProcess {
         // this line crashes chrome for some reason
         // args.add("--silent-launch");
 
-        // Logs also crash chrome on Windows 10 at the time of writing.
-        // Seems like a bug that could happen on any OS, so disable by default.
+        // Logs also crash Chrome on Windows 10 / OSX at the time of writing.
+        // Seems like a bug that could happen on any OS, so disable by default,
+        // and print a warning if enabled.
         if (engineSettings.saveChromeLogs()) {
+            Logger.warn("Enabling Chrome debug logging to 'userdata/chrome_debug.log'...  Chrome has some threading safety issues beware of lockups...");
+
             // Enable logging to userdata/chrome_debug.log
             args.add("--enable-logging");
 
