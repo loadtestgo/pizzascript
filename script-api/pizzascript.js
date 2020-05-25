@@ -1178,6 +1178,13 @@ Browser.prototype.removeCookie = function(url, name) {};
 /**
  * Click the first item matching the given selector.
  *
+ * If the item is off-screen it will be scrolled on-screen if possible..
+ *
+ * Scrolling may not work right away, so by default this function will
+ * check that the element has moved on-screen before clicking and wait
+ * a little bit for it to move if not (max 5 retries with 500ms wait
+ * between each retry).
+ *
  * If this click() navigates to a new page, call waitPageLoad() to
  * wait for the new page to load.  If the page is opened in a new
  * tab then you need to select the new tab before waiting.
@@ -1185,6 +1192,13 @@ Browser.prototype.removeCookie = function(url, name) {};
  * @example
  * // Click an element with id 'search'
  * b.click("#search");
+ * // Wait for the new page to load
+ * b.waitPageLoad();
+ *
+ * @example
+ * // Click an element with id 'search', and adjust the wait for the
+ * // element to be scrolled on-screen.
+ * b.click("#search", { "retry": 3, "retryWaitTime": 300 });
  * // Wait for the new page to load
  * b.waitPageLoad();
  *

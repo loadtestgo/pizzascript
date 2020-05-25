@@ -115,17 +115,20 @@ pizza.automation = {
             return value;
         }
 
-        function findTopElement(element, pos) {
-            var x = pos.left + (pos.width/2);
-            var y = pos.top + (pos.height/2);
+        /**
+         * Find element that hides the given element if any
+         */
+        function findTopElement(element, region) {
+            var x = region.left + (region.width/2);
+            var y = region.top + (region.height/2);
             var top = document.elementFromPoint(x, y);
-            if (top && top != element) {
+            if (top && top !== element) {
                 var parent = top;
                 while (true) {
                     parent = parent.parentNode;
                     if (!parent) {
                         return getElementSelector(top);
-                    } else if (parent == element) {
+                    } else if (parent === element) {
                         return null;
                     }
                 }
@@ -133,17 +136,24 @@ pizza.automation = {
             return null;
         }
 
-        var _getElementRegion = function(selector) {
+        var _moveElementOnScreenAndGetRegion = function(selector) {
             var element = _findElement(selector);
+
+            // find the element and scroll into view if necessary
             element.scrollIntoView(false);
 
-            var pos = getElementRegion(element, selector);
-            var e = findTopElement(element, pos);
+            // now get updated region, and check that the element is
+            // not hidden by other elements
+            var region = getElementRegion(element, selector);
+            var e = findTopElement(element, region);
             if (e) {
-                throw "Element '" + selector +"' hidden by '" + e +  "'";
+                throw {
+                    type: "HiddenByElement",
+                    message: "Element '" + selector +"' hidden by '" + e +  "'"
+                };
             }
 
-            return pos;
+            return region;
         };
 
         function getElementRegion(element, selector) {
@@ -151,15 +161,15 @@ pizza.automation = {
             // and then the bounding client rect.
             // SVG is one case that doesn't have a first client rect.
             var clientRects = element.getClientRects();
-            if (clientRects.length == 0) {
+            if (clientRects.length === 0) {
                 var box = element.getBoundingClientRect();
-                if (box.width == 0 && box.height == 0) {
+                if (box.width === 0 && box.height === 0) {
                     throw "Element '" + selector + "' found but not visible";
                 }
-                if (element.tagName.toLowerCase() == 'area') {
+                if (element.tagName.toLowerCase() === 'area') {
                     var coords = element.coords.split(',');
-                    if (element.shape.toLowerCase() == 'rect') {
-                        if (coords.length != 4) {
+                    if (element.shape.toLowerCase() === 'rect') {
+                        if (coords.length !== 4) {
                             throw "Failed to detect the region of the area for element '" + selector + "'"
                         }
                         var leftX = Number(coords[0]);
@@ -509,7 +519,7 @@ pizza.automation = {
                 }
             }
             // Sanity check that the new active element is the target element
-            if (element != doc.activeElement) {
+            if (element !== doc.activeElement) {
                 throw new Error('cannot focus element');
             }
         };
@@ -627,7 +637,7 @@ pizza.automation = {
 
         function getElementPath(element) {
             var tag = null;
-            for (var e = element; e && e != document.body; e = e.parentElement) {
+            for (var e = element; e && e !== document.body; e = e.parentElement) {
                 var add = e.tagName.toLowerCase();
                 if (e.id) {
                     add += '#' + e.id;
@@ -668,8 +678,8 @@ pizza.automation = {
             // Output some useful visibility info
             v.visible = false;
             try {
-                v.pos = getElementRegion(element);
-                var e = findTopElement(element, v.pos);
+                v.region = getElementRegion(element);
+                var e = findTopElement(element, v.region);
                 if (e) {
                     v.hiddenBy = e;
                 } else {
@@ -678,11 +688,11 @@ pizza.automation = {
             } catch (e) {}
 
             var style = window.getComputedStyle(element);
-            if (style.visibility == 'hidden') {
+            if (style.visibility === 'hidden') {
                 v.visibility = style.visibility;
             }
-            if (!v.pos) {
-                if (style.display == 'none') {
+            if (!v.region) {
+                if (style.display === 'none') {
                     v.display = style.display;
                 } else {
                     var parent = element;
@@ -692,14 +702,14 @@ pizza.automation = {
                             break;
                         }
                         var ps = window.getComputedStyle(parent);
-                        if (ps && ps.display == 'none') {
+                        if (ps && ps.display === 'none') {
                             v.hiddenParent = getElementSelector(parent);
                             break;
                         }
                     }
                 }
             }
-            if (style.zIndex != 'auto') {
+            if (style.zIndex !== 'auto') {
                 v.zIndex = style.zIndex;
             }
             var t = element.innerText;
@@ -724,7 +734,7 @@ pizza.automation = {
             elementExists: _elementExists,
             submitForm: _submitForm,
             focus: _focus,
-            getElementRegion: _getElementRegion
+            moveElementOnScreenAndGetRegion: _moveElementOnScreenAndGetRegion
         };
     }
 };

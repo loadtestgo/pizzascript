@@ -616,6 +616,14 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
+    public void click(String selector, NativeObject paramsIn) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        params.putAll(RhinoUtils.deserialize(paramsIn));
+        checkResponseForErrors(pizzaHandler.sendCommand("click", params));
+    }
+
+    @Override
     public void clickAt(String selector, int x, int y) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
@@ -651,6 +659,14 @@ public class ChromeBrowser implements Browser {
     public void hover(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
+        checkResponseForErrors(pizzaHandler.sendCommand("hover", params));
+    }
+
+    @Override
+    public void hover(String selector, NativeObject paramsIn) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        params.putAll(RhinoUtils.deserialize(paramsIn));
         checkResponseForErrors(pizzaHandler.sendCommand("hover", params));
     }
 

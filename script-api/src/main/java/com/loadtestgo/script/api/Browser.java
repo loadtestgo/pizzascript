@@ -490,6 +490,7 @@ public interface Browser {
      * @param selector the element to click
      */
     void click(String selector);
+    void click(String selector, NativeObject params);
 
     /**
      * Click the given item at the given location, emulating all JavaScript events
@@ -531,6 +532,7 @@ public interface Browser {
      * @param selector the element to hover over
      */
     void hover(String selector);
+    void hover(String selector, NativeObject params);
 
     /**
      * Hover over the first item matching the given selector at the given

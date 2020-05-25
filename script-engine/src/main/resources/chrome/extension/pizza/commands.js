@@ -1057,6 +1057,18 @@ pizza.main.commands = function() {
 
     function formatExceptionDetailsException(response) {
         var ex = response.exceptionDetails.exception;
+        // Deserialize automation.js exception
+        if (ex.type === "object" && ex.preview) {
+            if (ex.preview.properties) {
+                var error = {};
+                var properties = ex.preview.properties;
+                for (var i = 0; i < properties.length; ++i) {
+                    var prop = properties[i];
+                    error[prop.name] = prop.value;
+                }
+                return error;
+            }
+        }
         if (ex.description) {
             return stripStackTraceFromError(ex.description);
         }
@@ -1072,7 +1084,7 @@ pizza.main.commands = function() {
         } else if (response.exceptionDetails) {
             t = response.exceptionDetails.text;
             var uncaught = "Uncaught ";
-            if (t.indexOf(uncaught) == 0) {
+            if (t.indexOf(uncaught) === 0) {
                 t = t.substr(uncaught.length);
             }
         } else {
@@ -1110,10 +1122,13 @@ pizza.main.commands = function() {
                 };
                 pizza.devtools.sendCommand('Runtime.callFunctionOn', loc, function (response) {
                     if (response.message) {
+                        // console.log("1", JSON.stringify(response));
                         errorCallback(response.message);
                     } else if (response.wasThrown) {
+                        // console.log("2", JSON.stringify(response));
                         errorCallback(formatWasThrownException(response));
                     } else if (response.exceptionDetails) {
+                        // console.log("3", JSON.stringify(response));
                         errorCallback(formatExceptionDetailsException(response));
                     } else {
                         try {
@@ -1128,60 +1143,80 @@ pizza.main.commands = function() {
         });
     }
 
-    var _click = function(id, params) {
-        executeAutomationAPI(
-            function(response) {
-                var pos = response.result.value;
-                if (pos.left < 0 || pos.top < 0 ||
-                    pos.width <= 0 || pos.height <= 0) {
-                    sendResponse(id, { error: "Unable to click element at " + JSON.stringify(pos) });
-                } else {
-                    chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
-                        pos.top *= zoomFactor;
-                        pos.left *= zoomFactor;
-                        pos.width *= zoomFactor;
-                        pos.height *= zoomFactor;
+    function applyElementRegionWithRetry(id, params, applyElementFunction) {
+        params.retry = 5;
+        if (params.retry && !params.retryWaitTime) {
+            params.retryWaitTime = 500;
+        }
+        var check = function(params) {
+            executeAutomationAPI(
+                applyElementFunction,
+            function (error) {
+                    if (error.type) {
+                        if (error.type === 'HiddenByElement') {
+                            if (params.retry) {
+                                params.retry--;
+                                setTimeout(check, params.retryWaitTime, params);
+                                return;
+                            }
+                        }
+                        sendResponse(id, {error: error.message});
+                    } else {
+                        sendResponse(id, {error: error});
+                    }
+                },
+                true,
+                "function(selector) { return this.moveElementOnScreenAndGetRegion(selector); }",
+                params.selector);
+        }
 
-                        var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
-                        var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
-                        pizza.input.click(x, y, function () {
-                            sendResponse(id, {value: {}});
-                        });
+        check(params);
+    }
+
+    var _click = function(id, params) {
+        applyElementRegionWithRetry(id, params, function (response) {
+            var pos = response.result.value;
+            if (pos.left < 0 || pos.top < 0 ||
+                pos.width <= 0 || pos.height <= 0) {
+                sendResponse(id, {error: "Unable to click element at " + JSON.stringify(pos)});
+            } else {
+                chrome.tabs.getZoom(_currentTabId, function (zoomFactor) {
+                    pos.top *= zoomFactor;
+                    pos.left *= zoomFactor;
+                    pos.width *= zoomFactor;
+                    pos.height *= zoomFactor;
+
+                    var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
+                    var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
+                    pizza.input.click(x, y, function () {
+                        sendResponse(id, {value: {}});
                     });
-                }
-            },
-            function(error) { sendResponse(id, { error: error }); },
-            true,
-            "function(selector) { return this.getElementRegion(selector); }",
-            params.selector);
+                });
+            }
+        });
     };
 
     var _hover = function(id, params) {
-        executeAutomationAPI(
-            function(response) {
-                var pos = response.result.value;
-                if (pos.left < 0 || pos.top < 0 ||
-                    pos.width <= 0 || pos.height <= 0) {
-                    sendResponse(id, { error: "Unable to move mouse to element at " + JSON.stringify(pos) });
-                } else {
-                    chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
-                        pos.top *= zoomFactor;
-                        pos.left *= zoomFactor;
-                        pos.width *= zoomFactor;
-                        pos.height *= zoomFactor;
+        applyElementRegionWithRetry(id, params, function (response) {
+            var pos = response.result.value;
+            if (pos.left < 0 || pos.top < 0 ||
+                pos.width <= 0 || pos.height <= 0) {
+                sendResponse(id, { error: "Unable to move mouse to element at " + JSON.stringify(pos) });
+            } else {
+                chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
+                    pos.top *= zoomFactor;
+                    pos.left *= zoomFactor;
+                    pos.width *= zoomFactor;
+                    pos.height *= zoomFactor;
 
-                        var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
-                        var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
-                        pizza.input.mouseMove(x, y, function () {
-                            sendResponse(id, {value: {}});
-                        });
+                    var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
+                    var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
+                    pizza.input.mouseMove(x, y, function () {
+                        sendResponse(id, {value: {}});
                     });
-                }
-            },
-            function(error) { sendResponse(id, { error: error }); },
-            true,
-            "function(selector) { return this.getElementRegion(selector); }",
-            params.selector);
+                });
+            }
+        });
     };
 
     var _focus = function(id, params) {
@@ -1249,7 +1284,7 @@ pizza.main.commands = function() {
     var _getValue = function(id, params) {
         var script = "" + function(selector) {
           var e = this.findElement(selector);
-          if (e.tagName == 'SELECT' && e.hasAttribute('multiple')) {
+          if (e.tagName === 'SELECT' && e.hasAttribute('multiple')) {
             var a = e.selectedOptions;
             var v = [];
             for (var i = 0; i < a.length; ++i) {
@@ -1294,7 +1329,6 @@ pizza.main.commands = function() {
         executeAutomationAPI(
             function(response) {
                 pizza.frametracker.setFileInputFiles(response.result.objectId, params.files, function(response) {
-                    console.log(response);
                     sendResponse(id, { value: {} });
                 });
             },
@@ -1370,7 +1404,6 @@ pizza.main.commands = function() {
          var set = false;
          for (var j = 0; j < e.options.length; ++j) {
            var o = e.options[j];
-           console.log(t, j);
            if (params.text && t == o.text ||
                 params.value && t == o.value ||
                 params.match && o.text && o.text.match(t) ||
@@ -1523,7 +1556,7 @@ pizza.main.commands = function() {
         var elements = this.findElementAll(selector);
         for (var i = 0; i < elements.length; ++i) {
             var v = this.queryElementWrap(elements[i]);
-            if (v.pos && !v.hiddenBy) {
+            if (v.region && !v.hiddenBy) {
                 return true;
             }
         }
@@ -1574,11 +1607,11 @@ pizza.main.commands = function() {
     function fixPositionOnElements(elements, zoomFactor) {
         for (var i = 0; i < elements.length; ++i) {
             var e = elements[i];
-            if (e.pos) {
-                e.pos.top *= zoomFactor;
-                e.pos.left *= zoomFactor;
-                e.pos.width *= zoomFactor;
-                e.pos.height *= zoomFactor;
+            if (e.region) {
+                e.region.top *= zoomFactor;
+                e.region.left *= zoomFactor;
+                e.region.width *= zoomFactor;
+                e.region.height *= zoomFactor;
             }
         }
     }
@@ -1637,9 +1670,7 @@ pizza.main.commands = function() {
         }
         executeAutomationAPI(
             function(response) {
-                console.log(response);
                 pizza.frametracker.highlight(response.result.objectId, color, function(response) {
-                    console.log(response);
                     sendResponse(id, { value: {} });
                 });
             },
@@ -1992,11 +2023,11 @@ pizza.main.commands = function() {
                     e.preventDefault();
                     if (e.target) {
                         var details = that.queryElementWrap(e.target);
-                        if (details.pos) {
-                            details.pos.top *= zoomFactor;
-                            details.pos.left *= zoomFactor;
-                            details.pos.width *= zoomFactor;
-                            details.pos.height *= zoomFactor;
+                        if (details.region) {
+                            details.region.top *= zoomFactor;
+                            details.region.left *= zoomFactor;
+                            details.region.width *= zoomFactor;
+                            details.region.height *= zoomFactor;
                         }
                         window.postMessage({ type: "PizzaElementSelected", msg: details }, window.location);
                     }
@@ -2082,7 +2113,6 @@ pizza.main.commands = function() {
     addCommand("verifyText", _verifyText);
     addCommand("getInnerText", _getInnerText);
     addCommand("waitForText", _waitForText);
-
 
     addCommand("verifyTitle", _verifyTitle);
     addCommand("getTitle", _getTitle);
