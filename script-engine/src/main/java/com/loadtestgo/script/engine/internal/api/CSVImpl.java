@@ -4,58 +4,136 @@ import com.loadtestgo.script.api.CSV;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CSVImpl implements CSV {
     private List<String> rows;
+    private Map<String,Integer> columnNames = new HashMap<>();
+
+    public class Row implements CSV.Row {
+        private String values[];
+
+        Row(String[] values) {
+            this.values = values;
+        }
+
+        @Override
+        public String get(String columnName) {
+            if (columnName == null) {
+                return null;
+            }
+
+            Integer i = CSVImpl.this.columnNames.get(columnName.toLowerCase());
+            if (i == null || i >= values.length) {
+                return null;
+            }
+
+            return values[i];
+        }
+
+        @Override
+        public String get(int columnIndex) {
+            if (columnIndex < values.length) {
+                return values[columnIndex];
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public int getNumColumns() {
+            return values.length;
+        }
+    }
 
     public CSVImpl(File file) throws IOException {
         rows = parseCsvRowsIntoArray(new FileInputStream(file));
+
+        if (rows.size() > 0) {
+            List<String> columns = parseCsvRow(rows.get(0));
+            for (int i = 0; i < columns.size(); ++i) {
+                columnNames.put(columns.get(i).toLowerCase(), i);
+            }
+        }
     }
 
     @Override
-    public int getLength() {
+    public int getNumRows() {
         return rows.size();
     }
 
     @Override
-    public String[] row(int row) {
+    public Row row(int row) {
         if (row >= 0 && row < rows.size()) {
             List<String> columns = parseCsvRow(rows.get(row));
-            return columns.toArray(new String[columns.size()]);
+            return new Row(columns.toArray(new String[0]));
         } else {
             return null;
         }
     }
 
     @Override
-    public String[] randomRow() {
-        return row(randomInt(rows.size()));
+    public Row randomRow() {
+        if (rows.size() < 2) {
+            return null;
+        }
+        return row(1 + randomInt(rows.size() - 1));
     }
 
     @Override
-    public String value(int row, int column) {
-        String[] columns = row(row);
-        if (columns == null) {
+    public Row randomRow(boolean header) {
+        if (!header) {
+            return row(randomInt(rows.size()));
+        } else {
+            return randomRow();
+        }
+    }
+
+    @Override
+    public String value(int rowIndex, int columnIndex) {
+        Row row = row(rowIndex);
+        if (row == null) {
             return null;
-        } else if (column < columns.length && column >= 0) {
-            return columns[column];
+        } else if (columnIndex < row.getNumColumns() && columnIndex >= 0) {
+            return row.get(columnIndex);
         } else {
             return null;
         }
     }
 
     @Override
-    public String randomValue(int column) {
-        String[] columns = randomRow();
-        if (columns == null) {
+    public String value(int rowIndex, String columnName) {
+        Row row = row(rowIndex);
+        if (row == null) {
             return null;
-        } else if (column < columns.length && column >= 0) {
-            return columns[column];
         } else {
-            return null;
+            return row.get(columnName);
         }
+    }
+
+    @Override
+    public String randomValue(int columnIndex) {
+        Row row = randomRow();
+        if (row == null) {
+            return null;
+        } else {
+            return row.get(columnIndex);
+        }
+    }
+
+    @Override
+    public String randomValue(String columnName) {
+        Row row = randomRow();
+        if (row == null) {
+            return null;
+        } else {
+            return row.get(columnName);
+        }
+    }
+
+    @Override
+    public List<String> getColumnNames() {
+        return new ArrayList<>(columnNames.keySet());
     }
 
     enum ParseState {
@@ -64,7 +142,6 @@ public class CSVImpl implements CSV {
         INQUOTE_ESCAPE,
         NOQUOTES
     }
-
 
     enum ParseAllState {
         START,

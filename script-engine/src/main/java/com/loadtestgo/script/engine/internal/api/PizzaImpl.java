@@ -141,12 +141,6 @@ public class PizzaImpl implements Pizza {
         File file = testContext.getFile(filename);
         try {
             return new CSVImpl(file);
-        } catch (FileNotFoundException e) {
-            if (testContext.getIsFileSystemSandboxed()) {
-                throw new ScriptException(e.getMessage());
-            } else {
-                throw new ScriptException(e.getMessage().replace(filename, file.getAbsolutePath()));
-            }
         } catch (IOException e) {
             throw new ScriptException(e.getMessage());
         }

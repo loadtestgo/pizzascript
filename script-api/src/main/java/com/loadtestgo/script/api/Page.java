@@ -281,7 +281,8 @@ public class Page {
         BlockedByClient,
         NetworkChanged,
         UnsafePort,
-        UploadFileNotFound
+        UploadFileNotFound,
+        InvalidArgument
     }
 
     public void setError(Error error) {

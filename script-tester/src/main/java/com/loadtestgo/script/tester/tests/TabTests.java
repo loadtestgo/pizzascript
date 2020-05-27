@@ -82,14 +82,14 @@ public class TabTests extends JavaScriptTest {
             "b.selectTab({index: 1});" +
             "b.open(\"%s\");\n",
             getTestUrl("files/openNew.html"),
-            getTestUrl("files/openNew.html"));
+            getTestUrl("files/basic.html"));
 
         TestResult result = runScript(script);
 
         assertNoError(result);
         assertEquals(2, result.getPages().size());
         assertPagePath(result, 0, "/files/openNew.html");
-        assertPagePath(result, 1, "/files/openNew.html");
+        assertPagePath(result, 1, "/files/basic.html");
     }
 
     @Test

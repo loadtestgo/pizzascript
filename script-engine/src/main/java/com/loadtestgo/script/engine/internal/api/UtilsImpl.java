@@ -4,16 +4,25 @@ import com.loadtestgo.script.api.Util;
 import org.mozilla.javascript.NativeArray;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class UtilsImpl implements Util {
     private Random random = new Random();
-    private String alphaNumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private static String ALPHANUMERIC = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     public UtilsImpl() {
+    }
+
+    @Override
+    public String date(String format) {
+        return date(format, 0);
     }
 
     @Override
@@ -24,6 +33,21 @@ public class UtilsImpl implements Util {
         c.setTime(date);
         c.add(Calendar.DAY_OF_MONTH, daysOffset);
         return dt1.format(c.getTime());
+    }
+
+    @Override
+    public String dateTime(String format) {
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return date.format(formatter);
+    }
+
+    @Override
+    public String dateTime(String format, Date date) {
+        OffsetDateTime dateTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()),
+            ZoneOffset.UTC.normalized());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return dateTime.format(formatter);
     }
 
     @Override
@@ -40,7 +64,7 @@ public class UtilsImpl implements Util {
 
     @Override
     public String randomString() {
-        return randomString(alphaNumeric, 10);
+        return randomString(ALPHANUMERIC, 10);
     }
 
     @Override
@@ -50,16 +74,16 @@ public class UtilsImpl implements Util {
 
     @Override
     public String randomString(String chars, int len) {
-        String str = "";
+        StringBuilder str = new StringBuilder();
         for (int i = 0; i < len; ++i) {
-            str += chars.charAt(random.nextInt(chars.length()));
+            str.append(chars.charAt(random.nextInt(chars.length())));
         }
-        return str;
+        return str.toString();
     }
 
     @Override
     public String randomString(int len) {
-        return randomString(alphaNumeric, len);
+        return randomString(ALPHANUMERIC, len);
     }
 
     @Override

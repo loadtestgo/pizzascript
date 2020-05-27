@@ -356,10 +356,23 @@ var utils = {};
  * b.type("#departureDate", utils.date(format, 2));
  *
  * @param {String} format The time format
- * @param {Number} daysOffset The day offset
- * @return {String} The new date
+ * @param {Number=} daysOffset The day offset
+ * @return {String} The formatted date as a string
  */
 utils.date = function(format, daysOffset) {};
+
+/**
+ * Format the current (or given) date time.
+ *
+ * @example
+ * var format = "MM-dd-YY-hh-mm-ss-ms";
+ * b.type("#decsription", "description-" + utils.dateTime(format));
+ *
+ * @param {String} format The date time format
+ * @param {Date=} Date time to format, if not specified current date will be used
+ * @return {String} Date time as string
+ */
+utils.dateTime = function(format, date) {};
 
 /**
  * Return a random integer in the range 0 - (max - 1)
@@ -2785,24 +2798,28 @@ CSV = {};
  *
  * @return {Number} Number of rows in CSV file
  */
-CSV.prototype.getLength = function() {};
+CSV.prototype.getNumRows = function() {};
 
 /**
  * Returns the given row of the CSV file as an array of strings (one
  * value for each column).
  *
- * @param {Number} row The row to retrieve
+ * @param {Number} rowIndex The row index to retrieve
  *
- * @return {String[]}
+ * @return {module:CSVRow}
  */
-CSV.prototype.row = function(row) {};
+CSV.prototype.row = function(rowIndex) {};
 
 /**
- * Retrieve a random row in the CSV file
+ * Retrieve a random row in the CSV file.
  *
- * @return {String[]}
+ * By default assumes row 0 is the column names, and will not be returned.
+ *
+ * @param {Boolean=} hasHeader when set to true (the default) indicates that
+ * the first row of the CSV should be ignored.
+ * @return {module:CSVRow}
  */
-CSV.prototype.randomRow = function() {};
+CSV.prototype.randomRow = function(hasHeader) {};
 
 /**
  * Retrieve the value in the CSV table at the given row and column
@@ -2812,7 +2829,7 @@ CSV.prototype.randomRow = function() {};
  *
  * @return {String}
  */
-CSV.prototype.value = function(row, column) {};
+CSV.prototype.value = function(rowIndex, columnIndex) {};
 
 /**
  * Retrieve a value for the given column in the CSV file
@@ -2821,7 +2838,33 @@ CSV.prototype.value = function(row, column) {};
  *
  * @return {String}
  */
-CSV.prototype.randomValue = function(column) {};
+CSV.prototype.randomValue = function(columnIndex) {};
+
+/**
+ * CSV row data
+ *
+ * See {@link module:pizza.openCSV}
+ *
+ * @exports CSVRow
+ */
+CSVRow = {};
+
+/**
+ * Get the value of the given column.
+ *
+ * @param {Number|String} column The row to retrieve, if a number the column index, if a string
+ * a column name.
+ *
+ * @return {String}
+ */
+CSVRow.prototype.get = function(column) {};
+
+/**
+ * Return the number of columns for this row.
+ *
+ * @return {Number}
+ */
+CSVRow.prototype.getNumColumns = function() {};
 
 /**
  * An array of bytes with a content type

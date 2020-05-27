@@ -1,11 +1,25 @@
 package com.loadtestgo.script.api;
 
-public interface CSV {
-    int getLength();
+import java.util.List;
 
-    String[] row(int row);
-    String[] randomRow();
+public interface CSV {
+    interface Row {
+        String get(String columnName);
+        String get(int columnIndex);
+        int getNumColumns();
+    }
+
+    int getNumRows();
+
+    Row row(int row);
+    Row randomRow();
+    Row randomRow(boolean header);
 
     String value(int row, int column);
+    String value(int row, String columnName);
+
     String randomValue(int column);
+    String randomValue(String columnName);
+
+    List<String> getColumnNames();
 }

@@ -1,5 +1,6 @@
 package com.loadtestgo.script.tester.tests;
 
+import com.loadtestgo.script.api.ErrorType;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
 import org.junit.Test;
@@ -100,13 +101,21 @@ public class AddHeaders extends JavaScriptTest {
                 "b = pizza.open();\n" +
                 "b.setHeader('Host', 'www.google.com');\n" +
                 "b.open(\"%s\");\n" +
-                "b.verifyText(\'Host: www.google.com\');\n",
+                "b.verifyText('Host: www.google.com');\n",
                 getTestUrl("headers/all"));
 
         TestResult result = runScript(script);
 
         assertOnePage(result);
         assertOneRequest(result);
-        assertNoError(result);
+
+        int version = result.getBrowserVersionMajor();
+
+        // We can no longer override the host header in Chrome 81.
+        if (version >= 80) {
+            assertError("Error navigating to 'http://localhost:3000/headers/all': net::ERR_INVALID_ARGUMENT", ErrorType.Navigation, result);
+        } else {
+            assertNoError(result);
+        }
     }
 }

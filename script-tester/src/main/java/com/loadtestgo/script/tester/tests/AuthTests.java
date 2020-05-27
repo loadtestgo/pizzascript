@@ -30,7 +30,7 @@ public class AuthTests extends JavaScriptTest {
         if (!Os.isLinux()) {
             assertEquals(401, request.getStatusCode());
         }
-        assertError("Script interrupted", ErrorType.Timeout, result);
+        assertError("Error navigating to 'http://localhost:3000/auth/reject': net::ERR_INVALID_AUTH_CREDENTIALS", ErrorType.Navigation, result);
     }
 
     @Test
@@ -65,6 +65,6 @@ public class AuthTests extends JavaScriptTest {
 
         HttpRequest request = getFirstRequest(result);
         assertEquals(401, request.getStatusCode());
-        assertError("Script interrupted", ErrorType.Timeout, result);
+        assertError("Error navigating to 'http://localhost:3000/auth/reject': net::ERR_INVALID_AUTH_CREDENTIALS", ErrorType.Navigation, result);
     }
 }
