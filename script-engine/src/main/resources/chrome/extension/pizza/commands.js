@@ -479,11 +479,11 @@ pizza.main.commands = function() {
     };
 
     var _execute = function(id, params) {
-        _currentContextId = pizza.contexttracker.getContextIdForFrame(_currentTabId, _currentFrameId);
+        var contextId = pizza.contexttracker.getContextIdForFrame(_currentTabId, _currentFrameId);
 
         var loc = {
             expression: params.script,
-            contextId: _currentContextId
+            contextId: contextId
         };
 
         pizza.devtools.sendCommand('Runtime.evaluate', loc, function(response) {
@@ -1178,23 +1178,72 @@ pizza.main.commands = function() {
         check(params);
     }
 
-    var _click = function(id, params) {
-        applyElementRegionWithRetry(id, params, function (response) {
-            var pos = response.result.value;
-            if (pos.left < 0 || pos.top < 0 ||
-                pos.width <= 0 || pos.height <= 0) {
-                sendResponse(id, {error: "Unable to click element at " + JSON.stringify(pos)});
-            } else {
-                chrome.tabs.getZoom(_currentTabId, function (zoomFactor) {
-                    pos.top *= zoomFactor;
-                    pos.left *= zoomFactor;
-                    pos.width *= zoomFactor;
-                    pos.height *= zoomFactor;
+    var isRegionVisible = function(region) {
+        var left = region.left;
+        var top = region.top;
+        var height = region.height;
+        var width = region.width;
+        if (left < 0) {
+            width += left;
+            left = 0;
+        }
+        if (width < 0) {
+            width = 0;
+        }
+        if (top < 0) {
+            height += top;
+            top = 0;
+        }
+        if (height < 0) {
+            height = 0;
+        }
+        return width !== 0 && height !== 0;
+    }
 
-                    var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
-                    var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
-                    pizza.input.click(x, y, function () {
-                        sendResponse(id, {value: {}});
+    var calcElementPosition = function(region, params, zoomFactor) {
+        var left = region.left * zoomFactor;
+        var top = region.top * zoomFactor;
+        var height = region.height * zoomFactor;
+        var width = region.width * zoomFactor;
+        if (left < 0) {
+            width += left;
+            left = 0;
+            if (width < 0) {
+                width = 0;
+            }
+        }
+        if (top < 0) {
+            height += top;
+            top = 0;
+            if (height < 0) {
+                height = 0;
+            }
+        }
+        var x, y;
+        if (params.x == null) {
+            x = left + width / 2;
+        } else {
+            x = left + (params.x * zoomFactor);
+        }
+        if (params.y == null) {
+            y = top + height / 2;
+        } else {
+            y = top + (params.y * zoomFactor);
+        }
+        return {x: Math.floor(x), y: Math.floor(y)};
+    };
+
+    var _click = function(id, params) {
+        applyElementRegionWithRetry(id, params, function(response) {
+            var region = response.result.value;
+            if (!isRegionVisible(region)) {
+                sendResponse(id, {error: "Unable to click element at " + JSON.stringify(region)});
+            } else {
+                chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
+                    var pos = calcElementPosition(region, params, zoomFactor);
+                    console.log("clicking", pos, region);
+                    pizza.input.click(pos.x, pos.y, function () {
+                        sendResponse(id, {value: { x: pos.x, y: pos.y }});
                     });
                 });
             }
@@ -1202,21 +1251,14 @@ pizza.main.commands = function() {
     };
 
     var _hover = function(id, params) {
-        applyElementRegionWithRetry(id, params, function (response) {
-            var pos = response.result.value;
-            if (pos.left < 0 || pos.top < 0 ||
-                pos.width <= 0 || pos.height <= 0) {
-                sendResponse(id, { error: "Unable to move mouse to element at " + JSON.stringify(pos) });
+        applyElementRegionWithRetry(id, params, function(response) {
+            var region = response.result.value;
+            if (!isRegionVisible(region)) {
+                sendResponse(id, {error: "Unable to move mouse to element at " + JSON.stringify(region)});
             } else {
                 chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
-                    pos.top *= zoomFactor;
-                    pos.left *= zoomFactor;
-                    pos.width *= zoomFactor;
-                    pos.height *= zoomFactor;
-
-                    var x = Math.floor(pos.left + ((params.x) ? params.x : (pos.width / 2)));
-                    var y = Math.floor(pos.top + ((params.y) ? params.y : (pos.height / 2)));
-                    pizza.input.mouseMove(x, y, function () {
+                    var pos = calcElementPosition(region, params, zoomFactor);
+                    pizza.input.mouseMove(pos.x, pos.y, function () {
                         sendResponse(id, {value: {}});
                     });
                 });
@@ -1826,6 +1868,8 @@ pizza.main.commands = function() {
 
         _autoDismissDialogs = false;
 
+        _automationAPI = null;
+
         function stopVideo(next) {
             if (_videoCapture) {
                 pizza.devtools.sendCommand("Page.stopScreencast", {},
@@ -1845,7 +1889,7 @@ pizza.main.commands = function() {
             chrome.tabs.query({}, wait.add(function(tabs) {
                 for (var i = 0; i < tabs.length; ++i) {
                     var tab = tabs[i];
-                    if (i == 0) {
+                    if (i === 0) {
                         firstTab = tab;
                     } else {
                         chrome.tabs.remove(tab.id, wait.add());
@@ -1893,10 +1937,12 @@ pizza.main.commands = function() {
                 "localStorage": true,
                 "serviceWorkers": true,
                 "serverBoundCertificates": true,
-                "pluginData": true,
+                // "pluginData": true, // this freezes for 10 seconds and I dont think is useful anyway
                 "passwords": true,
                 "webSQL": true
-            }, next);
+            }, function() {
+                next();
+            });
         }
 
         function enableMessages(next) {
@@ -1930,7 +1976,7 @@ pizza.main.commands = function() {
                 return;
             }
             var op = operations[j++];
-            if (j == operations.length) {
+            if (j === operations.length) {
                 op(function() {
                     sendResponse(id, {});
                 });

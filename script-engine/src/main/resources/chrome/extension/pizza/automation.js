@@ -115,13 +115,40 @@ pizza.automation = {
             return value;
         }
 
+        var calcElementMidPosition = function(region) {
+            var left = region.left;
+            var top = region.top;
+            var height = region.height;
+            var width = region.width;
+            if (left < 0) {
+                width += left;
+                left = 0;
+                if (width < 0) {
+                    width = 0;
+                }
+            }
+            if (top < 0) {
+                height += top;
+                top = 0;
+                if (height < 0) {
+                    height = 0;
+                }
+            }
+            var x = left + width / 2;
+            var y = top + height / 2;
+            return {x: Math.floor(x), y: Math.floor(y)};
+        };
+
         /**
          * Find element that hides the given element if any
          */
         function findTopElement(element, region) {
-            var x = region.left + (region.width/2);
-            var y = region.top + (region.height/2);
-            var top = document.elementFromPoint(x, y);
+            var pos = calcElementMidPosition(region);
+            if (pos.x < 0 || pos.y < 0) {
+                console.log(region, pos);
+                return null;
+            }
+            var top = document.elementFromPoint(pos.x, pos.y);
             if (top && top !== element) {
                 var parent = top;
                 while (true) {
