@@ -204,6 +204,15 @@ pizza.ip = "";
 pizza.userId = 0;
 
 /**
+ * The worker id that the script is running under, it's unique per browser,
+ * on the bot and starts at 0.  Normally you don't need this, instead the userId
+ * can be used.
+ *
+ * @type {Number}
+ */
+pizza.workerId = 0;
+
+/**
  * The number of samples ran on this user id so far, starts at 0 and
  * increments by 1 for every sample that is processed by the current user.
  *
@@ -215,7 +224,8 @@ pizza.sequenceId = 0;
 
 /**
  * The bot index starting at 0 and increasing by one for every bot launched
- * for the duration of the test.
+ * for the duration of the test.  Normally you don't need this, instead the userId
+ * can be used.
  *
  * @type {Number}
  */

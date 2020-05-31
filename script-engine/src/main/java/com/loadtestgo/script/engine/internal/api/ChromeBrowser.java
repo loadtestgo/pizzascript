@@ -66,7 +66,7 @@ public class ChromeBrowser implements Browser {
                     userContext.getEngineContext().getWebSocketServer();
 
                 pizzaHandler = new ChromeWebSocket(testContext);
-                webSocket.initHandler(userContext.getUserId(), pizzaHandler);
+                webSocket.initHandler(userContext.getWorkerId(), pizzaHandler);
             } else {
                 pizzaHandler.reset(testContext);
             }

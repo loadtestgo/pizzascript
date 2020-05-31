@@ -114,7 +114,7 @@ public class TestContext {
     }
 
     public String getTestTmpDir() {
-        return String.format("%s/%d", Dirs.getTmp(), userContext.getUserId());
+        return String.format("%s/%d", Dirs.getTmp(), userContext.getWorkerId());
     }
 
     public ChromeSettings getDefaultChromeSettings() {

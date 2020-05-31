@@ -132,6 +132,11 @@ public class PizzaImpl implements Pizza {
     }
 
     @Override
+    public int getWorkerId() {
+        return testContext.getUserContext().getWorkerId();
+    }
+
+    @Override
     public int getSequenceId() {
         return testContext.getUserContext().getSeqId();
     }

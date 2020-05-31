@@ -86,6 +86,8 @@ public interface Pizza {
 
     int getBotId();
 
+    int getWorkerId();
+
     int getUserId();
 
     int getSequenceId();

@@ -11,6 +11,7 @@ import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeWebSocket;
 public class UserContext {
     private EngineContext engineContext;
     private int userId;
+    private int workerId;
     private int seqId;
     private boolean chromeProfileInitialSetup;
     private ChromeProcess chromeProcess;
@@ -22,12 +23,14 @@ public class UserContext {
     {
         this.userId = 0;
         this.seqId = 0;
+        this.workerId = 0;
         this.engineContext = engineContext;
     }
 
     public UserContext(EngineContext engineContext, int userId)
     {
         this.userId = userId;
+        this.workerId = userId;
         this.seqId = 0;
         this.engineContext = engineContext;
     }
@@ -40,6 +43,10 @@ public class UserContext {
         if (chromeProcess != null) {
             chromeProcess.close();
         }
+    }
+
+    public int getWorkerId() {
+        return workerId;
     }
 
     public int getUserId() {
@@ -60,6 +67,10 @@ public class UserContext {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void setWorkerId(int workerId) {
+        this.workerId = workerId;
     }
 
     public boolean isChromeProfileInitialSetup() {

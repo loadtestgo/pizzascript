@@ -296,7 +296,7 @@ public class ChromeProcess {
             String configFile = Path.join(destExtensionDir, "config.js");
 
             Map<String, String> map = new HashMap<>();
-            map.put("pizza.id", String.valueOf(userContext.getUserId()));
+            map.put("pizza.id", String.valueOf(userContext.getWorkerId()));
             if (userContext.getEngineContext().getWebSocketIp() != null) {
                 map.put("pizza.host", String.valueOf(userContext.getEngineContext().getWebSocketIp().getHostAddress()));
             } else {
