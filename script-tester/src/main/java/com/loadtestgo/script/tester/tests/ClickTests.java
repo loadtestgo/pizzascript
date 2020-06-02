@@ -93,4 +93,27 @@ public class ClickTests extends JavaScriptTest {
         assertError("Element '#div6' hidden by '#div7'", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
+
+    @Test
+    // One frequent test pattern is to wait on a button / or other clickable object to be visible
+    // and then click on it.  However when a website uses a framework or complicated code for
+    // rendering the button HTML / updating styles, the button can be hidden / shown multiple
+    // times.  If we wait for the first time the button is shown and then immediately click the
+    // button can be hidden again, and the click will fail.  To get around this issue, click()
+    // has a retry mechanism built-in, where it will wait and retry the click() several times.
+    // This test verifies that the retry is working.
+    public void clickButtonRepeatedlyShownAndHidden() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.click('#showDiv3');\n" +
+            "b.waitForVisible('#div3');\n" +
+            "b.click('#hideThenShowDiv3');\n" +
+            "b.click('#div3');\n",
+            getTestUrl("files/clipFlip.html"));
+
+        TestResult result = runScript(script);
+
+        assertNoError(result);
+        assertEquals(1, result.getPages().size());
+    }
 }

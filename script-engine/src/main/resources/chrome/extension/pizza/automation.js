@@ -183,6 +183,14 @@ pizza.automation = {
             return region;
         };
 
+        // Find a bounding box for the element.  Element should be directly under center.
+        // There can be shapes other than rectangles for elements and these won't be fully fit
+        // the bounding box, and may actually have multiple bounding boxes stored for them.
+        // There is an assumption that elements are rectangular in other parts of the code
+        // that call this function, and while this is largely true it won't work in the
+        // general case for SVG elements.  That's something that should be worked on as
+        // needed, its better to make sure the existing click() / hover() / visibility code
+        // works right now.
         function getElementRegion(element, selector) {
             // We try 2 methods to determine element region. Try the first client rect,
             // and then the bounding client rect.
@@ -191,13 +199,19 @@ pizza.automation = {
             if (clientRects.length === 0) {
                 var box = element.getBoundingClientRect();
                 if (box.width === 0 && box.height === 0) {
-                    throw "Element '" + selector + "' found but not visible";
+                    throw {
+                        type: "EmptyBoundingBox",
+                        message: "Element '" + selector + "' found but not visible"
+                    };
                 }
                 if (element.tagName.toLowerCase() === 'area') {
                     var coords = element.coords.split(',');
                     if (element.shape.toLowerCase() === 'rect') {
                         if (coords.length !== 4) {
-                            throw "Failed to detect the region of the area for element '" + selector + "'"
+                            throw {
+                                type: "InvalidAreaBoundingBox",
+                                message: "Failed to detect the region of the area for element '" + selector + "'"
+                            };
                         }
                         var leftX = Number(coords[0]);
                         var topY = Number(coords[1]);
@@ -209,9 +223,12 @@ pizza.automation = {
                             'width': rightX - leftX,
                             'height': bottomY - topY
                         };
-                    } else if (element.shape.toLowerCase() == 'circle') {
-                        if (coords.length != 3) {
-                            throw "Failed to detect the region of the area for element '" + selector + "'";
+                    } else if (element.shape.toLowerCase() === 'circle') {
+                        if (coords.length !== 3) {
+                            throw {
+                                type: "InvalidCircleBoundingBox",
+                                message: "Failed to detect the region of the area for element '" + selector + "'"
+                            };
                         }
                         var centerX = Number(coords[0]);
                         var centerY = Number(coords[1]);
@@ -222,9 +239,12 @@ pizza.automation = {
                             'width': radius * 2,
                             'height': radius * 2
                         };
-                    } else if (element.shape.toLowerCase() == 'poly') {
+                    } else if (element.shape.toLowerCase() === 'poly') {
                         if (coords.length < 2) {
-                            throw "Failed to detect the region of the area for element '" + selector + "'";
+                            throw {
+                                type: "InvalidPolyBoundingBox",
+                                message: "Failed to detect the region of the area for element '" + selector + "'"
+                            };
                         }
                         var minX = Number(coords[0]);
                         var minY = Number(coords[1]);
@@ -245,7 +265,10 @@ pizza.automation = {
                             'height': maxY - minY
                         };
                     } else {
-                        throw "Element '" + selector + "' shape=" + element.shape + " is not supported";
+                        throw {
+                            type: "UnknownShape",
+                            message: "Element '" + selector + "' shape=" + element.shape + " is not supported"
+                        };
                     }
                 }
                 return {
@@ -712,7 +735,10 @@ pizza.automation = {
                 } else {
                     v.visible = true;
                 }
-            } catch (e) {}
+            } catch (e) {
+                // got exception trying to find visible area,
+                // v.visible is false by default
+            }
 
             var style = window.getComputedStyle(element);
             if (style.visibility === 'hidden') {

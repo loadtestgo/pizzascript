@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Navigate away on button click after a wait</title>
+</head>
+<body>
+<script>
+function buttonClicked() {
+    setTimeout(function() {
+        window.location = '/files/findElements.html';
+    }, 1000);
+}
+</script>
+<p>Navigate away on button click after a wait</p>
+<h3>Button</h3>
+<button onclick="buttonClicked()" id="button">Navigate to findElements.html!</button>
+</body>
+</html>

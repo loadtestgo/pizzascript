@@ -1098,6 +1098,26 @@ pizza.main.commands = function() {
         return t;
     }
 
+    function isSendCommandInvalidContextError(response) {
+        if (!response || !response.message) {
+            return false;
+        }
+
+        try {
+            console.log(response.message);
+            var message = JSON.parse(response.message);
+
+            if (message.code !== -32000) {
+                return false;
+            }
+
+            return !(!pizza.isString(message.message) ||
+                !message.message.includes('Cannot find context with specified id'));
+        } catch (e) {
+            return false;
+        }
+    }
+
     function executeAutomationAPI(callback, errorCallback, byValue, script) {
         var args = [];
         for (var i = 4; i < arguments.length; ++i) {
@@ -1113,7 +1133,15 @@ pizza.main.commands = function() {
             }
             args.push(arg);
         }
-        injectAutomationAPI(function(response) {
+
+        // chrome.debugger.sendCommand() takes a context id for the webpage currently loaded,
+        // a new webpage can be loaded while this command is waiting to be run, forcing a
+        // unload of the previous page, so sendCommand() will fail with the following error:
+        //      "{code:-32000,message:'Cannot find context with specified id'}
+        // We detect this but looking for the above message and then checking the context ids
+        // this allows us to retry in only this case.  There should be no side effects of this
+        // as the command doesn't get to run first time.
+        var sendCommand = function(response) {
             if (response && response.error) {
                 errorCallback(response.error);
             } else if (response.exceptionDetails) {
@@ -1125,10 +1153,20 @@ pizza.main.commands = function() {
                     arguments: args,
                     returnByValue: byValue
                 };
+
+                var lastContextId = _currentContextId;
+
                 pizza.devtools.sendCommand('Runtime.callFunctionOn', loc, function (response) {
                     if (response.message) {
                         // console.log("1", JSON.stringify(response));
-                        errorCallback(response.message);
+                        if (isSendCommandInvalidContextError(response) &&
+                            lastContextId !== _currentContextId) {
+                            console.log("Context has changed was: " + lastContextId + " now: " + _currentContextId + ".  Reinjecting...");
+                            lastContextId = _currentContextId;
+                            injectAutomationAPI(sendCommand);
+                        } else {
+                            errorCallback(response.message);
+                        }
                     } else if (response.wasThrown) {
                         // console.log("2", JSON.stringify(response));
                         errorCallback(formatWasThrownException(response));
@@ -1145,7 +1183,8 @@ pizza.main.commands = function() {
                     }
                 });
             }
-        });
+        }
+        injectAutomationAPI(sendCommand);
     }
 
     function applyElementRegionWithRetry(id, params, applyElementFunction) {
@@ -1158,7 +1197,7 @@ pizza.main.commands = function() {
                 applyElementFunction,
             function (error) {
                     if (error.type) {
-                        if (error.type === 'HiddenByElement') {
+                        if (error.type === 'HiddenByElement' || error.type === 'EmptyBoundingBox') {
                             if (params.retry) {
                                 params.retry--;
                                 setTimeout(check, params.retryWaitTime, params);

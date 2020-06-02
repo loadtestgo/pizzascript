@@ -43,10 +43,10 @@ pizza.getHostFromUrl = function(url) {
     var firstColon = url.indexOf(":");
     if (firstColon > 0) {
         var startHost = firstColon + 1;
-        if (url.charAt(startHost) == '/') {
+        if (url.charAt(startHost) === '/') {
             startHost += 1;
         }
-        if (url.charAt(startHost) == '/') {
+        if (url.charAt(startHost) === '/') {
             startHost += 1;
         }
         var portColon = url.indexOf(":", startHost);

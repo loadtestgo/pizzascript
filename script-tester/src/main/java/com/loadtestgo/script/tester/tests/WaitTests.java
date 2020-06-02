@@ -23,7 +23,7 @@ public class WaitTests extends JavaScriptTest {
 
     @Test
     public void sleepInterrupted() {
-        String script = "b = pizza.sleep(3000);\n";
+        String script = "b = pizza.sleep(3000);";
 
         TestResult result = runScript(script, 2000);
 
@@ -98,5 +98,23 @@ public class WaitTests extends JavaScriptTest {
         assertError("Script interrupted", ErrorType.Timeout, result);
         assertTrue("Runtime greater than 2000ms", result.getRunTime() > 2000);
     }
-}
 
+    @Test
+    // Sometimes our tests won't wait for page loads, but instead wait for an element on the
+    // next page to be displayed.  Check that this works.
+    // The main failure case here was that the automation framework was not injected into the
+    // new page.
+    public void waitForElementAcrossPageLoad() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.click('#button');\n" +
+            // will stay on current page for 1 second then load a new page
+            "b.waitForElement('#div1');\n",
+            getTestUrl("files/buttonNavLater.html"));
+
+        TestResult result = runScript(script);
+
+        assertNoError(result);
+        assertEquals(2, result.getPages().size());
+    }
+}

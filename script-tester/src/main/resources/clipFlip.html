@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Elements Hidden</title>
+</head>
+<body>
+<div id="div1" style="display:none"><div id="div3">hidden</div></div>
+<div><button id="showDiv3">Show Flip div3</button></div>
+<div><button id="hideThenShowDiv3">Hide Flip div3</button></div>
+<script>
+    var div1 = document.getElementById("div1");
+    var showDiv3 = document.getElementById("showDiv3");
+    var hideThenShowDiv3 = document.getElementById("hideThenShowDiv3");
+    showDiv3.onclick = function() {
+        var timeToFlip = 400;
+        var timeToNextFlip = 40;
+
+        var flipVisible = function() {
+            if (div1.style.display === 'inline') {
+                div1.style.display = 'none';
+            } else {
+                div1.style.display = 'inline';
+            }
+            timeToFlip -= timeToNextFlip;
+            if (timeToFlip > 0) {
+                setTimeout(flipVisible, timeToNextFlip);
+            } else {
+                div1.style.display = 'inline';
+            }
+        };
+
+        setTimeout(flipVisible, timeToNextFlip);
+    };
+
+    hideThenShowDiv3.onclick = function() {
+        var timeToFlip = 400;
+        var timeToNextFlip = 40;
+
+        var flipVisible = function() {
+            if (div1.style.display === 'inline') {
+                div1.style.display = 'none';
+            } else {
+                div1.style.display = 'inline';
+            }
+            timeToFlip -= timeToNextFlip;
+            if (timeToFlip > 0) {
+                setTimeout(flipVisible, timeToNextFlip);
+            } else {
+                div1.style.display = 'inline';
+            }
+        };
+
+        flipVisible();
+    };
+</script>
+</body>
+</html>
