@@ -269,15 +269,17 @@ public class ChromeProcess {
                 value instanceof Number ||
                 value instanceof Boolean) {
                 orig.put(entry.getKey(), value);
-            } else if (value instanceof Object[]){
+            } else if (value instanceof Object[]) {
                 orig.put(entry.getKey(), new JSONArray(value));
-            } else if (value instanceof Map){
+            } else if (value instanceof Map) {
                 JSONObject object = orig.optJSONObject(key);
                 if (object == null) {
                     object = new JSONObject();
                     orig.put(key, object);
                 }
-                mergeJson(object, (Map<String, Object>)value);
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>)value;
+                mergeJson(object, map);
             }
         }
     }

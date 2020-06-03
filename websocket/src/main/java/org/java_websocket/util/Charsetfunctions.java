@@ -2,10 +2,7 @@ package org.java_websocket.util;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
+import java.nio.charset.*;
 
 import org.java_websocket.exceptions.InvalidDataException;
 import org.java_websocket.framing.CloseFrame;
@@ -67,7 +64,7 @@ public class Charsetfunctions {
 	}*/
 
 	public static String stringUtf8( ByteBuffer bytes ) throws InvalidDataException {
-		CharsetDecoder decode = Charset.forName( "UTF8" ).newDecoder();
+		CharsetDecoder decode = StandardCharsets.UTF_8.newDecoder();
 		decode.onMalformedInput( codingErrorAction );
 		decode.onUnmappableCharacter( codingErrorAction );
 		// decode.replaceWith( "X" );

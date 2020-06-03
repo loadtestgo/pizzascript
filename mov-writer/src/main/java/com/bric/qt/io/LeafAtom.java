@@ -34,7 +34,7 @@ abstract class LeafAtom extends Atom {
 		super(parent);
 	}
 	
-	public Enumeration<?> children() {
+	public Enumeration<? extends TreeNode> children() {
 		return EMPTY_ENUMERATION;
 	}
 	

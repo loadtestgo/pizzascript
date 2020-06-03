@@ -49,7 +49,7 @@ class EmptyAtom extends Atom {
 	@Override
 	protected void writeContents(GuardedOutputStream out) {}
 
-	public Enumeration<Object> children() {
+	public Enumeration<? extends TreeNode> children() {
 		return EMPTY_ENUMERATION;
 	}
 

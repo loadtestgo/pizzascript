@@ -5,6 +5,10 @@ subprojects {
     ext {
         jacksonVersion = '2.4.3'
         rhinoVersion = '1.7.7'
+        tinylogVersion = '1.0'
+        iocommonsVersion = '2.4'
+        rsyntaxVersion = '2.5.8'
+        orgJsonVersion = '20140107'
     }
 
     compileJava {
@@ -20,7 +24,7 @@ subprojects {
 
     jar {
         manifest {
-            attributes 'Implementation-Title': 'PizzaScript', 'Implementation-Version': version
+            attributes 'Implementation-Title': 'PizzaScript', 'Implementation-Version': archiveVersion
         }
     }
 
@@ -37,23 +41,24 @@ subprojects {
     }
 
     dependencies {
-        testCompile 'junit:junit:4.+'
-        testCompile 'org.jmockit:jmockit:1.20'
+        testImplementation 'junit:junit:4.+'
+        testImplementation 'org.jmockit:jmockit:1.20'
     }
 }
 
 project(':script-api') {
     dependencies {
-        compile project(':util')
-        compile "org.mozilla:rhino:$rhinoVersion"
-        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        implementation project(':util')
+        implementation "org.mozilla:rhino:$rhinoVersion"
+        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        implementation "org.tinylog:tinylog:$tinylogVersion"
     }
 }
 
 project(':util') {
     dependencies {
-        compile 'commons-io:commons-io:2.4'
-        compile 'org.tinylog:tinylog:1.0'
+        implementation "commons-io:commons-io:$iocommonsVersion"
+        implementation "org.tinylog:tinylog:$tinylogVersion"
     }
 }
 
@@ -65,16 +70,17 @@ project(':websocket') {
 
 project(':script-engine') {
     dependencies {
-        compile project(':script-api')
-        compile project(':util')
-        compile project(':websocket')
-        compile project(':mov-writer')
-        compile "org.mozilla:rhino:$rhinoVersion"
-        compile 'commons-io:commons-io:2.4'
-        compile 'javax.servlet:javax.servlet-api:3.1.0'
-        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-        compile 'org.json:json:20140107'
-        compile 'com.google.collections:google-collections:1.0'
+        implementation project(':script-api')
+        implementation project(':util')
+        implementation project(':websocket')
+        implementation project(':mov-writer')
+        implementation "org.mozilla:rhino:$rhinoVersion"
+        implementation "commons-io:commons-io:$iocommonsVersion"
+        implementation 'javax.servlet:javax.servlet-api:3.1.0'
+        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        implementation "org.json:json:$orgJsonVersion"
+        implementation 'com.google.collections:google-collections:1.0'
+        implementation "org.tinylog:tinylog:$tinylogVersion"
     }
 
     if (project.hasProperty("release")) {
@@ -104,14 +110,17 @@ project(':script-editor') {
 
     // Compress tar file
     dependencies {
-        compile project(':script-api')
-        compile project(':script-engine')
-        compile project(':util')
-        compile project(':view-metrics')
-        compile 'jline:jline:2.10'
-        compile 'com.fifesoft:rsyntaxtextarea:2.5.8'
-        compile 'com.fifesoft:autocomplete:2.5.8'
-        compile 'com.fifesoft:languagesupport:2.5.8'
+        implementation project(':script-api')
+        implementation project(':script-engine')
+        implementation project(':util')
+        implementation project(':view-metrics')
+        implementation 'jline:jline:2.10'
+        implementation "com.fifesoft:rsyntaxtextarea:$rsyntaxVersion"
+        implementation "com.fifesoft:autocomplete:$rsyntaxVersion"
+        implementation "com.fifesoft:languagesupport:$rsyntaxVersion"
+        implementation "org.tinylog:tinylog:$tinylogVersion"
+        implementation "org.json:json:$orgJsonVersion"
+        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     }
     distTar {
         compression = Compression.GZIP
@@ -125,12 +134,16 @@ project(':script-runner') {
 
     // Compress tar file
     dependencies {
-        compile project(':script-api')
-        compile project(':script-engine')
-        compile project(':util')
-        compile project(':view-metrics')
-        compile 'jline:jline:2.10'
-        compile 'org.fusesource.jansi:jansi-project:1.13'
+        implementation project(':script-api')
+        implementation project(':script-engine')
+        implementation project(':util')
+        implementation project(':view-metrics')
+        implementation 'jline:jline:2.10'
+        implementation 'org.fusesource.jansi:jansi-project:1.13'
+        implementation "org.tinylog:tinylog:$tinylogVersion"
+        implementation "org.json:json:$orgJsonVersion"
+        implementation "commons-io:commons-io:$iocommonsVersion"
+        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     }
     distTar {
         compression = Compression.GZIP
@@ -151,11 +164,11 @@ project(':view-metrics') {
 
 project(':script-tester') {
     dependencies {
-        compile project(':script-api')
-        compile project(':script-engine')
-        compile project(':util')
-        compile project(':view-metrics')
-        compile 'junit:junit:4.+'
+        implementation project(':script-api')
+        implementation project(':script-engine')
+        implementation project(':util')
+        implementation project(':view-metrics')
+        implementation 'junit:junit:4.+'
     }
     configurations {
       integrationCompile.extendsFrom testCompile
@@ -172,7 +185,7 @@ project(':script-tester') {
             showStandardStreams = true
             exceptionFormat = 'full'
         }
-        testClassesDir = sourceSets.integration.output.classesDir
+        testClassesDirs = sourceSets.integration.output.classesDirs
         classpath = sourceSets.integration.runtimeClasspath
     }
 }
@@ -183,7 +196,7 @@ project(':dist') {
   def projects = [ project(':script-runner'), project(':script-editor') ]
   distributions {
       main {
-          baseName = "pizzascript"
+          distributionBaseName = "pizzascript"
           contents {
               exclude "dist-${version}.jar"
               exclude ".gitkeep"
@@ -201,7 +214,8 @@ project(':dist') {
                   def libs = []
 
                   projects.each { p->
-                    libs.addAll(p.configurations.compile.resolvedConfiguration.resolvedArtifacts.file)
+                    p.configurations.getByName("implementation").setCanBeResolved(true)
+                    libs.addAll(p.configurations.implementation.resolvedConfiguration.resolvedArtifacts.file)
                     libs << p.jar
                   }
 
@@ -226,7 +240,7 @@ task baseDocs(type:Exec) {
   commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/pizzascript.js', 'script-api/pizzascript.md', '-d', 'docs/api'
 }
 
-task docs(dependsOn:baseDocs) << {
+task docs(dependsOn:baseDocs) doLast {
   FileTree tree = fileTree (dir: "docs/api");
   tree.include "*.html"
   tree.each { File file ->
@@ -241,7 +255,7 @@ task docs(dependsOn:baseDocs) << {
   }
 }
 
-task 'incVersion' << {
+task 'incVersion' doLast {
     Properties props = new Properties()
     File propsFile = new File('gradle.properties')
     props.load(propsFile.newDataInputStream())

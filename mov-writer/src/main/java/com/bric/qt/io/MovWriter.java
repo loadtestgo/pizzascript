@@ -234,11 +234,6 @@ public abstract class MovWriter {
 		Atom.write32Int(out, 0);
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		close();
-	}
-
 	/** This finishes writing the movie file.
 	 *
 	 * @throws IOException

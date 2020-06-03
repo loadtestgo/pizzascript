@@ -47,12 +47,12 @@ abstract class Atom implements TreeNode {
 	 */
 	protected static boolean ABBREVIATE = true;
 
-	protected static Enumeration<Object> EMPTY_ENUMERATION = new Enumeration<Object>() {
+	protected static Enumeration<TreeNode> EMPTY_ENUMERATION = new Enumeration<TreeNode>() {
 		public boolean hasMoreElements() {
 			return false;
 		}
 
-		public Object nextElement() {
+		public TreeNode nextElement() {
 			return null;
 		}
 	};

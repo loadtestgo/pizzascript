@@ -191,6 +191,7 @@ pizza.automation = {
         // general case for SVG elements.  That's something that should be worked on as
         // needed, its better to make sure the existing click() / hover() / visibility code
         // works right now.
+        // Will throw an exception if the bounding box is null, or size 0
         function getElementRegion(element, selector) {
             // We try 2 methods to determine element region. Try the first client rect,
             // and then the bounding client rect.
@@ -250,6 +251,7 @@ pizza.automation = {
                         var minY = Number(coords[1]);
                         var maxX = minX;
                         var maxY = minY;
+                        var i;
                         for (i = 2; i < coords.length; i += 2) {
                             var x = Number(coords[i]);
                             var y = Number(coords[i + 1]);

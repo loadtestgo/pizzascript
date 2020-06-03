@@ -3,7 +3,7 @@ package com.loadtestgo.script.engine.internal.api;
 import com.loadtestgo.script.api.CSV;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class CSVImpl implements CSV {
@@ -154,7 +154,7 @@ public class CSVImpl implements CSV {
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(
                 file,
-                Charset.forName("UTF-8")));
+                StandardCharsets.UTF_8));
 
         return parseCsvRowsIntoArray(reader);
     }
