@@ -30,6 +30,8 @@ public class ChromeWebSocket extends BrowserWebSocket {
     private Set<String> internalRequestIds;
 
     private Map<String, HttpRequest> ongoingRequests = new HashMap<>();
+    private Map<String, JSONObject> deferredRequestExtraInfo = new HashMap<>();
+    private Map<String, JSONObject> deferredResponseExtraInfo = new HashMap<>();
 
     private JPEGMovWriter videoWriter;
     private byte[] previousImage;
@@ -119,11 +121,17 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 case "Network.requestWillBeSent":
                     networkRequestWillBeSent(details);
                     break;
+                case "Network.requestWillBeSentExtraInfo":
+                    networkRequestWillBeSentExtraInfo(details);
+                    break;
                 case "Network.dataReceived":
                     networkDataReceived(details);
                     break;
                 case "Network.responseReceived":
                     networkResponseReceived(details);
+                    break;
+                case "Network.responseReceivedExtraInfo":
+                    networkResponseReceivedExtraInfo(details);
                     break;
                 case "Network.loadingFinished":
                     networkLoadingFinished(details);
@@ -723,10 +731,35 @@ public class ChromeWebSocket extends BrowserWebSocket {
             }
         }
 
+        JSONObject deferredDetails = deferredRequestExtraInfo.get(request.requestId);
+        if (deferredDetails != null) {
+            setRequestHeaders(deferredDetails, request);
+            deferredDetails.remove(request.requestId);
+        }
+
         synchronized (testResult) {
             page.addRequest(request);
             ongoingRequests.put(requestInfo.getRequestId(), request);
         }
+    }
+
+    private void networkRequestWillBeSentExtraInfo(JSONObject details) {
+        RequestInfo requestInfo = getDevToolsRequestInfo(details);
+
+        if (isInternalRequestId(requestInfo)) {
+            return;
+        }
+
+        HttpRequest request = getRequestForTab(requestInfo);
+        if (request == null) {
+            String requestId = details.getString("requestId");
+            if (!StringUtils.isEmpty(requestId)) {
+                deferredRequestExtraInfo.put(requestId, details);
+            }
+            return;
+        }
+
+        setRequestHeaders(details, request);
     }
 
     private void finishResponse(RequestInfo requestInfo, HttpRequest request, JSONObject responseObj) throws JSONException {
@@ -794,14 +827,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
     private void setResponseHeaders(HttpRequest request, JSONObject responseObj) {
         if (responseObj.has("headersText")) {
-            String headersText = responseObj.getString("headersText");
-            Http.Response responseInfo = Http.parseResponse(headersText);
-            request.setResponseHeaders(responseInfo.headers);
-            request.setProtocol(responseInfo.httpVersion); // Note the protocol may be overwritten later
-                                                           // if we get the value directly from chrome
-            request.setStatusCode(responseInfo.statusCode);
-            request.setStatusText(responseInfo.statusText);
-            request.setResponseHeadersSize(headersText.getBytes().length);
+            processHeadersText(request, responseObj);
         } else {
             // Headers are not always available in raw form, fallback to
             // grabbing the ones parsed by Chrome
@@ -823,6 +849,17 @@ public class ChromeWebSocket extends BrowserWebSocket {
             size += 2; // "\r\n"
             request.setResponseHeadersSize(size);
         }
+    }
+
+    private void processHeadersText(HttpRequest request, JSONObject responseObj) {
+        String headersText = responseObj.getString("headersText");
+        Http.Response responseInfo = Http.parseResponse(headersText);
+        request.setResponseHeaders(responseInfo.headers);
+        request.setProtocol(responseInfo.httpVersion); // Note the protocol may be overwritten later
+        // if we get the value directly from chrome
+        request.setStatusCode(responseInfo.statusCode);
+        request.setStatusText(responseInfo.statusText);
+        request.setResponseHeadersSize(headersText.getBytes().length);
     }
 
     private void networkWebSocketCreated(JSONObject details) {
@@ -1091,6 +1128,31 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
         request.setResourceType(convertResourceType(details.getString("type")));
         finishResponse(requestInfo, request, responseObj);
+
+        JSONObject deferredDetails = deferredResponseExtraInfo.get(request.requestId);
+        if (deferredDetails != null) {
+            processHeadersText(request, deferredDetails);
+            deferredResponseExtraInfo.remove(request.requestId);
+        }
+    }
+
+    private void networkResponseReceivedExtraInfo(JSONObject details) {
+        RequestInfo requestInfo = getDevToolsRequestInfo(details);
+        if (isInternalRequestId(requestInfo)) {
+            return;
+        }
+
+        HttpRequest request = getRequestForTab(requestInfo);
+        if (request == null) {
+            Logger.error("networkResponseReceivedExtraInfo event, but no request found: {}", details.getString("requestId"));
+            return;
+        }
+
+        if (details.has("headersText")) {
+            processHeadersText(request, details);
+        }
+
+        // Blocked cookies also available
     }
 
     private void networkRequestServedFromCache(JSONObject details) throws JSONException {
@@ -1702,7 +1764,9 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void addPage(Page page) {
-        testResult.addPage(page);
+        synchronized(testResult) {
+            testResult.addPage(page);
+        }
     }
 
     private void setPageStateAndNotify(Page page, Page.State state) {

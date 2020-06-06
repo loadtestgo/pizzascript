@@ -332,12 +332,19 @@ public class JavaScriptEngine {
                 }
             }
             if (throwable instanceof ScriptException) {
+                // It's an exception that we threw to indicate that user's test script failed
+                // its verification.
                 se = (ScriptException)throwable;
                 se.setFile(we.sourceName());
                 se.setLine(we.lineNumber());
                 se.setColumn(we.columnNumber());
                 se.setJSStackTrace(getStackTrace(we));
             } else {
+                if (throwable != null) {
+                    // Log the throwable - it may be an internal exception generated due to our code and
+                    // not the user's script!
+                    Logger.error(throwable);
+                }
                 se = new ScriptException(
                     ErrorType.Script,
                     errorMessage, we.sourceName(),

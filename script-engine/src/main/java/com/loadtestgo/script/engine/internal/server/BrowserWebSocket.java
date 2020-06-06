@@ -233,11 +233,9 @@ public class BrowserWebSocket {
                 obj = commandResponses.take();
             } catch (InterruptedException e) {
                 Logger.info("Interrupted while waiting for response for command id: {}", commandId);
-                throw new RuntimeException("Script interrupted");
+                throw new ScriptException("Script interrupted");
             }
-            if (obj == null) {
-                return null;
-            }
+
             Logger.info(obj);
             if (obj.has("id")) {
                 try {
