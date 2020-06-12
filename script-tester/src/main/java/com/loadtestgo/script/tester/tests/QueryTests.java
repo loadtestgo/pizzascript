@@ -96,5 +96,20 @@ public class QueryTests extends JavaScriptTest {
         assertNoError(result);
         assertEquals(1, result.getPages().size());
     }
+
+    @Test
+    public void queryIdWithColons() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "var v = b.query('#div\\\\:colon1\\\\:colon2\\\\:c\\\\:');\n" +
+            "assert.eq(v[0].visible, true);\n" +
+            "assert.eq(v[0].selector, '#div\\\\:colon1\\\\:colon2\\\\:c\\\\:');\n",
+            getTestUrl("files/findElements.html"));
+
+        TestResult result = runScript(script);
+
+        assertNoError(result);
+        assertEquals(1, result.getPages().size());
+    }
 }
 

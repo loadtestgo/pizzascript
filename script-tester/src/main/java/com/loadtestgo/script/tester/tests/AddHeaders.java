@@ -10,7 +10,7 @@ public class AddHeaders extends JavaScriptTest {
     public void defaultHeaders() {
         String script = String.format(
                 "b = pizza.open(\"%s\");\n" +
-                "b.verifyText(\'deflate\');\n",
+                "b.verifyText(\\'deflate\\');\n",
                 getTestUrl("headers/all"));
 
         TestResult result = runScript(script);
@@ -26,7 +26,7 @@ public class AddHeaders extends JavaScriptTest {
                 "b = pizza.open();\n" +
                 "b.setHeader('User-Agent', 'blah');\n" +
                 "b.open(\"%s\");\n" +
-                "b.verifyText(\'User-Agent: blah\');\n",
+                "b.verifyText(\\'User-Agent: blah\\');\n",
                 getTestUrl("headers/all"));
 
         TestResult result = runScript(script);
@@ -42,7 +42,7 @@ public class AddHeaders extends JavaScriptTest {
                 "b = pizza.open();\n" +
                 "b.setHeader('custom', 'blah');\n" +
                 "b.open(\"%s\");\n" +
-                "b.verifyText(\'custom: blah\');\n",
+                "b.verifyText(\\custom: blah\\');\n",
                 getTestUrl("headers/all"));
 
         TestResult result = runScript(script);
@@ -59,7 +59,7 @@ public class AddHeaders extends JavaScriptTest {
                 "b.setHeader('custom', 'blah');\n" +
                 "b.removeHeader('custom');\n" +
                 "b.open(\"%s\");\n" +
-                "b.verifyNotText(\'custom: blah\');\n",
+                "b.verifyNotText(\\'custom: blah\\');\n",
                 getTestUrl("headers/all"));
 
         TestResult result = runScript(script);
@@ -78,7 +78,7 @@ public class AddHeaders extends JavaScriptTest {
                 "b.removeHeader('Connection');\n" +
                 "b.open(\"%s\");\n" +
                 "b.waitForHttpRequests(2000);\n" +
-                "b.verifyNotText(\'custom: blah\');\n",
+                "b.verifyNotText(\\'custom: blah\\');\n",
                 getTestUrl("headers/all"));
 
         TestResult result = runScript(script);

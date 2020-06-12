@@ -169,6 +169,9 @@ project(':script-tester') {
         implementation project(':util')
         implementation project(':view-metrics')
         implementation 'junit:junit:4.+'
+        implementation "org.json:json:$orgJsonVersion"
+        implementation "org.tinylog:tinylog:$tinylogVersion"
+        implementation "commons-io:commons-io:$iocommonsVersion"
     }
     configurations {
       integrationCompile.extendsFrom testCompile

@@ -316,7 +316,7 @@ pizza.automation = {
             } else {
                 var items = findElementsCss(selector);
 
-                if (items.length == 0) {
+                if (items.length === 0) {
                     throw "Unable to find element for selector \'" + selector + "\'!";
                 }
 
@@ -490,7 +490,6 @@ pizza.automation = {
             var cmd = null;
             var param = null;
             var skipNext = false;
-            var css = "";
             var i = 0;
             var State = {
                 BASE : 0,
@@ -499,9 +498,9 @@ pizza.automation = {
             };
             var state = State.BASE;
             function pushCommand() {
-                if (state == State.ID_NUM) {
+                if (state === State.ID_NUM) {
                     commandArray.push({ cmd: 'id', params: selector.substring(last, i) });
-                } else if (cmd == 'contains' || cmd == 'icontains' || cmd == 'nth' || cmd == 'eq') {
+                } else if (cmd === 'contains' || cmd === 'icontains' || cmd === 'nth' || cmd === 'eq') {
                     commandArray.push({ cmd: cmd, params: param });
                 } else {
                     commandArray.push({ cmd: 'css', params: selector.substring(last, i) });
@@ -516,30 +515,30 @@ pizza.automation = {
                     continue;
                 }
                 var v = selector[i];
-                if (state == State.ID) {
+                if (state === State.ID) {
                     if (v >= '0' && v <= '9') {
                         last = i;
                         state = State.ID_NUM;
                     } else {
                         state = State.BASE;
                     }
-                } else if (state == State.ID_NUM) {
+                } else if (state === State.ID_NUM) {
                     if (splitters.indexOf(v) >= 0) {
                         pushCommand();
                         state = State.BASE;
                     }
                 } else {
-                    if (v == '\\') {
+                    if (v === '\\') {
                         skipNext = true;
-                    } else if (v == ':') {
+                    } else if (v === ':') {
                         pushCommand();
-                    } else if (v == '(') {
+                    } else if (v === '(') {
                         cmd = selector.substring(last + 1, i);
                         open = i;
-                    } else if (v == ')') {
+                    } else if (v === ')') {
                         param = selector.substring(open + 1, i);
                         end = i;
-                    } else if (v == '#') {
+                    } else if (v === '#') {
                         state = State.ID;
                     }
                 }
@@ -639,15 +638,23 @@ pizza.automation = {
             }
         };
 
+        function cssIdEscape(selector) {
+            if (!selector) {
+                return selector;
+            }
+            // escape any characters that need to be for this to a valid selector
+            return CSS.escape(selector);
+        }
+
         function getElementSelector(element) {
             var tag = null;
             var matches = null;
             var foundId = false;
             var i = 0;
-            for (var e = element; e && e != document.body; e = e.parentElement) {
+            for (var e = element; e && e !== document.body; e = e.parentElement) {
                 var add = e.tagName.toLowerCase();
                 if (e.id) {
-                    add = '#' + e.id;
+                    add = '#' + cssIdEscape(e.id);
                     foundId = true;
                 } else if (e.classList) {
                     for (i = 0; i < e.classList.length; ++i) {
@@ -664,11 +671,11 @@ pizza.automation = {
                 try {
                     matches = document.querySelectorAll(tag);
                     if (matches) {
-                        if (matches.length == 1) {
+                        if (matches.length === 1) {
                             return tag;
                         } else if (foundId && matches.length > 0) {
                             for (i = 0; i < matches.length; ++i) {
-                                if (matches[i] == element) {
+                                if (matches[i] === element) {
                                     if (i > 0) {
                                         tag += ":nth(" + i + ")";
                                     }
