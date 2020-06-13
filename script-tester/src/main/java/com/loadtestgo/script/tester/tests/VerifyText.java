@@ -116,4 +116,75 @@ public class VerifyText extends JavaScriptTest {
         assertError("Found text matching '/html body/i'",
                 ErrorType.Script, result);
     }
+
+    @Test
+    public void getInnerTextAll() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "var t = b.getInnerText();\n" +
+            "assert.eq(t,'This is the HTML body.');\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+        assertNoError(result);
+    }
+
+    @Test
+    public void getInnerHTMLAll() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "var t = b.getInnerHTML();\n" +
+            "assert.eq(t,'<head>\\n" +
+            "    <title>Test Page</title>\\n" +
+            "</head>\\n" +
+            "<body>\\n" +
+            "This is the HTML body.\\n" +
+            "\\n" +
+            "</body>');\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+        assertNoError(result);
+    }
+
+
+    @Test
+    public void getOuterHTMLAll() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "var t = b.getOuterHTML();\n" +
+            "assert.eq(t,'<html><head>\\n" +
+            "    <title>Test Page</title>\\n" +
+            "</head>\\n" +
+            "<body>\\n" +
+            "This is the HTML body.\\n" +
+            "\\n" +
+            "</body></html>');\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+        assertNoError(result);
+    }
+
+    @Test
+    public void verifyTextFrames() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "var t = b.getInnerText();\n" +
+            "assert.ok(t.contains(\"Nested Frame Top\"));\n" +
+            "b.verifyText(\"Nested Frame Top\");\n" +
+            "b.verifyText(\"This is the HTML body.\");",
+            getTestUrl("files/frames/nested.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+        assertNoError(result);
+    }
 }

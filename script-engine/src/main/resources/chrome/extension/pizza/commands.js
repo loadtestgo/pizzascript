@@ -190,12 +190,13 @@ pizza.main.commands = function() {
 
     var _verifyTextInternal = function(textSearch, callback) {
         chrome.tabs.executeScript(_currentTabId, {
-            code: 'document.body.innerText'
+            code: 'document.body.innerText',
+            allFrames: true
         }, function(response) {
             var found = false;
             if (pizza.isArray(response)) {
                 for (var i = 0; i < response.length; ++i) {
-                    if (response[i].search(textSearch) != -1) {
+                    if (response[i].search(textSearch) !== -1) {
                         found = true;
                         break;
                     }
@@ -234,7 +235,7 @@ pizza.main.commands = function() {
             searchRegexp = pizza.regexFromString(params.regexp);
         }
         chrome.tabs.get(_currentTabId, function(tab) {
-            var found = tab.title.search(searchRegexp) != -1;
+            var found = tab.title.search(searchRegexp) !== -1;
             sendResponse(id, { value: found });
         });
     };
@@ -396,8 +397,8 @@ pizza.main.commands = function() {
                 pizza.include = function(url) {
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.onreadystatechange = function() {
-                        if (xmlHttp.readyState == 4) {
-                            if (xmlHttp.status == 200) {
+                        if (xmlHttp.readyState === 4) {
+                            if (xmlHttp.status === 200) {
                                 try {
                                     eval(xmlHttp.responseText);
                                     pizza.state = "LOADED";
@@ -1778,12 +1779,17 @@ pizza.main.commands = function() {
             return this.findElement(selector).innerText;
         };
 
+        var selector = params.selector;
+        if (!selector) {
+            selector = "html";
+        }
+
         executeAutomationAPI(
             function(response) { sendResponse(id, { value: response.result.value }); },
             function(error) { sendResponse(id, { error: error }); },
             true,
             script,
-            params.selector
+            selector
         );
     };
 
@@ -1792,12 +1798,17 @@ pizza.main.commands = function() {
             return this.findElement(selector).innerHTML;
         };
 
+        var selector = params.selector;
+        if (!selector) {
+            selector = "html";
+        }
+
         executeAutomationAPI(
             function(response) { sendResponse(id, { value: response.result.value }); },
             function(error) { sendResponse(id, { error: error }); },
             true,
             script,
-            params.selector
+            selector
         );
     };
 

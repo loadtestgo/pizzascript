@@ -651,12 +651,30 @@ public interface Browser {
     void setFile(String selector, String file);
 
     /**
+     * Get the html for the inner part of currently selected frame.
+     * <p>
+     * By default the main frame of the page.
+     *
+     * @return the inner HTML for the current frame.
+     */
+    String getInnerHTML();
+
+    /**
      * Get the html inside the given element
      *
      * @param selector the element to get the HTML from
      * @return the inner HTML for the given element
      */
     String getInnerHTML(String selector);
+
+    /**
+     * Get the html for the entire currently selected frame.
+     * <p>
+     * By default the main frame of the page.
+     *
+     * @return the outer HTML for the current frame.
+     */
+    String getOuterHTML();
 
     /**
      * Get the html for the given element
@@ -667,13 +685,11 @@ public interface Browser {
     String getOuterHTML(String selector);
 
     /**
-     * Get the html for the entire currently selected frame.
-     * <p>
-     * By default the main frame of the page.
+     * Get the all text for the current frame
      *
-     * @return the outer HTML for the current frame.
+     * @return the text for the inner frame
      */
-    String getOuterHTML();
+    String getInnerText();
 
     /**
      * Get the text inside the given element

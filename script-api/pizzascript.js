@@ -686,7 +686,9 @@ Browser.prototype.clearPageLoad = function() {};
 Browser.prototype.newPage = function(pageName) {};
 
 /**
- * Verify the given text exists on the page.
+ * Verify the given text exists on the current page.
+ *
+ * Checks all frames.
  *
  * An exception is thrown if the text does not exist.
  *
@@ -710,6 +712,9 @@ Browser.prototype.verifyText = function(text) {};
  * The element does not need to exist at the time you called this
  * function.
  *
+ * NOTE: Since a selector is specified, this only applies to the
+ * currently selected frame.
+ *
  * @example
  * b.waitForText("#consoleLog", "DISCONNECTED");
  *
@@ -726,6 +731,8 @@ Browser.prototype.waitForText = function(selector, text) {};
  * Verify that the text of the page does not contain the given string.
  *
  * An exception is thrown if the given string exists on the page.
+ *
+ * NOTE: Checks all frames.
  *
  * @example
  * b.verifyNotText("Error");
@@ -1465,12 +1472,16 @@ Browser.prototype.setValue = function(selector, value) {};
 Browser.prototype.setFile = function(selector, file) {};
 
 /**
- * Get the html inside the given element
+ * Get the html inside the given element.
  *
  * @example
  * var html = b.getInnerHTML('#input1');
  *
- * @param {String} selector the element to get the HTML from
+ * @example
+ * // Get html for entire frame
+ * var html = b.getInnerHTML();
+ *
+ * @param {String=} selector the element to get the HTML from
  * @return {String} the inner HTML for the given element
  * @throws Throws an exception if the element can not be found
  */
@@ -1481,7 +1492,10 @@ Browser.prototype.getInnerHTML = function(selector) {};
  * no element specified.
  *
  * @example
- * var html = b.getInnerHTML();
+ * var html = b.getOuterHTML();
+ *
+ * @example
+ * var html = b.getOuterHTML("#myForm");
  *
  * @param {String=} selector the element to get the HTML for
  * @return {String} the outer HTML for the given element
@@ -1495,7 +1509,11 @@ Browser.prototype.getOuterHTML = function(selector) {};
  * @example
  * var text = b.getInnerText('#button1');
  *
- * @param {String} selector the element to get the inner text from
+ * @example
+ * // Get all text for currently selected frame
+ * var text = b.getInnerText();
+ *
+ * @param {String=} selector the element to get the inner text from
  * @return {String} the inner text for the given element
  * @throws Throws an exception if the element can not be found
  */

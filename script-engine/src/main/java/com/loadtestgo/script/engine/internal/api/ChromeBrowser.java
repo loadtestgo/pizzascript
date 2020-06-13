@@ -782,10 +782,21 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
+    public String getInnerHTML() {
+        HashMap<String,Object> params = new HashMap<>();
+        return getResponseString(pizzaHandler.sendCommand("getInnerHTML", params));
+    }
+
+    @Override
     public String getInnerHTML(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
         return getResponseString(pizzaHandler.sendCommand("getInnerHTML", params));
+    }
+
+    @Override
+    public String getOuterHTML() {
+        return getResponseString(pizzaHandler.sendCommand("getOuterHTML"));
     }
 
     @Override
@@ -796,8 +807,9 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public String getOuterHTML() {
-        return getResponseString(pizzaHandler.sendCommand("getOuterHTML"));
+    public String getInnerText() {
+        HashMap<String,Object> params = new HashMap<>();
+        return getResponseString(pizzaHandler.sendCommand("getInnerText", params));
     }
 
     @Override

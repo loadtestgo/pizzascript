@@ -282,7 +282,7 @@ pizza.main.frametracker = function() {
         var sel = _parseIndexFromSelector(selector);
         _queryFramesNoOffset(sel.css, frameId, function(response) {
             if (response.value) {
-                if (sel.index == -1) {
+                if (sel.index === -1) {
                     callback(response);
                 } else if (response.value.length > sel.index) {
                     var frame = response.value[sel.index];
@@ -305,7 +305,7 @@ pizza.main.frametracker = function() {
                          wait.add(function(response) {
                 if (response.nodeIds) {
                     var nodeIds = response.nodeIds;
-                    if (nodeIds.length == 0) {
+                    if (nodeIds.length === 0) {
                         return;
                     }
                     var elements = null;
