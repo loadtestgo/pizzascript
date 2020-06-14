@@ -192,7 +192,7 @@ public interface Browser {
      * in the background in response to user interaction.  In this case the page won't
      * have any of the navigation info filled out because a navigation did not occur.
      */
-    void newPage();
+    Page newPage();
 
     /**
      * Starts a new page object.
@@ -210,7 +210,7 @@ public interface Browser {
      *
      * @param pageName
      */
-    void newPage(String pageName);
+    Page newPage(String pageName);
 
     /**
      * Verify the given text exists on the page.

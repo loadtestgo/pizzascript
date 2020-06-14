@@ -347,11 +347,11 @@ public class ChromeWebSocket extends BrowserWebSocket {
         request.setStatusText(response.statusText);
     }
 
-    public void newPage() {
-        newPage(null);
+    public Page newPage() {
+        return newPage(null);
     }
 
-    public void newPage(String pageName) {
+    public Page newPage(String pageName) {
         synchronized (testResult) {
             Page page = new Page();
             if (pageName != null) {
@@ -367,6 +367,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 page.setUrl(current.getUrl());
                 addPage(page);
             }
+            return page;
         }
     }
 

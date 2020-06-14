@@ -2,13 +2,11 @@
 <html>
 
 <head>
-  <meta name="generator" content="JSDoc 3.4.0">
+  <meta name="generator" content="JSDoc 3.6.4">
   <meta charset="utf-8">
   <title>PizzaScript | CSV</title>
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
-  <link href="css/baseline.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700|Karla:400,400i,700,700i|Noto+Serif:400,400i,700,700i&display=swap&subset=latin-ext">
+  <link rel="stylesheet" href="css/baseline.css">
 </head>
 
 <body onload="prettyPrint()">
@@ -24,9 +22,8 @@
       <div id="jsdoc-content-container">
         <div id="jsdoc-main" role="main">
           <header class="page-header">
-            <div class="symbol-detail-labels"></div>
             <h1><small></small><span class="symbol-name">CSV</span></h1>
-            <p class="source-link">Source: <a href="pizzascript.js.html#source-line-2767">pizzascript.<wbr>js:2767</a></p>
+            <p class="source-link">Source: <a href="-_Users_watsonmw_pizzascript_script-api_pizzascript.js.html#source-line-2822">/<wbr>Users/<wbr>watsonmw/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:2822</a></p>
             <div class="symbol-description">
               <p>Read CSV data</p>
               <p>See <a href="module-pizza.html#.openCSV">module:pizza.openCSV</a></p>
@@ -40,10 +37,10 @@
               <div class="summary-content">
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
-                    <dt><a href="module-CSV.html#getLength">getLength()</a></dt>
+                    <dt><a href="module-CSV.html#getNumRows">getNumRows()</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="module-CSV.html#randomRow">randomRow()</a></dt>
+                    <dt><a href="module-CSV.html#randomRow">randomRow([hasHeader])</a></dt>
                     <dd>
                     </dd>
                   </dl>
@@ -53,7 +50,7 @@
                     <dt><a href="module-CSV.html#randomValue">randomValue(column)</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="module-CSV.html#row">row(row)</a></dt>
+                    <dt><a href="module-CSV.html#row">row(rowIndex)</a></dt>
                     <dd>
                     </dd>
                   </dl>
@@ -71,22 +68,53 @@
           <section>
             <h2>Methods</h2>
             <section>
-              <h3 id="getLength"><span class="symbol-name">getLength</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Number</span></span></h3>
+              <h3 id="getNumRows"><span class="symbol-name">getNumRows</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Number</span></span></h3>
               <p>Return the number of rows in the CSV file</p>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Number</code>&nbsp;
-                    <p>Number of rows in CSV file</p>
+                  <p><code>Number</code> 
+                  <p>Number of rows in CSV file</p>
                   </p>
                 </dd>
               </dl>
-              <h3 id="randomRow"><span class="symbol-name">randomRow</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of String</span></span></h3>
-              <p>Retrieve a random row in the CSV file</p>
+              <h3 id="randomRow"><span class="symbol-name">randomRow</span><span class="signature"><span class="signature-params">([hasHeader])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-CSVRow.html">module:CSVRow</a></span></span></h3>
+              <p>Retrieve a random row in the CSV file.</p>
+              <p>By default assumes row 0 is the column names, and will not be returned.</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>hasHeader</p>
+                      </td>
+                      <td>
+                        <p>Boolean</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>when set to true (the default) indicates that
+                          the first row of the CSV should be ignored.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Array of String</code>&nbsp;</p>
+                  <p><code><a href="module-CSVRow.html">module:CSVRow</a></code> </p>
                 </dd>
               </dl>
               <h3 id="randomValue"><span class="symbol-name">randomValue</span><span class="signature"><span class="signature-params">(column)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
@@ -123,11 +151,12 @@
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>String</code>&nbsp;</p>
+                  <p><code>String</code> </p>
                 </dd>
               </dl>
-              <h3 id="row"><span class="symbol-name">row</span><span class="signature"><span class="signature-params">(row)</span>&nbsp;&rarr; <span class="signature-returns"> Array of String</span></span></h3>
-              <p>Returns the given row of the CSV file as an array of strings (one value for each column).</p>
+              <h3 id="row"><span class="symbol-name">row</span><span class="signature"><span class="signature-params">(rowIndex)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-CSVRow.html">module:CSVRow</a></span></span></h3>
+              <p>Returns the given row of the CSV file as an array of strings (one
+                value for each column).</p>
               <section>
                 <h4>Parameter</h4>
                 <table class="jsdoc-details-table">
@@ -142,7 +171,7 @@
                   <tbody>
                     <tr>
                       <td>
-                        <p>row</p>
+                        <p>rowIndex</p>
                       </td>
                       <td>
                         <p>Number</p>
@@ -151,7 +180,7 @@
                         <p>&nbsp;</p>
                       </td>
                       <td>
-                        <p>The row to retrieve</p>
+                        <p>The row index to retrieve</p>
                       </td>
                     </tr>
                   </tbody>
@@ -160,7 +189,7 @@
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Array of String</code>&nbsp;</p>
+                  <p><code><a href="module-CSVRow.html">module:CSVRow</a></code> </p>
                 </dd>
               </dl>
               <h3 id="value"><span class="symbol-name">value</span><span class="signature"><span class="signature-params">(row, column)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
@@ -211,7 +240,7 @@
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>String</code>&nbsp;</p>
+                  <p><code>String</code> </p>
                 </dd>
               </dl>
             </section>
@@ -224,12 +253,11 @@
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on July 16, 2017.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 14, 2020.
       </p>
     </div>
   </footer>
   <script src="scripts/jquery.min.js"></script>
-  <script src="scripts/jquery.cookie.js"></script>
   <script src="scripts/tree.jquery.js"></script>
   <script src="scripts/prettify.js"></script>
   <script src="scripts/jsdoc-toc.js"></script>

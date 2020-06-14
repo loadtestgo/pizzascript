@@ -280,13 +280,13 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public void newPage() {
-        pizzaHandler.newPage();
+    public Page newPage() {
+        return pizzaHandler.newPage();
     }
 
     @Override
-    public void newPage(String pageName) {
-        pizzaHandler.newPage(pageName);
+    public Page newPage(String pageName) {
+        return pizzaHandler.newPage(pageName);
     }
 
     @Override
@@ -719,6 +719,9 @@ public class ChromeBrowser implements Browser {
 
     @Override
     public void type(String selector, Object... text) {
+        if (text.length == 0) {
+            throw new ScriptException("type() missing parameter with the text to type");
+        }
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
         params.put("text", text);

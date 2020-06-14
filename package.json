@@ -1,0 +1,14 @@
+{
+  "name": "pizzascript",
+  "version": "0.2.0",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "event-stream": "^4.0.1",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-replace": "^1.0.0",
+    "gulp-uglify": "^3.0.2",
+    "jsdoc": "^3.6.4",
+    "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/master"
+  }
+}

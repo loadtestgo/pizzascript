@@ -1,13 +1,11 @@
 <!doctype html>
 <html>
         <head>
-                <meta name="generator" content="JSDoc 3.4.0">
+                <meta name="generator" content="JSDoc 3.6.4">
                 <meta charset="utf-8">
                 <title>PizzaScript | Browser</title>
-                <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
-                <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
-                <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
-                <link href="css/baseline.css" rel="stylesheet">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700|Karla:400,400i,700,700i|Noto+Serif:400,400i,700,700i&display=swap&subset=latin-ext">
+                <link rel="stylesheet" href="css/baseline.css">
         </head>
         <body onload="prettyPrint()">
                 <nav id="jsdoc-navbar" role="navigation" class="jsdoc-navbar">
@@ -23,66 +21,96 @@
                                 <div id="jsdoc-content-container">
                                         <div id="jsdoc-main" role="main">
                     <header class="page-header">
-<div class="symbol-detail-labels"></div><h1><small></small><span class="symbol-name">Browser</span></h1>        <p class="source-link">Source: <a href="pizzascript.js.html#source-line-501">pizzascript.<wbr>js:501</a></p>
+<h1><small></small><span class="symbol-name">Browser</span></h1>        <p class="source-link">Source: <a href="-_Users_watsonmw_pizzascript_script-api_pizzascript.js.html#source-line-524">/<wbr>Users/<wbr>watsonmw/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:524</a></p>
                 <div class="symbol-description">
                         <p>Browser Automation</p>
-<h3>Element Selectors</h3><p>   Many functions here take selector strings to identify elements.  These selectors
-   are just like CSS selectors but with a few minor additions to make them more
-   convenient for website automation.</p>
-<p>   Additions to CSS selectors:</p>
+<h3>Element Selectors</h3>
+<p>Many functions here take selector strings to identify elements.  These selectors
+are just like CSS selectors but with a few minor additions to make them more
+convenient for website automation.</p>
+<p>Additions to CSS selectors:</p>
 <ul>
-<li><p>contains()</p>
-<p> Select only elements containing the given text.  This can be at the end of a selector
- or in the middle.  The selection is case sensitive.</p>
+<li>
+<p>contains()</p>
+<p>Select only elements containing the given text.  This can be at the end of a selector
+or in the middle.  The selection is case sensitive.</p>
 <p>Select the set of links containing 'Search':</p>
-<pre class="prettyprint source"><code>a:contains(Search)</code></pre></li>
-<li><p>icontains()</p>
+<pre><code>a:contains(Search)
+</code></pre>
+</li>
+<li>
+<p>icontains()</p>
 <p>Case insensitive version of :contains().</p>
 <p>Select the set of links containing 'Search' or 'search' or 'SEARCH':</p>
-<pre class="prettyprint source"><code>a:icontains(Search)</code></pre></li>
-<li><p>nth()/eq()</p>
+<pre><code>a:icontains(Search)
+</code></pre>
+</li>
+<li>
+<p>nth()/eq()</p>
 <p>Select the elements at the given index.  This can be at the end of a selector or
 in the middle.</p>
 <p>Select the 3rd 'a' element:</p>
-<pre class="prettyprint source"><code>a:nth(2)
-a:eq(2)</code></pre><p>From the set of links containing 'Search', select the 3rd one.</p>
-<pre class="prettyprint source"><code>a:contains(Search):nth(2)
-a:contains(Search):eq(2)</code></pre><p>From the set of 'a' element, select the 3rd one if it contains the string 'Search'.</p>
-<pre class="prettyprint source"><code>a:nth(2):contains(Search)
-a:eq(2):contains(Search)</code></pre></li>
-<li><p>Numeric ids are allowed</p>
-<p>E.g.</p>
-<pre class="prettyprint source"><code>#0</code></pre><p>or:</p>
-<pre class="prettyprint source"><code>#0_0_0</code></pre></li>
-<li><p>XPath</p>
+<pre><code>a:nth(2)
+a:eq(2)
+</code></pre>
+<p>From the set of links containing 'Search', select the 3rd one.</p>
+<pre><code>a:contains(Search):nth(2)
+a:contains(Search):eq(2)
+</code></pre>
+<p>From the set of 'a' element, select the 3rd one if it contains the string 'Search'.</p>
+<pre><code>a:nth(2):contains(Search)
+a:eq(2):contains(Search)
+</code></pre>
+</li>
+<li>
+<p>Numeric ids are allowed</p>
+<p>E.g.
+#0</p>
+<p>or:
+#0_0_0</p>
+</li>
+<li>
+<p>XPath</p>
 <p>Selectors starting with 'xpath:' or just '//' will do XPath matching instead of CSS selector
 matching.  Here are some examples&quot;</p>
 <p>Any div element in the document:</p>
-<pre class="prettyprint source"><code>//div
-xpath://div</code></pre><p>Any div element containing a paragraph element:</p>
-<pre class="prettyprint source"><code>//div/p
-xpath://div/p</code></pre><p>The div element with the id 'div1':</p>
-<pre class="prettyprint source"><code>//div[@id=\'div1\']
-xpath://div[@id=\'div1\']</code></pre><p>A div element with the class 'class1':</p>
-<pre class="prettyprint source"><code>//div[@class=\'class1\']
-xpath://div[@class=\'class1\']</code></pre><p>Any button with the text 'Button1':</p>
-<pre class="prettyprint source"><code>//button[text()=\'Button1\']
-xpath://button[text()=\'Button1\']</code></pre></li>
+<pre><code>//div
+xpath://div
+</code></pre>
+<p>Any div element containing a paragraph element:</p>
+<pre><code>//div/p
+xpath://div/p
+</code></pre>
+<p>The div element with the id 'div1':</p>
+<pre><code>//div[@id=\\'div1\\']
+xpath://div[@id=\\'div1\\']
+</code></pre>
+<p>A div element with the class 'class1':</p>
+<pre><code>//div[@class=\\'class1\\']
+xpath://div[@class=\\'class1\\']
+</code></pre>
+<p>Any button with the text 'Button1':</p>
+<pre><code>//button[text()=\\'Button1\\']
+xpath://button[text()=\\'Button1\\']
+</code></pre>
+</li>
 </ul>
-<h3>Frames, Tabs and Window selections</h3><p>   Frames can be queried and selected.  By default only elements within the top frame
-   are scoped for access.  To interact with elements in a sub frame, select the right
-   frame using <a href="module-Browser.html#selectFrame">module:Browser#selectFrame</a>.</p>
-<p>   The concept of windows does not exists, instead all tabs for all windows are listed.
-   We might break this out in future but for our purposes it doesn't matter if a tab
-   is really a new window or not.</p>
-<h3>Note</h3><p>   It's also important to be aware that while your script is executing the browser is
-   going about its business: loading the page, executing JavaScript, building the DOM,
-   animating elements, etc.  As such elements can appear/disappear, become visible/
-   invisible potentially even after the page has loaded.  Any script you write will
-   have to keep this in mind.  For example it is possible to wait for an element to be
-   visible in the DOM, but then when you try to click on the element it is gone again.
-   In those cases you may need to wait in a loop, catch click failures and try again.
-   We may add some kind of automatic wait for the item to be visible in future.</p>
+<h3>Frames, Tabs and Window selections</h3>
+<p>Frames can be queried and selected.  By default only elements within the top frame
+are scoped for access.  To interact with elements in a sub frame, select the right
+frame using <a href="module-Browser.html#selectFrame">module:Browser#selectFrame</a>.</p>
+<p>The concept of windows does not exists, instead all tabs for all windows are listed.
+We might break this out in future but for our purposes it doesn't matter if a tab
+is really a new window or not.</p>
+<h3>Note</h3>
+<p>It's also important to be aware that while your script is executing the browser is
+going about its business: loading the page, executing JavaScript, building the DOM,
+animating elements, etc.  As such elements can appear/disappear, become visible/
+invisible potentially even after the page has loaded.  Any script you write will
+have to keep this in mind.  For example it is possible to wait for an element to be
+visible in the DOM, but then when you try to click on the element it is gone again.
+In those cases you may need to wait in a loop, catch click failures and try again.
+We may add some kind of automatic wait for the item to be visible in future.</p>
 
                 </div>
             
@@ -188,10 +216,10 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#getCookie">getCookie(url, name)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#getInnerHTML">getInnerHTML(selector)</a></dt>
+                <dt><a href="module-Browser.html#getInnerHTML">getInnerHTML([selector])</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#getInnerText">getInnerText(selector)</a></dt>
+                <dt><a href="module-Browser.html#getInnerText">getInnerText([selector])</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#getOpenDialog">getOpenDialog()</a></dt>
@@ -280,10 +308,10 @@ xpath://button[text()=\'Button1\']</code></pre></li>
                 <dt><a href="module-Browser.html#reload">reload()</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#removeCookie">removeCookie(url, name)</a></dt>
+                <dt><a href="module-Browser.html#removeCookie">removeCookie(name)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#removeCookie">removeCookie(name)</a></dt>
+                <dt><a href="module-Browser.html#removeCookie">removeCookie(url, name)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#removeHeader">removeHeader(header)</a></dt>
@@ -417,18 +445,16 @@ xpath://button[text()=\'Button1\']</code></pre></li>
 
                 <h2>Methods</h2>
     <section>
-                <h3 id="back"><span class="symbol-name">back</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Go back to the previous page.</p>
+                <h3 id="back"><span class="symbol-name">back</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Go back to the previous page.</p>
 <p>4xx and 5xx responses on the main document trigger a failure after the page
 has loaded.</p>
 
-    
-    
-    
+        
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -445,22 +471,22 @@ has loaded.</p>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
 main document.</p></dd>
 
-        
-    </dl>
 
-                <h3 id="block3rdPartyUrls"><span class="symbol-name">block3rdPartyUrls</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Block requests to known third party URLs</p>
+
+
+        </dl>
+
+                <h3 id="block3rdPartyUrls"><span class="symbol-name">block3rdPartyUrls</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Block requests to known third party URLs</p>
 <p>These include analytics, tracking, advertising and RUM beacons.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -473,12 +499,11 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -496,21 +521,21 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="blockUrl"><span class="symbol-name">blockUrl</span><span class="signature"><span class="signature-params">(...url)</span></span></h3>
-        <p>Block requests to the given URL(s)</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="blockUrl"><span class="symbol-name">blockUrl</span><span class="signature"><span class="signature-params">(...url)</span></span></h3>            <p>Block requests to the given URL(s)</p>
 <p>Accepts wildcards in each URL, but URL must be of the form:</p>
 <p>&quot;protocol://host/path&quot;</p>
 <p>The protocol, site and path parts can wildcarded partially or fully.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -529,7 +554,7 @@ b.blockUrl(&quot;*://*.doubleclick.net/*&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -562,11 +587,10 @@ b.blockUrl(&quot;*://*.doubleclick.net/*&quot;);</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -584,19 +608,19 @@ b.blockUrl(&quot;*://*.doubleclick.net/*&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="check"><span class="symbol-name">check</span><span class="signature"><span class="signature-params">(selector[, on])</span></span></h3>
-        <p>Check the a checkbox matching the given selector</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="check"><span class="symbol-name">check</span><span class="signature"><span class="signature-params">(selector[, on])</span></span></h3>            <p>Check the a checkbox matching the given selector</p>
 <p>By default this function will check the checkbox.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -607,7 +631,7 @@ b.check(&quot;#checkBox1&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -654,12 +678,10 @@ b.check(&quot;#checkBox1&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -673,20 +695,21 @@ b.check(&quot;#checkBox1&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="clear"><span class="symbol-name">clear</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Clear the input element text matching the given selector</p>
 
-        <section>
+
+        </dl>
+
+                <h3 id="clear"><span class="symbol-name">clear</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Clear the input element text matching the given selector</p>
+
+            <section>
         <h4>
             Examples
         </h4>
@@ -703,7 +726,7 @@ b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -735,12 +758,10 @@ b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -754,21 +775,22 @@ b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="clearCache"><span class="symbol-name">clearCache</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Clear the browser cache</p>
+
+
+        </dl>
+
+                <h3 id="clearCache"><span class="symbol-name">clearCache</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Clear the browser cache</p>
 <p>Clears both the disk cache and the in memory cache.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -783,13 +805,11 @@ b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
 
     </section>
 
-    
-    
-
-    <dl class="dl-compact">
         
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -803,18 +823,19 @@ b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="clearCookies"><span class="symbol-name">clearCookies</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Clear all browser cookies</p>
 
-        <section>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="clearCookies"><span class="symbol-name">clearCookies</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Clear all browser cookies</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -829,13 +850,11 @@ b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
 
     </section>
 
-    
-    
-
-    <dl class="dl-compact">
         
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -849,18 +868,19 @@ b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="clearHighlight"><span class="symbol-name">clearHighlight</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Clears the highlight</p>
 
-        <section>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="clearHighlight"><span class="symbol-name">clearHighlight</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Clears the highlight</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -870,13 +890,11 @@ b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
 
     </section>
 
-    
-    
-
-    <dl class="dl-compact">
         
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -890,16 +908,17 @@ b.open(&quot;www.mysite.com/page2&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="clearPageLoad"><span class="symbol-name">clearPageLoad</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Forget any page loads that happened before this function, used in conjunction
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="clearPageLoad"><span class="symbol-name">clearPageLoad</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Forget any page loads that happened before this function, used in conjunction
 with waitPageLoad().</p>
 <p>Normally you should call this before doing something that triggers a new page
 to load.  That way when waitPageLoad() is called you know that waitPageLoad()
@@ -909,7 +928,7 @@ a sure fire way of making waitPageLoad() wait on the right page load.  You can
 call the version of waitPageLoad() that waits for a specific URL to load, if this
 is an issue.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -923,12 +942,11 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -947,18 +965,18 @@ b.waitPageLoad();</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="clearRules"><span class="symbol-name">clearRules</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Clears all URL block and rewrite rules.</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="clearRules"><span class="symbol-name">clearRules</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Clears all URL block and rewrite rules.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -974,12 +992,11 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -997,23 +1014,28 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="click"><span class="symbol-name">click</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Click the first item matching the given selector.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="click"><span class="symbol-name">click</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Click the first item matching the given selector.</p>
+<p>If the item is off-screen it will be scrolled on-screen if possible..</p>
+<p>Scrolling may not work right away, so by default this function will
+check that the element has moved on-screen before clicking and wait
+a little bit for it to move if not (max 5 retries with 500ms wait
+between each retry).</p>
 <p>If this click() navigates to a new page, call waitPageLoad() to
 wait for the new page to load.  If the page is opened in a new
 tab then you need to select the new tab before waiting.</p>
 
-        <section>
+            <section>
         <h4>
-            Example
+            Examples
         </h4>
                 <div>
     <pre class="prettyprint"><code>// Click an element with id &#x27;search&#x27;
@@ -1022,9 +1044,17 @@ b.click(&quot;#search&quot;);
 b.waitPageLoad();</code></pre>
 </div>
 
+                <div>
+    <pre class="prettyprint"><code>// Click an element with id &#x27;search&#x27;, and adjust the wait for the
+// element to be scrolled on-screen.
+b.click(&quot;#search&quot;, { &quot;retry&quot;: 10, &quot;retryWaitTime&quot;: 500 });
+// Wait for the new page to load
+b.waitPageLoad();</code></pre>
+</div>
+
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1056,12 +1086,10 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1075,21 +1103,22 @@ b.waitPageLoad();</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
         <dd><p>Throws an exception if the element is not visible</p></dd>
 
-        
-    </dl>
 
-                <h3 id="clickAt"><span class="symbol-name">clickAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>
-        <p>Click the given item at the given location, emulating all JavaScript events</p>
 
-        <section>
+
+        </dl>
+
+                <h3 id="clickAt"><span class="symbol-name">clickAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>            <p>Click the given item at the given location, emulating all JavaScript events</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -1099,7 +1128,7 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1161,12 +1190,10 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1180,22 +1207,23 @@ b.waitPageLoad();</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
         <dd><p>Throws an exception if the element is not visible</p></dd>
 
-        
-    </dl>
 
-                <h3 id="close"><span class="symbol-name">close</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Close the browser process.</p>
+
+
+        </dl>
+
+                <h3 id="close"><span class="symbol-name">close</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Close the browser process.</p>
 <p>The browser object cannot be used after this call.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -1209,12 +1237,11 @@ b &#x3D; pizza.open(&quot;www.bing.com&quot;);</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -1231,18 +1258,18 @@ b &#x3D; pizza.open(&quot;www.bing.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="dismissDialogs"><span class="symbol-name">dismissDialogs</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Dismiss all current and future JavaScript dialogs.</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="dismissDialogs"><span class="symbol-name">dismissDialogs</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Dismiss all current and future JavaScript dialogs.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -1254,12 +1281,11 @@ b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -1276,18 +1302,18 @@ b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="doubleClick"><span class="symbol-name">doubleClick</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Double click the given item, emulating all JavaScript events</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="doubleClick"><span class="symbol-name">doubleClick</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Double click the given item, emulating all JavaScript events</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -1297,7 +1323,7 @@ b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1329,12 +1355,10 @@ b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1348,22 +1372,23 @@ b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
         <dd><p>Throws an exception if the element is not visible</p></dd>
 
+
+
+
+        </dl>
+
+                <h3 id="doubleClickAt"><span class="symbol-name">doubleClickAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>            <p>Double click the given item at the given location, emulating all JavaScript events</p>
+
         
-    </dl>
-
-                <h3 id="doubleClickAt"><span class="symbol-name">doubleClickAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>
-        <p>Double click the given item at the given location, emulating all JavaScript events</p>
-
-    
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1425,12 +1450,10 @@ b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1444,24 +1467,25 @@ b.open(&quot;mysitewithdialog.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
         <dd><p>Throws an exception if the element is not visible</p></dd>
 
-        
-    </dl>
 
-                <h3 id="emulateDevice"><span class="symbol-name">emulateDevice</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
-        <p>Emulate the given device's rendering.</p>
+
+
+        </dl>
+
+                <h3 id="emulateDevice"><span class="symbol-name">emulateDevice</span><span class="signature"><span class="signature-params">(name)</span></span></h3>            <p>Emulate the given device's rendering.</p>
 <p>The viewport &amp; device pixel ratio will be scaled to match the rendering
 of the device.  The user agent is also changed.</p>
 <p>Only applies to new pages that are loaded (not the current).</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -1481,7 +1505,7 @@ b.reload();</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1514,11 +1538,10 @@ emulation.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -1536,18 +1559,18 @@ emulation.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="emulateNetworkCondition"><span class="symbol-name">emulateNetworkCondition</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
-        <p>Emulate the given network condition.</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="emulateNetworkCondition"><span class="symbol-name">emulateNetworkCondition</span><span class="signature"><span class="signature-params">(name)</span></span></h3>            <p>Emulate the given network condition.</p>
+
+            <section>
         <h4>
             Examples
         </h4>
@@ -1573,7 +1596,7 @@ b.open(&quot;bbc.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1606,11 +1629,10 @@ disable network condition emulation.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -1628,20 +1650,20 @@ disable network condition emulation.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="execute"><span class="symbol-name">execute</span><span class="signature"><span class="signature-params">(script)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
-        <p>Execute the given JavaScript in the current frame.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="execute"><span class="symbol-name">execute</span><span class="signature"><span class="signature-params">(script)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>            <p>Execute the given JavaScript in the current frame.</p>
 <p>If there is an exception when the script is executed in the
 browser it will be thrown here.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -1652,7 +1674,7 @@ browser it will be thrown here.</p>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1684,11 +1706,10 @@ browser it will be thrown here.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -1705,20 +1726,20 @@ browser it will be thrown here.</p>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Object</code>&nbsp;<p>The result of the script execution</p></p></dd>
 
-    </dl>
 
-                <h3 id="exists"><span class="symbol-name">exists</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>
-        <p>Test if an element matching the given selector exists in the current frame/tab.</p>
 
-        <section>
+
+    <dt>Returns</dt>
+        <dd><p><code>Object</code> <p>The result of the script execution</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="exists"><span class="symbol-name">exists</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>            <p>Test if an element matching the given selector exists in the current frame/tab.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -1733,7 +1754,7 @@ if (b.exists(&#x27;#form1&#x27;)) {
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1765,12 +1786,10 @@ if (b.exists(&#x27;#form1&#x27;)) {
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1784,22 +1803,23 @@ if (b.exists(&#x27;#form1&#x27;)) {
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Boolean</code>&nbsp;<p>true if the element exists</p></p></dd>
 
-    </dl>
 
-                <h3 id="focus"><span class="symbol-name">focus</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Focus the first item matching the given selector, emulating
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Boolean</code> <p>true if the element exists</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="focus"><span class="symbol-name">focus</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Focus the first item matching the given selector, emulating
 focus/blur JavaScript events.</p>
 
-    
-        <section>
+        
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -1831,12 +1851,10 @@ focus/blur JavaScript events.</p>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1850,26 +1868,26 @@ focus/blur JavaScript events.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="forward"><span class="symbol-name">forward</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Go forward in the history.</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="forward"><span class="symbol-name">forward</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Go forward in the history.</p>
 <p>4xx and 5xx responses on the main document trigger a failure after the page
 has loaded.</p>
 
-    
-    
-    
+        
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -1886,22 +1904,22 @@ has loaded.</p>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
 main document.</p></dd>
 
-        
-    </dl>
 
-                <h3 id="getBrowserName"><span class="symbol-name">getBrowserName</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-        <p>Get the browser name.</p>
+
+
+        </dl>
+
+                <h3 id="getBrowserName"><span class="symbol-name">getBrowserName</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>            <p>Get the browser name.</p>
 <p>E.g. &quot;Google Chrome&quot;.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -1911,13 +1929,11 @@ main document.</p></dd>
 
     </section>
 
-    
-    
-
-    <dl class="dl-compact">
         
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1931,20 +1947,21 @@ main document.</p></dd>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>String</code>&nbsp;<p>the browser name</p></p></dd>
 
-    </dl>
 
-                <h3 id="getBrowserVersion"><span class="symbol-name">getBrowserVersion</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-        <p>Get Version of the browser we are using</p>
 
-        <section>
+
+
+    <dt>Returns</dt>
+        <dd><p><code>String</code> <p>the browser name</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getBrowserVersion"><span class="symbol-name">getBrowserVersion</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>            <p>Get Version of the browser we are using</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -1954,13 +1971,11 @@ main document.</p></dd>
 
     </section>
 
-    
-    
-
-    <dl class="dl-compact">
         
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -1974,22 +1989,23 @@ main document.</p></dd>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>String</code>&nbsp;<p>the version of the browser that was launched</p></p></dd>
 
-    </dl>
 
-                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
-        <p>Get a cookie</p>
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>String</code> <p>the version of the browser that was launched</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>            <p>Get a cookie</p>
 <p>Given a cookie name, get details about the cookie.  The current domain is used.</p>
 
-    
-        <section>
+        
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2021,12 +2037,10 @@ main document.</p></dd>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2040,22 +2054,23 @@ main document.</p></dd>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Cookie.html">module:Cookie</a></code>&nbsp;<p>the cookie info</p></p></dd>
 
-    </dl>
 
-                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(url, name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
-        <p>Get a cookie</p>
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Cookie.html">module:Cookie</a></code> <p>the cookie info</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getCookie"><span class="symbol-name">getCookie</span><span class="signature"><span class="signature-params">(url, name)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Cookie.html">module:Cookie</a></span></span></h3>            <p>Get a cookie</p>
 <p>Given a URL and cookie name, get details about the cookie.</p>
 
-    
-        <section>
+        
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2102,12 +2117,10 @@ main document.</p></dd>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2121,30 +2134,36 @@ main document.</p></dd>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Cookie.html">module:Cookie</a></code>&nbsp;<p>the cookie info</p></p></dd>
 
-    </dl>
 
-                <h3 id="getInnerHTML"><span class="symbol-name">getInnerHTML</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-        <p>Get the html inside the given element</p>
 
-        <section>
+
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Cookie.html">module:Cookie</a></code> <p>the cookie info</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getInnerHTML"><span class="symbol-name">getInnerHTML</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>            <p>Get the html inside the given element.</p>
+
+            <section>
         <h4>
-            Example
+            Examples
         </h4>
                 <div>
     <pre class="prettyprint"><code>var html &#x3D; b.getInnerHTML(&#x27;#input1&#x27;);</code></pre>
 </div>
 
+                <div>
+    <pre class="prettyprint"><code>// Get html for entire frame
+var html &#x3D; b.getInnerHTML();</code></pre>
+</div>
+
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2164,7 +2183,7 @@ main document.</p></dd>
                 <p>String</p>
         </td>
         <td>
-                <p>&nbsp;</p>
+                <p>Yes</p>
         </td>
         <td>
                 <p>the element to get the HTML from</p>
@@ -2176,12 +2195,10 @@ main document.</p></dd>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2195,32 +2212,38 @@ main document.</p></dd>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-            <dt>Returns</dt>
-        <dd><p><code>String</code>&nbsp;<p>the inner HTML for the given element</p></p></dd>
+    <dt>Returns</dt>
+        <dd><p><code>String</code> <p>the inner HTML for the given element</p></p></dd>
 
-    </dl>
 
-                <h3 id="getInnerText"><span class="symbol-name">getInnerText</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-        <p>Get the text inside the given element</p>
 
-        <section>
+        </dl>
+
+                <h3 id="getInnerText"><span class="symbol-name">getInnerText</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>            <p>Get the text inside the given element</p>
+
+            <section>
         <h4>
-            Example
+            Examples
         </h4>
                 <div>
     <pre class="prettyprint"><code>var text &#x3D; b.getInnerText(&#x27;#button1&#x27;);</code></pre>
 </div>
 
+                <div>
+    <pre class="prettyprint"><code>// Get all text for currently selected frame
+var text &#x3D; b.getInnerText();</code></pre>
+</div>
+
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2240,7 +2263,7 @@ main document.</p></dd>
                 <p>String</p>
         </td>
         <td>
-                <p>&nbsp;</p>
+                <p>Yes</p>
         </td>
         <td>
                 <p>the element to get the inner text from</p>
@@ -2252,12 +2275,10 @@ main document.</p></dd>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2271,22 +2292,23 @@ main document.</p></dd>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-            <dt>Returns</dt>
-        <dd><p><code>String</code>&nbsp;<p>the inner text for the given element</p></p></dd>
+    <dt>Returns</dt>
+        <dd><p><code>String</code> <p>the inner text for the given element</p></p></dd>
 
-    </dl>
 
-                <h3 id="getOpenDialog"><span class="symbol-name">getOpenDialog</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> module:DialogInfo</span></span></h3>
-        <p>Get details about the currently open JavaScript dialog.</p>
 
-        <section>
+        </dl>
+
+                <h3 id="getOpenDialog"><span class="symbol-name">getOpenDialog</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> module:DialogInfo</span></span></h3>            <p>Get details about the currently open JavaScript dialog.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -2301,12 +2323,11 @@ assert.eq(&quot;it&#x27;s a dialog!&quot;, dialog.message);</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -2323,31 +2344,35 @@ assert.eq(&quot;it&#x27;s a dialog!&quot;, dialog.message);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>module:DialogInfo</code>&nbsp;<p>dialog info or null if no dialog open</p></p></dd>
 
-    </dl>
 
-                <h3 id="getOuterHTML"><span class="symbol-name">getOuterHTML</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-        <p>Get the html for the given element or the entire frame if
+
+
+    <dt>Returns</dt>
+        <dd><p><code>module:DialogInfo</code> <p>dialog info or null if no dialog open</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getOuterHTML"><span class="symbol-name">getOuterHTML</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>            <p>Get the html for the given element or the entire frame if
 no element specified.</p>
 
-        <section>
+            <section>
         <h4>
-            Example
+            Examples
         </h4>
                 <div>
-    <pre class="prettyprint"><code>var html &#x3D; b.getInnerHTML();</code></pre>
+    <pre class="prettyprint"><code>var html &#x3D; b.getOuterHTML();</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>var html &#x3D; b.getOuterHTML(&quot;#myForm&quot;);</code></pre>
 </div>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2379,12 +2404,10 @@ no element specified.</p>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2398,25 +2421,26 @@ no element specified.</p>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-            <dt>Returns</dt>
-        <dd><p><code>String</code>&nbsp;<p>the outer HTML for the given element</p></p></dd>
+    <dt>Returns</dt>
+        <dd><p><code>String</code> <p>the outer HTML for the given element</p></p></dd>
 
-    </dl>
 
-                <h3 id="getResponseBody"><span class="symbol-name">getResponseBody</span><span class="signature"><span class="signature-params">([httpRequest])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Data.html">module:Data</a></span></span></h3>
-        <p>Grab the response body for the given http request.</p>
+
+        </dl>
+
+                <h3 id="getResponseBody"><span class="symbol-name">getResponseBody</span><span class="signature"><span class="signature-params">([httpRequest])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Data.html">module:Data</a></span></span></h3>            <p>Grab the response body for the given http request.</p>
 <p>The HTTP requests can be gotten from pizza.result, see the example below.</p>
 <p>Note the HTTP request actually has to be finished before this can be called.</p>
 <p>If the item is downloading will wait until it is downloaded.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -2428,7 +2452,7 @@ var d &#x3D; b.getResponseBody(pizza.getRequestByUrl(&quot;www.google.com&quot;)
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2461,11 +2485,10 @@ browser.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -2484,20 +2507,20 @@ browser.</p>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Data.html">module:Data</a></code>&nbsp;<p>the contents of the request</p></p></dd>
 
-    </dl>
 
-                <h3 id="getTitle"><span class="symbol-name">getTitle</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-        <p>Return the page title.</p>
 
-        <section>
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Data.html">module:Data</a></code> <p>the contents of the request</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getTitle"><span class="symbol-name">getTitle</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>            <p>Return the page title.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -2508,12 +2531,11 @@ console.log(&quot;Loaded page &#x27;&quot; + title + &quot;&#x27;&quot;);</code>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -2530,20 +2552,20 @@ console.log(&quot;Loaded page &#x27;&quot; + title + &quot;&#x27;&quot;);</code>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>String</code>&nbsp;<p>The page title</p></p></dd>
 
-    </dl>
 
-                <h3 id="getUrl"><span class="symbol-name">getUrl</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-        <p>Get the current URL the browser is pointing to</p>
 
-        <section>
+
+    <dt>Returns</dt>
+        <dd><p><code>String</code> <p>The page title</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getUrl"><span class="symbol-name">getUrl</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>            <p>Get the current URL the browser is pointing to</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -2554,13 +2576,11 @@ var url &#x3D; b.getUrl();</code></pre>
 
     </section>
 
-    
-    
-
-    <dl class="dl-compact">
         
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2574,20 +2594,21 @@ var url &#x3D; b.getUrl();</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>String</code>&nbsp;<p>the URL the browser is pointing to</p></p></dd>
 
-    </dl>
 
-                <h3 id="getValue"><span class="symbol-name">getValue</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>
-        <p>Gets the value of given input form item</p>
 
-        <section>
+
+
+    <dt>Returns</dt>
+        <dd><p><code>String</code> <p>the URL the browser is pointing to</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="getValue"><span class="symbol-name">getValue</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Object</span></span></h3>            <p>Gets the value of given input form item</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -2597,7 +2618,7 @@ var url &#x3D; b.getUrl();</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2629,12 +2650,10 @@ var url &#x3D; b.getUrl();</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2648,22 +2667,23 @@ var url &#x3D; b.getUrl();</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-            <dt>Returns</dt>
-        <dd><p><code>Object</code>&nbsp;<p>the value of the given input form item</p></p></dd>
+    <dt>Returns</dt>
+        <dd><p><code>Object</code> <p>the value of the given input form item</p></p></dd>
 
-    </dl>
 
-                <h3 id="handleDialog"><span class="symbol-name">handleDialog</span><span class="signature"><span class="signature-params">(val)</span></span></h3>
-        <p>Accept / Reject the currently displayed JavaScript dialog, if any.</p>
 
-        <section>
+        </dl>
+
+                <h3 id="handleDialog"><span class="symbol-name">handleDialog</span><span class="signature"><span class="signature-params">(val)</span></span></h3>            <p>Accept / Reject the currently displayed JavaScript dialog, if any.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -2677,7 +2697,7 @@ b.handleDialog();</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2710,11 +2730,10 @@ window.prompt() dialog with the given text.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -2731,25 +2750,25 @@ window.prompt() dialog with the given text.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="highlight"><span class="symbol-name">highlight</span><span class="signature"><span class="signature-params">(selector[, color])</span></span></h3>
-        <p>Highlight the first element matching the selector</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="highlight"><span class="symbol-name">highlight</span><span class="signature"><span class="signature-params">(selector[, color])</span></span></h3>            <p>Highlight the first element matching the selector</p>
 <p>Only one item at a time can be highlighted.  Selecting a second will remove the
 highlight from the first.  Call clearHighlight() to remove the highlight.</p>
 <p>An optional color can be specified for the highlight.</p>
-<p>  a - The alpha component, in the [0-1] range
-  r - The red component, in the [0-255] range
-  g - The green component, in the [0-255] range
-  b - The blue component, in the [0-255] range</p>
+<p>a - The alpha component, in the [0-1] range
+r - The red component, in the [0-255] range
+g - The green component, in the [0-255] range
+b - The blue component, in the [0-255] range</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -2765,7 +2784,7 @@ b.highlight(&quot;button&quot;, { a: 0.2, r: 0, g: 0, b: 255 })</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2812,12 +2831,10 @@ b.highlight(&quot;button&quot;, { a: 0.2, r: 0, g: 0, b: 255 })</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2831,20 +2848,21 @@ b.highlight(&quot;button&quot;, { a: 0.2, r: 0, g: 0, b: 255 })</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="hover"><span class="symbol-name">hover</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Hover over the first item matching the given selector, emulating
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="hover"><span class="symbol-name">hover</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Hover over the first item matching the given selector, emulating
 all JavaScript events.</p>
 
-    
-        <section>
+        
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2876,12 +2894,10 @@ all JavaScript events.</p>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -2895,19 +2911,20 @@ all JavaScript events.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="hoverAt"><span class="symbol-name">hoverAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>
-        <p>Hover over the first item matching the given selector at the given
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="hoverAt"><span class="symbol-name">hoverAt</span><span class="signature"><span class="signature-params">(selector, x, y)</span></span></h3>            <p>Hover over the first item matching the given selector at the given
 location, emulating all JavaScript events</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -2923,7 +2940,7 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -2985,12 +3002,10 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -3004,22 +3019,23 @@ b.waitPageLoad();</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
         <dd><p>Throws an exception if the element is not visible</p></dd>
 
-        
-    </dl>
 
-                <h3 id="ignoreHttpErrors"><span class="symbol-name">ignoreHttpErrors</span><span class="signature"><span class="signature-params">([ignore])</span></span></h3>
-        <p>Don't trigger an error on HTTP 4xx or 5xx status codes during a
+
+
+        </dl>
+
+                <h3 id="ignoreHttpErrors"><span class="symbol-name">ignoreHttpErrors</span><span class="signature"><span class="signature-params">([ignore])</span></span></h3>            <p>Don't trigger an error on HTTP 4xx or 5xx status codes during a
 call to open(), waitPageLoad(), reload(), back() or forward().</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -3045,7 +3061,7 @@ b.open(&quot;mysite.com/404&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3081,11 +3097,10 @@ an exception.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3104,18 +3119,18 @@ an exception.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="isDialogOpen"><span class="symbol-name">isDialogOpen</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>
-        <p>Is a JavaScript modal dialog open?</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="isDialogOpen"><span class="symbol-name">isDialogOpen</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>            <p>Is a JavaScript modal dialog open?</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -3129,12 +3144,11 @@ b.handleDialog(true);</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3151,21 +3165,21 @@ b.handleDialog(true);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Boolean</code>&nbsp;<p>true if a JavaScript modal dialog is open, false otherwise</p></p></dd>
 
-    </dl>
 
-                <h3 id="isVisible"><span class="symbol-name">isVisible</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>
-        <p>Test if an element matching the given selector is visible
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Boolean</code> <p>true if a JavaScript modal dialog is open, false otherwise</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="isVisible"><span class="symbol-name">isVisible</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>            <p>Test if an element matching the given selector is visible
 in the current frame/tab.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -3180,7 +3194,7 @@ if (b.isVisible(&#x27;#button1&#x27;)) {
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3212,12 +3226,10 @@ if (b.isVisible(&#x27;#button1&#x27;)) {
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -3231,25 +3243,26 @@ if (b.isVisible(&#x27;#button1&#x27;)) {
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Boolean</code>&nbsp;<p>true if the element is visible</p></p></dd>
 
-    </dl>
 
-                <h3 id="jq"><span class="symbol-name">jq</span><span class="signature"><span class="signature-params">(script)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Object</span></span></h3>
-        <p>Execute the given JavaScript jQuery expression.</p>
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Boolean</code> <p>true if the element is visible</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="jq"><span class="symbol-name">jq</span><span class="signature"><span class="signature-params">(script)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Object</span></span></h3>            <p>Execute the given JavaScript jQuery expression.</p>
 <p>Executes on all frames in the current tab.</p>
 <p>If the normal automation functions fail or are limited in some way, jQuery to
 the rescue! (maybe) jQuery selectors are typically a bit richer than the selectors
 provided by us and since any javascript code can be executed, more complex
 queries can be built up.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -3266,7 +3279,7 @@ b.jq(&quot;$(&#x27;button&#x27;).css(&#x27;border&#x27;, &#x27;2px solid red&#x2
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3298,11 +3311,10 @@ b.jq(&quot;$(&#x27;button&#x27;).css(&#x27;border&#x27;, &#x27;2px solid red&#x2
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3319,20 +3331,20 @@ b.jq(&quot;$(&#x27;button&#x27;).css(&#x27;border&#x27;, &#x27;2px solid red&#x2
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Array of Object</code>&nbsp;<p>Returns an array of results for each frame that exists on the current tab</p></p></dd>
 
-    </dl>
 
-                <h3 id="listAllFrames"><span class="symbol-name">listAllFrames</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Frame.html">module:Frame</a></span></span></h3>
-        <p>List all frames for the current window</p>
 
-        <section>
+
+    <dt>Returns</dt>
+        <dd><p><code>Array of Object</code> <p>Returns an array of results for each frame that exists on the current tab</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="listAllFrames"><span class="symbol-name">listAllFrames</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Frame.html">module:Frame</a></span></span></h3>            <p>List all frames for the current window</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -3343,12 +3355,11 @@ console.log(JSON.stringify(frames));</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3365,54 +3376,53 @@ console.log(JSON.stringify(frames));</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Array of <a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>A nested array of frames</p></p></dd>
-
-    </dl>
-
-                <h3 id="listCookies"><span class="symbol-name">listCookies</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Cookie.html">module:Cookie</a></span></span></h3>
-        <p>List all cookies set in the browser</p>
-
-    
-    
-    
-
-    <dl class="dl-compact">
-        
-        
 
 
 
 
+    <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Frame.html">module:Frame</a></code> <p>A nested array of frames</p></p></dd>
 
 
 
+        </dl>
 
-
-
-
-
-
+                <h3 id="listCookies"><span class="symbol-name">listCookies</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Cookie.html">module:Cookie</a></span></span></h3>            <p>List all cookies set in the browser</p>
 
         
         
         
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Array of <a href="module-Cookie.html">module:Cookie</a></code>&nbsp;<p>array of cookies</p></p></dd>
 
-    </dl>
+        <dl class="dl-compact">
+            
 
-                <h3 id="listDevices"><span class="symbol-name">listDevices</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>List devices available for emulation</p>
 
-        <section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Cookie.html">module:Cookie</a></code> <p>array of cookies</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="listDevices"><span class="symbol-name">listDevices</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>List devices available for emulation</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -3423,12 +3433,11 @@ b.listDevices();</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3446,19 +3455,19 @@ b.listDevices();</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="listFrames"><span class="symbol-name">listFrames</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Frame.html">module:Frame</a></span></span></h3>
-        <p>List the sub-frames for the currently selected frame.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="listFrames"><span class="symbol-name">listFrames</span><span class="signature"><span class="signature-params">([selector])</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Frame.html">module:Frame</a></span></span></h3>            <p>List the sub-frames for the currently selected frame.</p>
 <p>See selectFrame() for details on the selector.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -3469,7 +3478,7 @@ console.log(JSON.stringify(frames));</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3501,11 +3510,10 @@ console.log(JSON.stringify(frames));</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3522,20 +3530,20 @@ console.log(JSON.stringify(frames));</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Array of <a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>An array of frames</p></p></dd>
 
-    </dl>
 
-                <h3 id="listNetworkConditions"><span class="symbol-name">listNetworkConditions</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>List network conditions available for emulation</p>
 
-        <section>
+
+    <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Frame.html">module:Frame</a></code> <p>An array of frames</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="listNetworkConditions"><span class="symbol-name">listNetworkConditions</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>List network conditions available for emulation</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -3546,12 +3554,11 @@ b.listNetworkConditions();</code></pre>
 
     </section>
 
-    
-    
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3568,24 +3575,6 @@ b.listNetworkConditions();</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
-
-                <h3 id="listTabs"><span class="symbol-name">listTabs</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Tab.html">module:Tab</a></span></span></h3>
-        <p>List all tabs/windows open in browser</p>
-
-    
-    
-    
-
-    <dl class="dl-compact">
-        
-        
 
 
 
@@ -3593,25 +3582,42 @@ b.listNetworkConditions();</code></pre>
 
 
 
+        </dl>
 
-
-
-
-
-
+                <h3 id="listTabs"><span class="symbol-name">listTabs</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Array of <a href="module-Tab.html">module:Tab</a></span></span></h3>            <p>List all tabs/windows open in browser</p>
 
         
         
         
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Array of <a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>array of tabs</p></p></dd>
 
-    </dl>
+        <dl class="dl-compact">
+            
 
-                <h3 id="newPage"><span class="symbol-name">newPage</span><span class="signature"><span class="signature-params">([pageName])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>
-        <p>Starts a new page object.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Array of <a href="module-Tab.html">module:Tab</a></code> <p>array of tabs</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="newPage"><span class="symbol-name">newPage</span><span class="signature"><span class="signature-params">([pageName])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>            <p>Starts a new page object.</p>
 <p>This allows you to name the page. HTTP requests made by the browser are added to this new
 page object.  Page names show up in the script/test result page.</p>
 <p>This function is useful to split out XHR or Ajax requests into a separate page which can
@@ -3622,7 +3628,7 @@ to split of the timings of various actions from each other and from the main pag
 That is, the time span from the first item to start downloading until the last item on that
 page is fully downloaded.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -3643,7 +3649,7 @@ b.open(&quot;bing.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3675,12 +3681,10 @@ b.open(&quot;bing.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -3694,57 +3698,57 @@ b.open(&quot;bing.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Page.html">module:Page</a></code>&nbsp;<p>the page that was navigated to.</p></p></dd>
-
-    </dl>
-
-                <h3 id="newTab"><span class="symbol-name">newTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
-        <p>Open a new tab</p>
-
-    
-    
-    
-
-    <dl class="dl-compact">
-        
-        
 
 
 
 
 
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Page.html">module:Page</a></code> <p>the page that was navigated to.</p></p></dd>
 
 
 
+        </dl>
 
-
-
-
-
+                <h3 id="newTab"><span class="symbol-name">newTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>            <p>Open a new tab</p>
 
         
         
         
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab.</p></p></dd>
 
-    </dl>
+        <dl class="dl-compact">
+            
 
-                <h3 id="open"><span class="symbol-name">open</span><span class="signature"><span class="signature-params">(url)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>
-        <p>Open the given URL</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code> <p>info about the selected tab.</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="open"><span class="symbol-name">open</span><span class="signature"><span class="signature-params">(url)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>            <p>Open the given URL</p>
 <p>Function blocks until the page is open.</p>
 <p>An exception is thrown if the navigation fails.</p>
 <p>4xx and 5xx responses on the main document trigger a failure.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -3755,7 +3759,7 @@ b.open(&quot;www.google.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3787,11 +3791,10 @@ b.open(&quot;www.google.com&quot;);</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3809,25 +3812,25 @@ b.open(&quot;www.google.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
 main document.</p></dd>
 
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Page.html">module:Page</a></code>&nbsp;<p>a new page object for the given page.</p></p></dd>
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Page.html">module:Page</a></code> <p>a new page object for the given page.</p></p></dd>
 
-    </dl>
 
-                <h3 id="openAsync"><span class="symbol-name">openAsync</span><span class="signature"><span class="signature-params">(url)</span></span></h3>
-        <p>Open the given URL</p>
+
+        </dl>
+
+                <h3 id="openAsync"><span class="symbol-name">openAsync</span><span class="signature"><span class="signature-params">(url)</span></span></h3>            <p>Open the given URL</p>
 <p>Does not wait for the page to load.</p>
 <p>Normally you would call this in conjunction with waitForHttpRequests() or waitPageLoad()</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -3839,7 +3842,7 @@ b.waitForVisible(&quot;input[name&#x3D;&#x27;q&#x27;]&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3871,11 +3874,10 @@ b.waitForVisible(&quot;input[name&#x3D;&#x27;q&#x27;]&quot;);</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -3893,21 +3895,21 @@ b.waitForVisible(&quot;input[name&#x3D;&#x27;q&#x27;]&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="query"><span class="symbol-name">query</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Element</span></span></h3>
-        <p>Find the elements matching the given selector in the current frame.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="query"><span class="symbol-name">query</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Element</span></span></h3>            <p>Find the elements matching the given selector in the current frame.</p>
 <p>Does <em>not</em> throw an exception if the selector is not matched.  Instead an empty
 array is returned.</p>
 
-    
-        <section>
+        
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -3939,12 +3941,10 @@ array is returned.</p>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -3958,24 +3958,25 @@ array is returned.</p>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Array of Element</code>&nbsp;<p>an array containing info about each of the elements that matched the selector</p></p></dd>
 
-    </dl>
 
-                <h3 id="queryVisible"><span class="symbol-name">queryVisible</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Element</span></span></h3>
-        <p>Find the elements matching the given selector in the current frame.</p>
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Array of Element</code> <p>an array containing info about each of the elements that matched the selector</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="queryVisible"><span class="symbol-name">queryVisible</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Array of Element</span></span></h3>            <p>Find the elements matching the given selector in the current frame.</p>
 <p>Does <em>not</em> throw an exception if the selector is not matched.  Instead an empty
 array is returned.</p>
 <p>Returns only visible elements.</p>
 
-    
-        <section>
+        
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4007,12 +4008,10 @@ array is returned.</p>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -4026,28 +4025,28 @@ array is returned.</p>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code>Array of Element</code>&nbsp;<p>An array containing info about each of the elements that matched the selector</p></p></dd>
 
-    </dl>
 
-                <h3 id="reload"><span class="symbol-name">reload</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Reload the current page.</p>
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Array of Element</code> <p>An array containing info about each of the elements that matched the selector</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="reload"><span class="symbol-name">reload</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Reload the current page.</p>
 <p>4xx and 5xx responses on the main document trigger a failure after the page
 has loaded.</p>
 
-    
-    
-    
+        
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -4064,22 +4063,84 @@ has loaded.</p>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
 main document.</p></dd>
 
+
+
+
+        </dl>
+
+                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(name)</span></span></h3>            <p>Remove a given cookie from the browser for the current domain</p>
+
         
-    </dl>
+            <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>name</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the name of the cookie to remove</p>
+        </td>
+</tr>
 
-                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(url, name)</span></span></h3>
-        <p>Remove a given cookie from the browser</p>
+        </tbody>
+</table>
 
-    
-        <section>
+    </section>
+
+        
+
+        <dl class="dl-compact">
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(url, name)</span></span></h3>            <p>Remove a given cookie from the browser</p>
+
+        
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4126,74 +4187,10 @@ main document.</p></dd>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        
-        
-        
-        
-        
-    </dl>
-
-                <h3 id="removeCookie"><span class="symbol-name">removeCookie</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
-        <p>Remove a given cookie from the browser for the current domain</p>
-
-    
-        <section>
-        <h4>Parameter</h4>
-            <table class="jsdoc-details-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Optional</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-                <tr>
-        <td>
-            <p>name</p>
-        </td>
-        <td>
-                <p>String</p>
-        </td>
-        <td>
-                <p>&nbsp;</p>
-        </td>
-        <td>
-                <p>the name of the cookie to remove</p>
-        </td>
-</tr>
-
-        </tbody>
-</table>
-
-    </section>
-
-    
-
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -4208,20 +4205,20 @@ main document.</p></dd>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="removeHeader"><span class="symbol-name">removeHeader</span><span class="signature"><span class="signature-params">(header)</span></span></h3>
-        <p>Remove a given header</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="removeHeader"><span class="symbol-name">removeHeader</span><span class="signature"><span class="signature-params">(header)</span></span></h3>            <p>Remove a given header</p>
 <p>Removes a header that was previous added/overridden</p>
 <p>Overridden headers are no longer overridden and the original header is still sent.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -4237,7 +4234,7 @@ b.open(&quot;mysite.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4269,12 +4266,10 @@ b.open(&quot;mysite.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -4288,23 +4283,24 @@ b.open(&quot;mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="rewriteUrl"><span class="symbol-name">rewriteUrl</span><span class="signature"><span class="signature-params">(url, rewriteUrl)</span></span></h3>
-        <p>Rewrite requests to the given URL</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="rewriteUrl"><span class="symbol-name">rewriteUrl</span><span class="signature"><span class="signature-params">(url, rewriteUrl)</span></span></h3>            <p>Rewrite requests to the given URL</p>
 <p>Accepts wildcards in the URL, but the URL must be of the form:</p>
 <p>&quot;protocol://host/path&quot;</p>
 <p>The protocol, site and path parts can wildcarded partially or fully.</p>
 <p>Match groups are supported, just put parenthesis around each group.  In the rewriteUrl string,
 match groups can be referred to via $1, $2, $3, etc.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -4317,7 +4313,7 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4364,11 +4360,10 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -4385,20 +4380,20 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="screenshot"><span class="symbol-name">screenshot</span><span class="signature"><span class="signature-params">([format][, quality])</span></span></h3>
-        <p>Take a screenshot.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="screenshot"><span class="symbol-name">screenshot</span><span class="signature"><span class="signature-params">([format][, quality])</span></span></h3>            <p>Take a screenshot.</p>
 <p>The format can be any of 'webp', 'png' or 'jpeg'.</p>
 <p>If on a high DPI display, the screenshot is scaled down by the devicePixelRatio.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -4408,7 +4403,7 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4459,12 +4454,10 @@ size, 1.0 is best quality and largest image size.</p>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -4478,18 +4471,19 @@ size, 1.0 is best quality and largest image size.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="select"><span class="symbol-name">select</span><span class="signature"><span class="signature-params">(selector, value)</span></span></h3>
-        <p>Select the given item/items of a dropdown or combobox</p>
 
-        <section>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="select"><span class="symbol-name">select</span><span class="signature"><span class="signature-params">(selector, value)</span></span></h3>            <p>Select the given item/items of a dropdown or combobox</p>
+
+            <section>
         <h4>
             Examples
         </h4>
@@ -4531,7 +4525,7 @@ select(&quot;#toppings&quot;, {index: [2, 3], clear: false})</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4578,12 +4572,10 @@ select(&quot;#toppings&quot;, {index: [2, 3], clear: false})</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -4597,22 +4589,23 @@ select(&quot;#toppings&quot;, {index: [2, 3], clear: false})</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="selectContent"><span class="symbol-name">selectContent</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Select the content of the given element</p>
+
+
+        </dl>
+
+                <h3 id="selectContent"><span class="symbol-name">selectContent</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Select the content of the given element</p>
 <p>Right now, basically only useful in combination with type()
 as an alternative to clear().</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -4624,7 +4617,7 @@ b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4656,12 +4649,10 @@ b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -4675,18 +4666,19 @@ b.type(&quot;#input1&quot;, Key.Backspace);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="selectFrame"><span class="symbol-name">selectFrame</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>
-        <p>Select the given frame using a special frame selector.</p>
+
+
+        </dl>
+
+                <h3 id="selectFrame"><span class="symbol-name">selectFrame</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>            <p>Select the given frame using a special frame selector.</p>
 <p>An extended/modified css syntax is used.  The :nth operator can be used to
 select the nth element.  For example, b.selectFrame(&quot;iframe:nth(1)&quot;) will
 select the the second iframe in the document.  Spaces are used to select
@@ -4697,7 +4689,7 @@ selectFrame() operate on the previously selected frame.  To switch back to
 the main/top frame for the page call selectTopFrame().</p>
 <p>An exception is thrown if no frame matching the selector can be found.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -4732,7 +4724,7 @@ b.selectFrame(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4764,12 +4756,10 @@ b.selectFrame(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -4783,24 +4773,25 @@ b.selectFrame(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if no frame matching the selector can be found.</p></dd>
 
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>Details about the frame selected.</p></p></dd>
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Frame.html">module:Frame</a></code> <p>Details about the frame selected.</p></p></dd>
 
-    </dl>
 
-                <h3 id="selectFrameCss"><span class="symbol-name">selectFrameCss</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>
-        <p>Select the given frame using a normal CSS Selector.  None of the special
+
+        </dl>
+
+                <h3 id="selectFrameCss"><span class="symbol-name">selectFrameCss</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>            <p>Select the given frame using a normal CSS Selector.  None of the special
 syntax allowed by selectFrame() is used.</p>
 <p>An exception is thrown if no frame matching the selector can be found.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -4816,7 +4807,7 @@ b.selectFrameCss(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -4848,12 +4839,10 @@ b.selectFrameCss(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -4867,90 +4856,89 @@ b.selectFrameCss(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>Details about the frame selected.</p></p></dd>
-
-    </dl>
-
-                <h3 id="selectLatestTab"><span class="symbol-name">selectLatestTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
-        <p>Select the most recently opened new tab.</p>
-
-    
-    
-    
-
-    <dl class="dl-compact">
-        
-        
 
 
 
 
 
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Frame.html">module:Frame</a></code> <p>Details about the frame selected.</p></p></dd>
 
 
 
+        </dl>
 
-
-
-
-
+                <h3 id="selectLatestTab"><span class="symbol-name">selectLatestTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>            <p>Select the most recently opened new tab.</p>
 
         
         
         
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab</p></p></dd>
 
-    </dl>
+        <dl class="dl-compact">
+            
 
-                <h3 id="selectMainTab"><span class="symbol-name">selectMainTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
-        <p>Select the main tab.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code> <p>info about the selected tab</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="selectMainTab"><span class="symbol-name">selectMainTab</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>            <p>Select the main tab.</p>
 <p>Select the main tab, this is the first tab opened, if the first tab was closed
 the oldest tab still around is select.</p>
 
-    
-    
-    
-
-    <dl class="dl-compact">
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         
         
         
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab.</p></p></dd>
 
-    </dl>
+        <dl class="dl-compact">
+            
 
-                <h3 id="selectTab"><span class="symbol-name">selectTab</span><span class="signature"><span class="signature-params">(obj)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>
-        <p>Select the given tab</p>
 
-        <section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code> <p>info about the selected tab.</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="selectTab"><span class="symbol-name">selectTab</span><span class="signature"><span class="signature-params">(obj)</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Tab.html">module:Tab</a></span></span></h3>            <p>Select the given tab</p>
+
+            <section>
         <h4>
             Examples
         </h4>
@@ -4991,7 +4979,7 @@ selectTab({index: 0});</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5023,12 +5011,10 @@ selectTab({index: 0});</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5042,20 +5028,21 @@ selectTab({index: 0});</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Tab.html">module:Tab</a></code>&nbsp;<p>info about the selected tab</p></p></dd>
 
-    </dl>
 
-                <h3 id="selectTopFrame"><span class="symbol-name">selectTopFrame</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>
-        <p>Select the top level/main frame for the current window.</p>
 
-        <section>
+
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Tab.html">module:Tab</a></code> <p>info about the selected tab</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="selectTopFrame"><span class="symbol-name">selectTopFrame</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Frame.html">module:Frame</a></span></span></h3>            <p>Select the top level/main frame for the current window.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -5070,13 +5057,11 @@ b.selectTopFrame();</code></pre>
 
     </section>
 
-    
-    
-
-    <dl class="dl-compact">
         
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5090,23 +5075,24 @@ b.selectTopFrame();</code></pre>
 
 
 
-        
-        
-        
-        
-        
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Frame.html">module:Frame</a></code>&nbsp;<p>The frame selected</p></p></dd>
 
-    </dl>
 
-                <h3 id="setAuth"><span class="symbol-name">setAuth</span><span class="signature"><span class="signature-params">(username, password)</span></span></h3>
-        <p>Set the browser credentials.</p>
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Frame.html">module:Frame</a></code> <p>The frame selected</p></p></dd>
+
+
+
+        </dl>
+
+                <h3 id="setAuth"><span class="symbol-name">setAuth</span><span class="signature"><span class="signature-params">(username, password)</span></span></h3>            <p>Set the browser credentials.</p>
 <p>These will be automatically entered whenever a credentials dialog
 would normally show up.  Works with Basic Auth and all other forms
 of HTTP authentication supported by Chrome.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -5119,7 +5105,7 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5166,12 +5152,10 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5185,20 +5169,21 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="setCookie"><span class="symbol-name">setCookie</span><span class="signature"><span class="signature-params">(name, value[, details])</span></span></h3>
-        <p>Set a cookie</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="setCookie"><span class="symbol-name">setCookie</span><span class="signature"><span class="signature-params">(name, value[, details])</span></span></h3>            <p>Set a cookie</p>
 <p>Set a cookie with the given name/value for the current domain.</p>
 <p>Optional info can be given such as the expiry and the url.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -5216,7 +5201,7 @@ b.open(&quot;www.mysite.com/&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5278,12 +5263,10 @@ b.open(&quot;www.mysite.com/&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5297,20 +5280,21 @@ b.open(&quot;www.mysite.com/&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="setFile"><span class="symbol-name">setFile</span><span class="signature"><span class="signature-params">(selector, file)</span></span></h3>
-        <p>Set the file on a file input element.</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="setFile"><span class="symbol-name">setFile</span><span class="signature"><span class="signature-params">(selector, file)</span></span></h3>            <p>Set the file on a file input element.</p>
 <p>The file path can be relative, or absolute (when the script
 is not sandboxed).</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -5320,7 +5304,7 @@ is not sandboxed).</p>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5367,12 +5351,10 @@ is not sandboxed).</p>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5386,20 +5368,21 @@ is not sandboxed).</p>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if either the element or file can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="setHeader"><span class="symbol-name">setHeader</span><span class="signature"><span class="signature-params">(name, value)</span></span></h3>
-        <p>Override/Add a header</p>
 
-        <section>
+
+        </dl>
+
+                <h3 id="setHeader"><span class="symbol-name">setHeader</span><span class="signature"><span class="signature-params">(name, value)</span></span></h3>            <p>Override/Add a header</p>
+
+            <section>
         <h4>
             Examples
         </h4>
@@ -5419,7 +5402,7 @@ b.open(&quot;mysite.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5466,12 +5449,10 @@ b.open(&quot;mysite.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5485,20 +5466,21 @@ b.open(&quot;mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="setUserAgent"><span class="symbol-name">setUserAgent</span><span class="signature"><span class="signature-params">(userAgent)</span></span></h3>
-        <p>Set the user agent to something else.</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="setUserAgent"><span class="symbol-name">setUserAgent</span><span class="signature"><span class="signature-params">(userAgent)</span></span></h3>            <p>Set the user agent to something else.</p>
 <p>Set to an empty string to set back to the default.</p>
 <p>Sets both the HTTP request headers and the JavaScript navigator.userAgent</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -5511,7 +5493,7 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5543,12 +5525,10 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5562,19 +5542,20 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="setValue"><span class="symbol-name">setValue</span><span class="signature"><span class="signature-params">(selector, value)</span></span></h3>
-        <p>Set the given input form element value.</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="setValue"><span class="symbol-name">setValue</span><span class="signature"><span class="signature-params">(selector, value)</span></span></h3>            <p>Set the given input form element value.</p>
 <p>Directly sets the value without causing any input events to be fired.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -5584,7 +5565,7 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5631,12 +5612,10 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5650,29 +5629,29 @@ b.open(&quot;www.mysite.com&quot;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="startVideoCapture"><span class="symbol-name">startVideoCapture</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Start a video capture.</p>
+
+
+        </dl>
+
+                <h3 id="startVideoCapture"><span class="symbol-name">startVideoCapture</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Start a video capture.</p>
 <p>Starts a video capture if one is not already started.  A video capture will
 normally be started as soon as Browser.protoype.open() is called.</p>
 <p>Can be used to resume a stopped video recording.</p>
 
-    
-    
-    
+        
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -5690,25 +5669,24 @@ normally be started as soon as Browser.protoype.open() is called.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="stopVideoCapture"><span class="symbol-name">stopVideoCapture</span><span class="signature"><span class="signature-params">()</span></span></h3>
-        <p>Stops a video capture.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="stopVideoCapture"><span class="symbol-name">stopVideoCapture</span><span class="signature"><span class="signature-params">()</span></span></h3>            <p>Stops a video capture.</p>
 <p>Stop an ongoing video capture.</p>
 
-    
-    
-    
+        
+        
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -5725,18 +5703,18 @@ normally be started as soon as Browser.protoype.open() is called.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="stopVideoCapture"><span class="symbol-name">stopVideoCapture</span><span class="signature"><span class="signature-params">(name)</span></span></h3>
-        <p>Emulate the given network condition.</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="stopVideoCapture"><span class="symbol-name">stopVideoCapture</span><span class="signature"><span class="signature-params">(name)</span></span></h3>            <p>Emulate the given network condition.</p>
+
+            <section>
         <h4>
             Examples
         </h4>
@@ -5762,7 +5740,7 @@ b.open(&quot;bbc.com&quot;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5795,11 +5773,10 @@ disable network condition emulation.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -5817,21 +5794,21 @@ disable network condition emulation.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="submit"><span class="symbol-name">submit</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Submit a form</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="submit"><span class="symbol-name">submit</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Submit a form</p>
 <p>The selector can point to any element in the form as well as the form itself.</p>
 <p>This calls .submit() on the form, if this fails you can also try click() or
 type() on the submit button element.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -5842,7 +5819,7 @@ b.submit(&#x27;#form1&#x27;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5874,12 +5851,10 @@ b.submit(&#x27;#form1&#x27;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -5893,22 +5868,23 @@ b.submit(&#x27;#form1&#x27;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="type"><span class="symbol-name">type</span><span class="signature"><span class="signature-params">(selector, ...text)</span></span></h3>
-        <p>Type the given text into the first item matching the given selector</p>
+
+
+        </dl>
+
+                <h3 id="type"><span class="symbol-name">type</span><span class="signature"><span class="signature-params">(selector, ...text)</span></span></h3>            <p>Type the given text into the first item matching the given selector</p>
 <p>First it focuses the element (blurring the previously focused element),
 then it emulates key presses for the given text.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -5936,7 +5912,7 @@ b.type(&quot;#search&quot;, [Key.Control, Key.K]);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -5984,12 +5960,10 @@ b.type(&quot;#search&quot;, [Key.Control, Key.K]);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -6003,19 +5977,20 @@ b.type(&quot;#search&quot;, [Key.Control, Key.K]);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="verifyExists"><span class="symbol-name">verifyExists</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Verify an element matching the given selector exists in the current frame/tab.</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="verifyExists"><span class="symbol-name">verifyExists</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Verify an element matching the given selector exists in the current frame/tab.</p>
 <p>An exception is thrown if the element does not exist.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -6026,7 +6001,7 @@ b.verifyExists(&#x27;#button1&#x27;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6058,12 +6033,10 @@ b.verifyExists(&#x27;#button1&#x27;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -6077,21 +6050,22 @@ b.verifyExists(&#x27;#button1&#x27;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="verifyNotExists"><span class="symbol-name">verifyNotExists</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Verify no element matches the given selector exists in the current frame/tab.</p>
+
+
+        </dl>
+
+                <h3 id="verifyNotExists"><span class="symbol-name">verifyNotExists</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Verify no element matches the given selector exists in the current frame/tab.</p>
 <p>An exception is thrown if the element exists.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -6102,7 +6076,7 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6134,12 +6108,10 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -6153,21 +6125,23 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the element is found</p></dd>
 
-        
-    </dl>
 
-                <h3 id="verifyNotText"><span class="symbol-name">verifyNotText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>
-        <p>Verify that the text of the page does not contain the given string.</p>
+
+
+        </dl>
+
+                <h3 id="verifyNotText"><span class="symbol-name">verifyNotText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>            <p>Verify that the text of the page does not contain the given string.</p>
 <p>An exception is thrown if the given string exists on the page.</p>
+<p>NOTE: Checks all frames.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -6181,7 +6155,7 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6213,11 +6187,10 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -6235,16 +6208,16 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="verifyRequest"><span class="symbol-name">verifyRequest</span><span class="signature"><span class="signature-params">(url)</span></span></h3>
-        <p>Verify a request was made and had no errors on the current page.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="verifyRequest"><span class="symbol-name">verifyRequest</span><span class="signature"><span class="signature-params">(url)</span></span></h3>            <p>Verify a request was made and had no errors on the current page.</p>
 <p>An exception is thrown in the following cases:</p>
 <ul>
 <li>The request was never made / not found on the current page</li>
@@ -6255,7 +6228,7 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 <p>WebSocket requests do not need to complete (i.e. be closed), but an
 error will thrown if the WebSocket did not successfully connect.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -6270,7 +6243,7 @@ b.verifyRequest(/^ws{1,2}:/);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6302,12 +6275,10 @@ b.verifyRequest(/^ws{1,2}:/);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -6321,22 +6292,24 @@ b.verifyRequest(/^ws{1,2}:/);</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception if the request is not found or has an
 error.</p></dd>
 
-        
-    </dl>
 
-                <h3 id="verifyText"><span class="symbol-name">verifyText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>
-        <p>Verify the given text exists on the page.</p>
+
+
+        </dl>
+
+                <h3 id="verifyText"><span class="symbol-name">verifyText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>            <p>Verify the given text exists on the current page.</p>
+<p>Checks all frames.</p>
 <p>An exception is thrown if the text does not exist.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -6350,7 +6323,7 @@ error.</p></dd>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6381,11 +6354,10 @@ error.</p></dd>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -6403,19 +6375,19 @@ error.</p></dd>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="verifyTitle"><span class="symbol-name">verifyTitle</span><span class="signature"><span class="signature-params">(title)</span></span></h3>
-        <p>Verify the page title matches the given title.</p>
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="verifyTitle"><span class="symbol-name">verifyTitle</span><span class="signature"><span class="signature-params">(title)</span></span></h3>            <p>Verify the page title matches the given title.</p>
 <p>An exception is thrown if no text matches the title.</p>
 
-        <section>
+            <section>
         <h4>
             Examples
         </h4>
@@ -6430,7 +6402,7 @@ b.verifyTitle(/Goo+gle/);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6462,11 +6434,10 @@ b.verifyTitle(/Goo+gle/);</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -6483,18 +6454,18 @@ b.verifyTitle(/Goo+gle/);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="waitForElement"><span class="symbol-name">waitForElement</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Wait for the given selector to be matched.</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="waitForElement"><span class="symbol-name">waitForElement</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Wait for the given selector to be matched.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -6505,7 +6476,7 @@ b.waitForElement(&#x27;#divNew&#x27;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6537,12 +6508,10 @@ b.waitForElement(&#x27;#divNew&#x27;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -6556,22 +6525,23 @@ b.waitForElement(&#x27;#divNew&#x27;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="waitForHttpRequests"><span class="symbol-name">waitForHttpRequests</span><span class="signature"><span class="signature-params">(idleTimeMS)</span></span></h3>
-        <p>Wait for all ongoing HTTP requests to stop.</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="waitForHttpRequests"><span class="symbol-name">waitForHttpRequests</span><span class="signature"><span class="signature-params">(idleTimeMS)</span></span></h3>            <p>Wait for all ongoing HTTP requests to stop.</p>
 <p>idleTimeMS is the minimum time to wait, this function will not return
 before then.</p>
 <p>Waits for Web Socket connections to fully open if there is one ongoing,
 but does not wait for idle time on the WebSocket connection or for it to close.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -6582,7 +6552,7 @@ b.waitForHttpRequests(2000);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6614,11 +6584,10 @@ b.waitForHttpRequests(2000);</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -6636,21 +6605,23 @@ b.waitForHttpRequests(2000);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="waitForText"><span class="symbol-name">waitForText</span><span class="signature"><span class="signature-params">(selector, text)</span></span></h3>
-        <p>Wait for the element matching the given selector to contain the
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="waitForText"><span class="symbol-name">waitForText</span><span class="signature"><span class="signature-params">(selector, text)</span></span></h3>            <p>Wait for the element matching the given selector to contain the
 given text.</p>
 <p>The element does not need to exist at the time you called this
 function.</p>
+<p>NOTE: Since a selector is specified, this only applies to the
+currently selected frame.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -6660,7 +6631,7 @@ function.</p>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameters</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6707,11 +6678,10 @@ function.</p>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -6730,18 +6700,18 @@ function.</p>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="waitForVisible"><span class="symbol-name">waitForVisible</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>
-        <p>Wait for the given selector to match a visible item.</p>
 
-        <section>
+
+
+
+
+
+        </dl>
+
+                <h3 id="waitForVisible"><span class="symbol-name">waitForVisible</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Wait for the given selector to match a visible item.</p>
+
+            <section>
         <h4>
             Example
         </h4>
@@ -6752,7 +6722,7 @@ b.waitForVisible(&#x27;#button1&#x27;);</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6784,12 +6754,10 @@ b.waitForVisible(&#x27;#button1&#x27;);</code></pre>
 
     </section>
 
-    
-
-    <dl class="dl-compact">
-        
         
 
+        <dl class="dl-compact">
+            
 
 
 
@@ -6803,16 +6771,17 @@ b.waitForVisible(&#x27;#button1&#x27;);</code></pre>
 
 
 
-        
-        
-        
-        
-        
-        
-    </dl>
 
-                <h3 id="waitPageLoad"><span class="symbol-name">waitPageLoad</span><span class="signature"><span class="signature-params">([timeoutMS])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>
-        <p>Wait for a new page to load on the current tab.</p>
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="waitPageLoad"><span class="symbol-name">waitPageLoad</span><span class="signature"><span class="signature-params">([timeoutMS])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Page.html">module:Page</a></span></span></h3>            <p>Wait for a new page to load on the current tab.</p>
 <p>If a page is recently loaded, and that page was not waited on before (either
 by open() or this function), then the function will just return.  If the
 page opens in a new tab or window be sure to switch to that tab or window
@@ -6821,7 +6790,7 @@ before calling waitPageLoad().</p>
 on the page redirects and the main redirected page to be loaded.</p>
 <p>4xx and 5xx responses on the main document trigger a failure.</p>
 
-        <section>
+            <section>
         <h4>
             Example
         </h4>
@@ -6832,7 +6801,7 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-        <section>
+            <section>
         <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
@@ -6864,11 +6833,10 @@ b.waitPageLoad();</code></pre>
 
     </section>
 
-    
+        
 
-    <dl class="dl-compact">
-        
-        
+        <dl class="dl-compact">
+            
 
 
 
@@ -6886,18 +6854,19 @@ b.waitPageLoad();</code></pre>
 
 
 
-        
-        
-        
-        
-            <dt>Throws</dt>
+
+
+
+    <dt>Throws</dt>
         <dd><p>Throws an exception when a 4xx or 5xx status code is returned for
 main document.</p></dd>
 
-            <dt>Returns</dt>
-        <dd><p><code><a href="module-Page.html">module:Page</a></code>&nbsp;<p>the page that was navigated to.</p></p></dd>
+    <dt>Returns</dt>
+        <dd><p><code><a href="module-Page.html">module:Page</a></code> <p>the page that was navigated to.</p></p></dd>
 
-    </dl>
+
+
+        </dl>
 
     </section>
 
@@ -6915,12 +6884,11 @@ main document.</p></dd>
                     <footer id="jsdoc-footer" class="jsdoc-footer">
                             <div id="jsdoc-footer-container">
                                     <p>
-                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on July 16, 2017.
+                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 14, 2020.
                                     </p>
                             </div>
                     </footer>
                 <script src="scripts/jquery.min.js"></script>
-                <script src="scripts/jquery.cookie.js"></script>
                 <script src="scripts/tree.jquery.js"></script>
                 <script src="scripts/prettify.js"></script>
                 <script src="scripts/jsdoc-toc.js"></script>

@@ -2,13 +2,11 @@
 <html>
 
 <head>
-  <meta name="generator" content="JSDoc 3.4.0">
+  <meta name="generator" content="JSDoc 3.6.4">
   <meta charset="utf-8">
   <title>PizzaScript | pizza</title>
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
-  <link href="css/baseline.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700|Karla:400,400i,700,700i|Noto+Serif:400,400i,700,700i&display=swap&subset=latin-ext">
+  <link rel="stylesheet" href="css/baseline.css">
 </head>
 
 <body onload="prettyPrint()">
@@ -24,17 +22,16 @@
       <div id="jsdoc-content-container">
         <div id="jsdoc-main" role="main">
           <header class="page-header">
-            <div class="symbol-detail-labels"></div>
             <h1><small></small><span class="symbol-name">pizza</span></h1>
-            <p class="source-link">Source: <a href="pizzascript.js.html#source-line-15">pizzascript.<wbr>js:15</a></p>
+            <p class="source-link">Source: <a href="-_Users_watsonmw_pizzascript_script-api_pizzascript.js.html#source-line-15">/<wbr>Users/<wbr>watsonmw/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:15</a></p>
             <div class="symbol-description">
               <p>Main entry point for tests.</p>
               <p>Most scripts will start with a call to <a href="module-pizza.html#.open">module:pizza.open</a>.</p>
             </div>
             <section>
               <h2>
-            Examples
-        </h2>
+                Examples
+              </h2>
               <div>
                 <pre class="prettyprint"><code>var b &#x3D; pizza.open(&quot;loadtestgo.com&quot;);</code></pre>
               </div>
@@ -61,30 +58,33 @@ b.open(&quot;loadtestgo.com&quot;);</code></pre>
                     <dt><a href="module-pizza.html#.loadTestId">loadTestId</a></dt>
                     <dd>
                     </dd>
+                    <dt><a href="module-pizza.html#.location">location</a></dt>
+                    <dd>
+                    </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
-                    <dt><a href="module-pizza.html#.location">location</a></dt>
-                    <dd>
-                    </dd>
                     <dt><a href="module-pizza.html#.pages">pages</a></dt>
                     <dd>
                     </dd>
                     <dt><a href="module-pizza.html#.result">result</a></dt>
                     <dd>
                     </dd>
-                  </dl>
-                </div>
-                <div class="summary-column">
-                  <dl class="dl-summary-callout">
                     <dt><a href="module-pizza.html#.sequenceId">sequenceId</a></dt>
                     <dd>
                     </dd>
                     <dt><a href="module-pizza.html#.userId">userId</a></dt>
                     <dd>
                     </dd>
+                  </dl>
+                </div>
+                <div class="summary-column">
+                  <dl class="dl-summary-callout">
                     <dt><a href="module-pizza.html#.version">version</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="module-pizza.html#.workerId">workerId</a></dt>
                     <dd>
                     </dd>
                   </dl>
@@ -99,10 +99,10 @@ b.open(&quot;loadtestgo.com&quot;);</code></pre>
                     <dt><a href="module-pizza.html#.browser">browser()</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="module-pizza.html#.getRequestByFullUrl">getRequestByFullUrl(pageIndexOrFullUrl[, fullUrl])</a></dt>
+                    <dt><a href="module-pizza.html#.getRequestByFullUrl">getRequestByFullUrl(pageIndexOrPartialUrl[, partialUrl])</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="module-pizza.html#.getRequestByFullUrl">getRequestByFullUrl(pageIndexOrPartialUrl[, partialUrl])</a></dt>
+                    <dt><a href="module-pizza.html#.getRequestByFullUrl">getRequestByFullUrl(pageIndexOrFullUrl[, fullUrl])</a></dt>
                     <dd>
                     </dd>
                   </dl>
@@ -138,18 +138,20 @@ b.open(&quot;loadtestgo.com&quot;);</code></pre>
             <section>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".botId"><span class="symbol-name">botId</span><small class="property-type">
-            &nbsp;Number</small></h3>
-              <p>The bot index starting at 0 and increasing by one for every bot launched for the duration of the test.</p>
+                  &nbsp;Number</small></h3>
+              <p>The bot index starting at 0 and increasing by one for every bot launched
+                for the duration of the test. Normally you don't need this, instead the userId
+                can be used.</p>
               <dl class="dl-compact">
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".ip"><span class="symbol-name">ip</span><small class="property-type">
-            &nbsp;String</small></h3>
+                  &nbsp;String</small></h3>
               <p>The public ip of the machine running the test.</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Log the ip to the console
 console.log(pizza.getIp());</code></pre>
@@ -159,24 +161,26 @@ console.log(pizza.getIp());</code></pre>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".loadTestId"><span class="symbol-name">loadTestId</span><small class="property-type">
-            &nbsp;Number</small></h3>
+                  &nbsp;Number</small></h3>
               <p>The id of the load test that is running</p>
               <dl class="dl-compact">
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".location"><span class="symbol-name">location</span><small class="property-type">
-            &nbsp;String</small></h3>
-              <p>The location the test is running from. Our tests run primarily on Google Compute Engine, so this is normally the Google Compute region the script is running in.</p>
+                  &nbsp;String</small></h3>
+              <p>The location the test is running from. Our tests run primarily on Google Compute Engine,
+                so this is normally the Google Compute region the script is running in.</p>
               <dl class="dl-compact">
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".pages"><span class="symbol-name">pages</span><small class="property-type">
-            &nbsp;Array of <a href="module-Page.html">module:Page</a></small></h3>
-              <p>Any pages that were loaded during the test (including the current page or pages added with {@link module:Browser#newPage).</p>
+                  &nbsp;Array of <a href="module-Page.html">module:Page</a></small></h3>
+              <p>Any pages that were loaded during the test (including the current page or pages
+                added with {@link module:Browser#newPage).</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Log the pages loaded so far to the console
 var r &#x3D; pizza.result;
@@ -192,8 +196,8 @@ for (var i &#x3D; 0; i &lt; r.length; ++i) {
               <p>The test results that will be uploaded when the test ends.</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Log the name of the test to the console
 console.log(pizza.result.testName);</code></pre>
@@ -202,27 +206,37 @@ console.log(pizza.result.testName);</code></pre>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code><a href="module-TestResult.html">module:TestResult</a></code>&nbsp;</p>
+                  <p><code><a href="module-TestResult.html">module:TestResult</a></code> </p>
                 </dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".sequenceId"><span class="symbol-name">sequenceId</span><small class="property-type">
-            &nbsp;Number</small></h3>
-              <p>The number of samples ran on this user id so far, starts at 0 and increments by 1 for every sample that is processed by the current user.</p>
+                  &nbsp;Number</small></h3>
+              <p>The number of samples ran on this user id so far, starts at 0 and
+                increments by 1 for every sample that is processed by the current user.</p>
               <p>Unique only to the user.</p>
               <dl class="dl-compact">
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".userId"><span class="symbol-name">userId</span><small class="property-type">
-            &nbsp;Number</small></h3>
-              <p>The user id that the script is running under, it's unique across the load test and starts at 0.</p>
+                  &nbsp;Number</small></h3>
+              <p>The user id that the script is running under, it's unique across the load
+                test and starts at 0.</p>
               <dl class="dl-compact">
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".version"><span class="symbol-name">version</span><small class="property-type">
-            &nbsp;String</small></h3>
-              <p>The version of the bot running the test (this is mostly for diagnostic purposes).
-              </p>
+                  &nbsp;String</small></h3>
+              <p>The version of the bot running the test (this is mostly for diagnostic
+                purposes).</p>
+              <dl class="dl-compact">
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".workerId"><span class="symbol-name">workerId</span><small class="property-type">
+                  &nbsp;Number</small></h3>
+              <p>The worker id that the script is running under, it's unique per browser,
+                on the bot and starts at 0. Normally you don't need this, instead the userId
+                can be used.</p>
               <dl class="dl-compact">
               </dl>
             </section>
@@ -233,8 +247,8 @@ console.log(pizza.result.testName);</code></pre>
               <p>Returns the current browser if one is open</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Get the currently open browser
 var b &#x3D; pizza.browser();</code></pre>
@@ -243,61 +257,9 @@ var b &#x3D; pizza.browser();</code></pre>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code><a href="module-Browser.html">module:Browser</a></code>&nbsp;
-                    <p>The current browser if open, null otherwise</p>
+                  <p><code><a href="module-Browser.html">module:Browser</a></code> 
+                  <p>The current browser if open, null otherwise</p>
                   </p>
-                </dd>
-              </dl>
-              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
-              <h3 id=".getRequestByFullUrl"><span class="symbol-name">getRequestByFullUrl</span><span class="signature"><span class="signature-params">(pageIndexOrFullUrl[, fullUrl])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-HttpRequest.html">module:HttpRequest</a></span></span></h3>
-              <p>Gets the first request matching the given full url</p>
-              <section>
-                <h4>Parameters</h4>
-                <table class="jsdoc-details-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Type</th>
-                      <th>Optional</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <p>pageIndexOrFullUrl</p>
-                      </td>
-                      <td>
-                        <p>(String or Number)</p>
-                      </td>
-                      <td>
-                        <p>&nbsp;</p>
-                      </td>
-                      <td>
-                        <p>the zero based page index (ordered by when they started loading), or the full url to match the request against.</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <p>fullUrl</p>
-                      </td>
-                      <td>
-                        <p>String</p>
-                      </td>
-                      <td>
-                        <p>Yes</p>
-                      </td>
-                      <td>
-                        <p>the full url to match against if a page index is specified</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </section>
-              <dl class="dl-compact">
-                <dt>Returns</dt>
-                <dd>
-                  <p><code><a href="module-HttpRequest.html">module:HttpRequest</a></code>&nbsp;</p>
                 </dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
@@ -326,7 +288,8 @@ var b &#x3D; pizza.browser();</code></pre>
                         <p>&nbsp;</p>
                       </td>
                       <td>
-                        <p>the zero based page index (ordered by when they started loading), or the partial url to match the request against.</p>
+                        <p>the zero based page index (ordered by when they started loading),
+                          or the partial url to match the request against.</p>
                       </td>
                     </tr>
                     <tr>
@@ -349,7 +312,60 @@ var b &#x3D; pizza.browser();</code></pre>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code><a href="module-HttpRequest.html">module:HttpRequest</a></code>&nbsp;</p>
+                  <p><code><a href="module-HttpRequest.html">module:HttpRequest</a></code> </p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".getRequestByFullUrl"><span class="symbol-name">getRequestByFullUrl</span><span class="signature"><span class="signature-params">(pageIndexOrFullUrl[, fullUrl])</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-HttpRequest.html">module:HttpRequest</a></span></span></h3>
+              <p>Gets the first request matching the given full url</p>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>pageIndexOrFullUrl</p>
+                      </td>
+                      <td>
+                        <p>(String or Number)</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>the zero based page index (ordered by when they started loading),
+                          or the full url to match the request against.</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>fullUrl</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>the full url to match against if a page index is specified</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code><a href="module-HttpRequest.html">module:HttpRequest</a></code> </p>
                 </dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
@@ -358,8 +374,8 @@ var b &#x3D; pizza.browser();</code></pre>
               <p>Takes an optional URL or browser settings parameter. See the examples below.</p>
               <section>
                 <h4>
-            Examples
-        </h4>
+                  Examples
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Open browser at &quot;http://www.mysite.com&quot;
 var b &#x3D; pizza.open(&quot;www.mysite.com&quot;);</code></pre>
@@ -398,8 +414,8 @@ b.open(&quot;mysite.com/404&quot;);</code></pre>
                 <dd><a href="module-Browser.html#ignoreHttpErrors">module:Browser#ignoreHttpErrors</a></dd>
                 <dt>Returns</dt>
                 <dd>
-                  <p><code><a href="module-Browser.html">module:Browser</a></code>&nbsp;
-                    <p>the newly opened browser</p>
+                  <p><code><a href="module-Browser.html">module:Browser</a></code> 
+                  <p>the newly opened browser</p>
                   </p>
                 </dd>
               </dl>
@@ -439,19 +455,20 @@ b.open(&quot;mysite.com/404&quot;);</code></pre>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code><a href="module-CSV.html">module:CSV</a></code>&nbsp;
-                    <p>The CSV data</p>
+                  <p><code><a href="module-CSV.html">module:CSV</a></code> 
+                  <p>The CSV data</p>
                   </p>
                 </dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".saveFile"><span class="symbol-name">saveFile</span><span class="signature"><span class="signature-params">(filename, data)</span></span></h3>
               <p>Save a file to the script results.</p>
-              <p>When ran with the script runner, these files will be saved along side the script results and attached to the JUnit tests result.</p>
+              <p>When ran with the script runner, these files will be saved along side the script results
+                and attached to the JUnit tests result.</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>b.open(&quot;www.google.com&quot;);
 // Get response body of the main HTML request
@@ -507,12 +524,15 @@ pizza.saveFile(d);</code></pre>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".sleep"><span class="symbol-name">sleep</span><span class="signature"><span class="signature-params">(milliseconds)</span></span></h3>
               <p>Sleep for the given amount of milliseconds.</p>
-              <p>It's almost always better to wait on an element being visible or some change to the DOM to happen, than having a hard wait. Often sleeps require a significant amount of tweaking and have to be changed several times in response to failures
-                that happen after you have written the script.</p>
+              <p>It's almost always better to wait on an element being visible or some
+                change to the DOM to happen, than having a hard wait. Often sleeps
+                require a significant amount of tweaking and have to be changed
+                several times in response to failures that happen after you have
+                written the script.</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Sleep for one second
 pizza.sleep(1000);</code></pre>
@@ -558,8 +578,8 @@ pizza.sleep(1000);</code></pre>
               <p>Wait for the given function to return true</p>
               <section>
                 <h4>
-            Examples
-        </h4>
+                  Examples
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Wait for window.myVar to be set
 pizza.waitFor(function() {
@@ -628,12 +648,11 @@ pizza.waitFor(function() {
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on July 16, 2017.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 14, 2020.
       </p>
     </div>
   </footer>
   <script src="scripts/jquery.min.js"></script>
-  <script src="scripts/jquery.cookie.js"></script>
   <script src="scripts/tree.jquery.js"></script>
   <script src="scripts/prettify.js"></script>
   <script src="scripts/jsdoc-toc.js"></script>

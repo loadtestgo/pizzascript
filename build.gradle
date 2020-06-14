@@ -89,7 +89,7 @@ project(':script-engine') {
             exclude('chrome/extension/pizza/manifest.json')
         }
         task minify(type: Exec) {
-            commandLine '/usr/local/bin/gulp', 'enginejs'
+            commandLine 'gulp', 'enginejs'
         }
         processResources.dependsOn minify
     }

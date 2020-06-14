@@ -2,13 +2,11 @@
 <html>
 
 <head>
-  <meta name="generator" content="JSDoc 3.4.0">
+  <meta name="generator" content="JSDoc 3.6.4">
   <meta charset="utf-8">
   <title>PizzaScript | utils</title>
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Karla:400,400i,700,700i" type="text/css">
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Noto+Serif:400,400i,700,700i" type="text/css">
-  <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Inconsolata:500" type="text/css">
-  <link href="css/baseline.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700|Karla:400,400i,700,700i|Noto+Serif:400,400i,700,700i&display=swap&subset=latin-ext">
+  <link rel="stylesheet" href="css/baseline.css">
 </head>
 
 <body onload="prettyPrint()">
@@ -24,9 +22,8 @@
       <div id="jsdoc-content-container">
         <div id="jsdoc-main" role="main">
           <header class="page-header">
-            <div class="symbol-detail-labels"></div>
             <h1><small></small><span class="symbol-name">utils</span></h1>
-            <p class="source-link">Source: <a href="pizzascript.js.html#source-line-347">pizzascript.<wbr>js:347</a></p>
+            <p class="source-link">Source: <a href="-_Users_watsonmw_pizzascript_script-api_pizzascript.js.html#source-line-357">/<wbr>Users/<wbr>watsonmw/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:357</a></p>
             <div class="symbol-description">
               <p>Utility Functions</p>
             </div>
@@ -39,7 +36,10 @@
               <div class="summary-content">
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
-                    <dt><a href="module-utils.html#.date">date(format, daysOffset)</a></dt>
+                    <dt><a href="module-utils.html#.date">date(format[, daysOffset])</a></dt>
+                    <dd>
+                    </dd>
+                    <dt><a href="module-utils.html#.dateTime">dateTime(format[, Date])</a></dt>
                     <dd>
                     </dd>
                   </dl>
@@ -49,14 +49,12 @@
                     <dt><a href="module-utils.html#.random">random(max)</a></dt>
                     <dd>
                     </dd>
-                  </dl>
-                </div>
-                <div class="summary-column">
-                  <dl class="dl-summary-callout">
                     <dt><a href="module-utils.html#.randomElement">randomElement(array)</a></dt>
                     <dd>
                     </dd>
                   </dl>
+                </div>
+                <div class="summary-column">
                 </div>
               </div>
             </div>
@@ -65,12 +63,13 @@
             <h2>Methods</h2>
             <section>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
-              <h3 id=".date"><span class="symbol-name">date</span><span class="signature"><span class="signature-params">(format, daysOffset)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
-              <p>Return a date in the given format with the given number days offset from the current date.</p>
+              <h3 id=".date"><span class="symbol-name">date</span><span class="signature"><span class="signature-params">(format[, daysOffset])</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+              <p>Return a date in the given format with the given number days offset
+                from the current date.</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// Set a date two days in the future
 var format &#x3D; &quot;MM/dd/yyyy&quot;;
@@ -111,7 +110,7 @@ b.type(&quot;#departureDate&quot;, utils.date(format, 2));</code></pre>
                         <p>Number</p>
                       </td>
                       <td>
-                        <p>&nbsp;</p>
+                        <p>Yes</p>
                       </td>
                       <td>
                         <p>The day offset</p>
@@ -123,8 +122,71 @@ b.type(&quot;#departureDate&quot;, utils.date(format, 2));</code></pre>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>String</code>&nbsp;
-                    <p>The new date</p>
+                  <p><code>String</code> 
+                  <p>The formatted date as a string</p>
+                  </p>
+                </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".dateTime"><span class="symbol-name">dateTime</span><span class="signature"><span class="signature-params">(format[, Date])</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+              <p>Format the current (or given) date time.</p>
+              <section>
+                <h4>
+                  Example
+                </h4>
+                <div>
+                  <pre class="prettyprint"><code>var format &#x3D; &quot;MM-dd-YY-hh-mm-ss-ms&quot;;
+b.type(&quot;#decsription&quot;, &quot;description-&quot; + utils.dateTime(format));</code></pre>
+                </div>
+              </section>
+              <section>
+                <h4>Parameters</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>format</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>The date time format</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p>Date</p>
+                      </td>
+                      <td>
+                        <p>Date</p>
+                      </td>
+                      <td>
+                        <p>Yes</p>
+                      </td>
+                      <td>
+                        <p>time to format, if not specified current date will be used</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>String</code> 
+                  <p>Date time as string</p>
                   </p>
                 </dd>
               </dl>
@@ -133,12 +195,12 @@ b.type(&quot;#departureDate&quot;, utils.date(format, 2));</code></pre>
               <p>Return a random integer in the range 0 - (max - 1)</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// get a random element from an array
 var airports &#x3D; [&#x27;san&#x27;, &#x27;sfo&#x27;, &#x27;pdx&#x27;, &#x27;smf&#x27;, &#x27;lax&#x27;];
-var origin &#x3D; airports[util.random(airports.length)];</code></pre>
+var origin &#x3D; airports[utils.random(airports.length)];</code></pre>
                 </div>
               </section>
               <section>
@@ -173,8 +235,8 @@ var origin &#x3D; airports[util.random(airports.length)];</code></pre>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Number</code>&nbsp;
-                    <p>Random integer between 0 - (max - 1)</p>
+                  <p><code>Number</code> 
+                  <p>Random integer between 0 - (max - 1)</p>
                   </p>
                 </dd>
               </dl>
@@ -183,12 +245,12 @@ var origin &#x3D; airports[util.random(airports.length)];</code></pre>
               <p>Return a random element from the given array</p>
               <section>
                 <h4>
-            Example
-        </h4>
+                  Example
+                </h4>
                 <div>
                   <pre class="prettyprint"><code>// get a random element from an array
 var airports &#x3D; [&#x27;san&#x27;, &#x27;sfo&#x27;, &#x27;pdx&#x27;, &#x27;smf&#x27;, &#x27;lax&#x27;];
-var origin &#x3D; util.randomElement(airports);</code></pre>
+var origin &#x3D; utils.randomElement(airports);</code></pre>
                 </div>
               </section>
               <section>
@@ -223,8 +285,8 @@ var origin &#x3D; util.randomElement(airports);</code></pre>
               <dl class="dl-compact">
                 <dt>Returns</dt>
                 <dd>
-                  <p><code>Object</code>&nbsp;
-                    <p>Random element from the given array, or null if the array is empty</p>
+                  <p><code>Object</code> 
+                  <p>Random element from the given array, or null if the array is empty</p>
                   </p>
                 </dd>
               </dl>
@@ -238,12 +300,11 @@ var origin &#x3D; util.randomElement(airports);</code></pre>
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.4.0 on July 16, 2017.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 14, 2020.
       </p>
     </div>
   </footer>
   <script src="scripts/jquery.min.js"></script>
-  <script src="scripts/jquery.cookie.js"></script>
   <script src="scripts/tree.jquery.js"></script>
   <script src="scripts/prettify.js"></script>
   <script src="scripts/jsdoc-toc.js"></script>

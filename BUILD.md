@@ -34,7 +34,7 @@ loading of the extension.
 
 We use NodeJS & Gulp to minify the JS files (NodeJS is also needed to generate docs).
 
-Install NodeJS 0.12+:
+Install NodeJS 12+:
 
 On OSX:
 
@@ -45,10 +45,9 @@ On Debian (replace \_ with just the underscore):
     curl -sL https://deb.nodesource.com/setup\_0.12 | sudo bash -
     sudo apt-get install nodejs
 
-Install Gulp as follows (sudo is necessary):
+Install Gulp and deps as follows:
 
-    npm install gulp
-    npm install gulp-uglify gulp-concat gulp-replace event-stream
+    npm install
 
 To generate a release build:
 
