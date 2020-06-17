@@ -1441,103 +1441,106 @@ pizza.main.commands = function() {
     };
 
     var scriptSelectSingle = "" + function(selector, jsonParams) {
-      var i, o;
-      var e = this.findElement(selector);
-      var params = JSON.parse(jsonParams);
-      if (params.index) {
+      let i, o;
+      let e = this.findElement(selector);
+      let params = JSON.parse(jsonParams);
+      if (params.hasOwnProperty('index')) {
         i = params.index;
         if (i >= 0 && i < e.options.length) {
           o = e.options[i];
           o.selected = true;
           return;
         }
-        throw "Error: Unable to find option with index '" + i + "'!";
+        throw "Unable to find option with index '" + i + "'!";
       }
-      var match;
-      if (params.match) {
+      let match;
+      if (params.hasOwnProperty('match')) {
         match = new RegExp(params.match);
       }
       for (i = 0; i < e.options.length; ++i) {
         o = e.options[i];
-        if (params.text && o.text == params.text ||
-              params.value && o.value == params.value ||
-              match && o.text && o.text.match(match)) {
+        if ((params.hasOwnProperty('text') && o.text == params.text) ||
+            (params.hasOwnProperty('value') && o.value == params.value) ||
+            (match && o.text && o.text.match(match))) {
           o.selected = true;
           return;
         }
       }
-      if (params.text) {
-        throw "Error: Unable to find option with text '" + params.text + "'!";
-      } else if (params.value) {
-        throw "Error: Unable to find option with value '" + params.value + "'!";
-      } else if (params.match) {
-         throw "Error: Unable to find option with text that matches " + params.match + "!";
+      if (params.hasOwnProperty('text')) {
+        throw "Unable to find option with text '" + params.text + "'!";
+      } else if (params.hasOwnProperty('value')) {
+        throw "Unable to find option with value '" + params.value + "'!";
+      } else if (params.hasOwnProperty('match')) {
+         throw "Unable to find option with text that matches " + params.match + "!";
       } else {
-        throw "Error: Unable to find option!";
+        throw "Unable to find option!";
       }
     };
 
     var scriptSelectMultiple = "" + function(selector, jsonParams) {
-      var e = this.findElement(selector);
-      var a = null;
-      var params = JSON.parse(jsonParams);
-      if (params.text) {
+      let e = this.findElement(selector);
+      let a = null;
+      let params = JSON.parse(jsonParams);
+      if (params.hasOwnProperty('text')) {
         a = params.text;
-      } else if (params.value) {
+      } else if (params.hasOwnProperty('value')) {
         a = params.value;
-      } else if (params.match) {
+      } else if (params.hasOwnProperty('match')) {
         a = params.match;
-        for (var i = 0; i < a.length; ++i) {
-          var t = a[i];
+        for (let i = 0; i < a.length; ++i) {
+          let t = a[i];
           a[i] = new RegExp(t);
         }
-      } else if (params.index) {
+      } else if (params.hasOwnProperty('index')) {
         a = params.index;
       }
       if (params.clear) {
-        for (var i = 0; i < e.options.length; ++i) {
-          var o = e.options[i];
+        for (let i = 0; i < e.options.length; ++i) {
+          let o = e.options[i];
           o.selected = false;
         }
       }
-      for (var i = 0; i < a.length; ++i) {
-         var t = a[i];
-         var set = false;
-         for (var j = 0; j < e.options.length; ++j) {
-           var o = e.options[j];
-           if (params.text && t == o.text ||
-                params.value && t == o.value ||
-                params.match && o.text && o.text.match(t) ||
-                params.index && j == t) {
+      for (let i = 0; i < a.length; ++i) {
+         let t = a[i];
+         let set = false;
+         for (let j = 0; j < e.options.length; ++j) {
+           let o = e.options[j];
+           if ((params.hasOwnProperty('text') && t === o.text) ||
+               (params.hasOwnProperty('value') && t === o.value) ||
+               (params.hasOwnProperty('match') && o.text && o.text.match(t)) ||
+               (params.hasOwnProperty('index') && j === t)) {
              o.selected = true;
              set = true;
            }
          }
          if (!set) {
-           if (params.text) {
-             throw "Error: Unable to find option with text '" + t + "'!";
-           } else if (params.value) {
-             throw "Error: Unable to find option with value '" + t + "'!";
-           } else if (params.index) {
-             throw "Error: Unable to find option with index '" + t + "'!";
-           } else if (params.match) {
-             throw "Error: Unable to find option with text that matches " + params.match + "!";
+           if (params.hasOwnProperty('text')) {
+             throw "Unable to find option with text '" + t + "'!";
+           } else if (params.hasOwnProperty('value')) {
+             throw "Unable to find option with value '" + t + "'!";
+           } else if (params.hasOwnProperty('index')) {
+             throw "Unable to find option with index '" + t + "'!";
+           } else if (params.hasOwnProperty('match')) {
+             throw "Unable to find option with text that matches " + params.match + "!";
            }
          }
       }
-    };
+    }
 
     var _select = function(id, params) {
-        var value = params.value;
-        if (!value.text && !value.value && !value.index && !value.match) {
-            sendResponse(id, { error: "Error: None of text, value, index or match properties set!"});
+        let value = params.value;
+        if (!value.hasOwnProperty('text') &&
+            !value.hasOwnProperty('value') &&
+            !value.hasOwnProperty('index') &&
+            !value.hasOwnProperty('match')) {
+            sendResponse(id, { error: "None of text, value, index or match properties set!"});
             return;
         }
         var script = null;
-        if (value.text && value.text instanceof Array ||
-            value.value && value.value instanceof Array ||
-            value.index && value.index instanceof Array ||
-            value.match && value.match instanceof Array) {
+        if ((value.hasOwnProperty('text') && value.text instanceof Array) ||
+            (value.hasOwnProperty('value') && value.value instanceof Array) ||
+            (value.hasOwnProperty('index') && value.index instanceof Array) ||
+            (value.hasOwnProperty('match') && value.match instanceof Array)) {
             script = scriptSelectMultiple;
         } else {
             script = scriptSelectSingle;
@@ -1567,7 +1570,7 @@ pizza.main.commands = function() {
     var existsScript = "" + function(selector) {
         try {
             var v = this.findElement(selector);
-            return v ? true : false;
+            return !!v;
         } catch (e) {
             return false
         }

@@ -43,7 +43,7 @@ public class SelectOptionsTests extends JavaScriptTest {
 
         TestResult result = runScript(script);
 
-        assertError("Error: Unable to find option with value 'value12'!", ErrorType.Script, result);
+        assertError("Unable to find option with value 'value12'!", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
 
@@ -57,7 +57,7 @@ public class SelectOptionsTests extends JavaScriptTest {
 
         TestResult result = runScript(script);
 
-        assertError("Error: Unable to find option with text 'Value 12'!", ErrorType.Script, result);
+        assertError("Unable to find option with text 'Value 12'!", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
 
@@ -120,7 +120,7 @@ public class SelectOptionsTests extends JavaScriptTest {
 
         TestResult result = runScript(script);
 
-        assertError("Error: Unable to find option with text 'Toes'!", ErrorType.Script, result);
+        assertError("Unable to find option with text 'Toes'!", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
 
@@ -133,7 +133,7 @@ public class SelectOptionsTests extends JavaScriptTest {
 
         TestResult result = runScript(script);
 
-        assertError("Error: Unable to find option with value 'toes'!", ErrorType.Script, result);
+        assertError("Unable to find option with value 'toes'!", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
 
@@ -146,7 +146,7 @@ public class SelectOptionsTests extends JavaScriptTest {
 
         TestResult result = runScript(script);
 
-        assertError("Error: Unable to find option with index '20'!", ErrorType.Script, result);
+        assertError("Unable to find option with index '20'!", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
 
@@ -159,7 +159,24 @@ public class SelectOptionsTests extends JavaScriptTest {
 
         TestResult result = runScript(script);
 
-        assertError("Error: Unable to find option with text that matches /Toes/!", ErrorType.Script, result);
+        assertError("Unable to find option with text that matches /Toes/!", ErrorType.Script, result);
         assertEquals(1, result.getPages().size());
     }
+
+    @Test
+    public void selectIndex0() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "assert.eq(b.getValue('select'), 'value2');\n" +
+            // Select by index 0
+            "b.select('select', {index: 0});\n" +
+            "assert.eq(b.getValue('select'), 'value1');\n",
+            getTestUrl("files/form.html"));
+
+        TestResult result = runScript(script);
+
+        assertNoError(result);
+        assertEquals(1, result.getPages().size());
+    }
+
 }
