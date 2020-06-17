@@ -188,7 +188,7 @@ pizza.main.commands = function() {
             });
     };
 
-    var _verifyTextInternal = function(textSearch, callback) {
+    var _hasTextInternal = function(textSearch, callback) {
         chrome.tabs.executeScript(_currentTabId, {
             code: 'document.body.innerText',
             allFrames: true
@@ -196,7 +196,8 @@ pizza.main.commands = function() {
             var found = false;
             if (pizza.isArray(response)) {
                 for (var i = 0; i < response.length; ++i) {
-                    if (response[i].search(textSearch) !== -1) {
+                    var r = response[i]; // can be null if no text in frame
+                    if (r && r.search(textSearch) !== -1) {
                         found = true;
                         break;
                     }
@@ -215,14 +216,14 @@ pizza.main.commands = function() {
         });
     };
 
-    var _verifyText = function(id, params) {
+    var _hasText = function(id, params) {
         var searchRegexp = null;
         if (params.text) {
             searchRegexp = new RegExp(pizza.regexEscape(params.text), 'i');
         } else {
             searchRegexp = pizza.regexFromString(params.regexp);
         }
-        _verifyTextInternal(searchRegexp, function(found) {
+        _hasTextInternal(searchRegexp, function(found) {
             sendResponse(id, { value: found });
         });
     };
@@ -1128,6 +1129,9 @@ pizza.main.commands = function() {
                 arg.type = "string";
             } else if (pizza.isNumber(o)) {
                 arg.type = "number";
+            } else if (pizza.isBoolean(o)) {
+                arg.type = "boolean";
+                arg.value = o;
             } else {
                 arg.type = "object";
                 arg.value = JSON.stringify(o);
@@ -1365,6 +1369,16 @@ pizza.main.commands = function() {
             "function(selector, checked) { var e = this.findElement(selector); e.checked = checked; }",
             params.selector,
             checkState
+        );
+    };
+
+    var _checked = function(id, params) {
+        executeAutomationAPI(
+            function(response) { sendResponse(id, { value: response.result.value } ); },
+            function(error) { sendResponse(id, { error: error }); },
+            true,
+            "function(selector) { var e = this.findElement(selector); return e.checked; }",
+            params.selector
         );
     };
 
@@ -2211,7 +2225,7 @@ pizza.main.commands = function() {
     addCommand("forward", _forward);
     addCommand("reload", _reload);
 
-    addCommand("verifyText", _verifyText);
+    addCommand("hasText", _hasText);
     addCommand("getInnerText", _getInnerText);
     addCommand("waitForText", _waitForText);
 
@@ -2262,6 +2276,7 @@ pizza.main.commands = function() {
     addCommand("clear", _clear);
     addCommand("selectContent", _selectContent);
     addCommand("check", _check);
+    addCommand("checked", _checked);
     addCommand("getValue", _getValue);
     addCommand("setValue", _setValue);
     addCommand("setFiles", _setFiles);

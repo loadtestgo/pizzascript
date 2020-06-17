@@ -700,6 +700,7 @@ Browser.prototype.newPage = function(pageName) {};
  *
  * @param {String|RegExp} text
  *
+ * @see module:Browser#hasText
  * @see module:Browser#getInnerText
  * @see module:Browser#verifyNotText
  */
@@ -722,6 +723,7 @@ Browser.prototype.verifyText = function(text) {};
  * @param {String} text the text to wait for
  *
  * @see module:Browser#getInnerText
+ * @see module:Browser#hasText
  * @see module:Browser#verifyText
  * @see module:Browser#verifyNotText
  */
@@ -742,10 +744,30 @@ Browser.prototype.waitForText = function(selector, text) {};
  *
  * @param {String|RegExp} text The text to look for on the page
  *
+ * @see module:Browser#hasText
  * @see module:Browser#verifyText
+ * @see module:Browser#waitForText
  * @see module:Browser#getInnerText
  */
 Browser.prototype.verifyNotText = function(text) {};
+
+/**
+ * Check if the given text exists somewhere on the page.
+ *
+ * @example
+ * if (b.hasText('Accept Terms')) {
+ *     b.click("#accept");
+ * }
+ *
+ * @param {String|RegExp} text The text to look for on the page
+ * @return {Boolean} true if the given text can be found
+ *
+ * @see module:Browser#verifyText
+ * @see module:Browser#verifyNotText
+ * @see module:Browser#waitForText
+ * @see module:Browser#getInnerText
+ */
+Browser.prototype.hasText = function(text) {};
 
 /**
  * Verify the page title matches the given title.
@@ -908,12 +930,16 @@ Browser.prototype.listAllFrames = function() {};
  * b.selectFrame("iframe:nth(2)");
  *
  * @example
- * // Select the iframe with the name 'name1'
+ * // Select iframe with the name 'name1'
  * b.selectFrame("iframe[name='name1']");
  *
  * @example
- * // Select the iframe with the name 'name1'
+ * // Select iframe with the name 'name1'
  * b.selectFrame("iframe[name='name1']");
+ *
+ * @example
+ * // Select iframe with src starting with 'dialog'
+ * b.selectFrame("iframe[src^='/dialog']")
  *
  * @param {String} selector select the first frame matching this selector
  * @return {module:Frame} Details about the frame selected.
@@ -935,6 +961,10 @@ Browser.prototype.selectFrame = function(selector) {};
  * @example
  * // Select the iframe with the name 'name1'
  * b.selectFrameCss("iframe[name='name1']");
+ *
+ * @example
+ * // Select iframe with src starting with 'dialog'
+ * b.selectFrame("iframe[src^='/dialog']")
  *
  * @param {String} selector select the first frame matching this selector
  * @return {module:Frame} Details about the frame selected.
@@ -1392,6 +1422,15 @@ Browser.prototype.selectContent = function(selector) {};
 Browser.prototype.check = function(selector, on) {};
 
 /**
+ * Check if input checkbox is selected.
+ *
+ * @throws Throws an exception if the element can not be found
+ * @param {String} selector the checkbox element to check
+ * @return {Boolean} true if input checkbox selected.
+ */
+Browser.prototype.checked = function(selector) {};
+
+/**
  * Select the given item/items of a dropdown or combobox
  *
  * @example
@@ -1403,11 +1442,13 @@ Browser.prototype.check = function(selector, on) {};
  * select("#toppings", {value: "option1"})
  *
  * @example
- * // Select by text
+ * // Select by option text:
+ * select("#topping", "Onions");
+ * // This is the same as:
  * select("#toppings", {text: "Onions"})
  *
  * @example
- * // Select by text matching Regex
+ * // Select by option text matching Regex
  * select("#toppings", {match: ".nions"})
  *
  * @example
@@ -1547,8 +1588,8 @@ Browser.prototype.submit = function(selector) {};
  *     b.submit('#form2');
  * }
  *
- * @param {String} selector the element to search for
- * @return {Boolean} true if the element exists
+ * @param {String} selector the CSS selector or XPATH to lookup
+ * @return {Boolean} true if at least one element that matches the selector exists / false otherwise
  */
 Browser.prototype.exists = function(selector) {};
 

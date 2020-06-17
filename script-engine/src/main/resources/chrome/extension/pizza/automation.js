@@ -384,7 +384,7 @@ pizza.automation = {
                             }
                             break;
                         case 'css':
-                            if (i == 0) {
+                            if (i === 0) {
                                 newItems = document.querySelectorAll(cmd.params);
                             } else {
                                 for (j = 0; j < items.length; ++j) {
@@ -394,7 +394,7 @@ pizza.automation = {
                             }
                             break;
                         case 'id':
-                            if (i == 0) {
+                            if (i === 0) {
                                 e = document.getElementById(cmd.params);
                                 if (e) {
                                     newItems = [e];
@@ -410,7 +410,7 @@ pizza.automation = {
                             break;
                     }
                     items = newItems;
-                    if (items.length == 0) {
+                    if (items.length === 0) {
                         break;
                     }
                 }
@@ -512,6 +512,7 @@ pizza.automation = {
             var splitters = ['>', ',', '*', ":", " ", "\t"];
             for (; i < selector.length; ++i) {
                 if (skipNext) {
+                    skipNext = false;
                     continue;
                 }
                 var v = selector[i];
@@ -760,7 +761,7 @@ pizza.automation = {
                     var parent = element;
                     while (true) {
                         parent = parent.parentNode;
-                        if (!parent) {
+                        if (!parent || parent === document) {
                             break;
                         }
                         var ps = window.getComputedStyle(parent);

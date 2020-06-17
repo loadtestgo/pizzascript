@@ -67,7 +67,11 @@ public class FormTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.check('#checkbox1');\n" +
-            "assert.eq(b.getValue('#checkbox1'), 'on');",
+            "assert.ok(b.checked('#checkbox1'));\n" +
+            "b.check('#checkbox1', false);\n" +
+            "assert.ok(!b.checked('#checkbox1'));" +
+            "b.check('#checkbox1', true);\n" +
+            "assert.ok(b.checked('#checkbox1'));\n",
             getTestUrl("files/form.html"));
 
         TestResult result = runScript(script);

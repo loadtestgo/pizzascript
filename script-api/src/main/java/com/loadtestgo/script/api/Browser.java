@@ -4,6 +4,8 @@ import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.regexp.NativeRegExp;
 
+import java.util.HashMap;
+
 /**
  * API for controlling the browser.
  *
@@ -256,6 +258,20 @@ public interface Browser {
      * @param title the title to match
      */
     void verifyTitle(String title);
+
+    /**
+     * Check if the given text exists somewhere on the page.
+     *
+     * @param text the text to match
+     */
+    boolean hasText(String text);
+
+    /**
+     * Check if the given text exists somewhere on the page.
+     *
+     * @param regexp the regex to search for in the page text
+     */
+    boolean hasText(NativeRegExp regexp);
 
     /**
      * Return the page title.
@@ -593,6 +609,14 @@ public interface Browser {
     void check(String selector, boolean on);
 
     /**
+     * Return checkbox state for the given selector
+     *
+     * @param selector the checkbox element to check on/off
+     * @return true if checked
+     */
+    boolean checked(String selector);
+
+    /**
      * Select the given item/items of a dropdown or combobox
      * <p>
      * Select by index:
@@ -623,6 +647,8 @@ public interface Browser {
      * @param value    the values to select
      */
     void select(String selector, NativeObject value);
+
+    void select(String selector, String text);
 
     /**
      * Gets the value of given input form item

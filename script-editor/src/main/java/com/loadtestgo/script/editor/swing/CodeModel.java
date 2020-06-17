@@ -61,6 +61,22 @@ public class CodeModel {
         }
     }
 
+    public void updateFilePath(SourceFile sourceFile) {
+        synchronized (sourceFiles) {
+            String key = null;
+            for (Map.Entry<String, SourceFile> entry : sourceFiles.entrySet()) {
+                if (entry.getValue() == sourceFile) {
+                    key = entry.getKey();
+                    break;
+                }
+            }
+            if (key != null) {
+                sourceFiles.remove(key);
+            }
+            sourceFiles.put(sourceFile.getFilePath(), sourceFile);
+        }
+    }
+
     private String getFilePath(DebuggableScript debuggableScript) {
         String filePath = debuggableScript.getSourceName();
         if (filePath == null) {

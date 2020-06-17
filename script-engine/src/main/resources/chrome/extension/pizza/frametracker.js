@@ -28,7 +28,6 @@ pizza.main.frametracker = function() {
     };
 
     var _processNode = function(node) {
-        console.log(node);
         if (node.frameId && node.nodeId) {
             _nodeIdToFrameId[node.nodeId] = node.frameId;
             _frames[node.nodeId] = node;
@@ -199,7 +198,7 @@ pizza.main.frametracker = function() {
 
     var _queryFrameFrameSelector = function(selector, frameId, callback) {
         var selectorArray = _splitOnSpacesWithEscapes(selector);
-        if (selectorArray.length == 0) {
+        if (selectorArray.length === 0) {
             callback({ error: "zero length selector" });
         }
 
@@ -210,32 +209,36 @@ pizza.main.frametracker = function() {
             _sendCommand('DOM.querySelectorAll',
                 { nodeId: nodeId, selector: sel.css },
                 function(response) {
-                    _resolveFrameNodes(response.nodeIds, function(response) {
-                        if (!response.value) {
-                            callback();
-                        }
-
-                        if (sel.index > -1) {
-                            if (response.value.length > sel.index) {
-                                response.value = [response.value[sel.index]];
+                    if (response.nodeIds) {
+                        _resolveFrameNodes(response.nodeIds, function (response) {
+                            if (!response.value) {
+                                callback();
                             }
-                        }
 
-                        i++;
-
-                        if (i >= selectorArray.length && response.value.length > 0) {
-                            if (frame == null) {
-                                frame = response.value[0];
+                            if (sel.index > -1) {
+                                if (response.value.length > sel.index) {
+                                    response.value = [response.value[sel.index]];
+                                }
                             }
-                            callback();
-                        } else {
-                            async.each(response.value, function(value, callback) {
-                                search(_frameIdToContentNodeId[value.frameId], i, callback);
-                            }, function(r) {
-                                callback(r);
-                            });
-                        }
-                    });
+
+                            i++;
+
+                            if (i >= selectorArray.length && response.value.length > 0) {
+                                if (frame == null) {
+                                    frame = response.value[0];
+                                }
+                                callback();
+                            } else {
+                                async.each(response.value, function (value, callback) {
+                                    search(_frameIdToContentNodeId[value.frameId], i, callback);
+                                }, function (r) {
+                                    callback(r);
+                                });
+                            }
+                        });
+                    } else {
+                        callback({ error: response });
+                    }
                 });
         };
 

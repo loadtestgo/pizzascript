@@ -150,6 +150,9 @@ We may add some kind of automatic wait for the item to be visible in future.</p>
                 <dt><a href="module-Browser.html#check">check(selector[, on])</a></dt>
                 <dd>
                 </dd>
+                <dt><a href="module-Browser.html#checked">checked(selector)</a></dt>
+                <dd>
+                </dd>
                 <dt><a href="module-Browser.html#clear">clear(selector)</a></dt>
                 <dd>
                 </dd>
@@ -246,6 +249,9 @@ We may add some kind of automatic wait for the item to be visible in future.</p>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#handleDialog">handleDialog(val)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#hasText">hasText(text)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#highlight">highlight(selector[, color])</a></dt>
@@ -702,6 +708,72 @@ b.check(&quot;#checkBox1&quot;);</code></pre>
     <dt>Throws</dt>
         <dd><p>Throws an exception if the element can not be found</p></dd>
 
+
+
+
+        </dl>
+
+                <h3 id="checked"><span class="symbol-name">checked</span><span class="signature"><span class="signature-params">(selector)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>            <p>Check if input checkbox is selected.</p>
+
+        
+            <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the checkbox element to check</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+        
+
+        <dl class="dl-compact">
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt>Throws</dt>
+        <dd><p>Throws an exception if the element can not be found</p></dd>
+
+    <dt>Returns</dt>
+        <dd><p><code>Boolean</code> <p>true if input checkbox selected.</p></p></dd>
 
 
 
@@ -1777,7 +1849,7 @@ if (b.exists(&#x27;#form1&#x27;)) {
                 <p>&nbsp;</p>
         </td>
         <td>
-                <p>the element to search for</p>
+                <p>the CSS selector or XPATH to lookup</p>
         </td>
 </tr>
 
@@ -1809,7 +1881,7 @@ if (b.exists(&#x27;#form1&#x27;)) {
 
 
     <dt>Returns</dt>
-        <dd><p><code>Boolean</code> <p>true if the element exists</p></p></dd>
+        <dd><p><code>Boolean</code> <p>true if at least one element that matches the selector exists / false otherwise</p></p></dd>
 
 
 
@@ -2754,6 +2826,86 @@ window.prompt() dialog with the given text.</p>
 
 
 
+
+
+
+        </dl>
+
+                <h3 id="hasText"><span class="symbol-name">hasText</span><span class="signature"><span class="signature-params">(text)</span>&nbsp;&rarr; <span class="signature-returns"> Boolean</span></span></h3>            <p>Check if the given text exists somewhere on the page.</p>
+
+            <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>if (b.hasText(&#x27;Accept Terms&#x27;)) {
+    b.click(&quot;#accept&quot;);
+}</code></pre>
+</div>
+
+    </section>
+
+            <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>text</p>
+        </td>
+        <td>
+                <p>(String or RegExp)</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The text to look for on the page</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+        
+
+        <dl class="dl-compact">
+            
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
+        <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
+        <dd><a href="module-Browser.html#waitForText">module:Browser#waitForText</a></dd>
+        <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
+
+
+
+
+
+
+
+    <dt>Returns</dt>
+        <dd><p><code>Boolean</code> <p>true if the given text can be found</p></p></dd>
 
 
 
@@ -4498,12 +4650,14 @@ select(&quot;#toppings&quot;, {value: &quot;option1&quot;})</code></pre>
 </div>
 
                 <div>
-    <pre class="prettyprint"><code>// Select by text
+    <pre class="prettyprint"><code>// Select by option text:
+select(&quot;#topping&quot;, &quot;Onions&quot;);
+// This is the same as:
 select(&quot;#toppings&quot;, {text: &quot;Onions&quot;})</code></pre>
 </div>
 
                 <div>
-    <pre class="prettyprint"><code>// Select by text matching Regex
+    <pre class="prettyprint"><code>// Select by option text matching Regex
 select(&quot;#toppings&quot;, {match: &quot;.nions&quot;})</code></pre>
 </div>
 
@@ -4713,13 +4867,18 @@ b.selectFrame(&quot;iframe:nth(2)&quot;);</code></pre>
 </div>
 
                 <div>
-    <pre class="prettyprint"><code>// Select the iframe with the name &#x27;name1&#x27;
+    <pre class="prettyprint"><code>// Select iframe with the name &#x27;name1&#x27;
 b.selectFrame(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
 </div>
 
                 <div>
-    <pre class="prettyprint"><code>// Select the iframe with the name &#x27;name1&#x27;
+    <pre class="prettyprint"><code>// Select iframe with the name &#x27;name1&#x27;
 b.selectFrame(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select iframe with src starting with &#x27;dialog&#x27;
+b.selectFrame(&quot;iframe[src^&#x3D;&#x27;/dialog&#x27;]&quot;)</code></pre>
 </div>
 
     </section>
@@ -4803,6 +4962,11 @@ b.selectFrameCss(&quot;iframe&quot;);</code></pre>
                 <div>
     <pre class="prettyprint"><code>// Select the iframe with the name &#x27;name1&#x27;
 b.selectFrameCss(&quot;iframe[name&#x3D;&#x27;name1&#x27;]&quot;);</code></pre>
+</div>
+
+                <div>
+    <pre class="prettyprint"><code>// Select iframe with src starting with &#x27;dialog&#x27;
+b.selectFrame(&quot;iframe[src^&#x3D;&#x27;/dialog&#x27;]&quot;)</code></pre>
 </div>
 
     </section>
@@ -6203,7 +6367,9 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
 
 
     <dt>See also</dt>
+        <dd><a href="module-Browser.html#hasText">module:Browser#hasText</a></dd>
         <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
+        <dd><a href="module-Browser.html#waitForText">module:Browser#waitForText</a></dd>
         <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
 
 
@@ -6370,6 +6536,7 @@ error.</p></dd>
 
 
     <dt>See also</dt>
+        <dd><a href="module-Browser.html#hasText">module:Browser#hasText</a></dd>
         <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
         <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
 
@@ -6695,6 +6862,7 @@ currently selected frame.</p>
 
     <dt>See also</dt>
         <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
+        <dd><a href="module-Browser.html#hasText">module:Browser#hasText</a></dd>
         <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
         <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
 
@@ -6884,7 +7052,7 @@ main document.</p></dd>
                     <footer id="jsdoc-footer" class="jsdoc-footer">
                             <div id="jsdoc-footer-container">
                                     <p>
-                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 14, 2020.
+                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 16, 2020.
                                     </p>
                             </div>
                     </footer>

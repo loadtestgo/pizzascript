@@ -45,8 +45,13 @@ public class JsRuntimeSupport extends ScriptableObject {
         String fullPath = file.getPath();
         Logger.info("Loading file " + fullPath + "...");
 
+        String filePath = fileName;
+        if (!dis.testContext.getIsFileSystemSandboxed()) {
+            filePath = fullPath;
+        }
+
         try {
-            return cx.evaluateReader(newScope, new InputStreamReader(new FileInputStream(file)), fileName, 1, null);
+            return cx.evaluateReader(newScope, new InputStreamReader(new FileInputStream(file)), filePath, 1, null);
         } catch (IOException e) {
             if (dis.testContext.getIsFileSystemSandboxed()) {
                 throw new ScriptException(e.getMessage());

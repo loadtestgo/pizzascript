@@ -9,6 +9,7 @@ import com.loadtestgo.script.engine.internal.rhino.RhinoUtils;
 import com.loadtestgo.script.engine.internal.server.BrowserWebSocketServer;
 import com.loadtestgo.util.Http;
 import com.loadtestgo.util.HttpHeader;
+import com.loadtestgo.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeArray;
@@ -299,7 +300,7 @@ public class ChromeBrowser implements Browser {
     public void verifyText(String text) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("text", text);
-        JSONObject result = pizzaHandler.sendCommand("verifyText", params);
+        JSONObject result = pizzaHandler.sendCommand("hasText", params);
         if (!getResponseBoolean(result)) {
             throw new ScriptException(String.format("Unable to find text '%s'", text));
         }
@@ -309,7 +310,7 @@ public class ChromeBrowser implements Browser {
     public void verifyNotText(String text) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("text", text);
-        JSONObject result = pizzaHandler.sendCommand("verifyText", params);
+        JSONObject result = pizzaHandler.sendCommand("hasText", params);
         if (getResponseBoolean(result)) {
             throw new ScriptException(String.format("Found text '%s'", text));
         }
@@ -320,7 +321,7 @@ public class ChromeBrowser implements Browser {
         HashMap<String,Object> params = new HashMap<>();
         String text = regexp.toString();
         params.put("regexp", text);
-        JSONObject result = pizzaHandler.sendCommand("verifyText", params);
+        JSONObject result = pizzaHandler.sendCommand("hasText", params);
         if (!getResponseBoolean(result)) {
             throw new ScriptException(String.format("Unable to find text matching '%s'", text));
         }
@@ -331,10 +332,26 @@ public class ChromeBrowser implements Browser {
         HashMap<String,Object> params = new HashMap<>();
         String text = regexp.toString();
         params.put("regexp", text);
-        JSONObject result = pizzaHandler.sendCommand("verifyText", params);
+        JSONObject result = pizzaHandler.sendCommand("hasText", params);
         if (getResponseBoolean(result)) {
             throw new ScriptException(String.format("Found text matching '%s'", text));
         }
+    }
+
+    @Override
+    public boolean hasText(String text) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("text", text);
+        return getResponseBoolean(pizzaHandler.sendCommand("hasText", params));
+    }
+
+    @Override
+    public boolean hasText(NativeRegExp regexp) {
+        HashMap<String,Object> params = new HashMap<>();
+        String text = regexp.toString();
+        params.put("regexp", text);
+        JSONObject result = pizzaHandler.sendCommand("hasText", params);
+        return getResponseBoolean(result);
     }
 
     @Override
@@ -744,10 +761,27 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
+    public boolean checked(String selector) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        return getResponseBoolean(pizzaHandler.sendCommand("checked", params));
+    }
+
+    @Override
     public void select(String selector, NativeObject value) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
         params.put("value", RhinoUtils.deserialize(value));
+        getResponseData(pizzaHandler.sendCommand("select", params));
+    }
+
+    @Override
+    public void select(String selector, String text) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        HashMap<String,Object> valueParams = new HashMap<>();
+        valueParams.put("text", text);
+        params.put("value", valueParams);
         checkResponseForErrors(pizzaHandler.sendCommand("select", params));
     }
 
@@ -1107,7 +1141,23 @@ public class ChromeBrowser implements Browser {
             } else if (response.has("description") && !response.isNull("description")) {
                 return RhinoUtils.serialize(response.opt("description"));
             } else if (response.has("error")) {
-                throw new ScriptException(ErrorType.Script, response.getString("error"));
+                Object error = response.get("error");
+                if (error instanceof String) {
+                    throw new ScriptException(ErrorType.Script, (String) error);
+                } else if (error instanceof JSONObject) {
+                    String errorMessage = ((JSONObject) error).optString("message", null);
+                    if (errorMessage != null) {
+                        String errorName = ((JSONObject) error).optString("name", null);
+                        if (StringUtils.isSet(errorName)) {
+                            errorMessage = errorName + ": " + errorMessage;
+                        }
+                    } else {
+                        errorMessage = error.toString();
+                    }
+                    throw new ScriptException(ErrorType.Script, errorMessage);
+                } else {
+                    throw new ScriptException(ErrorType.Script, error.toString());
+                }
             } else {
                 return null;
             }

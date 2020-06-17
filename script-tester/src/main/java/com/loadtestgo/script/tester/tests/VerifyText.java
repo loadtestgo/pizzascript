@@ -187,4 +187,20 @@ public class VerifyText extends JavaScriptTest {
         assertOnePage(result);
         assertNoError(result);
     }
+
+    @Test
+    public void hasText() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "assert.ok(b.hasText(\"Nested Frame Top\"));\n" +
+            "assert.ok(b.hasText(/Th.s .s th. HTML b.dy/));" +
+            "assert.ok(!b.hasText(\"Text not there\"));" +
+            "assert.ok(!b.hasText(/Text not there/));",
+            getTestUrl("files/frames/nested.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+        assertNoError(result);
+    }
 }

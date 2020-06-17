@@ -297,6 +297,10 @@ pizza.isNumber = function(v) {
     return (typeof v == 'number' || v instanceof Number);
 };
 
+pizza.isBoolean = function(v) {
+    return (typeof v === "boolean" || v instanceof Boolean);
+}
+
 pizza.isFunction = function(v) {
     return (typeof v == 'function' || v instanceof Function);
 };

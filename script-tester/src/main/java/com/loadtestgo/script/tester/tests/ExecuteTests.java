@@ -72,11 +72,44 @@ public class ExecuteTests extends JavaScriptTest {
 
         assertOnePage(result);
 
-        //
         assertNotNull("Expected error, but no error", result.getError());
         assertEquals(ErrorType.Script, result.getError().type);
         String errorMessage = result.getError().message;
         assertTrue(errorMessage.equals("SyntaxError: Unexpected token ILLEGAL") ||
             errorMessage.equals("SyntaxError: Invalid or unexpected token"));
+    }
+
+    @Test
+    public void throwJSException() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.execute('throw \"exception\"');\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+
+        assertNotNull("Expected error, but no error", result.getError());
+        assertEquals(ErrorType.Script, result.getError().type);
+        String errorMessage = result.getError().message;
+        assertTrue(errorMessage.equals("exception"));
+    }
+
+    @Test
+    public void throwJSXPathException() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.execute(\"document.evaluate('notanxpath[', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue\");\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+
+        assertNotNull("Expected error, but no error", result.getError());
+        assertEquals(ErrorType.Script, result.getError().type);
+        String errorMessage = result.getError().message;
+        assertTrue(errorMessage.startsWith("SyntaxError"));
     }
 }

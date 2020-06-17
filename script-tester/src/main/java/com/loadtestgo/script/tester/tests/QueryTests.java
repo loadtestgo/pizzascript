@@ -45,7 +45,7 @@ public class QueryTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "var v = b.query('div');\n" +
-            "assert.eq(v.length, 11);\n" +
+            "assert.eq(v.length, 12);\n" +
             "v = b.query('notatag');\n" +
             "assert.eq(v.length, 0);\n",
             getTestUrl("files/findElements.html"));

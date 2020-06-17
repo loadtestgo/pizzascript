@@ -567,6 +567,10 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             } else {
                 filePanel = openFile(fileName, showDebugFrame);
             }
+
+            if (filePanel == null) {
+                return;
+            }
         }
 
         filePanel.setDefaultFocus();
@@ -735,6 +739,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             source.setNewFile(false);
             source.setIsModified(false);
             source.setFilePath(filePath);
+            codeModel.updateFilePath(source);
             updateFilePanelName(filePanel);
         } catch (IOException ex) {
             if (renamedFile != null) {
