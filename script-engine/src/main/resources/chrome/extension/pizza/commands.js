@@ -1441,9 +1441,9 @@ pizza.main.commands = function() {
     };
 
     var scriptSelectSingle = "" + function(selector, jsonParams) {
-      let i, o;
-      let e = this.findElement(selector);
-      let params = JSON.parse(jsonParams);
+      var i, o;
+      var e = this.findElement(selector);
+      var params = JSON.parse(jsonParams);
       if (params.hasOwnProperty('index')) {
         i = params.index;
         if (i >= 0 && i < e.options.length) {
@@ -1453,7 +1453,7 @@ pizza.main.commands = function() {
         }
         throw "Unable to find option with index '" + i + "'!";
       }
-      let match;
+      var match;
       if (params.hasOwnProperty('match')) {
         match = new RegExp(params.match);
       }
@@ -1478,33 +1478,35 @@ pizza.main.commands = function() {
     };
 
     var scriptSelectMultiple = "" + function(selector, jsonParams) {
-      let e = this.findElement(selector);
-      let a = null;
-      let params = JSON.parse(jsonParams);
+      var e = this.findElement(selector);
+      var a = null;
+      var i, t, o;
+      var params = JSON.parse(jsonParams);
       if (params.hasOwnProperty('text')) {
         a = params.text;
       } else if (params.hasOwnProperty('value')) {
         a = params.value;
       } else if (params.hasOwnProperty('match')) {
         a = params.match;
-        for (let i = 0; i < a.length; ++i) {
-          let t = a[i];
+        for (i = 0; i < a.length; ++i) {
+          t = a[i];
           a[i] = new RegExp(t);
         }
       } else if (params.hasOwnProperty('index')) {
         a = params.index;
       }
       if (params.clear) {
-        for (let i = 0; i < e.options.length; ++i) {
-          let o = e.options[i];
+        for (i = 0; i < e.options.length; ++i) {
+          o = e.options[i];
           o.selected = false;
         }
       }
-      for (let i = 0; i < a.length; ++i) {
-         let t = a[i];
-         let set = false;
-         for (let j = 0; j < e.options.length; ++j) {
-           let o = e.options[j];
+      var set, j;
+      for (i = 0; i < a.length; ++i) {
+         t = a[i];
+         set = false;
+         for (j = 0; j < e.options.length; ++j) {
+           o = e.options[j];
            if ((params.hasOwnProperty('text') && t === o.text) ||
                (params.hasOwnProperty('value') && t === o.value) ||
                (params.hasOwnProperty('match') && o.text && o.text.match(t)) ||
@@ -1528,7 +1530,7 @@ pizza.main.commands = function() {
     }
 
     var _select = function(id, params) {
-        let value = params.value;
+        var value = params.value;
         if (!value.hasOwnProperty('text') &&
             !value.hasOwnProperty('value') &&
             !value.hasOwnProperty('index') &&

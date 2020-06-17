@@ -178,5 +178,4 @@ public class SelectOptionsTests extends JavaScriptTest {
         assertNoError(result);
         assertEquals(1, result.getPages().size());
     }
-
 }
