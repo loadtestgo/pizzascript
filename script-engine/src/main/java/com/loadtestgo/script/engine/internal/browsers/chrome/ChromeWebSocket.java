@@ -413,10 +413,12 @@ public class ChromeWebSocket extends BrowserWebSocket {
         }
 
         long lastTime = -1;
-        for (HttpRequest request : page.getRequests()) {
-            if (request.getState() == HttpRequest.State.Complete) {
-                if (request.getEndTime() > lastTime) {
-                    lastTime = request.getEndTime();
+        synchronized (testResult) {
+            for (HttpRequest request : page.getRequests()) {
+                if (request.getState() == HttpRequest.State.Complete) {
+                    if (request.getEndTime() > lastTime) {
+                        lastTime = request.getEndTime();
+                    }
                 }
             }
         }
