@@ -1322,16 +1322,50 @@ pizza.main.commands = function() {
             params.selector);
     };
 
+
     var _type = function(id, params) {
         // Focus the element using injected JS, then type using the
-        // Devtools automation/input APIs
+        // Devtools automation/input APIs.
+        function respondWithError(error) {
+            sendResponse(id, { error: error });
+        }
+
+        function respondWithOk() {
+            sendResponse(id, { value: {} });
+        }
+
+        // Two wait idles on the page's javascript thread are needed
+
+        // Second wait is needed for send keys to be processed - we don't want to continue with the script
+        // until the keys are processed by page's javascript thead.  Without this some keys can be missed at
+        // end of text.
+        function afterSendKeys(response) {
+            executeAutomationAPI(
+                respondWithOk,
+                respondWithError,
+                true,
+                "function() { return true; }",
+                params.selector);
+        }
+
+        // First wait is needed after focus() to make sure any wait idles triggered on element focus are processed
+        // Without this some keys can be missed at start.
+        function afterFocus(response) {
+            executeAutomationAPI(
+                function(response) {
+                    pizza.input.type(params.text, function () {
+                        afterSendKeys(response);
+                    });
+                },
+                respondWithError,
+                true,
+                "function() { return true; }",
+                params.selector);
+        }
+
         executeAutomationAPI(
-            function(response) {
-                pizza.input.type(params.text, function () {
-                    sendResponse(id, { value: {} });
-                });
-            },
-            function(error) { sendResponse(id, { error: error }); },
+            afterFocus,
+            respondWithError,
             true,
             "function(selector) { return this.focus(selector); }",
             params.selector);

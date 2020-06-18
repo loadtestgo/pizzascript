@@ -70,8 +70,8 @@ public class TypeTests extends JavaScriptTest {
                 "  return false;\n" +
                 "else return true;\n" +
             "});\n" +
-            "assert.ok(b.execute('check(storedEvents[0], \\\'keydown\\\', 9)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[1], \\\'keyup\\\', 9)'));\n" +
+            "assert.ok(b.execute('check(storedEvents[0], \\'keydown\\', 9)'));\n" +
+            "assert.ok(b.execute('check(storedEvents[1], \\'keyup\\', 9)'));\n" +
             "assert.eq(b.execute('document.activeElement.id'), 'input2');\n",
             getTestUrl("files/inputHandlers.html"));
 
@@ -97,9 +97,9 @@ public class TypeTests extends JavaScriptTest {
                 "else return true;\n" +
             "});\n" +
                 "b.execute('console.log(storedEvents[0])');\n" +
-            "assert.ok(b.execute('check(storedEvents[0], \\\'keydown\\\', 13, 0)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[1], \\\'keypress\\\', 13, 13)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[2], \\\'keyup\\\', 13, 0)'));\n",
+            "assert.ok(b.execute('check(storedEvents[0], \\'keydown\\', 13, 0)'));\n" +
+            "assert.ok(b.execute('check(storedEvents[1], \\'keypress\\', 13, 13)'));\n" +
+            "assert.ok(b.execute('check(storedEvents[2], \\'keyup\\', 13, 0)'));\n",
             getTestUrl("files/inputHandlers.html"));
 
         TestResult result = runScript(script);
