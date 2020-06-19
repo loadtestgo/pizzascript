@@ -1474,93 +1474,93 @@ pizza.main.commands = function() {
         );
     };
 
-    var scriptSelectSingle = "" + function(selector, jsonParams) {
-      var i, o;
-      var e = this.findElement(selector);
-      var params = JSON.parse(jsonParams);
-      if (params.hasOwnProperty('index')) {
-        i = params.index;
-        if (i >= 0 && i < e.options.length) {
-          o = e.options[i];
-          o.selected = true;
-          return;
+    var scriptSelectSingle = "" + function (selector, jsonParams) {
+        var i, o;
+        var e = this.findElement(selector);
+        var params = JSON.parse(jsonParams);
+        if (params.hasOwnProperty('index')) {
+            i = params.index;
+            if (i >= 0 && i < e.options.length) {
+                o = e.options[i];
+                o.selected = true;
+                return;
+            }
+            throw "Unable to find option with index '" + i + "'!";
         }
-        throw "Unable to find option with index '" + i + "'!";
-      }
-      var match;
-      if (params.hasOwnProperty('match')) {
-        match = new RegExp(params.match);
-      }
-      for (i = 0; i < e.options.length; ++i) {
-        o = e.options[i];
-        if ((params.hasOwnProperty('text') && o.text == params.text) ||
-            (params.hasOwnProperty('value') && o.value == params.value) ||
-            (match && o.text && o.text.match(match))) {
-          o.selected = true;
-          return;
+        var match;
+        if (params.hasOwnProperty('match')) {
+            match = new RegExp(params.match);
         }
-      }
-      if (params.hasOwnProperty('text')) {
-        throw "Unable to find option with text '" + params.text + "'!";
-      } else if (params.hasOwnProperty('value')) {
-        throw "Unable to find option with value '" + params.value + "'!";
-      } else if (params.hasOwnProperty('match')) {
-         throw "Unable to find option with text that matches " + params.match + "!";
-      } else {
-        throw "Unable to find option!";
-      }
+        for (i = 0; i < e.options.length; ++i) {
+            o = e.options[i];
+            if ((params.hasOwnProperty('text') && o.text === params.text) ||
+                (params.hasOwnProperty('value') && o.value === params.value) ||
+                (match && o.text && o.text.match(match))) {
+                o.selected = true;
+                return;
+            }
+        }
+        if (params.hasOwnProperty('text')) {
+            throw "Unable to find option with text '" + params.text + "'!";
+        } else if (params.hasOwnProperty('value')) {
+            throw "Unable to find option with value '" + params.value + "'!";
+        } else if (params.hasOwnProperty('match')) {
+            throw "Unable to find option with text that matches " + params.match + "!";
+        } else {
+            throw "Unable to find option!";
+        }
     };
 
-    var scriptSelectMultiple = "" + function(selector, jsonParams) {
-      var e = this.findElement(selector);
-      var a = null;
-      var i, t, o;
-      var params = JSON.parse(jsonParams);
-      if (params.hasOwnProperty('text')) {
-        a = params.text;
-      } else if (params.hasOwnProperty('value')) {
-        a = params.value;
-      } else if (params.hasOwnProperty('match')) {
-        a = params.match;
+    var scriptSelectMultiple = "" + function (selector, jsonParams) {
+        var e = this.findElement(selector);
+        var a = null;
+        var i, t, o;
+        var params = JSON.parse(jsonParams);
+        if (params.hasOwnProperty('text')) {
+            a = params.text;
+        } else if (params.hasOwnProperty('value')) {
+            a = params.value;
+        } else if (params.hasOwnProperty('match')) {
+            a = params.match;
+            for (i = 0; i < a.length; ++i) {
+                t = a[i];
+                a[i] = new RegExp(t);
+            }
+        } else if (params.hasOwnProperty('index')) {
+            a = params.index;
+        }
+        if (params.clear) {
+            for (i = 0; i < e.options.length; ++i) {
+                o = e.options[i];
+                o.selected = false;
+            }
+        }
+        var set, j;
         for (i = 0; i < a.length; ++i) {
-          t = a[i];
-          a[i] = new RegExp(t);
+            t = a[i];
+            set = false;
+            for (j = 0; j < e.options.length; ++j) {
+                o = e.options[j];
+                if ((params.hasOwnProperty('text') && t === o.text) ||
+                    (params.hasOwnProperty('value') && t === o.value) ||
+                    (params.hasOwnProperty('match') && o.text && o.text.match(t)) ||
+                    (params.hasOwnProperty('index') && j === t)) {
+                    o.selected = true;
+                    set = true;
+                }
+            }
+            if (!set) {
+                if (params.hasOwnProperty('text')) {
+                    throw "Unable to find option with text '" + t + "'!";
+                } else if (params.hasOwnProperty('value')) {
+                    throw "Unable to find option with value '" + t + "'!";
+                } else if (params.hasOwnProperty('index')) {
+                    throw "Unable to find option with index '" + t + "'!";
+                } else if (params.hasOwnProperty('match')) {
+                    throw "Unable to find option with text that matches " + params.match + "!";
+                }
+            }
         }
-      } else if (params.hasOwnProperty('index')) {
-        a = params.index;
-      }
-      if (params.clear) {
-        for (i = 0; i < e.options.length; ++i) {
-          o = e.options[i];
-          o.selected = false;
-        }
-      }
-      var set, j;
-      for (i = 0; i < a.length; ++i) {
-         t = a[i];
-         set = false;
-         for (j = 0; j < e.options.length; ++j) {
-           o = e.options[j];
-           if ((params.hasOwnProperty('text') && t === o.text) ||
-               (params.hasOwnProperty('value') && t === o.value) ||
-               (params.hasOwnProperty('match') && o.text && o.text.match(t)) ||
-               (params.hasOwnProperty('index') && j === t)) {
-             o.selected = true;
-             set = true;
-           }
-         }
-         if (!set) {
-           if (params.hasOwnProperty('text')) {
-             throw "Unable to find option with text '" + t + "'!";
-           } else if (params.hasOwnProperty('value')) {
-             throw "Unable to find option with value '" + t + "'!";
-           } else if (params.hasOwnProperty('index')) {
-             throw "Unable to find option with index '" + t + "'!";
-           } else if (params.hasOwnProperty('match')) {
-             throw "Unable to find option with text that matches " + params.match + "!";
-           }
-         }
-      }
     }
 
     var _select = function(id, params) {

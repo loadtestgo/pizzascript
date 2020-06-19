@@ -36,8 +36,8 @@ function clearEvents() {
 
 function addHandlers(b) {
     b.onchange = function(e) { storedEvents.push(e); };
-    b.onkeydown = function(e) { storedEvents.push(e); };
-    b.onkeyup = function(e) { storedEvents.push(e); };
+    b.onkeydown = function(e) { console.log(e.code, e.key); storedEvents.push(e); };
+    b.onkeyup = function(e) { console.log(e.code, e.key); storedEvents.push(e); };
     b.onkeypress = function(e) { storedEvents.push(e); };
 }
 

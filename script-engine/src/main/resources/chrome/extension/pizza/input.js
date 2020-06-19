@@ -218,6 +218,107 @@ pizza.main.input = function() {
         222: '\''
     };
 
+    // US keyboard
+    var char2DOMCodeUSKeyboard = {
+        '\t': 'Tab',
+        '\n': 'Enter',
+        ' ': 'Space',
+        '0': 'Digit0',
+        '1': 'Digit1',
+        '2': 'Digit2',
+        '3': 'Digit3',
+        '4': 'Digit4',
+        '5': 'Digit5',
+        '6': 'Digit6',
+        '7': 'Digit7',
+        '8': 'Digit8',
+        '9': 'Digit9',
+        ':': 'Semicolon', // +shift
+        ';': 'Semicolon',
+        '<': 'Comma', // +shift
+        '=': 'Equal',
+        '>': 'Period', // +shift
+        '?': 'Slash', // +shift
+        '@': 'Digit2', // +shift
+        'a': 'KeyA',
+        'A': 'KeyA',
+        'b': 'KeyB',
+        'B': 'KeyB',
+        'c': 'KeyC',
+        'C': 'KeyC',
+        'd': 'KeyD',
+        'D': 'KeyD',
+        'e': 'KeyE',
+        'E': 'KeyE',
+        'f': 'KeyF',
+        'F': 'KeyF',
+        'g': 'KeyG',
+        'G': 'KeyG',
+        'h': 'KeyH',
+        'H': 'KeyH',
+        'i': 'KeyI',
+        'I': 'KeyI',
+        'j': 'KeyJ',
+        'J': 'KeyJ',
+        'k': 'KeyK',
+        'K': 'KeyK',
+        'l': 'KeyL',
+        'L': 'KeyL',
+        'm': 'KeyM',
+        'M': 'KeyM',
+        'n': 'KeyN',
+        'N': 'KeyN',
+        'o': 'KeyO',
+        'O': 'KeyO',
+        'p': 'KeyP',
+        'P': 'KeyP',
+        'q': 'KeyQ',
+        'Q': 'KeyQ',
+        'r': 'KeyR',
+        'R': 'KeyR',
+        's': 'KeyS',
+        'S': 'KeyS',
+        't': 'KeyT',
+        'T': 'KeyT',
+        'u': 'KeyU',
+        'U': 'KeyU',
+        'v': 'KeyV',
+        'V': 'KeyV',
+        'w': 'KeyW',
+        'W': 'KeyW',
+        'x': 'KeyX',
+        'X': 'KeyX',
+        'y': 'KeyY',
+        'Y': 'KeyY',
+        'z': 'KeyZ',
+        'Z': 'KeyZ',
+        '^': 'Digit6', // +shift
+        '!': 'Digit1', // +shift
+        '"': 'Quote', // +shift
+        '#': 'Digit3', // +shift
+        '$': 'Digit4', // +shift
+        '%': 'Digit5', // +shift
+        '&': 'Digit7', // +shift
+        '_': 'Minus', // +shift
+        '(': 'Digit9', // +shift
+        ')': 'Digit0', // +shift
+        '*': 'Digit8', // +shift
+        '+': 'Equal', // +shift
+        '|': 'Backslash', // +shift
+        '-': 'Minus',
+        '{': 'BracketLeft',
+        '}': 'BracketRight',
+        '~': 'Backquote', // +shift
+        ',': 'Comma',
+        '.': 'Period',
+        '/': 'Slash',
+        '`': 'Backquote',
+        '[': 'BracketLeft',
+        '\\': 'Backslash',
+        ']': 'BracketRight',
+        '\'': 'Quote'
+    };
+
     var _dispatchEvents = function(cmd, events, callback) {
         var i = 0;
         var dispatchEvent = function(response) {
@@ -300,47 +401,58 @@ pizza.main.input = function() {
             unmodifiedText: rawText
         }
         // Special guy
-        if (text == '\r') {
+        if (text === '\r') {
             a.keyIdentifier = "Enter";
         }
         return a;
     };
 
-    function assignKeyIdentifier(event, keyCode) {
+    function assignKeyIdentifiers(event, keyCode, char) {
         // Well we should probably assign more of these but I only
         // found problems when not assigning these ones (so far...)
-        if (keyCode == 91) {
+        if (keyCode === 91) {
             event.keyIdentifier = "Meta";
-        } else if (keyCode == 13) {
+        } else if (keyCode === 13) {
             event.keyIdentifier = "Enter";
+        }
+
+        // Unique DOM defined string value describing the meaning of the key in the context
+        // of active modifiers, keyboard layout, etc (e.g., 'AltGr') (default: "").
+        if (char in char2key) {
+            event.key = char;
+        }
+
+        // Unique DOM defined string value for each physical key (e.g., 'KeyA') (default: "").
+        if (char in char2DOMCodeUSKeyboard) {
+            event.code = char2DOMCodeUSKeyboard[char];
         }
     }
 
-    var keyDown = function(code, modifiers) {
+    var keyDown = function(code, char, modifiers) {
         var a = {
             type: KeyEventType.RawKeyDown,
             windowsVirtualKeyCode: code, // Only windowsV key code is understood right now
                                          // by Chrome right now
-            macCharCode: code,
+            nativeVirtualKeyCode: code,
             unmodifiedText: "",
-            text: "",
             modifiers: modifiers
         };
-        assignKeyIdentifier(a, code);
+        assignKeyIdentifiers(a, code, char);
+        console.log(a);
         return a;
     };
 
-    var keyUp = function(code, modifiers) {
+    var keyUp = function(code, char, modifiers) {
         var a = {
             type: KeyEventType.KeyUp,
             windowsVirtualKeyCode: code, // Only windowsV key code is understood
                                          // by Chrome right now
-            macCharCode: code,
-            unmodifiedText: "",
-            text: "",
+            nativeVirtualKeyCode: code,
+            unmodifiedText: '',
             modifiers: modifiers
         };
-        assignKeyIdentifier(a, code);
+        assignKeyIdentifiers(a, code, char);
+        console.log(a);
         return a;
     };
 
@@ -381,24 +493,24 @@ pizza.main.input = function() {
         for (var i = 0; i < text.length; i++) {
             var char = text.charAt(i);
             var code = convertToKeyCode(char);
-            events.push(keyDown(code, modifiers));
+            events.push(keyDown(code, char, modifiers));
             // '\n' always gets converted to Enter
-            if (code == 13) {
+            if (code === 13) {
                 char = '\r';
             }
             events.push(keyChar(char, char));
-            events.push(keyUp(code, modifiers));
+            events.push(keyUp(code, char, modifiers));
         }
     }
 
     function getModifier(key) {
-        if (key == Key.Control || key == Key.LeftControl || key == Key.RightControl) {
+        if (key === Key.Control || key === Key.LeftControl || key === Key.RightControl) {
             return ModifierMask.ControlKey;
-        } else if (key == Key.Shift || key == Key.LeftShift || key == Key.RightShift) {
+        } else if (key === Key.Shift || key === Key.LeftShift || key === Key.RightShift) {
             return ModifierMask.ShiftKey;
-        } else if (key == Key.Alt || key == Key.LeftAlt || key == Key.RightAlt) {
+        } else if (key === Key.Alt || key === Key.LeftAlt || key === Key.RightAlt) {
             return ModifierMask.AltKey;
-        } else if (key == Key.Meta || key == Key.LeftMeta || key == Key.RightMeta) {
+        } else if (key === Key.Meta || key === Key.LeftMeta || key === Key.RightMeta) {
             return ModifierMask.MetaKey;
         }
         return 0;
@@ -409,7 +521,7 @@ pizza.main.input = function() {
             processKeys(events, item, modifiers);
         } else if (pizza.isNumber(item)) {
             var keyModifier = getModifier(item);
-            if (keyModifier != 0) {
+            if (keyModifier !== 0) {
                 var keyPressIndex = keyDowns.indexOf(item);
                 if (keyPressIndex > -1) {
                     modifiers &= (~(keyModifier));
@@ -423,7 +535,7 @@ pizza.main.input = function() {
             } else {
                 events.push(keyDown(item, modifiers));
                 var v = convertKeyCodeToChar(item);
-                if (modifiers == 0) {
+                if (modifiers === 0) {
                     events.push(keyChar(v, v));
                 }
                 events.push(keyUp(item, modifiers));
