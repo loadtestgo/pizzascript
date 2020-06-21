@@ -3,6 +3,8 @@ package com.loadtestgo.script.tester.server;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class InputStreamReader {
     private InputStream stream;
     private final static int BUFFER_SIZE = 8192;
@@ -34,14 +36,14 @@ public class InputStreamReader {
                         len--;
                     }
                     if (len > 0) {
-                        stringBuilder.append(new String(buf, start, len, "UTF-8"));
+                        stringBuilder.append(new String(buf, start, len, UTF_8));
                     }
                     start = i + 1;
                     return stringBuilder.toString();
                 }
             }
 
-            stringBuilder.append(new String(buf, start, end - start, "UTF-8"));
+            stringBuilder.append(new String(buf, start, end - start, UTF_8))
             start = end;
 
             fill();
@@ -65,7 +67,7 @@ public class InputStreamReader {
             if (amountToRead + readSoFar > length) {
                 amountToRead = length - readSoFar;
             }
-            stringBuilder.append(new String(buf, start, amountToRead, "UTF-8"));
+            stringBuilder.append(new String(buf, start, amountToRead, UTF_8));
             start += amountToRead + 1;
             readSoFar += amountToRead;
         }

@@ -8,17 +8,16 @@ import org.mozilla.javascript.NativeFunction;
 import org.mozilla.javascript.NativeObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PizzaImpl implements Pizza {
     private TestContext testContext;
     private JavaScriptEngine javaScriptEngine;
 
-    public PizzaImpl(TestContext testContext,
-                     JavaScriptEngine javaScriptEngine) {
+    public PizzaImpl(TestContext testContext, JavaScriptEngine javaScriptEngine) {
         this.testContext = testContext;
         this.javaScriptEngine = javaScriptEngine;
     }
@@ -142,6 +141,9 @@ public class PizzaImpl implements Pizza {
     }
 
     @Override
+    public long nextSeqId(String namedSequence) { return getEngineContext().nextSeqId(namedSequence); }
+
+    @Override
     public CSV openCSV(String filename) {
         File file = testContext.getFile(filename);
         try {
@@ -158,11 +160,7 @@ public class PizzaImpl implements Pizza {
 
     @Override
     public void saveFile(String name, String data) {
-        try {
-            testContext.saveFile(name, new Data("", data.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            // ignore
-        }
+        testContext.saveFile(name, new Data("", data.getBytes(UTF_8)));
     }
 
     @Override

@@ -63,6 +63,11 @@ public class CSVImpl implements CSV {
     }
 
     @Override
+    public int size() {
+        return rows.size();
+    }
+
+    @Override
     public Row row(int row) {
         if (row >= 0 && row < rows.size()) {
             List<String> columns = parseCsvRow(rows.get(row));

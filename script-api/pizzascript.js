@@ -198,7 +198,8 @@ pizza.ip = "";
 
 /**
  * The user id that the script is running under, it's unique across the load
- * test and starts at 0.
+ * test and starts at 0.  The value of the user id will never exceed the max
+ * number of users used during a load test.
  *
  * @type {Number}
  */
@@ -210,6 +211,9 @@ pizza.userId = 0;
  * can be used.
  *
  * @type {Number}
+ *
+ * @see module:pizza.sequenceId
+ * @see module:pizza.userId
  */
 pizza.workerId = 0;
 
@@ -220,6 +224,9 @@ pizza.workerId = 0;
  * Unique only to the user.
  *
  * @type {Number}
+ *
+ * @see module:pizza.workerId
+ * @see module:pizza.userId
  */
 pizza.sequenceId = 0;
 
@@ -254,6 +261,20 @@ pizza.location = "";
  * @type {Number}
  */
 pizza.loadTestId = 0;
+
+/**
+ * Generate a new sequential id unique to this load test and unique per passed in
+ * named sequence.
+ *
+ * Sequences start at zero and are incremented by 1 every time this function is
+ * called across the load test.
+ *
+ * @param {String} Named sequence to return a value from.
+ *
+ * @see module:pizza.sequenceId
+ * @see module:pizza.userId
+ */
+pizza.nextSeqId = function(namedSequence) {};
 
 /**
  * Assert Helper Functions
@@ -2954,6 +2975,13 @@ CSV = {};
  * @return {Number} Number of rows in CSV file
  */
 CSV.prototype.getNumRows = function() {};
+
+/**
+ * Return the number of rows in the CSV file
+ *
+ * @return {Number} Number of rows in CSV file
+ */
+CSV.prototype.size = function() {};
 
 /**
  * Returns the given row of the CSV file as an array of strings (one

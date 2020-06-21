@@ -8,6 +8,8 @@ import com.loadtestgo.util.StringUtils;
 
 import java.io.IOException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class Auth {
     @Page(desc = "Ask Authentication, then accept any username/password")
     public void accept(HttpRequest request) throws IOException {
@@ -16,7 +18,7 @@ public class Auth {
         if (StringUtils.isEmpty(authorization)) {
             request.write("HTTP/1.1 401 Authentication Required\r\n");
             request.writeHtmlHeaders();
-            request.writeHeader("WWW-Authenticate", "Basic realm=\'realm\'");
+            request.writeHeader("WWW-Authenticate", "Basic realm='realm'");
             request.writeln();
             request.write("<html><head></head><body><h1>401 Authentication Required</h1></body></html>");
         } else {
@@ -34,9 +36,7 @@ public class Auth {
         if (!StringUtils.isEmpty(authorization)) {
             if (authorization.startsWith("Basic ")) {
                 String authStringProvided = authorization.substring(6);
-                String authString = new String(
-                        Base64.encodeBase64("username:password".getBytes("UTF-8")),
-                        "UTF-8");
+                String authString = new String(Base64.encodeBase64("username:password".getBytes(UTF_8)), UTF_8);
                 if (authString.equals(authStringProvided)) {
                     request.writeOk();
                     request.writeHtmlHeaders();
@@ -48,7 +48,7 @@ public class Auth {
         }
         request.write("HTTP/1.1 401 Authentication Required\r\n");
         request.writeHtmlHeaders();
-        request.writeHeader("WWW-Authenticate", "Basic realm=\'realm\'");
+        request.writeHeader("WWW-Authenticate", "Basic realm='realm'");
         request.writeln();
         request.write("<html><head></head><body><h1>401 Authentication Required</h1></body></html>");
     }
@@ -58,7 +58,7 @@ public class Auth {
         HttpHeaders headers = request.readHeaders();
         request.write("HTTP/1.1 401 Authentication Required\r\n");
         request.writeHtmlHeaders();
-        request.writeHeader("WWW-Authenticate", "Basic realm=\'realm\'");
+        request.writeHeader("WWW-Authenticate", "Basic realm='realm'");
         request.writeln();
         request.write("<html><head></head><body><h1>401 Authentication Required</h1></body></html>");
     }

@@ -240,22 +240,22 @@ project(':dist') {
 }
 
 task baseDocs(type:Exec) {
-  commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/pizzascript.js', 'script-api/pizzascript.md', '-d', 'docs/api'
+    commandLine 'node_modules/.bin/jsdoc', '-c', 'script-api/jsdoc.conf', '-t', 'node_modules/jsdoc-baseline', 'script-api/pizzascript.js', 'script-api/pizzascript.md', '-d', 'docs/api'
 }
 
 task docs(dependsOn:baseDocs) doLast {
-  FileTree tree = fileTree (dir: "docs/api");
-  tree.include "*.html"
-  tree.each { File file ->
-    String contents = file.getText( 'UTF-8' )
-    contents = contents.replaceAll('<title>Home</title>', '<title>PizzaScript Browser Automation API</title>' )
-    contents = contents.replaceAll('<title>Module:', '<title>PizzaScript |' )
-    contents = contents.replaceAll('href="index.html"', 'href="http://pizzascript.org"')
-    contents = contents.replaceAll('Home</a>', 'PizzaScript</a><a class="jsdoc-navbar-package-name" href="index.html">Index</a>')
-    contents = contents.replaceAll('<span class="label label-kind">module</span>', '')
+    FileTree tree = fileTree (dir: "docs/api");
+    tree.include "*.html"
+    tree.each { File file ->
+        String contents = file.getText( 'UTF-8' )
+        contents = contents.replaceAll('<title>Home</title>', '<title>PizzaScript Browser Automation API</title>' )
+        contents = contents.replaceAll('<title>Module:', '<title>PizzaScript |' )
+        contents = contents.replaceAll('href="index.html"', 'href="http://pizzascript.org"')
+        contents = contents.replaceAll('Home</a>', 'PizzaScript</a><a class="jsdoc-navbar-package-name" href="index.html">Index</a>')
+        contents = contents.replaceAll('<span class="label label-kind">module</span>', '')
 
-    file.write( contents, 'UTF-8' )
-  }
+        file.write( contents, 'UTF-8' )
+    }
 }
 
 task 'incVersion' doLast {

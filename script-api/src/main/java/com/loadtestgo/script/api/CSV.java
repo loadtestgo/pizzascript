@@ -10,6 +10,7 @@ public interface CSV {
     }
 
     int getNumRows();
+    int size();
 
     Row row(int row);
     Row randomRow();

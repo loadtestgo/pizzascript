@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * Very basic template writer class
  *
@@ -46,7 +48,7 @@ public class Template {
 
     public void write(File output, File input) throws IOException {
         try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(input), "UTF-8")))
+                    new InputStreamReader(new FileInputStream(input), UTF_8)))
         {
             writeOut(output, br);
         }
@@ -67,7 +69,7 @@ public class Template {
         try (
                 BufferedWriter bw = new BufferedWriter(
                         new OutputStreamWriter(
-                                new FileOutputStream(output), "UTF-8")))
+                                new FileOutputStream(output), UTF_8)))
         {
             writeOut(bw, br);
         }

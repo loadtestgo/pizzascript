@@ -93,11 +93,12 @@ gulp.task('enginejs', function(cbOuter) {
     )();
 });
 
-gulp.task('view-metrics', function() {
+gulp.task('view-metrics', function(cb) {
     var src = "view-metrics/src/main/resources/js/";
     var dest = "view-metrics/build/resources/main/js";
 
     return gulp.src(src + "*.js")
                .pipe(uglify())
-               .pipe(gulp.dest(dest));
+               .pipe(gulp.dest(dest))
+                .on('end', cb);
 });

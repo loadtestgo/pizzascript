@@ -8,6 +8,8 @@ import java.security.DigestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import static java.nio.charset.StandardCharsets.*;
+
 /**
  * Generate Chrome extension ids for expanded directory extensions.
  *
@@ -61,9 +63,9 @@ public class ChromeExtensionId {
     static String GenerateId(String input) throws DigestException,
             NoSuchAlgorithmException, UnsupportedEncodingException {
         byte[] hash = new byte[kIdSize];
-        byte[] bytes = input.getBytes("UTF-8");
+        byte[] bytes = input.getBytes(UTF_8);
         hash(bytes, hash);
-        byte[] output = hexEncode(hash).getBytes("UTF-8");
+        byte[] output = hexEncode(hash).getBytes(UTF_8);
         ConvertHexadecimalToIDAlphabet(output);
         return new String(output);
     }

@@ -10,11 +10,14 @@ import java.io.File;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * The main EngineContext that is shared between multiple browsers all
- * going at the same time.  It controls & provides the main websocket
- * server that each browser talks to.
+ * The main EngineContext that is shared between multiple browsers / users / sessions.
+ * It controls & provides the main websocket server that each browser talks to.
+ * It also provides access any global services that an individual browser / user / session
+ * requires.
  */
 public class EngineContext {
     private BrowserWebSocketServer webSocketServer;
@@ -26,6 +29,7 @@ public class EngineContext {
     private String location;
     private EngineSettings engineSettings;
     private File chromeExecutable;
+    final private Map<String,Long> seqIds = new HashMap<>();
 
     public EngineContext() {
         this.engineSettings = new EngineSettings(IniFile.settings());
@@ -145,6 +149,14 @@ public class EngineContext {
             return ChromeFinder.findChrome(engineSettings);
         }
         return chromeExecutable;
+    }
+
+    public long nextSeqId(String namedSequence) {
+        synchronized (seqIds) {
+            Long val = seqIds.getOrDefault(namedSequence, 0L);
+            seqIds.put(namedSequence, val+1);
+            return val;
+        }
     }
 }
 

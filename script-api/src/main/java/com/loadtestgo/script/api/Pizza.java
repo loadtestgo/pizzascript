@@ -92,6 +92,8 @@ public interface Pizza {
 
     int getSequenceId();
 
+    long nextSeqId(String namedSequence);
+
     CSV openCSV(String filename) throws IOException;
 
     void saveFile(String name, Data data);

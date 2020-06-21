@@ -19,8 +19,9 @@
 
 package com.loadtestgo.util;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Provides Base64 encoding and decoding as defined by RFC 2045.
@@ -227,11 +228,7 @@ public class Base64 {
         this.decodeSize = encodeSize - 1;
         if (containsBase64Byte(lineSeparator)) {
             String sep;
-            try {
-                sep = new String(lineSeparator, "UTF-8");
-            } catch (UnsupportedEncodingException uee) {
-                sep = new String(lineSeparator);
-            }
+            sep = new String(lineSeparator, UTF_8);
             throw new IllegalArgumentException("lineSeperator must not contain base64 characters: [" + sep + "]");
         }
     }

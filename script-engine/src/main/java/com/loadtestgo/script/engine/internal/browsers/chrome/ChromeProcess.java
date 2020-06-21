@@ -18,6 +18,8 @@ import java.net.URL;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.*;
 
+import static java.nio.charset.StandardCharsets.*;
+
 public class ChromeProcess {
     private UserContext userContext;
     private String profileDir;
@@ -253,7 +255,7 @@ public class ChromeProcess {
                 String mergedJsonAsString = jsonPreferences.toString(INDENT_SPACES);
 
                 try (FileOutputStream output = new FileOutputStream(file)) {
-                    output.write(mergedJsonAsString.getBytes("UTF-8"));
+                    output.write(mergedJsonAsString.getBytes(UTF_8));
                 }
             } catch (IOException e) {
                 Logger.error(e, "Unable to merge Chrome preferences with template, using default preferences instead");
