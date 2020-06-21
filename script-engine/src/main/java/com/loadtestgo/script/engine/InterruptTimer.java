@@ -31,7 +31,8 @@ public class InterruptTimer {
             long runTime = currentTime - startTime;
             long timeLeft = timeout + testContext.getBrowserOpenTime() - runTime;
             if (timeLeft <= 0) {
-                Logger.info("Triggering interrupt...");
+                int workerId = testContext.getUserContext().getWorkerId();
+                Logger.info("Worker {}: Triggering interrupt after {}ms (runtime: {}ms, browser setup: {}ms)...", workerId, timeout, runTime, testContext.getBrowserOpenTime());
                 thread.interrupt();
                 stopped = true;
             } else {
