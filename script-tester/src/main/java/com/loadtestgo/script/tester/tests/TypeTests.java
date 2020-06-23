@@ -2,13 +2,10 @@ package com.loadtestgo.script.tester.tests;
 
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Tests for the type command, you can also use jquery to call the handlers
- * directly but they don't always work because not all javascript input event
- * events are generated.
+ * Tests for the type command.
  */
 public class TypeTests extends JavaScriptTest {
     @Test
@@ -29,23 +26,11 @@ public class TypeTests extends JavaScriptTest {
     }
 
     @Test
-    public void eventChecks() {
+    public void email() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
-            "b.type('#input1', 'a');\n" +
-            "assert.eq(b.execute('storedEvents.length'), 3);\n" +
-            "b.execute('' + function check(event, type, keyCode) {\n" +
-                "if (event.type != type) \n" +
-                "  return false;\n" +
-                "else if (event.keyCode != keyCode)\n" +
-                "  return false;\n" +
-                "else if (event.which != keyCode)\n" +
-                "  return false;\n" +
-                "else return true;\n" +
-            "});\n" +
-            "assert.ok(b.execute('check(storedEvents[0], \\\'keydown\\\', 65)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[1], \\\'keypress\\\', 97)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[2], \\\'keyup\\\', 65)'));\n",
+            "b.type('#input1', 'chad.summerchild86+1@vanish.org');\n" +
+            "assert.eq(b.getValue('#input1'), 'chad.summerchild86+1@vanish.org');\n",
             getTestUrl("files/inputHandlers.html"));
 
         TestResult result = runScript(script);
@@ -53,25 +38,107 @@ public class TypeTests extends JavaScriptTest {
     }
 
     @Test
-    @Ignore
+    public void otherCommonChars() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', '!@#^&()_+=-{}[]:;\"\\',.<>?/*$`~|');\n" +
+            "assert.eq(b.getValue('#input1'), '!@#^&()_+=-{}[]:;\"\\',.<>?/*$`~|');\n",
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    @Test
+    public void specialOnUSKeyboard() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', '£¢¥€');\n" +
+            "assert.eq(b.getValue('#input1'), '£¢¥\\u20ac');\n",
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    @Test
+    public void percent() {
+        // percent is escaped here due to String.format()
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', '%%');\n" +
+            "assert.eq(b.getValue('#input1'), '%%');\n",
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    @Test
+    public void multMod() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', '');\n" +
+            "assert.eq(b.getValue('#input1'), '%%*');\n",
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    @Test
+    public void eventChecksLowercaseLetter() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', 'a');\n" +
+            "assert.eq(b.execute('storedEvents.length'), 3);\n" +
+            checkEventFunction() +
+            "b.execute('check(storedEvents[0], \\'keydown\\', 65, 0, \\'a\\', \\'KeyA\\')');\n" +
+            "b.execute('check(storedEvents[1], \\'keypress\\', 97, 97, \\'a\\', \\'KeyA\\')');\n" +
+            "b.execute('check(storedEvents[2], \\'keyup\\', 65, 0, \\'a\\', \\'KeyA\\')');\n",
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    @Test
+    public void eventChecksUppercaseLetter() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', 'A');\n" +
+            "assert.eq(b.execute('storedEvents.length'), 3);\n" +
+            checkEventFunction() +
+            "b.execute('check(storedEvents[0], \\'keydown\\', 65, 0, \\'A\\', \\'KeyA\\')');\n" +
+            "b.execute('check(storedEvents[1], \\'keypress\\', 65, 65, \\'A\\', \\'KeyA\\')');\n" +
+            "b.execute('check(storedEvents[2], \\'keyup\\', 65, 0, \\'A\\', \\'KeyA\\')');\n",
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    @Test
     public void eventChecksTab() {
-        // This test checks that we dont type a tab, but we do.
-        // Need to revisit what we should do here.
+        // Test tab moves focus and generates correct events
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.type('#input1', '\\t');\n" +
-            "assert.eq(b.execute('storedEvents.length'), 2);\n" +
-            "b.execute('' + function check(event, type, keyCode) {\n" +
-                "if (event.type != type)\n" +
-                "  return false;\n" +
-                "else if (event.keyCode != keyCode)\n" +
-                "  return false;\n" +
-                "else if (event.which != keyCode)\n" +
-                "  return false;\n" +
-                "else return true;\n" +
-            "});\n" +
-            "assert.ok(b.execute('check(storedEvents[0], \\'keydown\\', 9)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[1], \\'keyup\\', 9)'));\n" +
+            checkTabEventsCode() +
+            "assert.eq(b.execute('document.activeElement.id'), 'input2');\n",
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    @Test
+    public void eventChecksTabKey() {
+        // Test tab moves focus and generates correct events
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', Key.Tab);\n" +
+            checkTabEventsCode() +
             "assert.eq(b.execute('document.activeElement.id'), 'input2');\n",
             getTestUrl("files/inputHandlers.html"));
 
@@ -84,26 +151,58 @@ public class TypeTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.type('#input1', '\\n');\n" +
-            "assert.eq(b.execute('storedEvents.length'), 3);\n" +
-            "b.execute('' + function check(event, type, keyCode, charCode) {\n" +
-                "if (event.type != type)\n" +
-                "  return false;\n" +
-                "else if (event.keyCode != keyCode)\n" +
-                "  return false;\n" +
-                "else if (event.which != keyCode)\n" +
-                "  return false;\n" +
-                "else if (event.charCode != charCode)\n" +
-                "  return false;\n" +
-                "else return true;\n" +
-            "});\n" +
-                "b.execute('console.log(storedEvents[0])');\n" +
-            "assert.ok(b.execute('check(storedEvents[0], \\'keydown\\', 13, 0)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[1], \\'keypress\\', 13, 13)'));\n" +
-            "assert.ok(b.execute('check(storedEvents[2], \\'keyup\\', 13, 0)'));\n",
+            checkReturnEventsCode(),
             getTestUrl("files/inputHandlers.html"));
 
         TestResult result = runScript(script);
         assertNoError(result);
+    }
+
+    @Test
+    public void eventEnterKey() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.type('#input1', Key.Return);\n" +
+            "assert.eq(b.execute('storedEvents.length'), 3);\n" +
+            checkReturnEventsCode(),
+            getTestUrl("files/inputHandlers.html"));
+
+        TestResult result = runScript(script);
+        assertNoError(result);
+    }
+
+    private static String checkEventFunction() {
+        return
+            "b.execute('' + function check(event, type, keyCode, charCode, key, code) {\n" +
+            "if (event.type != type)\n" +
+            "  throw 'type diff';\n" +
+            "else if (event.keyCode != keyCode)\n" +
+            "  throw 'keyCode diff';\n" +
+            "else if (event.which != keyCode)\n" +
+            "  throw 'which diff';\n" +
+            "else if (event.charCode != charCode)\n" +
+            "  throw 'charCode diff';\n" +
+            "else if (event.key != key)\n" +
+            "  throw 'key diff';\n" +
+            "else if (event.code != code)\n" +
+            "  throw 'code diff';\n" +
+            "});\n";
+    }
+
+    private static String checkReturnEventsCode() {
+        return
+            checkEventFunction() +
+            "b.execute('check(storedEvents[0], \\'keydown\\', 13, 0, \\'Enter\\', \\'Enter\\')');\n" +
+            "b.execute('check(storedEvents[1], \\'keypress\\', 13, 13, \\'Enter\\', \\'Enter\\')');\n" +
+            "b.execute('check(storedEvents[2], \\'keyup\\', 13, 0, \\'Enter\\', \\'Enter\\')');\n";
+    }
+
+    private static String checkTabEventsCode() {
+        return
+            checkEventFunction() +
+            "assert.eq(b.execute('storedEvents.length'), 2);\n" +
+            "b.execute('check(storedEvents[0], \\'keydown\\', 9, 0, \\'Tab\\', \\'Tab\\')');\n" +
+            "b.execute('check(storedEvents[1], \\'keyup\\', 9, 0, \\'Tab\\', \\'Tab\\')');\n";
     }
 
     @Test
@@ -119,20 +218,4 @@ public class TypeTests extends JavaScriptTest {
         TestResult result = runScript(script);
         assertNoError(result);
     }
-
-    /*
-     * Useful script for testing
-     *
-        var b = pizza.open("http://localhost:3000/files/inputHandlers.html");
-        b.type("#input1", "\n");
-        console.log(b.execute("storedEvents[0].keyCode"));
-        console.log(b.execute("storedEvents[1].keyCode"));
-        console.log(b.execute("storedEvents[2].keyCode"));
-        console.log(b.execute("storedEvents[0].charCode"));
-        console.log(b.execute("storedEvents[1].charCode"));
-        console.log(b.execute("storedEvents[2].charCode"));
-        console.log(b.execute("storedEvents[0].keyIdentifier"));
-        console.log(b.execute("storedEvents[1].keyIdentifier"));
-        console.log(b.execute("storedEvents[2].keyIdentifier"));
-     */
 }

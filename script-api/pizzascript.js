@@ -419,6 +419,34 @@ utils.randomElement = function(array) {};
  *    are just like CSS selectors but with a few minor additions to make them more
  *    convenient for website automation.
  *
+ *    Common selectors:
+ *
+ *    - By id
+ *
+ *        #thisIsTheId
+ *
+ *    - By class
+ *
+ *        .class1.class2.class3
+ *
+ *    - By tag
+ *
+ *        button
+ *
+ *    - By tag & class
+ *
+ *        button.class1.class2
+ *
+ *    - By hierarchy
+ *
+ *        div.class1 span.class2 button.class2
+ *
+ * @see {@link http://www.w3schools.com/cssref/css_selectors.asp|CSS Selectors}
+ *
+ *    Remember some characters like ':' have to be escaped for CSS Selectors using '\\':
+ *
+ *       id\\:0\\:1
+ *
  *    Additions to CSS selectors:
  *
  *    - contains()
@@ -469,7 +497,7 @@ utils.randomElement = function(array) {};
  *    - XPath
  *
  *      Selectors starting with 'xpath:' or just '//' will do XPath matching instead of CSS selector
- *      matching.  Here are some examples"
+ *      matching.  Here are some examples:
  *
  *      Any div element in the document:
  *
@@ -500,26 +528,26 @@ utils.randomElement = function(array) {};
  *
  *    Frames can be queried and selected.  By default only elements within the top frame
  *    are scoped for access.  To interact with elements in a sub frame, select the right
- *    frame using {@link module:Browser#selectFrame}.
+ *    frame using {@link module:Browser#selectFrame}.  Conversely checking for text /
+ *    queries related text check all frames.
  *
  *    The concept of windows does not exists, instead all tabs for all windows are listed.
- *    We might break this out in future but for our purposes it doesn't matter if a tab
- *    is really a new window or not.
+ *    We might break this out in future but for the purposes of automation it generally
+ *    doesn't matter if a tab is really a new window or not.
  *
  * ### Note
  *
  *    It's also important to be aware that while your script is executing the browser is
  *    going about its business: loading the page, executing JavaScript, building the DOM,
- *    animating elements, etc.  As such elements can appear/disappear, become visible/
- *    invisible potentially even after the page has loaded.  Any script you write will
- *    have to keep this in mind.  For example it is possible to wait for an element to be
- *    visible in the DOM, but then when you try to click on the element it is gone again.
- *    In those cases you may need to wait in a loop, catch click failures and try again.
- *    We may add some kind of automatic wait for the item to be visible in future.
+ *    rebuilding the DOM on interactions, animating elements, etc.  As such elements can
+ *    appear/disappear, become visible/invisible potentially even after the page has loaded.
+ *    Any script you write will have to keep this in mind.  For example, it is possible to
+ *    wait for an element to be visible in the DOM, but then when you try to click on the
+ *    element it is gone again. In those cases you may need to wait in a loop, catch click
+ *    failures and try again.  We may add some kind of automatic wait for the item to be
+ *    visible in future.
  *
  * @exports Browser
- *
- * @see {@link http://www.w3schools.com/cssref/css_selectors.asp|CSS Selectors}
  */
 Browser = {};
 
@@ -3012,7 +3040,7 @@ console.log = function(o) {};
  * @example
  * // Load the file 'foo.js', and execute it's JavaScript
  * load("bar.js"); // If 'bar.js' contains:
- *                 //   function x() {
+ *                 //   x = function() {
  *                 //     console.log("hello");
  *                 //   }
  * x();            // then the function x() can be called

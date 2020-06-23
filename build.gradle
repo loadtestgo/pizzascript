@@ -262,8 +262,8 @@ task 'incVersion' doLast {
     Properties props = new Properties()
     File propsFile = new File('gradle.properties')
     props.load(propsFile.newDataInputStream())
-    Integer nextbuildnum = (((props.getProperty('buildNumber')) as BigDecimal) + 1)
-    props.setProperty('buildNumber', nextbuildnum.toString())
+    Integer nextBuildNum = (((props.getProperty('buildNumber')) as Integer) + 1)
+    props.setProperty('buildNumber', nextBuildNum.toString())
     props.store(propsFile.newWriter(), null)
     props.load(propsFile.newDataInputStream())
 }

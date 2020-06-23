@@ -639,6 +639,7 @@ pizza.main.commands = function() {
                     break;
                 default:
                     r += c;
+                    break;
             }
         }
 
@@ -1337,7 +1338,7 @@ pizza.main.commands = function() {
         // Two wait idles on the page's javascript thread are needed
 
         // Second wait is needed for send keys to be processed - we don't want to continue with the script
-        // until the keys are processed by page's javascript thead.  Without this some keys can be missed at
+        // until the keys are processed by page's javascript thread.  Without this some keys can be missed at
         // end of text.
         function afterSendKeys(response) {
             executeAutomationAPI(

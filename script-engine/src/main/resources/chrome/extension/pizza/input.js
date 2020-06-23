@@ -27,297 +27,157 @@ pizza.main.input = function() {
         RawKeyDown: "rawKeyDown"
     };
 
-    var char2key = {
-        '\t': 9,
-        '\n': 13,
-        ' ': 32,
-        '0': 48,
-        '1': 49,
-        '2': 50,
-        '3': 51,
-        '4': 52,
-        '5': 53,
-        '6': 54,
-        '7': 55,
-        '8': 56,
-        '9': 57,
-        ':': 58,
-        ';': 59,
-        '<': 60,
-        '=': 61,
-        '>': 62,
-        '?': 63,
-        '@': 64,
-        'a': 65,
-        'A': 65,
-        'b': 66,
-        'B': 66,
-        'c': 67,
-        'C': 67,
-        'd': 68,
-        'D': 68,
-        'e': 69,
-        'E': 69,
-        'f': 70,
-        'F': 70,
-        'g': 71,
-        'G': 71,
-        'h': 72,
-        'H': 72,
-        'i': 73,
-        'I': 73,
-        'j': 74,
-        'J': 74,
-        'k': 75,
-        'K': 75,
-        'l': 76,
-        'L': 76,
-        'm': 77,
-        'M': 77,
-        'n': 78,
-        'N': 78,
-        'o': 79,
-        'O': 79,
-        'p': 80,
-        'P': 80,
-        'q': 81,
-        'Q': 81,
-        'r': 82,
-        'R': 82,
-        's': 83,
-        'S': 83,
-        't': 84,
-        'T': 84,
-        'u': 85,
-        'U': 85,
-        'v': 86,
-        'V': 86,
-        'w': 87,
-        'W': 87,
-        'x': 88,
-        'X': 88,
-        'y': 89,
-        'Y': 89,
-        'z': 90,
-        'Z': 90,
-        '^': 160,
-        '!': 161,
-        '"': 162,
-        '#': 163,
-        '$': 164,
-        '%': 165,
-        '&': 166,
-        '_': 167,
-        '(': 168,
-        ')': 169,
-        '*': 170,
-        '+': 171,
-        '|': 172,
-        '-': 173,
-        '{': 174,
-        '}': 175,
-        '~': 176,
-        ',': 188,
-        '.': 190,
-        '/': 191,
-        '`': 192,
-        '[': 219,
-        '\\': 220,
-        ']': 221,
-        '\'': 222
+    var Key = {
+        Shift: 0x10,
+        Control: 0x11,
+        Alt: 0x12,
+        Meta: 0x5b,
+        LeftShift: 0xa0,
+        RightShift: 0xa1,
+        LeftControl: 0xa2,
+        RightControl: 0xa3,
+        LeftAlt: 0xa4,
+        RightAlt: 0xa5,
+        LeftMeta: 0x5b,
+        RightMeta: 0x5c
     };
 
-    // This is not a straight reverse of the char2key list,
-    // There's overloading in both (many ids map to same values).
-    var key2char = {
-        9: '\t',
-        13: '\n',
-        32: ' ',
-        48: '0',
-        49: '1',
-        50: '2',
-        51: '3',
-        52: '4',
-        53: '5',
-        54: '6',
-        55: '7',
-        56: '8',
-        57: '9',
-        58: ':',
-        59: ';',
-        60: '<',
-        61: '=',
-        62: '>',
-        63: '?',
-        64: '@',
-        65: 'A',
-        66: 'B',
-        67: 'C',
-        68: 'D',
-        69: 'E',
-        70: 'F',
-        71: 'G',
-        72: 'H',
-        73: 'I',
-        74: 'J',
-        75: 'K',
-        76: 'L',
-        77: 'M',
-        78: 'N',
-        79: 'O',
-        80: 'P',
-        81: 'Q',
-        82: 'R',
-        83: 'S',
-        84: 'T',
-        85: 'U',
-        86: 'V',
-        87: 'W',
-        88: 'X',
-        89: 'Y',
-        90: 'Z',
-        96: '0',
-        97: '1',
-        98: '2',
-        99: '3',
-        10: '4',
-        101: '5',
-        102: '6',
-        103: '7',
-        104: '8',
-        105: '9',
-        106: '*',
-        107: '+',
-        109: '-',
-        110: '.',
-        111: '/',
-        160: '^',
-        161: '!',
-        162: '"',
-        163: '#',
-        164: '$',
-        165: '%',
-        166: '&',
-        167: '_',
-        168: '(',
-        169: ')',
-        170: '*',
-        171: '+',
-        172: '|',
-        173: '-',
-        174: '{',
-        175: '}',
-        176: '~',
-        188: ',',
-        190: '.',
-        191: '/',
-        192: '`',
-        219: '[',
-        220: '\\',
-        221: ']',
-        222: '\''
-    };
+    var KEY_CHAR = 0; // The character typed
+    var KEY_KEY = 1;  // The key name pressed according to JavaScript event
+    var KEY_CODE = 2; // The key id pressed according to JavaScript event
+    var KEY_MOD = 3;  // The modifier mask to apply
+    var KEY_1252 = 4; // The code point of character.  See: https://en.wikipedia.org/wiki/Windows-1252
 
-    // US keyboard
-    var char2DOMCodeUSKeyboard = {
-        '\t': 'Tab',
-        '\n': 'Enter',
-        ' ': 'Space',
-        '0': 'Digit0',
-        '1': 'Digit1',
-        '2': 'Digit2',
-        '3': 'Digit3',
-        '4': 'Digit4',
-        '5': 'Digit5',
-        '6': 'Digit6',
-        '7': 'Digit7',
-        '8': 'Digit8',
-        '9': 'Digit9',
-        ':': 'Semicolon', // +shift
-        ';': 'Semicolon',
-        '<': 'Comma', // +shift
-        '=': 'Equal',
-        '>': 'Period', // +shift
-        '?': 'Slash', // +shift
-        '@': 'Digit2', // +shift
-        'a': 'KeyA',
-        'A': 'KeyA',
-        'b': 'KeyB',
-        'B': 'KeyB',
-        'c': 'KeyC',
-        'C': 'KeyC',
-        'd': 'KeyD',
-        'D': 'KeyD',
-        'e': 'KeyE',
-        'E': 'KeyE',
-        'f': 'KeyF',
-        'F': 'KeyF',
-        'g': 'KeyG',
-        'G': 'KeyG',
-        'h': 'KeyH',
-        'H': 'KeyH',
-        'i': 'KeyI',
-        'I': 'KeyI',
-        'j': 'KeyJ',
-        'J': 'KeyJ',
-        'k': 'KeyK',
-        'K': 'KeyK',
-        'l': 'KeyL',
-        'L': 'KeyL',
-        'm': 'KeyM',
-        'M': 'KeyM',
-        'n': 'KeyN',
-        'N': 'KeyN',
-        'o': 'KeyO',
-        'O': 'KeyO',
-        'p': 'KeyP',
-        'P': 'KeyP',
-        'q': 'KeyQ',
-        'Q': 'KeyQ',
-        'r': 'KeyR',
-        'R': 'KeyR',
-        's': 'KeyS',
-        'S': 'KeyS',
-        't': 'KeyT',
-        'T': 'KeyT',
-        'u': 'KeyU',
-        'U': 'KeyU',
-        'v': 'KeyV',
-        'V': 'KeyV',
-        'w': 'KeyW',
-        'W': 'KeyW',
-        'x': 'KeyX',
-        'X': 'KeyX',
-        'y': 'KeyY',
-        'Y': 'KeyY',
-        'z': 'KeyZ',
-        'Z': 'KeyZ',
-        '^': 'Digit6', // +shift
-        '!': 'Digit1', // +shift
-        '"': 'Quote', // +shift
-        '#': 'Digit3', // +shift
-        '$': 'Digit4', // +shift
-        '%': 'Digit5', // +shift
-        '&': 'Digit7', // +shift
-        '_': 'Minus', // +shift
-        '(': 'Digit9', // +shift
-        ')': 'Digit0', // +shift
-        '*': 'Digit8', // +shift
-        '+': 'Equal', // +shift
-        '|': 'Backslash', // +shift
-        '-': 'Minus',
-        '{': 'BracketLeft',
-        '}': 'BracketRight',
-        '~': 'Backquote', // +shift
-        ',': 'Comma',
-        '.': 'Period',
-        '/': 'Slash',
-        '`': 'Backquote',
-        '[': 'BracketLeft',
-        '\\': 'Backslash',
-        ']': 'BracketRight',
-        '\'': 'Quote'
-    };
+    var keyDefinitions = [
+        ['\t', 'Tab', 9, 0, 9],
+        ['\n', 'Enter', 13, 0, 13],
+        [' ', 'Space', 32, 0, 32],
+        ['!', 'Digit1', 49, ModifierMask.ShiftKey, 33],
+        ['"', 'Quote', 222, ModifierMask.ShiftKey, 34],
+        ['#', 'Digit3', 51, ModifierMask.ShiftKey, 35],
+        ['$', 'Digit4', 52, ModifierMask.ShiftKey, 36],
+        ['%', 'Digit5', 53, ModifierMask.ShiftKey, 37],
+        ['^', 'Digit6', 54, ModifierMask.ShiftKey, 38],
+        ['&', 'Digit7', 55, ModifierMask.ShiftKey, 39],
+        ['\'', 'Quote', 222, 0, 39],
+        ['(', 'Digit9', 57, ModifierMask.ShiftKey, 40],
+        [')', 'Digit0', 48, ModifierMask.ShiftKey, 41],
+        ['*', 'Digit8', 56, ModifierMask.ShiftKey, 42],
+        ['+', 'Equal', 187, ModifierMask.ShiftKey, 43],
+        [',', 'Comma', 188, 0, 44],
+        ['-', 'Minus', 189, 0, 45],
+        ['.', 'Period', 190, 0, 46],
+        ['/', 'Slash', 191, 0, 47],
+        ['0', 'Digit0', 48, 0, 48],
+        ['1', 'Digit1', 49, 0, 49],
+        ['2', 'Digit2', 50, 0, 50],
+        ['3', 'Digit3', 51, 0, 51],
+        ['4', 'Digit4', 52, 0, 52],
+        ['5', 'Digit5', 53, 0, 53],
+        ['6', 'Digit6', 54, 0, 54],
+        ['7', 'Digit7', 55, 0, 55],
+        ['8', 'Digit8', 56, 0, 56],
+        ['9', 'Digit9', 57, 0, 57],
+        [':', 'Semicolon', 59, ModifierMask.ShiftKey, 58],
+        [';', 'Semicolon', 59, 0, 59],
+        ['<', 'Comma', 188, ModifierMask.ShiftKey, 60],
+        ['=', 'Equal', 187, 0, 61],
+        ['>', 'Period', 190, ModifierMask.ShiftKey, 62],
+        ['?', 'Slash', 191, ModifierMask.ShiftKey, 63],
+        ['@', 'Digit2', 50, ModifierMask.ShiftKey, 64],
+        ['a', 'KeyA', 65, 0, 97 ],
+        ['A', 'KeyA', 65, ModifierMask.ShiftKey, 65 ],
+        ['b', 'KeyB', 66, 0, 98 ],
+        ['B', 'KeyB', 66, ModifierMask.ShiftKey, 66 ],
+        ['c', 'KeyC', 67, 0, 99 ],
+        ['C', 'KeyC', 67, ModifierMask.ShiftKey, 67 ],
+        ['d', 'KeyD', 68, 0, 100 ],
+        ['D', 'KeyD', 68, ModifierMask.ShiftKey, 68 ],
+        ['e', 'KeyE', 69, 0, 101 ],
+        ['E', 'KeyE', 69, ModifierMask.ShiftKey, 69 ],
+        ['f', 'KeyF', 70, 0, 102 ],
+        ['F', 'KeyF', 70, ModifierMask.ShiftKey, 70 ],
+        ['g', 'KeyG', 71, 0, 103 ],
+        ['G', 'KeyG', 71, ModifierMask.ShiftKey, 71 ],
+        ['h', 'KeyH', 72, 0, 104 ],
+        ['H', 'KeyH', 72, ModifierMask.ShiftKey, 72 ],
+        ['i', 'KeyI', 73, 0, 105 ],
+        ['I', 'KeyI', 73, ModifierMask.ShiftKey, 73 ],
+        ['j', 'KeyJ', 74, 0, 106 ],
+        ['J', 'KeyJ', 74, ModifierMask.ShiftKey, 74 ],
+        ['k', 'KeyK', 75, 0, 107 ],
+        ['K', 'KeyK', 75, ModifierMask.ShiftKey, 75 ],
+        ['l', 'KeyL', 76, 0, 108 ],
+        ['L', 'KeyL', 76, ModifierMask.ShiftKey, 76 ],
+        ['m', 'KeyM', 77, 0, 109 ],
+        ['M', 'KeyM', 77, ModifierMask.ShiftKey, 77 ],
+        ['n', 'KeyN', 78, 0, 110 ],
+        ['N', 'KeyN', 78, ModifierMask.ShiftKey, 78 ],
+        ['o', 'KeyO', 79, 0, 111 ],
+        ['O', 'KeyO', 79, ModifierMask.ShiftKey, 79 ],
+        ['p', 'KeyP', 80, 0, 112 ],
+        ['P', 'KeyP', 80, ModifierMask.ShiftKey, 80 ],
+        ['q', 'KeyQ', 81, 0, 113 ],
+        ['Q', 'KeyQ', 81, ModifierMask.ShiftKey, 81 ],
+        ['r', 'KeyR', 82, 0, 114 ],
+        ['R', 'KeyR', 82, ModifierMask.ShiftKey, 82 ],
+        ['s', 'KeyS', 83, 0, 115 ],
+        ['S', 'KeyS', 83, ModifierMask.ShiftKey, 83 ],
+        ['t', 'KeyT', 84, 0, 116 ],
+        ['T', 'KeyT', 84, ModifierMask.ShiftKey, 84 ],
+        ['u', 'KeyU', 85, 0, 117 ],
+        ['U', 'KeyU', 85, ModifierMask.ShiftKey, 85 ],
+        ['v', 'KeyV', 86, 0, 118 ],
+        ['V', 'KeyV', 86, ModifierMask.ShiftKey, 86 ],
+        ['w', 'KeyW', 87, 0, 119 ],
+        ['W', 'KeyW', 87, ModifierMask.ShiftKey, 87 ],
+        ['x', 'KeyX', 88, 0, 120 ],
+        ['X', 'KeyX', 88, ModifierMask.ShiftKey, 88 ],
+        ['y', 'KeyY', 89, 0, 121 ],
+        ['Y', 'KeyY', 89, ModifierMask.ShiftKey, 89 ],
+        ['z', 'KeyZ', 90, 0, 122 ],
+        ['Z', 'KeyZ', 90, ModifierMask.ShiftKey, 90 ],
+        ['[', 'BracketLeft', 219, 0, 91],
+        ['\\', 'Backslash', 220, 0, 92],
+        [']', 'BracketRight', 221, 0, 93],
+        ['_', 'Minus', 189, ModifierMask.ShiftKey, 95],
+        ['`', 'Backquote', 192, 0, 96],
+        ['{', 'BracketLeft', 219, ModifierMask.ShiftKey, 123],
+        ['|', 'Backslash', 220, ModifierMask.ShiftKey, 124],
+        ['}', 'BracketRight', 221, ModifierMask.ShiftKey, 125],
+        ['~', 'Backquote', 192, ModifierMask.ShiftKey, 126],
+    ];
+
+    var charToKey = {};
+    for (var i = 0; i < keyDefinitions.length; i++) {
+        var key = keyDefinitions[i];
+        if (key) {
+            charToKey[key[KEY_CHAR]] = key;
+        }
+    }
+
+    var keyDefinitionsNoChar = [
+        [0, 'Shift', 0x10, ModifierMask.ShiftKey, 0x10],
+        [0, 'Control', 0x11, ModifierMask.ControlKey, 0x11],
+        [0, 'Alt', 0x12, ModifierMask.AltKey, 0x12],
+        [0, 'LeftShift', 0xa0, ModifierMask.ShiftKey, 0xa0],
+        [0, 'RightShift', 0xa1, ModifierMask.ShiftKey, 0xa1],
+        [0, 'LeftControl', 0xa2, ModifierMask.ControlKey, 0xa2],
+        [0, 'RightControl', 0xa3, ModifierMask.ControlKey, 0xa3],
+        [0, 'LeftAlt', 0xa4, ModifierMask.AltKey, 0xa4],
+        [0, 'RightAlt', 0xa5, ModifierMask.AltKey, 0xa5],
+        [0, 'Meta', 0x5b, ModifierMask.LeftMeta, 0x5b],
+        [0, 'LeftMeta', 0x5b, ModifierMask.MetaKey, 0x5b],
+        [0, 'RightMeta', 0x5c, ModifierMask.MetaKey, 0x5c],
+    ];
+
+    var jsKeyCodeToKey = {};
+    for (var i = 0; i < keyDefinitions.length; i++) {
+        var key = keyDefinitions[i];
+        if (key && key[KEY_MOD] === 0) {
+            jsKeyCodeToKey[key[KEY_CODE]] = key;
+        }
+    }
 
     var _dispatchEvents = function(cmd, events, callback) {
         var i = 0;
@@ -394,151 +254,118 @@ pizza.main.input = function() {
         pizza.input.dispatchEvents('Input.dispatchMouseEvent', events, callback);
     };
 
-    var keyChar = function(text, rawText) {
+    function assignKeyIdentifiers(event, char, key) {
+        if (char == '\n') {
+            event.key = key[KEY_KEY];
+        } else if (char == '\t') {
+            event.key = key[KEY_KEY];
+        } else {
+            event.key = char;
+        }
+    }
+
+    var keyChar = function(char, key, modifiers) {
+        var text = char;
+        if (key[KEY_CODE] === 13) {
+            text = '\r';
+        }
         var a = {
             type: KeyEventType.Char,
             text: text,
-            unmodifiedText: rawText
+            modifiers: key[KEY_MOD],
+            windowsVirtualKeyCode: key[KEY_1252],
+            nativeVirtualKeyCode: key[KEY_1252],
+            code: key[KEY_KEY]
         }
-        // Special guy
-        if (text === '\r') {
-            a.keyIdentifier = "Enter";
-        }
+        assignKeyIdentifiers(a, char, key);
+        // console.log("keyChar", a);
         return a;
     };
 
-    function assignKeyIdentifiers(event, keyCode, char) {
-        // Well we should probably assign more of these but I only
-        // found problems when not assigning these ones (so far...)
-        if (keyCode === 91) {
-            event.keyIdentifier = "Meta";
-        } else if (keyCode === 13) {
-            event.keyIdentifier = "Enter";
-        }
-
-        // Unique DOM defined string value describing the meaning of the key in the context
-        // of active modifiers, keyboard layout, etc (e.g., 'AltGr') (default: "").
-        if (char in char2key) {
-            event.key = char;
-        }
-
-        // Unique DOM defined string value for each physical key (e.g., 'KeyA') (default: "").
-        if (char in char2DOMCodeUSKeyboard) {
-            event.code = char2DOMCodeUSKeyboard[char];
-        }
-    }
-
-    var keyDown = function(code, char, modifiers) {
+    var keyDown = function(char, key, modifiers) {
         var a = {
             type: KeyEventType.RawKeyDown,
-            windowsVirtualKeyCode: code, // Only windowsV key code is understood right now
-                                         // by Chrome right now
-            nativeVirtualKeyCode: code,
-            unmodifiedText: "",
-            modifiers: modifiers
+            windowsVirtualKeyCode: key[KEY_CODE],
+            nativeVirtualKeyCode: key[KEY_CODE],
+            unmodifiedText: '',
+            modifiers: key[KEY_MOD],
+            code: key[KEY_KEY]
         };
-        assignKeyIdentifiers(a, code, char);
-        console.log(a);
+        assignKeyIdentifiers(a, char, key);
+        // console.log("keyDown", a);
         return a;
     };
 
-    var keyUp = function(code, char, modifiers) {
+    var keyUp = function(char, key, modifiers) {
         var a = {
             type: KeyEventType.KeyUp,
-            windowsVirtualKeyCode: code, // Only windowsV key code is understood
-                                         // by Chrome right now
-            nativeVirtualKeyCode: code,
+            windowsVirtualKeyCode: key[KEY_CODE],
+            nativeVirtualKeyCode: key[KEY_CODE],
             unmodifiedText: '',
-            modifiers: modifiers
+            modifiers: key[KEY_MOD],
+            code: key[KEY_KEY]
         };
-        assignKeyIdentifiers(a, code, char);
-        console.log(a);
+        assignKeyIdentifiers(a, char, key);
+        // console.log("keyUp", a);
         return a;
     };
 
-    var Key = {
-        Shift: 0x10,
-        Control: 0x11,
-        Alt: 0x12,
-        Meta: 0x5b,
-        LeftShift: 0xa0,
-        RightShift: 0xa1,
-        LeftControl: 0xa2,
-        RightControl: 0xa3,
-        LeftAlt: 0xa4,
-        RightAlt: 0xa5,
-        LeftMeta: 0x5b,
-        RightMeta: 0x5c
-    };
-
-    // Convert JavaScript char to Windows1252
-    function convertToKeyCode(char) {
-        if (char in char2key) {
-            return char2key[char];
+    function getKeyForChar(char) {
+        var key = charToKey[char];
+        if (key) {
+            if (key[KEY_CODE] !== char.codePointAt(0)) {
+                console.log("diff in code", char, key[KEY_CODE], char.codePointAt(0));
+            }
         } else {
-            return 0;
+            key = [char, char, 0, 0, char.codePointAt(0)];
         }
+        return key;
     }
 
-    // Convert Windows1252 code to JavaScript char
-    function convertKeyCodeToChar(code) {
-        if (code in key2char) {
-            return key2char[code];
-        } else {
-            return String.fromCharCode(code);
+    function getKeyForItem(item) {
+        var key = jsKeyCodeToKey[item];
+        if (!key) {
+            key = [0, 0, item, 0, item];
         }
+        return key;
     }
 
     function processKeys(events, text, modifiers) {
-        for (var i = 0; i < text.length; i++) {
-            var char = text.charAt(i);
-            var code = convertToKeyCode(char);
-            events.push(keyDown(code, char, modifiers));
-            // '\n' always gets converted to Enter
-            if (code === 13) {
-                char = '\r';
-            }
-            events.push(keyChar(char, char));
-            events.push(keyUp(code, char, modifiers));
+        var chars = Array.from(text); // split text by character
+        console.log(chars, text);
+        for (var i = 0; i < chars.length; i++) {
+            var char = chars[i];
+            var key = getKeyForChar(char);
+            events.push(keyDown(char, key, modifiers));
+            events.push(keyChar(char, key, modifiers));
+            events.push(keyUp(char, key, modifiers));
         }
-    }
-
-    function getModifier(key) {
-        if (key === Key.Control || key === Key.LeftControl || key === Key.RightControl) {
-            return ModifierMask.ControlKey;
-        } else if (key === Key.Shift || key === Key.LeftShift || key === Key.RightShift) {
-            return ModifierMask.ShiftKey;
-        } else if (key === Key.Alt || key === Key.LeftAlt || key === Key.RightAlt) {
-            return ModifierMask.AltKey;
-        } else if (key === Key.Meta || key === Key.LeftMeta || key === Key.RightMeta) {
-            return ModifierMask.MetaKey;
-        }
-        return 0;
     }
 
     function processKeysNumberOrString(events, item, modifiers, keyDowns) {
         if (pizza.isString(item)) {
             processKeys(events, item, modifiers);
         } else if (pizza.isNumber(item)) {
-            var keyModifier = getModifier(item);
+            var key = getKeyForItem(item);
+            var keyModifier = key[KEY_MOD];
+            var char = key[KEY_CHAR];
             if (keyModifier !== 0) {
                 var keyPressIndex = keyDowns.indexOf(item);
                 if (keyPressIndex > -1) {
                     modifiers &= (~(keyModifier));
-                    events.push(keyUp(item, modifiers));
+                    events.push(keyUp(char, key, modifiers));
                     keyDowns.slice(keyPressIndex, 1);
                 } else {
                     modifiers |= keyModifier;
-                    events.push(keyDown(item, modifiers));
+                    events.push(keyDown(char, key, modifiers));
                     keyDowns.push(item);
                 }
             } else {
-                events.push(keyDown(item, modifiers));
-                var v = convertKeyCodeToChar(item);
+                events.push(keyDown(char, key, modifiers));
                 if (modifiers === 0) {
-                    events.push(keyChar(v, v));
+                    events.push(keyChar(char, key, modifiers));
                 }
-                events.push(keyUp(item, modifiers));
+                events.push(keyUp(char, key, modifiers));
             }
         }
         return modifiers;
@@ -557,9 +384,10 @@ pizza.main.input = function() {
         }
         for (i = keyDowns.length - 1; i >= 0; --i) {
             var item = keyDowns[i];
-            var keyModifier = getModifier(item);
+            var key = getKeyForItem(item);
+            var keyModifier = key[KEY_MOD];
             modifiers &= (~(keyModifier));
-            events.push(keyUp(item, modifiers));
+            events.push(keyUp(char, key, modifiers));
         }
     }
 

@@ -13,10 +13,5 @@
       // Enable developer mode for easier debugging of our extension.
       "developer_mode": true
     }
-  },
-  "devtools": {
-    "file_system_paths": {
-      "/Users/watsonmw/loadtest/script-engine/src/main/resources/chrome/extension/pizza": null
-    }
   }
 }
