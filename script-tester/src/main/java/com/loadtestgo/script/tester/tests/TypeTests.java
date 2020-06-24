@@ -75,18 +75,6 @@ public class TypeTests extends JavaScriptTest {
     }
 
     @Test
-    public void multMod() {
-        String script = String.format(
-            "b = pizza.open(\"%s\");\n" +
-            "b.type('#input1', '');\n" +
-            "assert.eq(b.getValue('#input1'), '%%*');\n",
-            getTestUrl("files/inputHandlers.html"));
-
-        TestResult result = runScript(script);
-        assertNoError(result);
-    }
-
-    @Test
     public void eventChecksLowercaseLetter() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +

@@ -76,7 +76,7 @@ public class WatchedTableModel extends AbstractTableModel {
         }
     }
 
-    void updateModel() {
+    public void updateModel() {
         for (int i = 0; i < expressions.size(); ++i) {
             String expr = expressions.get(i);
             String result;

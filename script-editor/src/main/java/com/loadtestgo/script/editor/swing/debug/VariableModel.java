@@ -1,4 +1,6 @@
-package com.loadtestgo.script.editor.swing;
+package com.loadtestgo.script.editor.swing.debug;
+
+import com.loadtestgo.script.editor.swing.TreeTableModel;
 
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;

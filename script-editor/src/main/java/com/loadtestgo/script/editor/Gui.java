@@ -1,6 +1,6 @@
 package com.loadtestgo.script.editor;
 
-import com.loadtestgo.script.editor.swing.Debugger;
+import com.loadtestgo.script.editor.swing.debug.Debugger;
 import com.loadtestgo.script.editor.swing.MainWindow;
 import javafx.application.Platform;
 import org.pmw.tinylog.Logger;

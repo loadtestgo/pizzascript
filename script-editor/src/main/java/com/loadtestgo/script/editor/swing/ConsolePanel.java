@@ -1,8 +1,6 @@
 package com.loadtestgo.script.editor.swing;
 
-import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.editor.PizzaScript;
-import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.JavaScriptEngine;
 import com.loadtestgo.script.engine.ScriptException;
 
@@ -14,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConsolePanel extends JPanel implements ConsoleCallbacks {
-    private ConsoleTextArea consoleTextArea;
-    private ConsoleTextField consoleTextField;
-    private ConsoleScriptThread scriptThread;
-    private final Object resetScriptThreadLock = new Object();
-    private EditorTestContext.WindowPosition windowPosition;
+    protected ConsoleTextArea consoleTextArea;
+    protected ConsoleTextField consoleTextField;
+    protected final Object resetScriptThreadLock = new Object();
+    protected EditorTestContext.WindowPosition windowPosition;
+    protected JPanel consoleInputPane;
 
     public ConsolePanel() {
         super();
@@ -29,14 +27,14 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
         consoleTextArea.setEditable(false);
 
         printGreeting();
+    }
 
-        scriptThread = newScriptThread();
-
+    protected void init(ConsoleTextField.CommandExecutor commandExecutor) {
         JLabel promptLabel = new JLabel();
         promptLabel.setFont(EditorSettings.getCodeFont());
         promptLabel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
 
-        consoleTextField = new ConsoleTextField(new CommandExecutor(), consoleTextArea, promptLabel);
+        consoleTextField = new ConsoleTextField(commandExecutor, consoleTextArea, promptLabel);
         consoleTextField.setFocusTraversalKeysEnabled(false);
         JScrollPane consoleInputScroll = new JScrollPane(consoleTextField,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
@@ -45,7 +43,7 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
         consoleInputScroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         consoleTextField.setScrollPane(consoleInputScroll);
 
-        JPanel consoleInputPane = new JPanel();
+        consoleInputPane = new JPanel();
         consoleTextField.setResizeParent(consoleInputPane);
         BoxLayout layout = new BoxLayout(consoleInputPane, BoxLayout.X_AXIS);
         consoleInputPane.setLayout(layout);
@@ -79,51 +77,26 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
         });
     }
 
-    private void printGreeting() {
-        consoleTextArea.println(
-                String.format("Welcome to %s Interactive Console %s!",
-                        PizzaScript.AppName,
-                        PizzaScript.getVersion()),
-                "#800000");
-        consoleTextArea.println(
-                "Type JavaScript to evaluate or open a new window in the File menu.",
-                "darkGray");
+    protected void printGreeting() {
     }
 
     public ConsoleTextArea getTextArea() {
         return consoleTextArea;
     }
 
-    public TestResult getTestResult() {
-        synchronized (resetScriptThreadLock) {
-            return scriptThread.getTestContext().getTestResult();
-        }
-    }
-
-    public ConsoleScriptThread getScriptThread() {
-        return scriptThread;
-    }
-
     @Override
-    public void autoCompletions(String source,
-                                int completionStartPos,
-                                int insertPos,
+    public void autoCompletions(String source, int completionStartPos, int insertPos,
                                 ArrayList<JavaScriptEngine.CompletionGroup> completions) {
-        if (completions.size() == 0) {
-            return;
-        } else {
+        if (completions.size() != 0) {
             final ArrayList<JavaScriptEngine.CompletionGroup> finalCompletions = completions;
             final String finalSource = source;
             final int finalPos = completionStartPos;
             final int finalInsertPos = insertPos;
             final String finalResult = longestMatchingString(completions);
 
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (!consoleTextField.autoComplete(finalSource, finalPos, finalInsertPos, finalResult)) {
-                        displayCompletions(finalSource, finalCompletions);
-                    }
+            SwingUtilities.invokeLater(() -> {
+                if (!consoleTextField.autoComplete(finalSource, finalPos, finalInsertPos, finalResult)) {
+                    displayCompletions(finalSource, finalCompletions);
                 }
             });
         }
@@ -254,56 +227,13 @@ public class ConsolePanel extends JPanel implements ConsoleCallbacks {
         consoleTextField.requestFocusInWindow();
     }
 
-    public void close() {
-        synchronized (resetScriptThreadLock) {
-            scriptThread.shutdown();
-        }
-    }
-
-    public void reset() {
-        synchronized (resetScriptThreadLock) {
-            scriptThread.shutdown();
-
-            consoleTextArea.clear();
-            printGreeting();
-
-            scriptThread = newScriptThread();
-        }
-    }
-
-    private ConsoleScriptThread newScriptThread() {
+    protected ConsoleScriptThread newScriptThread() {
         ConsoleScriptThread scriptThread = new ConsoleScriptThread(this, consoleTextArea.getConsoleOut());
         scriptThread.setWindowPosition(windowPosition);
         return scriptThread;
     }
 
-    public void setWindowPosition(EditorTestContext.WindowPosition windowPosition) {
-        synchronized (resetScriptThreadLock) {
-            this.windowPosition = windowPosition;
-            scriptThread.setWindowPosition(windowPosition);
-        }
-    }
-
-    private class CommandExecutor implements ConsoleTextField.CommandExecutor {
-        @Override
-        public boolean stringIsCompilableUnit(String partialLine) {
-            synchronized (resetScriptThreadLock) {
-                return scriptThread.getJavaScriptEngine().stringIsCompilableUnit(partialLine);
-            }
-        }
-
-        @Override
-        public void evalSource(int i, String partialLine) {
-            synchronized (resetScriptThreadLock) {
-                scriptThread.evalSource(i, partialLine);
-            }
-        }
-
-        @Override
-        public void tabComplete(String source, int pos) {
-            synchronized (resetScriptThreadLock) {
-                scriptThread.tabComplete(source, pos);
-            }
-        }
+    public ConsoleTextArea getConsoleTextArea() {
+        return consoleTextArea;
     }
 }

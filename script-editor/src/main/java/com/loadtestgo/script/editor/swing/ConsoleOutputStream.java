@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-class ConsoleOutputStream implements ConsoleNotifier, ResultsNotifier {
+public class ConsoleOutputStream implements ConsoleNotifier, ResultsNotifier {
     private ConsoleWriter consoleWriter;
     private ConsoleTextArea textArea;
     private TestResult testResult;

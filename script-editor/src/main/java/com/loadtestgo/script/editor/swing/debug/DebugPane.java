@@ -1,4 +1,6 @@
-package com.loadtestgo.script.editor.swing;
+package com.loadtestgo.script.editor.swing.debug;
+
+import com.loadtestgo.script.editor.swing.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +20,7 @@ public class DebugPane extends JPanel implements ActionListener {
     private WatchedTableModel tableModel;
     private EvalTable evalTable;
     private ConsoleTextArea output;
-    private JScrollPane outputPane;
+    private DebugConsolePanel outputPane;
     private boolean enabled;
 
     public DebugPane(final MainWindow mainWindow) {
@@ -27,7 +29,7 @@ public class DebugPane extends JPanel implements ActionListener {
         JPanel panel = new JPanel();
 
         JLabel frameLabel = new JLabel("Stack Frame:");
-        stackFrame = new JComboBox<String>();
+        stackFrame = new JComboBox<>();
         stackFrame.setLightWeightPopupEnabled(false);
         toolTips = Collections.synchronizedList(new java.util.ArrayList<String>());
         frameLabel.setBorder(stackFrame.getBorder());
@@ -69,10 +71,9 @@ public class DebugPane extends JPanel implements ActionListener {
         jsp = new JScrollPane(evalTable);
         tabs.add("Watch", jsp);
 
-        output = new ConsoleTextArea();
-        outputPane = new JScrollPane(output);
+        outputPane = new DebugConsolePanel(mainWindow.getDebugger());
+        output = outputPane.getConsoleTextArea();
         tabs.add("Output", outputPane);
-        output.setScrollPane(outputPane);
 
         tabs.setPreferredSize(new Dimension(500, 300));
 

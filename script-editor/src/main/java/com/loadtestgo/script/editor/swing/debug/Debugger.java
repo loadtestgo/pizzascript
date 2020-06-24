@@ -1,18 +1,15 @@
-package com.loadtestgo.script.editor.swing;
+package com.loadtestgo.script.editor.swing.debug;
 
 import com.loadtestgo.script.api.TestResult;
-import com.loadtestgo.script.engine.EasyTestContext;
-import com.loadtestgo.script.engine.EngineSettings;
-import com.loadtestgo.script.engine.JavaScriptEngine;
-import com.loadtestgo.script.engine.ScriptException;
-import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
+import com.loadtestgo.script.editor.swing.*;
+import com.loadtestgo.script.engine.*;
 import com.loadtestgo.script.engine.internal.rhino.DebuggerStopException;
 import com.loadtestgo.util.Path;
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
+import org.pmw.tinylog.Logger;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +25,7 @@ public class Debugger {
         STEP_OUT
     }
 
-    private DebuggerCallbacks callback;
+    private List<DebuggerCallbacks> callbacks = new ArrayList<>();
     private int frameIndex = -1;
     private volatile ContextData interruptedContextData;
     private final Object stateMonitor = new Object();
@@ -52,6 +49,7 @@ public class Debugger {
     private boolean insideInterruptLoop = false;
     private boolean isRunning = false;
     private boolean isInterrupted = false;
+    private boolean isEngineRunning = false;
 
     private Thread debuggerThread;
     private DebuggerExecution debuggerExecution;
@@ -98,8 +96,8 @@ public class Debugger {
     public void setSourceFileLookup(SourceFileLookup sourceFileLookup) {
     }
 
-    public void setGuiCallback(DebuggerCallbacks callback) {
-        this.callback = callback;
+    public void addGuiCallback(DebuggerCallbacks callback) {
+        this.callbacks.add(callback);
     }
 
     public CodeModel getCodeModel() {
@@ -109,6 +107,8 @@ public class Debugger {
     public TestResult getTestResult() {
         return testResult;
     }
+
+    public JavaScriptEngine getJavaScriptEngine() { return javaScriptEngine; }
 
     public void contextSwitch(int frameIndex) {
         this.frameIndex = frameIndex;
@@ -172,6 +172,12 @@ public class Debugger {
         }
     }
 
+    public boolean isEngineRunning() {
+        synchronized (stateMonitor) {
+            return isEngineRunning;
+        }
+    }
+
     public ContextData currentContextData() {
         return interruptedContextData;
     }
@@ -211,9 +217,20 @@ public class Debugger {
         setDebugRunMode(DebugRunMode.NONE);
         synchronized (stateMonitor) {
             isRunning = true;
+            isEngineRunning = true;
         }
         debuggerExecution.startRun(sourceFile);
-        callback.evalScriptStarted();
+        for (DebuggerCallbacks callback : callbacks) {
+            callback.evalScriptStarted();
+        }
+    }
+
+    public void evalSource(int lineNo, String source, ConsoleCallbacks callbacks) {
+        debuggerExecution.evalSource(lineNo, source, callbacks);
+    }
+
+    public void tabComplete(String source, int pos, ConsoleCallbacks callbacks) {
+        debuggerExecution.tabComplete(source, pos, callbacks);
     }
 
     public String objectToString(Object object) {
@@ -331,7 +348,9 @@ public class Debugger {
                 this.insideInterruptLoop = true;
                 this.evalRequest = null;
                 this.debugRunMode = DebugRunMode.NONE;
-                callback.enterInterrupt(frame, scriptException);
+                for (DebuggerCallbacks callback : callbacks) {
+                    callback.enterInterrupt(frame, scriptException);
+                }
                 try {
                     while (true) {
                         try {
@@ -401,7 +420,9 @@ public class Debugger {
                 case STOP:
                     throw new DebuggerStopException();
             }
-            callback.evalScriptContinue();
+            for (DebuggerCallbacks callback : callbacks) {
+                callback.evalScriptContinue();
+            }
         } finally {
             synchronized (stateMonitor) {
                 interruptedContextData = null;
@@ -428,22 +449,20 @@ public class Debugger {
 
     private void doEvalVars(Object scope, ArrayList<Variable> variables) {
         Object[] ids = getObjectIds(scope);
-        Arrays.sort(ids, new Comparator<Object>() {
-            public int compare(Object l, Object r) {
-                // Integers before strings
-                if (l instanceof String) {
-                    if (r instanceof Integer) {
-                        return -1;
-                    }
-                    return ((String) l).compareTo((String) r);
-                } else {
-                    if (r instanceof String) {
-                        return 1;
-                    }
-                    int lint = ((Integer) l).intValue();
-                    int rint = ((Integer) r).intValue();
-                    return lint - rint;
+        Arrays.sort(ids, (l, r) -> {
+            // Integers before strings
+            if (l instanceof String) {
+                if (r instanceof Integer) {
+                    return -1;
                 }
+                return ((String) l).compareTo((String) r);
+            } else {
+                if (r instanceof String) {
+                    return 1;
+                }
+                int lint = ((Integer) l).intValue();
+                int rint = ((Integer) r).intValue();
+                return lint - rint;
             }
         });
 
@@ -665,13 +684,6 @@ public class Debugger {
         }
     }
 
-    public enum Command {
-        NONE,
-        RUN,
-        STOP,
-        BREAK
-    }
-
     private class DebuggerExecution implements Runnable {
         private SourceFile file;
         private JavaScriptEngine engine;
@@ -679,12 +691,11 @@ public class Debugger {
         private EditorTestContext.WindowPosition windowPosition;
         private Map<DebuggableScript, FunctionSource> functionToSource;
         private final Object monitor = new Object();
-        private Command command;
+        private final ArrayList<java.util.concurrent.Callable<Object>> commands = new ArrayList<>();
 
         public DebuggerExecution(JavaScriptEngine engine) {
             this.engine = engine;
             this.functionToSource = new ConcurrentHashMap<>();
-            this.command = Command.NONE;
         }
 
         private FunctionSource getFunctionSource(DebuggableScript fnOrScript) {
@@ -725,23 +736,62 @@ public class Debugger {
                 } catch (InterruptedException e) {
                     continue;
                 }
-                if (readCommand() == Command.RUN) {
-                    execute(file);
+                java.util.concurrent.Callable<Object> command = readCommand();
+                try {
+                    if (command != null) {
+                        command.call();
+                    }
+                } catch (Exception e) {
+                    Logger.error(e, "Exception executing command");
                 }
             }
         }
 
-        private synchronized Command readCommand() {
-            Command command = this.command;
-            this.command = Command.NONE;
-            return command;
+        private class RunTask implements java.util.concurrent.Callable<Object> {
+            public RunTask() {
+            }
+
+            @Override
+            public Object call() throws Exception {
+                execute(file);
+                return null;
+            }
+        }
+
+        private synchronized java.util.concurrent.Callable<Object> readCommand() {
+            synchronized (commands) {
+                if (commands.size() == 0) {
+                    return null;
+                }
+                return commands.remove(0);
+            }
         }
 
         public synchronized void startRun(SourceFile file) {
             this.file = file;
-            this.command = Command.RUN;
-            synchronized (monitor) {
-                monitor.notify();
+            synchronized (commands) {
+                commands.add(new RunTask());
+                synchronized (monitor) {
+                    monitor.notify();
+                }
+            }
+        }
+
+        public void evalSource(int lineNo, String source, ConsoleCallbacks callbacks) {
+            synchronized (commands) {
+                commands.add(new EvalTask(engine, lineNo, source, callbacks));
+                synchronized (monitor) {
+                    monitor.notify();
+                }
+            }
+        }
+
+        public void tabComplete(String source, int pos, ConsoleCallbacks callbacks) {
+            synchronized (commands) {
+                commands.add(new TabCompleteTask(engine, source, pos, callbacks));
+                synchronized (monitor) {
+                    monitor.notify();
+                }
             }
         }
 
@@ -773,6 +823,9 @@ public class Debugger {
             testResult = testContext.getTestResult();
             consoleOutputStream.setTestResult(testResult);
             engine.init(testContext);
+            synchronized (stateMonitor) {
+                Debugger.this.isEngineRunning = true;
+            }
             try {
                 Context cx = engine.getContext();
                 ContextData contextData = new ContextData();
@@ -786,14 +839,19 @@ public class Debugger {
             } catch (Throwable t) {
                 exception = t;
             } finally {
+                boolean isEngineRunning = false;
                 if (exception == null && cleanupWhenDone) {
                     engine.finish();
                 }
+                isEngineRunning = (engine.getContext() != null);
                 synchronized (stateMonitor) {
-                    isRunning = false;
-                    isInterrupted = false;
+                    Debugger.this.isRunning = false;
+                    Debugger.this.isInterrupted = false;
+                    Debugger.this.isEngineRunning = isEngineRunning;
                 }
-                callback.evalScriptStopped(exception);
+                for (DebuggerCallbacks callback : callbacks) {
+                    callback.evalScriptStopped(exception, isEngineRunning);
+                }
             }
         }
 

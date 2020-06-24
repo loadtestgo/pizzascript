@@ -28,7 +28,7 @@ public class ConsoleTextField extends RSyntaxTextArea implements KeyListener {
     private JScrollPane scrollPane;
     private JPanel resizeParent;
 
-    interface CommandExecutor {
+    public interface CommandExecutor {
         boolean stringIsCompilableUnit(String partialLine);
 
         void evalSource(int i, String partialLine);

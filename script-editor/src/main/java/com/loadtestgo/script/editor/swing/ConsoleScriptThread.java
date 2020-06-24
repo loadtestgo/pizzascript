@@ -1,10 +1,11 @@
 package com.loadtestgo.script.editor.swing;
 
+import com.loadtestgo.script.editor.swing.debug.EvalTask;
+import com.loadtestgo.script.editor.swing.debug.InitTask;
+import com.loadtestgo.script.editor.swing.debug.TabCompleteTask;
 import com.loadtestgo.script.engine.*;
-import com.loadtestgo.util.Path;
-import org.pmw.tinylog.Logger;
 
-import java.util.ArrayList;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,8 +16,7 @@ public class ConsoleScriptThread {
     private ExecutorService executorService;
     private EditorTestContext testContext;
 
-    public ConsoleScriptThread(ConsoleCallbacks callbacks,
-                               ConsoleOutputStream output) {
+    public ConsoleScriptThread(ConsoleCallbacks callbacks, ConsoleOutputStream output) {
         this.engine = new JavaScriptEngine();
         this.callbacks = callbacks;
         this.executorService = Executors.newSingleThreadExecutor();
@@ -50,81 +50,5 @@ public class ConsoleScriptThread {
 
     public void setWindowPosition(EditorTestContext.WindowPosition windowPosition) {
         this.testContext.setWindowPosition(windowPosition);
-    }
-
-    static private class InitTask implements Callable<Object> {
-        private JavaScriptEngine engine;
-        private TestContext testContext;
-        private ConsoleOutputStream output;
-
-        public InitTask(JavaScriptEngine engine,
-                        TestContext testContext,
-                        ConsoleOutputStream output) {
-            this.engine = engine;
-            this.testContext = testContext;
-            this.output = output;
-        }
-
-        @Override
-        public Object call() throws Exception {
-            engine.setConsole(output);
-            engine.init(testContext);
-            return null;
-        }
-    }
-
-    static private class EvalTask implements Callable<Object> {
-        private JavaScriptEngine engine;
-        private String source;
-        private int lineNo;
-        private ConsoleCallbacks callbacks;
-
-        public EvalTask(JavaScriptEngine engine,
-                        int lineNo,
-                        String source,
-                        ConsoleCallbacks callbacks) {
-            this.engine = engine;
-            this.lineNo = lineNo;
-            this.source = source;
-            this.callbacks = callbacks;
-        }
-
-        @Override
-        public Object call() throws Exception {
-            Object result = null;
-            try {
-                result = engine.runPartialScript(source, lineNo);
-                callbacks.expressionResult(engine.valueToString(result));
-            } catch (ScriptException se) {
-                callbacks.scriptException(se);
-            }
-
-            return result;
-        }
-    }
-
-    private class TabCompleteTask implements Callable<Object> {
-        private JavaScriptEngine engine;
-        private String source;
-        private int insertPos;
-        private ConsoleCallbacks callbacks;
-
-        public TabCompleteTask(JavaScriptEngine engine,
-                               String source,
-                               int insertPos,
-                               ConsoleCallbacks callbacks) {
-            this.engine = engine;
-            this.source = source;
-            this.insertPos = insertPos;
-            this.callbacks = callbacks;
-        }
-
-        @Override
-        public Object call() throws Exception {
-            ArrayList<JavaScriptEngine.CompletionGroup> completions = new ArrayList<>();
-            int pos = engine.complete(source, insertPos, completions);
-            callbacks.autoCompletions(source, pos, insertPos, completions);
-            return null;
-        }
     }
 }

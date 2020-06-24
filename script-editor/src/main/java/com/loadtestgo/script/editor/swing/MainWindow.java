@@ -7,11 +7,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.loadtestgo.script.api.ErrorType;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.editor.Gui;
+import com.loadtestgo.script.editor.swing.debug.DebugPane;
+import com.loadtestgo.script.editor.swing.debug.Debugger;
+import com.loadtestgo.script.editor.swing.debug.DebuggerCallbacks;
 import com.loadtestgo.script.engine.ConsoleNotifier;
-import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.ScriptException;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeFinder;
-import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeProcess;
 import com.loadtestgo.script.har.HarWriter;
 import com.loadtestgo.util.IniFile;
 import com.loadtestgo.util.Os;
@@ -44,7 +45,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     private JTabbedPane tabbedPane;
     private DebugPane debugPane;
     private JToolBar toolBar;
-    private ConsolePanel console;
+    private MainConsolePanel console;
     private JMenu windowMenu;
     private JSplitPane splitPane;
     private JLabel statusBar;
@@ -117,7 +118,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         setJMenuBar(createMenuBar());
         init();
 
-        debugger.setGuiCallback(this);
+        debugger.addGuiCallback(this);
     }
 
     private void prettyActions() {
@@ -199,7 +200,8 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
 
         keepBrowserOpenToggle = new JCheckBoxMenuItem();
         keepBrowserOpenToggle.setAction(keepBrowserOpenAction);
-        keepBrowserOpenToggle.setSelected(false);
+        keepBrowserOpenToggle.setSelected(true);
+        getDebugger().setCleanupWhenDone(!keepBrowserOpenToggle.isSelected());
         debugMenu.add(keepBrowserOpenToggle);
 
         windowMenu.add(nextTabAction);
@@ -421,20 +423,20 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             return;
         }
 
-        if (component instanceof ConsolePanel) {
-            ConsolePanel panel = (ConsolePanel)component;
+        if (component instanceof MainConsolePanel) {
+            MainConsolePanel panel = (MainConsolePanel)component;
             panel.setDefaultFocus();
         }
     }
 
-    private ConsolePanel getConsolePanel() {
+    private MainConsolePanel getConsolePanel() {
         Component component = tabbedPane.getSelectedComponent();
         if (component == null) {
             return null;
         }
 
-        if (component instanceof ConsolePanel) {
-            return (ConsolePanel)component;
+        if (component instanceof MainConsolePanel) {
+            return (MainConsolePanel)component;
         }
 
         return null;
@@ -454,7 +456,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     }
 
     private void addConsoleFrame() {
-        console = new ConsolePanel();
+        console = new MainConsolePanel();
         console.getTextArea().setPageClickListener(this);
 
         tabbedPane.addTab(null, console);
@@ -783,7 +785,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             return panel.getTestResult();
         }
 
-        ConsolePanel console = getConsolePanel();
+        MainConsolePanel console = getConsolePanel();
         if (console != null) {
             return console.getTestResult();
         }
@@ -888,59 +890,47 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
     public void enterInterrupt(Debugger.StackFrame lastFrame, Throwable exception) {
         final Debugger.StackFrame finalLastFrame = lastFrame;
         final Throwable finalException = exception;
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                showStopLine(finalLastFrame);
+        java.awt.EventQueue.invokeLater(() -> {
+            showStopLine(finalLastFrame);
 
-                if (finalException != null) {
-                    handleException(finalException);
-                }
-
-                debugPane.updateStackTrace(finalLastFrame.contextData());
-                updateDebugState();
-                statusBar.setText("Break");
+            if (finalException != null) {
+                handleException(finalException);
             }
+
+            debugPane.updateStackTrace(finalLastFrame.contextData());
+            updateDebugState();
+            statusBar.setText("Break");
         });
     }
 
     @Override
     public void evalScriptContinue() {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                updateDebugState();
-                setFilePosition(getCurrentFilePanel(), -1);
-                statusBar.setText("Running...");
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            updateDebugState();
+            setFilePosition(getCurrentFilePanel(), -1);
+            statusBar.setText("Running...");
         });
     }
 
     @Override
     public void evalScriptStarted() {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                debugPane.clearOutput();
-                updateDebugState();
-                setFilePosition(getCurrentFilePanel(), -1);
-                statusBar.setText("Running...");
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            debugPane.clearOutput();
+            updateDebugState();
+            setFilePosition(getCurrentFilePanel(), -1);
+            statusBar.setText("Running...");
         });
     }
 
     @Override
-    public void evalScriptStopped(Throwable exception) {
+    public void evalScriptStopped(Throwable exception, boolean isEngineRunning) {
         final Throwable finalException = exception;
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                debugPane.clearStackTrace();
-                updateDebugState();
-                setFilePosition(getCurrentFilePanel(), -1);
-                statusBar.setText("Done");
-                handleException(finalException);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            debugPane.clearStackTrace();
+            updateDebugState();
+            setFilePosition(getCurrentFilePanel(), -1);
+            statusBar.setText("Done");
+            handleException(finalException);
         });
     }
 
@@ -1017,8 +1007,8 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
 
         if (component instanceof FilePanel) {
             return ((FilePanel)component).getTextArea();
-        } else if (component instanceof ConsolePanel) {
-            return ((ConsolePanel)component).getTextArea();
+        } else if (component instanceof MainConsolePanel) {
+            return ((MainConsolePanel)component).getTextArea();
         }
 
         return null;
@@ -1082,12 +1072,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
 
         tabbedPane.setTabComponentAt(pos, tabHeader);
 
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                closePanel(finalPanel);
-            }
-        });
+        closeButton.addActionListener(e -> closePanel(finalPanel));
 
         KeyStroke closeShortcut = KeyStroke.getKeyStroke(KeyEvent.VK_W,
                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
@@ -1476,7 +1461,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
         public void actionPerformed(ActionEvent e) {
             JPanel panel = getCurrentPanel();
             if (panel != null) {
-                if (panel instanceof ConsolePanel) {
+                if (panel instanceof MainConsolePanel) {
                     ConsoleFindDialog dialog =
                         new ConsoleFindDialog(MainWindow.this,(ConsolePanel)panel);
                     dialog.showDialog(MainWindow.this);
@@ -1638,10 +1623,7 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            FilePanel filePanel = getCurrentFilePanel();
-            if (filePanel != null) {
-                getDebugger().setCleanupWhenDone(!keepBrowserOpenToggle.isSelected());
-            }
+             getDebugger().setCleanupWhenDone(!keepBrowserOpenToggle.isSelected());
         }
     }
 
