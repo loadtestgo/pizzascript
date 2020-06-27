@@ -69,6 +69,35 @@ public class WaitTests extends JavaScriptTest {
     }
 
     @Test
+    public void waitNotVisible() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.click('#revealAfterWait');\n" +
+            "b.waitNotVisible('#revealAfterWait');\n" +
+            "assert.ok(!b.hasText('Click button to replace DOM'));\n",
+            getTestUrl("files/elementLater.html"));
+
+        TestResult result = runScript(script);
+
+        assertNoError(result);
+        assertEquals(1, result.getPages().size());
+    }
+
+    @Test
+    public void waitNotVisibleFail() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.waitNotVisible('#revealAfterWait');\n",
+            getTestUrl("files/elementLater.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertEquals(1, result.getPages().size());
+        assertError("Script interrupted", ErrorType.Timeout, result);
+        assertTrue("Runtime greater than 3000ms", result.getRunTime() > 3000);
+    }
+
+    @Test
     public void waitExists() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +

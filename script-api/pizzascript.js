@@ -1736,15 +1736,39 @@ Browser.prototype.queryVisible = function(selector) {};
 Browser.prototype.waitElement = function(selector) {};
 
 /**
- * Wait for the given selector to match a visible item.
+ * Wait for the given selector to be matched and at least one resulting element to be visible.
+ *
+ * Checks current frame only.
  *
  * @example
  * // Wait for an element to be visible
  * b.waitVisible('#button1');
  *
  * @param {String} selector The element(s) to wait for
+ *
+ * @see module:Browser#exists
+ * @see module:Browser#isVisible
+ * @see module:Browser#waitNotVisible
  */
 Browser.prototype.waitVisible = function(selector) {};
+
+/**
+ * Wait for the given selector to either not be matched or matched but none of the resulting
+ * elements are visible.  Checks current frame only.
+ *
+ * NOTE: The element does not need to be visible to begin with.
+ *
+ * @example
+ * // The #errorDiv to be removed / hidden from DOM.
+ * b.waitNotVisible('#errorDiv');
+ *
+ * @param {String} selector The element(s) to wait for to be no longer visible
+ *
+ * @see module:Browser#exists
+ * @see module:Browser#isVisible
+ * @see module:Browser#waitVisible
+ */
+Browser.prototype.waitNotVisible = function(selector) {};
 
 /**
  * Highlight the first element matching the selector

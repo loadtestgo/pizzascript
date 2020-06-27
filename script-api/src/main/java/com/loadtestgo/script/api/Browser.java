@@ -821,11 +821,21 @@ public interface Browser {
     void waitElement(String selector);
 
     /**
-     * Wait for the given selector to be matched.
+     * Wait for the given selector to be matched and at least one resulting element to be visible.
      *
      * @param selector the element(s) to wait for
      */
     void waitVisible(String selector);
+
+    /**
+     * Wait for the given selector to either not be matched or matched but none of the resulting
+     * elements are visible.
+     *
+     * NOTE: The element does not need to be visible to begin with.
+     *
+     * @param selector the element(s) to wait for to be no longer visible
+     */
+    void waitNotVisible(String selector);
 
     /**
      * Wait for the element matching the given selector to contain the

@@ -1752,10 +1752,7 @@ pizza.main.commands = function() {
     };
 
     var _waitElement = function(id, params) {
-        var pollTime = 200;
-        if (params.poll) {
-            pollTime = params.poll;
-        }
+        var pollTime = getParamPollTime(params);
 
         var check = function() {
             executeAutomationAPI(
@@ -1794,10 +1791,7 @@ pizza.main.commands = function() {
                 }
             };
 
-        var pollTime = 200;
-        if (params.poll) {
-            pollTime = params.poll;
-        }
+        var pollTime = getParamPollTime(params);
 
         var check = function() {
             executeAutomationAPI(
@@ -1844,11 +1838,7 @@ pizza.main.commands = function() {
 
     var _waitVisible = function(id, params) {
         var selector = params.selector;
-
-        var pollTime = 500;
-        if (params.poll) {
-            pollTime = params.poll;
-        }
+        var pollTime = getParamPollTime(params);
 
         var check = function(selector) {
             executeAutomationAPI(
@@ -1859,6 +1849,33 @@ pizza.main.commands = function() {
                         setTimeout(function () {
                             check(selector);
                         }, pollTime);
+                    }
+                },
+                function (error) {
+                    sendResponse(id, { error: error });
+                },
+                true,
+                isVisibleScript,
+                params.selector
+            );
+        };
+
+        check(selector);
+    };
+
+    var _waitNotVisible = function(id, params) {
+        var selector = params.selector;
+        var pollTime = getParamPollTime(params);
+
+        var check = function(selector) {
+            executeAutomationAPI(
+                function (response) {
+                    if (response.result.value) {
+                        setTimeout(function () {
+                            check(selector);
+                        }, pollTime);
+                    } else {
+                        sendResponse(id, { });
                     }
                 },
                 function (error) {
@@ -2014,7 +2031,7 @@ pizza.main.commands = function() {
 
     var _clearPageLoad = function(id, params) {
         pizza.navigation.reset(_currentTabId, 0);
-        sendResponse(id, { });
+        sendResponse(id, {});
     };
 
     var _waitPageLoad = function(id, params) {
@@ -2099,7 +2116,6 @@ pizza.main.commands = function() {
         }
 
         _autoDismissDialogs = false;
-
         _automationAPI = null;
 
         function stopVideo(next) {
@@ -2297,7 +2313,6 @@ pizza.main.commands = function() {
      *   https://code.google.com/p/chromium/issues/detail?id=63979
      */
     var _findElementByClick = function() {
-
         var script = "" + function(zoomFactor) {
             if (!this.findElementListener) {
                 var that = this;
@@ -2458,6 +2473,7 @@ pizza.main.commands = function() {
     addCommand("waitElement", _waitElement);
     addCommand("isVisible", _isVisible);
     addCommand("waitVisible", _waitVisible);
+    addCommand("waitNotVisible", _waitNotVisible);
 
     addCommand("clearHighlight", _clearHighlight);
     addCommand("highlight", _highlight);

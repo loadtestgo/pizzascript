@@ -976,6 +976,13 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
+    public void waitNotVisible(String selector) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitNotVisible", params));
+    }
+
+    @Override
     public void highlight(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
