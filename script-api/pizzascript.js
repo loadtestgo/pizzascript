@@ -186,7 +186,8 @@ pizza.getRequestByFullUrl = function(pageIndexOrFullUrl, fullUrl) {};
 pizza.result = null;
 
 /**
- * The public ip of the machine running the test.
+ * The public ip of the machine (bot) running the test.  This IP will
+ * be the one used by the bot to connect to your website.
  *
  * @example
  * // Log the ip to the console
@@ -206,7 +207,7 @@ pizza.ip = "";
 pizza.userId = 0;
 
 /**
- * The worker id that the script is running under, it's unique per browser,
+ * The worker id that the script is running under, it's unique per browser
  * on the bot and starts at 0.  Normally you don't need this, instead the userId
  * can be used.
  *
@@ -221,7 +222,7 @@ pizza.workerId = 0;
  * The number of samples ran on this user id so far, starts at 0 and
  * increments by 1 for every sample that is processed by the current user.
  *
- * Unique only to the user.
+ * Unique only to the current pizza.botId + pizza.workerId.
  *
  * @type {Number}
  *

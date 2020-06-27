@@ -23,7 +23,7 @@
         <div id="jsdoc-main" role="main">
           <header class="page-header">
             <h1><small></small><span class="symbol-name">pizza</span></h1>
-            <p class="source-link">Source: <a href="-_Users_watsonmw_pizzascript_script-api_pizzascript.js.html#source-line-15">/<wbr>Users/<wbr>watsonmw/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:15</a></p>
+            <p class="source-link">Source: <a href="-_Users_watsonmw_loadtest_pizzascript_script-api_pizzascript.js.html#source-line-15">/<wbr>Users/<wbr>watsonmw/<wbr>loadtest/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:15</a></p>
             <div class="symbol-description">
               <p>Main entry point for tests.</p>
               <p>Most scripts will start with a call to <a href="module-pizza.html#.open">module:pizza.open</a>.</p>
@@ -109,19 +109,22 @@ b.open(&quot;loadtestgo.com&quot;);</code></pre>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
+                    <dt><a href="module-pizza.html#.nextSeqId">nextSeqId(Named)</a></dt>
+                    <dd>
+                    </dd>
                     <dt><a href="module-pizza.html#.open">open()</a></dt>
                     <dd>
                     </dd>
                     <dt><a href="module-pizza.html#.openCSV">openCSV(filename)</a></dt>
                     <dd>
                     </dd>
-                    <dt><a href="module-pizza.html#.saveFile">saveFile(filename, data)</a></dt>
-                    <dd>
-                    </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
+                    <dt><a href="module-pizza.html#.saveFile">saveFile(filename, data)</a></dt>
+                    <dd>
+                    </dd>
                     <dt><a href="module-pizza.html#.sleep">sleep(milliseconds)</a></dt>
                     <dd>
                     </dd>
@@ -147,7 +150,8 @@ b.open(&quot;loadtestgo.com&quot;);</code></pre>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".ip"><span class="symbol-name">ip</span><small class="property-type">
                   &nbsp;String</small></h3>
-              <p>The public ip of the machine running the test.</p>
+              <p>The public ip of the machine (bot) running the test. This IP will
+                be the one used by the bot to connect to your website.</p>
               <section>
                 <h4>
                   Example
@@ -214,14 +218,18 @@ console.log(pizza.result.testName);</code></pre>
                   &nbsp;Number</small></h3>
               <p>The number of samples ran on this user id so far, starts at 0 and
                 increments by 1 for every sample that is processed by the current user.</p>
-              <p>Unique only to the user.</p>
+              <p>Unique only to the current pizza.botId + pizza.workerId.</p>
               <dl class="dl-compact">
+                <dt>See also</dt>
+                <dd><a href="module-pizza.html#.workerId">module:pizza.workerId</a></dd>
+                <dd><a href="module-pizza.html#.userId">module:pizza.userId</a></dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".userId"><span class="symbol-name">userId</span><small class="property-type">
                   &nbsp;Number</small></h3>
               <p>The user id that the script is running under, it's unique across the load
-                test and starts at 0.</p>
+                test and starts at 0. The value of the user id will never exceed the max
+                number of users used during a load test.</p>
               <dl class="dl-compact">
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
@@ -234,10 +242,13 @@ console.log(pizza.result.testName);</code></pre>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".workerId"><span class="symbol-name">workerId</span><small class="property-type">
                   &nbsp;Number</small></h3>
-              <p>The worker id that the script is running under, it's unique per browser,
+              <p>The worker id that the script is running under, it's unique per browser
                 on the bot and starts at 0. Normally you don't need this, instead the userId
                 can be used.</p>
               <dl class="dl-compact">
+                <dt>See also</dt>
+                <dd><a href="module-pizza.html#.sequenceId">module:pizza.sequenceId</a></dd>
+                <dd><a href="module-pizza.html#.userId">module:pizza.userId</a></dd>
               </dl>
             </section>
             <h2>Methods</h2>
@@ -367,6 +378,46 @@ var b &#x3D; pizza.browser();</code></pre>
                 <dd>
                   <p><code><a href="module-HttpRequest.html">module:HttpRequest</a></code> </p>
                 </dd>
+              </dl>
+              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
+              <h3 id=".nextSeqId"><span class="symbol-name">nextSeqId</span><span class="signature"><span class="signature-params">(Named)</span></span></h3>
+              <p>Generate a new sequential id unique to this load test and unique per passed in
+                named sequence.</p>
+              <p>Sequences start at zero and are incremented by 1 every time this function is
+                called across the load test.</p>
+              <section>
+                <h4>Parameter</h4>
+                <table class="jsdoc-details-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Optional</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>Named</p>
+                      </td>
+                      <td>
+                        <p>String</p>
+                      </td>
+                      <td>
+                        <p>&nbsp;</p>
+                      </td>
+                      <td>
+                        <p>sequence to return a value from.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <dl class="dl-compact">
+                <dt>See also</dt>
+                <dd><a href="module-pizza.html#.sequenceId">module:pizza.sequenceId</a></dd>
+                <dd><a href="module-pizza.html#.userId">module:pizza.userId</a></dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
               <h3 id=".open"><span class="symbol-name">open</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> <a href="module-Browser.html">module:Browser</a></span></span></h3>
@@ -570,7 +621,8 @@ pizza.sleep(1000);</code></pre>
               <dl class="dl-compact">
                 <dt>See also</dt>
                 <dd><a href="module-pizza.html#.waitFor">module:pizza.waitFor</a></dd>
-                <dd><a href="module-Browser.html#waitForVisible">module:Browser#waitForVisible</a></dd>
+                <dd><a href="module-Browser.html#waitVisible">module:Browser#waitVisible</a></dd>
+                <dd><a href="module-Browser.html#waitText">module:Browser#waitText</a></dd>
                 <dd><a href="module-Browser.html#waitForHttpRequests">module:Browser#waitForHttpRequests</a></dd>
               </dl>
               <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
@@ -648,7 +700,7 @@ pizza.waitFor(function() {
   <footer id="jsdoc-footer" class="jsdoc-footer">
     <div id="jsdoc-footer-container">
       <p>
-        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 16, 2020.
+        Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 27, 2020.
       </p>
     </div>
   </footer>

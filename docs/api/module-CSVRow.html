@@ -4,7 +4,7 @@
 <head>
   <meta name="generator" content="JSDoc 3.6.4">
   <meta charset="utf-8">
-  <title>PizzaScript | console</title>
+  <title>PizzaScript | CSVRow</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700|Karla:400,400i,700,700i|Noto+Serif:400,400i,700,700i&display=swap&subset=latin-ext">
   <link rel="stylesheet" href="css/baseline.css">
 </head>
@@ -22,28 +22,32 @@
       <div id="jsdoc-content-container">
         <div id="jsdoc-main" role="main">
           <header class="page-header">
-            <h1><small></small><span class="symbol-name">console</span></h1>
-            <p class="source-link">Source: <a href="-_Users_watsonmw_loadtest_pizzascript_script-api_pizzascript.js.html#source-line-3082">/<wbr>Users/<wbr>watsonmw/<wbr>loadtest/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:3082</a></p>
+            <h1><small></small><span class="symbol-name">CSVRow</span></h1>
+            <p class="source-link">Source: <a href="-_Users_watsonmw_loadtest_pizzascript_script-api_pizzascript.js.html#source-line-3034">/<wbr>Users/<wbr>watsonmw/<wbr>loadtest/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:3034</a></p>
             <div class="symbol-description">
-              <p>Debug console for scripts.</p>
-              <p>Can be used to debug scripts. The debug output is displayed in the results page
-                for any scripts that are ran via the website. Also works in the script editor.</p>
+              <p>CSV row data</p>
+              <p>See <a href="module-pizza.html#.openCSV">module:pizza.openCSV</a></p>
             </div>
             <dl class="dl-compact">
             </dl>
           </header>
           <section id="summary">
             <div class="summary-callout">
-              <h2 class="summary-callout-heading">Method</h2>
+              <h2 class="summary-callout-heading">Methods</h2>
               <div class="summary-content">
                 <div class="summary-column">
                   <dl class="dl-summary-callout">
-                    <dt><a href="module-console.html#.log">log(.<wbr>.<wbr>.<wbr>o)</a></dt>
+                    <dt><a href="module-CSVRow.html#get">get(column)</a></dt>
                     <dd>
                     </dd>
                   </dl>
                 </div>
                 <div class="summary-column">
+                  <dl class="dl-summary-callout">
+                    <dt><a href="module-CSVRow.html#getNumColumns">getNumColumns()</a></dt>
+                    <dd>
+                    </dd>
+                  </dl>
                 </div>
                 <div class="summary-column">
                 </div>
@@ -51,35 +55,10 @@
             </div>
           </section>
           <section>
-            <h2>Method</h2>
+            <h2>Methods</h2>
             <section>
-              <div class="symbol-detail-labels"><span class="label label-static">static</span></div>
-              <h3 id=".log"><span class="symbol-name">log</span><span class="signature"><span class="signature-params">(...o)</span></span></h3>
-              <p>Logs the given parameters to the output.</p>
-              <p>Takes an optional URL or browser settings parameter. See the examples below.</p>
-              <section>
-                <h4>
-                  Examples
-                </h4>
-                <div>
-                  <pre class="prettyprint"><code>console.log(&quot;hello&quot;); // Displays: &#x27;hello&#x27;</code></pre>
-                </div>
-                <div>
-                  <pre class="prettyprint"><code>console.log(&quot;ello&quot;, &quot;ello&quot;); // Displays: &#x27;ello ello&#x27;</code></pre>
-                </div>
-                <div>
-                  <pre class="prettyprint"><code>var x &#x3D; 1;
-console.log(&quot;x:&quot;, x); // Displays: &#x27;x: 1&#x27;</code></pre>
-                </div>
-                <div>
-                  <pre class="prettyprint"><code>var x &#x3D; 1;
-var y &#x3D; 2;
-console.log(&quot;x:&quot;, x, &quot; y: &quot;, y); // Displays: &#x27;x: 1 y: 2&#x27;</code></pre>
-                </div>
-                <div>
-                  <pre class="prettyprint"><code>console.log({ a: &#x27;b&#x27;}); // Displays: &#x27;{a: &quot;b&quot;}&#x27;</code></pre>
-                </div>
-              </section>
+              <h3 id="get"><span class="symbol-name">get</span><span class="signature"><span class="signature-params">(column)</span>&nbsp;&rarr; <span class="signature-returns"> String</span></span></h3>
+              <p>Get the value of the given column.</p>
               <section>
                 <h4>Parameter</h4>
                 <table class="jsdoc-details-table">
@@ -94,23 +73,35 @@ console.log(&quot;x:&quot;, x, &quot; y: &quot;, y); // Displays: &#x27;x: 1 y: 
                   <tbody>
                     <tr>
                       <td>
-                        <p>o</p>
+                        <p>column</p>
                       </td>
                       <td>
-                        <p>Object</p>
+                        <p>(Number or String)</p>
                       </td>
                       <td>
                         <p>&nbsp;</p>
                       </td>
                       <td>
-                        <p>The objects to print</p>
-                        <p>Value can be repeated.</p>
+                        <p>The row to retrieve, if a number the column index, if a string
+                          a column name.</p>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </section>
               <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>String</code> </p>
+                </dd>
+              </dl>
+              <h3 id="getNumColumns"><span class="symbol-name">getNumColumns</span><span class="signature"><span class="signature-params">()</span>&nbsp;&rarr; <span class="signature-returns"> Number</span></span></h3>
+              <p>Return the number of columns for this row.</p>
+              <dl class="dl-compact">
+                <dt>Returns</dt>
+                <dd>
+                  <p><code>Number</code> </p>
+                </dd>
               </dl>
             </section>
           </section>

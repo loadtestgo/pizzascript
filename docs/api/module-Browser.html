@@ -21,96 +21,36 @@
                                 <div id="jsdoc-content-container">
                                         <div id="jsdoc-main" role="main">
                     <header class="page-header">
-<h1><small></small><span class="symbol-name">Browser</span></h1>        <p class="source-link">Source: <a href="-_Users_watsonmw_pizzascript_script-api_pizzascript.js.html#source-line-524">/<wbr>Users/<wbr>watsonmw/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:524</a></p>
+<h1><small></small><span class="symbol-name">Browser</span></h1>        <p class="source-link">Source: <a href="-_Users_watsonmw_loadtest_pizzascript_script-api_pizzascript.js.html#source-line-575">/<wbr>Users/<wbr>watsonmw/<wbr>loadtest/<wbr>pizzascript/<wbr>script-api/<wbr>pizzascript.<wbr>js:575</a></p>
                 <div class="symbol-description">
                         <p>Browser Automation</p>
 <h3>Element Selectors</h3>
 <p>Many functions here take selector strings to identify elements.  These selectors
 are just like CSS selectors but with a few minor additions to make them more
 convenient for website automation.</p>
-<p>Additions to CSS selectors:</p>
+<p>Common selectors:</p>
 <ul>
 <li>
-<p>contains()</p>
-<p>Select only elements containing the given text.  This can be at the end of a selector
-or in the middle.  The selection is case sensitive.</p>
-<p>Select the set of links containing 'Search':</p>
-<pre><code>a:contains(Search)
-</code></pre>
+<p>By id</p>
+<p>#thisIsTheId</p>
 </li>
 <li>
-<p>icontains()</p>
-<p>Case insensitive version of :contains().</p>
-<p>Select the set of links containing 'Search' or 'search' or 'SEARCH':</p>
-<pre><code>a:icontains(Search)
-</code></pre>
+<p>By class</p>
+<p>.class1.class2.class3</p>
 </li>
 <li>
-<p>nth()/eq()</p>
-<p>Select the elements at the given index.  This can be at the end of a selector or
-in the middle.</p>
-<p>Select the 3rd 'a' element:</p>
-<pre><code>a:nth(2)
-a:eq(2)
-</code></pre>
-<p>From the set of links containing 'Search', select the 3rd one.</p>
-<pre><code>a:contains(Search):nth(2)
-a:contains(Search):eq(2)
-</code></pre>
-<p>From the set of 'a' element, select the 3rd one if it contains the string 'Search'.</p>
-<pre><code>a:nth(2):contains(Search)
-a:eq(2):contains(Search)
-</code></pre>
+<p>By tag</p>
+<p>button</p>
 </li>
 <li>
-<p>Numeric ids are allowed</p>
-<p>E.g.
-#0</p>
-<p>or:
-#0_0_0</p>
+<p>By tag &amp; class</p>
+<p>button.class1.class2</p>
 </li>
 <li>
-<p>XPath</p>
-<p>Selectors starting with 'xpath:' or just '//' will do XPath matching instead of CSS selector
-matching.  Here are some examples&quot;</p>
-<p>Any div element in the document:</p>
-<pre><code>//div
-xpath://div
-</code></pre>
-<p>Any div element containing a paragraph element:</p>
-<pre><code>//div/p
-xpath://div/p
-</code></pre>
-<p>The div element with the id 'div1':</p>
-<pre><code>//div[@id=\\'div1\\']
-xpath://div[@id=\\'div1\\']
-</code></pre>
-<p>A div element with the class 'class1':</p>
-<pre><code>//div[@class=\\'class1\\']
-xpath://div[@class=\\'class1\\']
-</code></pre>
-<p>Any button with the text 'Button1':</p>
-<pre><code>//button[text()=\\'Button1\\']
-xpath://button[text()=\\'Button1\\']
-</code></pre>
+<p>By hierarchy</p>
+<p>div.class1 span.class2 button.class2</p>
 </li>
 </ul>
-<h3>Frames, Tabs and Window selections</h3>
-<p>Frames can be queried and selected.  By default only elements within the top frame
-are scoped for access.  To interact with elements in a sub frame, select the right
-frame using <a href="module-Browser.html#selectFrame">module:Browser#selectFrame</a>.</p>
-<p>The concept of windows does not exists, instead all tabs for all windows are listed.
-We might break this out in future but for our purposes it doesn't matter if a tab
-is really a new window or not.</p>
-<h3>Note</h3>
-<p>It's also important to be aware that while your script is executing the browser is
-going about its business: loading the page, executing JavaScript, building the DOM,
-animating elements, etc.  As such elements can appear/disappear, become visible/
-invisible potentially even after the page has loaded.  Any script you write will
-have to keep this in mind.  For example it is possible to wait for an element to be
-visible in the DOM, but then when you try to click on the element it is gone again.
-In those cases you may need to wait in a loop, catch click failures and try again.
-We may add some kind of automatic wait for the item to be visible in future.</p>
 
                 </div>
             
@@ -231,14 +171,14 @@ We may add some kind of automatic wait for the item to be visible in future.</p>
                 <dt><a href="module-Browser.html#getOuterHTML">getOuterHTML([selector])</a></dt>
                 <dd>
                 </dd>
+                <dt><a href="module-Browser.html#getResponseBody">getResponseBody([httpRequest])</a></dt>
+                <dd>
+                </dd>
         </dl>
 </div>
 
                     <div class="summary-column">
         <dl class="dl-summary-callout">
-                <dt><a href="module-Browser.html#getResponseBody">getResponseBody([httpRequest])</a></dt>
-                <dd>
-                </dd>
                 <dt><a href="module-Browser.html#getTitle">getTitle()</a></dt>
                 <dd>
                 </dd>
@@ -329,17 +269,17 @@ We may add some kind of automatic wait for the item to be visible in future.</p>
                 <dt><a href="module-Browser.html#screenshot">screenshot([format][, quality])</a></dt>
                 <dd>
                 </dd>
-        </dl>
-</div>
-
-                    <div class="summary-column">
-        <dl class="dl-summary-callout">
                 <dt><a href="module-Browser.html#select">select(selector, value)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#selectContent">selectContent(selector)</a></dt>
                 <dd>
                 </dd>
+        </dl>
+</div>
+
+                    <div class="summary-column">
+        <dl class="dl-summary-callout">
                 <dt><a href="module-Browser.html#selectFrame">selectFrame(selector)</a></dt>
                 <dd>
                 </dd>
@@ -409,19 +349,28 @@ We may add some kind of automatic wait for the item to be visible in future.</p>
                 <dt><a href="module-Browser.html#verifyTitle">verifyTitle(title)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#waitForElement">waitForElement(selector)</a></dt>
+                <dt><a href="module-Browser.html#waitElement">waitElement(selector)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitElementText">waitElementText(selector, text)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#waitForHttpRequests">waitForHttpRequests(idleTimeMS)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#waitForText">waitForText(selector, text)</a></dt>
+                <dt><a href="module-Browser.html#waitNotText">waitNotText(text)</a></dt>
                 <dd>
                 </dd>
-                <dt><a href="module-Browser.html#waitForVisible">waitForVisible(selector)</a></dt>
+                <dt><a href="module-Browser.html#waitNotVisible">waitNotVisible(selector)</a></dt>
                 <dd>
                 </dd>
                 <dt><a href="module-Browser.html#waitPageLoad">waitPageLoad([timeoutMS])</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitText">waitText(text)</a></dt>
+                <dd>
+                </dd>
+                <dt><a href="module-Browser.html#waitVisible">waitVisible(selector)</a></dt>
                 <dd>
                 </dd>
         </dl>
@@ -1006,7 +955,7 @@ is an issue.</p>
         </h4>
                 <div>
     <pre class="prettyprint"><code>b.openAsync(&quot;www.mysite.com&quot;);
-b.waitForVisible(&quot;#button1&quot;);
+b.waitVisible(&quot;#button1&quot;);
 b.clearPageLoad();
 b.click(&quot;#button1&quot;);
 b.waitPageLoad();</code></pre>
@@ -2895,7 +2844,8 @@ window.prompt() dialog with the given text.</p>
     <dt>See also</dt>
         <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
         <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
-        <dd><a href="module-Browser.html#waitForText">module:Browser#waitForText</a></dd>
+        <dd><a href="module-Browser.html#waitText">module:Browser#waitText</a></dd>
+        <dd><a href="module-Browser.html#waitNotText">module:Browser#waitNotText</a></dd>
         <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
 
 
@@ -3084,7 +3034,7 @@ location, emulating all JavaScript events</p>
     <pre class="prettyprint"><code>// Hover over a drop down
 b.hover(&quot;#myDropDown&quot;);
 // Wait for a link to be displayed
-b.waitForVisible(&quot;#myMenuItem&quot;);
+b.waitVisible(&quot;#myMenuItem&quot;);
 // Now click the link
 b.click(&quot;#myMenuItem&quot;);
 b.waitPageLoad();</code></pre>
@@ -3989,7 +3939,7 @@ main document.</p></dd>
                 <div>
     <pre class="prettyprint"><code>var b &#x3D; pizza.open();
 b.open(&quot;www.google.com&quot;);
-b.waitForVisible(&quot;input[name&#x3D;&#x27;q&#x27;]&quot;);</code></pre>
+b.waitVisible(&quot;input[name&#x3D;&#x27;q&#x27;]&quot;);</code></pre>
 </div>
 
     </section>
@@ -6369,7 +6319,7 @@ b.verifyNotExists(&#x27;#errorDiv&#x27;);</code></pre>
     <dt>See also</dt>
         <dd><a href="module-Browser.html#hasText">module:Browser#hasText</a></dd>
         <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
-        <dd><a href="module-Browser.html#waitForText">module:Browser#waitForText</a></dd>
+        <dd><a href="module-Browser.html#waitText">module:Browser#waitText</a></dd>
         <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
 
 
@@ -6630,7 +6580,7 @@ b.verifyTitle(/Goo+gle/);</code></pre>
 
         </dl>
 
-                <h3 id="waitForElement"><span class="symbol-name">waitForElement</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Wait for the given selector to be matched.</p>
+                <h3 id="waitElement"><span class="symbol-name">waitElement</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Wait for the given selector to be matched.</p>
 
             <section>
         <h4>
@@ -6638,7 +6588,7 @@ b.verifyTitle(/Goo+gle/);</code></pre>
         </h4>
                 <div>
     <pre class="prettyprint"><code>// Wait for an element to exist in the DOM
-b.waitForElement(&#x27;#divNew&#x27;);</code></pre>
+b.waitElement(&#x27;#divNew&#x27;);</code></pre>
 </div>
 
     </section>
@@ -6690,6 +6640,102 @@ b.waitForElement(&#x27;#divNew&#x27;);</code></pre>
 
 
 
+
+
+
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="waitElementText"><span class="symbol-name">waitElementText</span><span class="signature"><span class="signature-params">(selector, text)</span></span></h3>            <p>Wait for the element matching the given selector to contain the
+given text.</p>
+<p>The element does not need to exist at the time you called this
+function.</p>
+<p>NOTE: Since a selector is specified, this only applies to the
+currently selected frame.</p>
+
+            <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.waitElementText(&quot;#consoleLog&quot;, &quot;DISCONNECTED&quot;);</code></pre>
+</div>
+
+    </section>
+
+            <section>
+        <h4>Parameters</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the element to wait for</p>
+        </td>
+</tr>
+
+                <tr>
+        <td>
+            <p>text</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the text to wait for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+        
+
+        <dl class="dl-compact">
+            
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#waitText">module:Browser#waitText</a></dd>
+        <dd><a href="module-Browser.html#hasText">module:Browser#hasText</a></dd>
+        <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
+        <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
 
 
 
@@ -6781,25 +6827,20 @@ b.waitForHttpRequests(2000);</code></pre>
 
         </dl>
 
-                <h3 id="waitForText"><span class="symbol-name">waitForText</span><span class="signature"><span class="signature-params">(selector, text)</span></span></h3>            <p>Wait for the element matching the given selector to contain the
-given text.</p>
-<p>The element does not need to exist at the time you called this
-function.</p>
-<p>NOTE: Since a selector is specified, this only applies to the
-currently selected frame.</p>
+                <h3 id="waitNotText"><span class="symbol-name">waitNotText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>            <p>Wait for the current window / tab to not contain the given text.</p>
 
             <section>
         <h4>
             Example
         </h4>
                 <div>
-    <pre class="prettyprint"><code>b.waitForText(&quot;#consoleLog&quot;, &quot;DISCONNECTED&quot;);</code></pre>
+    <pre class="prettyprint"><code>b.waitNotText(&quot;Sign In&quot;);</code></pre>
 </div>
 
     </section>
 
             <section>
-        <h4>Parameters</h4>
+        <h4>Parameter</h4>
             <table class="jsdoc-details-table">
         <thead>
             <tr>
@@ -6812,21 +6853,6 @@ currently selected frame.</p>
         <tbody>
                 <tr>
         <td>
-            <p>selector</p>
-        </td>
-        <td>
-                <p>String</p>
-        </td>
-        <td>
-                <p>&nbsp;</p>
-        </td>
-        <td>
-                <p>the element to wait for</p>
-        </td>
-</tr>
-
-                <tr>
-        <td>
             <p>text</p>
         </td>
         <td>
@@ -6836,7 +6862,7 @@ currently selected frame.</p>
                 <p>&nbsp;</p>
         </td>
         <td>
-                <p>the text to wait for</p>
+                <p>the text to not wait for</p>
         </td>
 </tr>
 
@@ -6861,10 +6887,11 @@ currently selected frame.</p>
 
 
     <dt>See also</dt>
-        <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
+        <dd><a href="module-Browser.html#waitText">module:Browser#waitText</a></dd>
         <dd><a href="module-Browser.html#hasText">module:Browser#hasText</a></dd>
         <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
         <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
+        <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
 
 
 
@@ -6877,15 +6904,17 @@ currently selected frame.</p>
 
         </dl>
 
-                <h3 id="waitForVisible"><span class="symbol-name">waitForVisible</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Wait for the given selector to match a visible item.</p>
+                <h3 id="waitNotVisible"><span class="symbol-name">waitNotVisible</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Wait for the given selector to either not be matched or matched but none of the resulting
+elements are visible.  Checks current frame only.</p>
+<p>NOTE: The element does not need to be visible to begin with.</p>
 
             <section>
         <h4>
             Example
         </h4>
                 <div>
-    <pre class="prettyprint"><code>// Wait for an element to be visible
-b.waitForVisible(&#x27;#button1&#x27;);</code></pre>
+    <pre class="prettyprint"><code>// The #errorDiv to be removed / hidden from DOM.
+b.waitNotVisible(&#x27;#errorDiv&#x27;);</code></pre>
 </div>
 
     </section>
@@ -6913,7 +6942,7 @@ b.waitForVisible(&#x27;#button1&#x27;);</code></pre>
                 <p>&nbsp;</p>
         </td>
         <td>
-                <p>The element(s) to wait for</p>
+                <p>The element(s) to wait for to be no longer visible</p>
         </td>
 </tr>
 
@@ -6937,6 +6966,10 @@ b.waitForVisible(&#x27;#button1&#x27;);</code></pre>
 
 
 
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#exists">module:Browser#exists</a></dd>
+        <dd><a href="module-Browser.html#isVisible">module:Browser#isVisible</a></dd>
+        <dd><a href="module-Browser.html#waitVisible">module:Browser#waitVisible</a></dd>
 
 
 
@@ -7036,6 +7069,160 @@ main document.</p></dd>
 
         </dl>
 
+                <h3 id="waitText"><span class="symbol-name">waitText</span><span class="signature"><span class="signature-params">(text)</span></span></h3>            <p>Wait for the current window / tab to contain the given text.</p>
+
+            <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>b.waitText(&quot;Sign Out&quot;);</code></pre>
+</div>
+
+    </section>
+
+            <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>text</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>the text to wait for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+        
+
+        <dl class="dl-compact">
+            
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#waitNotText">module:Browser#waitNotText</a></dd>
+        <dd><a href="module-Browser.html#hasText">module:Browser#hasText</a></dd>
+        <dd><a href="module-Browser.html#verifyText">module:Browser#verifyText</a></dd>
+        <dd><a href="module-Browser.html#verifyNotText">module:Browser#verifyNotText</a></dd>
+        <dd><a href="module-Browser.html#getInnerText">module:Browser#getInnerText</a></dd>
+
+
+
+
+
+
+
+
+
+
+        </dl>
+
+                <h3 id="waitVisible"><span class="symbol-name">waitVisible</span><span class="signature"><span class="signature-params">(selector)</span></span></h3>            <p>Wait for the given selector to be matched and at least one resulting element to be visible.</p>
+<p>Checks current frame only.</p>
+
+            <section>
+        <h4>
+            Example
+        </h4>
+                <div>
+    <pre class="prettyprint"><code>// Wait for an element to be visible
+b.waitVisible(&#x27;#button1&#x27;);</code></pre>
+</div>
+
+    </section>
+
+            <section>
+        <h4>Parameter</h4>
+            <table class="jsdoc-details-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Optional</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+        <td>
+            <p>selector</p>
+        </td>
+        <td>
+                <p>String</p>
+        </td>
+        <td>
+                <p>&nbsp;</p>
+        </td>
+        <td>
+                <p>The element(s) to wait for</p>
+        </td>
+</tr>
+
+        </tbody>
+</table>
+
+    </section>
+
+        
+
+        <dl class="dl-compact">
+            
+
+
+
+
+
+
+
+
+
+
+
+    <dt>See also</dt>
+        <dd><a href="module-Browser.html#exists">module:Browser#exists</a></dd>
+        <dd><a href="module-Browser.html#isVisible">module:Browser#isVisible</a></dd>
+        <dd><a href="module-Browser.html#waitNotVisible">module:Browser#waitNotVisible</a></dd>
+
+
+
+
+
+
+
+
+
+
+        </dl>
+
     </section>
 
 
@@ -7052,7 +7239,7 @@ main document.</p></dd>
                     <footer id="jsdoc-footer" class="jsdoc-footer">
                             <div id="jsdoc-footer-container">
                                     <p>
-                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 16, 2020.
+                                      Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> 3.6.4 on June 27, 2020.
                                     </p>
                             </div>
                     </footer>
