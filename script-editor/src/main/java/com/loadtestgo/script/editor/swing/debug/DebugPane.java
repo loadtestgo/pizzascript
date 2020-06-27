@@ -60,7 +60,7 @@ public class DebugPane extends JPanel implements ActionListener {
         localsTable.setPreferredSize(null);
         jsp = new JScrollPane(localsTable);
         tabs.add("Locals", jsp);
-        c.weightx  = c.weighty = 1;
+        c.weightx = c.weighty = 1;
         c.gridheight = GridBagConstraints.REMAINDER;
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.WEST;

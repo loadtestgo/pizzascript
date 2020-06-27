@@ -858,6 +858,10 @@ public class MainWindow extends JFrame implements DebuggerCallbacks, PageClickLi
             } finally {
                 r.close();
             }
+            // Rhino and REdit doesn't handle windows newlines correctly - so replace
+            // Also saving turns \n -> \r\n on windows, putting in evermore \r\n every time
+            // the file is saved.
+            source = source.replaceAll("\r\n", "\n");
             SourceFile sourceFile = codeModel.newFile(source, filePath);
             sourceFile.setNewFile(false);
             sourceFile.setIsModified(false);

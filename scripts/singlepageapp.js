@@ -8,7 +8,7 @@ b.newPage();
 b.type("input[name='q']", "hot pocket\n");
 
 // Click on the first link for hot pockets, turns out we are pretty hungry
-b.waitForVisible("a:icontains(hot pocket)");
+b.waitVisible("a:icontains(hot pocket)");
 
 b.newPage();
 b.click("a:icontains(hot pocket)");

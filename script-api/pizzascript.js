@@ -85,7 +85,8 @@ pizza.browser = function() {};
  * @param {Number} milliseconds time to wait
  *
  * @see module:pizza.waitFor
- * @see module:Browser#waitForVisible
+ * @see module:Browser#waitVisible
+ * @see module:Browser#waitText
  * @see module:Browser#waitForHttpRequests
  */
 pizza.sleep = function(milliseconds) {};
@@ -585,7 +586,7 @@ Browser.prototype.open = function(url) {};
  * @example
  * var b = pizza.open();
  * b.open("www.google.com");
- * b.waitForVisible("input[name='q']");
+ * b.waitVisible("input[name='q']");
  *
  * @param {String} url the url to open
  *
@@ -668,7 +669,7 @@ Browser.prototype.waitPageLoad = function(timeoutMS) {};
  *
  * @example
  * b.openAsync("www.mysite.com");
- * b.waitForVisible("#button1");
+ * b.waitVisible("#button1");
  * b.clearPageLoad();
  * b.click("#button1");
  * b.waitPageLoad();
@@ -745,17 +746,49 @@ Browser.prototype.verifyText = function(text) {};
  * currently selected frame.
  *
  * @example
- * b.waitForText("#consoleLog", "DISCONNECTED");
+ * b.waitElementText("#consoleLog", "DISCONNECTED");
  *
  * @param {String} selector the element to wait for
  * @param {String} text the text to wait for
  *
- * @see module:Browser#getInnerText
+ * @see module:Browser#waitText
  * @see module:Browser#hasText
  * @see module:Browser#verifyText
  * @see module:Browser#verifyNotText
  */
-Browser.prototype.waitForText = function(selector, text) {};
+Browser.prototype.waitElementText = function(selector, text) {};
+
+/**
+ * Wait for the current window / tab to contain the given text.
+ *
+ * @example
+ * b.waitText("Sign Out");
+ *
+ * @param {String} text the text to wait for
+ *
+ * @see module:Browser#waitNotText
+ * @see module:Browser#hasText
+ * @see module:Browser#verifyText
+ * @see module:Browser#verifyNotText
+ * @see module:Browser#getInnerText
+ */
+Browser.prototype.waitText = function(text) {};
+
+/**
+ * Wait for the current window / tab to not contain the given text.
+ *
+ * @example
+ * b.waitNotText("Sign In");
+ *
+ * @param {String} text the text to not wait for
+ *
+ * @see module:Browser#waitText
+ * @see module:Browser#hasText
+ * @see module:Browser#verifyText
+ * @see module:Browser#verifyNotText
+ * @see module:Browser#getInnerText
+ */
+Browser.prototype.waitNotText = function(text) {};
 
 /**
  * Verify that the text of the page does not contain the given string.
@@ -774,7 +807,7 @@ Browser.prototype.waitForText = function(selector, text) {};
  *
  * @see module:Browser#hasText
  * @see module:Browser#verifyText
- * @see module:Browser#waitForText
+ * @see module:Browser#waitText
  * @see module:Browser#getInnerText
  */
 Browser.prototype.verifyNotText = function(text) {};
@@ -792,7 +825,8 @@ Browser.prototype.verifyNotText = function(text) {};
  *
  * @see module:Browser#verifyText
  * @see module:Browser#verifyNotText
- * @see module:Browser#waitForText
+ * @see module:Browser#waitText
+ * @see module:Browser#waitNotText
  * @see module:Browser#getInnerText
  */
 Browser.prototype.hasText = function(text) {};
@@ -1335,7 +1369,7 @@ Browser.prototype.hover = function(selector) {};
  * // Hover over a drop down
  * b.hover("#myDropDown");
  * // Wait for a link to be displayed
- * b.waitForVisible("#myMenuItem");
+ * b.waitVisible("#myMenuItem");
  * // Now click the link
  * b.click("#myMenuItem");
  * b.waitPageLoad();
@@ -1695,22 +1729,22 @@ Browser.prototype.queryVisible = function(selector) {};
  *
  * @example
  * // Wait for an element to exist in the DOM
- * b.waitForElement('#divNew');
+ * b.waitElement('#divNew');
  *
  * @param {String} selector The element(s) to wait for
  */
-Browser.prototype.waitForElement = function(selector) {};
+Browser.prototype.waitElement = function(selector) {};
 
 /**
  * Wait for the given selector to match a visible item.
  *
  * @example
  * // Wait for an element to be visible
- * b.waitForVisible('#button1');
+ * b.waitVisible('#button1');
  *
  * @param {String} selector The element(s) to wait for
  */
-Browser.prototype.waitForVisible = function(selector) {};
+Browser.prototype.waitVisible = function(selector) {};
 
 /**
  * Highlight the first element matching the selector

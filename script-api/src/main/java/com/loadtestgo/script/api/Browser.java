@@ -274,6 +274,26 @@ public interface Browser {
     boolean hasText(NativeRegExp regexp);
 
     /**
+     * Wait for the current window / tab to contain the given text.
+     */
+    void waitText(String text);
+
+    /**
+     * Wait for the current window / tab to contain the given text.
+     */
+    void waitText(NativeRegExp regexp);
+
+    /**
+     * Wait for the current window / tab to not contain the given text.
+     */
+    void waitNotText(String text);
+
+    /**
+     * Wait for the current window / tab to not contain the given text.
+     */
+    void waitNotText(NativeRegExp regexp);
+
+    /**
      * Return the page title.
      */
     String getTitle();
@@ -798,14 +818,14 @@ public interface Browser {
      *
      * @param selector the element(s) to wait for
      */
-    void waitForElement(String selector);
+    void waitElement(String selector);
 
     /**
      * Wait for the given selector to be matched.
      *
      * @param selector the element(s) to wait for
      */
-    void waitForVisible(String selector);
+    void waitVisible(String selector);
 
     /**
      * Wait for the element matching the given selector to contain the
@@ -814,7 +834,7 @@ public interface Browser {
      * @param selector the element(s) to wait for
      * @param text     the text to wait for
      */
-    void waitForText(String selector, String text);
+    void waitElementText(String selector, String text);
 
     /**
      * Highlight the first element matching the selector

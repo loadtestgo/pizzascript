@@ -18,7 +18,7 @@ public class HoverTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.hover('#menu1');\n" +
-            "b.waitForVisible('#menu1drop');\n" +
+            "b.waitVisible('#menu1drop');\n" +
             "b.click('a:contains(Item1)');\n" +
             "b.waitPageLoad();",
             getTestUrl("files/navMenu.html"));

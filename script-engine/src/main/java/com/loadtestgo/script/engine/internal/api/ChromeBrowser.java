@@ -21,6 +21,7 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class ChromeBrowser implements Browser {
@@ -196,9 +197,7 @@ public class ChromeBrowser implements Browser {
     @Override
     public void ignoreHttpErrors(Integer... statusCodesToIgnore) {
         this.ignoreHttpErrorCodes = new ArrayList<>();
-        for (Integer i : statusCodesToIgnore) {
-            this.ignoreHttpErrorCodes.add(i);
-        }
+        Collections.addAll(this.ignoreHttpErrorCodes, statusCodesToIgnore);
     }
 
     @Override
@@ -352,6 +351,36 @@ public class ChromeBrowser implements Browser {
         params.put("regexp", text);
         JSONObject result = pizzaHandler.sendCommand("hasText", params);
         return getResponseBoolean(result);
+    }
+
+    @Override
+    public void waitText(String text) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("text", text);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitText", params));
+    }
+
+    @Override
+    public void waitText(NativeRegExp regexp) {
+        HashMap<String,Object> params = new HashMap<>();
+        String text = regexp.toString();
+        params.put("regexp", text);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitText", params));
+    }
+
+    @Override
+    public void waitNotText(String text) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("text", text);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitNotText", params));
+    }
+
+    @Override
+    public void waitNotText(NativeRegExp regexp) {
+        HashMap<String,Object> params = new HashMap<>();
+        String text = regexp.toString();
+        params.put("regexp", text);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitNotText", params));
     }
 
     @Override
@@ -915,25 +944,35 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public void waitForElement(String selector) {
+    public void waitElement(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
-        checkResponseForErrors(pizzaHandler.sendCommand("waitForElement", params));
+        checkResponseForErrors(pizzaHandler.sendCommand("waitElement", params));
+    }
+
+    @Deprecated
+    public void waitForElement(String selector) {
+        waitElement(selector);
     }
 
     @Override
-    public void waitForText(String selector, String text) {
+    public void waitElementText(String selector, String text) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
         params.put("text", text);
-        checkResponseForErrors(pizzaHandler.sendCommand("waitForText", params));
+        checkResponseForErrors(pizzaHandler.sendCommand("waitElementText", params));
     }
 
     @Override
-    public void waitForVisible(String selector) {
+    public void waitVisible(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
-        checkResponseForErrors(pizzaHandler.sendCommand("waitForVisible", params));
+        checkResponseForErrors(pizzaHandler.sendCommand("waitVisible", params));
+    }
+
+    @Deprecated
+    public void waitForVisible(String selector) {
+        waitVisible(selector);
     }
 
     @Override

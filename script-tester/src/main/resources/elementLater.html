@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Element added on the fly</title>
+    <title>Replace DOM after wait</title>
 </head>
 <body>
-<p>Element added when you click hello</p>
-<button id="reveal">Say Hello</button>
+<p>Click button to replace DOM</p>
+<button id="reveal">Switch DOM</button>
+<button id="revealAfterWait">Switch DOM in 2 seconds</button>
 <script>
     var b = document.getElementById("reveal");
     b.onclick = function() {
-        document.body.innerHTML = "<div id=\"divNew\">Hello</div>";
+        document.body.innerHTML = "<div id=\"divNew\">New Text</div>";
+    };
+    b = document.getElementById("revealAfterWait");
+    b.onclick = function() {
+        setTimeout(function() {
+            document.body.innerHTML = "<div id=\"divNew\">New Text After 2 Seconds</div>";
+        }, 2000);
     };
 </script>
 </body>

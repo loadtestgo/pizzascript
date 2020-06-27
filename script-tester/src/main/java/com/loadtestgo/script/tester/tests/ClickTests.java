@@ -106,7 +106,7 @@ public class ClickTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.click('#showDiv3');\n" +
-            "b.waitForVisible('#div3');\n" +
+            "b.waitVisible('#div3');\n" +
             "b.click('#hideThenShowDiv3');\n" +
             "b.click('#div3');\n",
             getTestUrl("files/clipFlip.html"));
@@ -115,5 +115,31 @@ public class ClickTests extends JavaScriptTest {
 
         assertNoError(result);
         assertEquals(1, result.getPages().size());
+    }
+
+    @Test
+    public void clickCheckboxesInSubFrames() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.listFrames();\n" +
+            "b.selectFrame('iframe[name=name_2]');\n" +
+            "assert.equal(b.checked('#checkbox1'), false);\n" +
+            "b.click('#checkbox1');\n" +
+            "assert.equal(b.checked('#checkbox1'), true);\n" +
+            "b.click('#checkbox1');\n" +
+            "assert.equal(b.checked('#checkbox1'), false);\n" +
+            "b.selectTopFrame();\n" +
+            "b.selectFrame('iframe[name=name_1]');\n" +
+            "assert.equal(b.checked('#checkbox1'), false);\n" +
+            "b.click('#checkbox1');\n" +
+            "assert.equal(b.checked('#checkbox1'), true);\n" +
+            "b.click('#checkbox1');\n" +
+            "assert.equal(b.checked('#checkbox1'), false);\n",
+            getTestUrl("files/frames/forms.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+        assertNoError(result);
     }
 }

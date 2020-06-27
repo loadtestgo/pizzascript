@@ -6,12 +6,12 @@ b.click("a:contains(CRAFT PIZZA)");
 
 // Wait for the pizza size menu to be displayed, then click the size we want
 css = "h4:contains(Large San Diego Craft Pizza)";
-b.waitForVisible(css);
+b.waitVisible(css);
 b.click(css);
 
 // Add the toppings, once the topping are displayed
 css = "label:contains(Mushroom)";
-b.waitForVisible(css);
+b.waitVisible(css);
 b.click(css);
 
 // Add the rest of the toppings

@@ -7,17 +7,22 @@
 //
 // Provides functions to querying frames in the current DOM.
 //
+// After the top level document (which itself is a frame), each sub frame has two node ids.
+//
 // Uses Devtools DOM.* APIs
 //
 pizza.main.frametracker = function() {
-    var _nodeIdToFrameId = [];
-    var _frameIdToContentNodeId = [];
-    var _frames = [];
+    // Chrome Extension Frame ID to top level document node id for current page
+    var _frameIdToContentNodeId = {};
+    // Node ID of frame (in context of parent document) to frame details
+    var _nodeIdToFrame = {};
+    // Node ID of frame (in context of parent document) to Chrome Extension Frame Id
+    var _nodeIdToFrameId = {};
     var _rootNodeId = null;
     var _tabId = null;
 
     var _documentUpdated = function(params) {
-        _nodeIdToFrameId = [];
+        _nodeIdToFrameId = {};
         _rootNodeId = null;
     };
 
@@ -30,7 +35,7 @@ pizza.main.frametracker = function() {
     var _processNode = function(node) {
         if (node.frameId && node.nodeId) {
             _nodeIdToFrameId[node.nodeId] = node.frameId;
-            _frames[node.nodeId] = node;
+            _nodeIdToFrame[node.nodeId] = node;
             _frameIdToContentNodeId[node.frameId] = node.contentDocument.nodeId;
         }
 
@@ -107,13 +112,13 @@ pizza.main.frametracker = function() {
                 _sendCommand('DOM.requestNode', { objectId: response.object.objectId }, function(response) {
                     var frameId = _nodeIdToFrameId[nodeId];
                     if (frameId) {
-                        var r = _frames[nodeId];
+                        var r = _nodeIdToFrame[nodeId];
                         var value = {
                             type: r.localName,
                             frameId: r.frameId
                         };
                         _copyAttributes(value,
-                            ["id", "name", "src", "width", "height", "style"],
+                            ["id", "name", "src", "width", "height", "style", "title"],
                             r.attributes);
                         callback({ value: value });
                     } else {
@@ -148,6 +153,18 @@ pizza.main.frametracker = function() {
             }
             callback(response);
         });
+    };
+
+    var _resolveFrame = function(frameId, callback) {
+        var foundNodeId = null;
+        for (var nodeId in _nodeIdToFrameId) {
+            if (_nodeIdToFrameId[nodeId] === frameId) {
+                console.log("matched", nodeId, frameId);
+                foundNodeId = nodeId;
+                break;
+            }
+        }
+        _sendCommand('DOM.resolveNode', { nodeId: parseInt(foundNodeId) }, callback);
     };
 
     var _listFramesForNode = function(selector, nodeId, callback) {
@@ -402,6 +419,7 @@ pizza.main.frametracker = function() {
         highlight: _highlight,
         clearHighlight: _clearHighlight,
         setFileInputFiles: _setFileInputFiles,
+        resolveFrame: _resolveFrame,
         setTab: _setTab
     };
 };

@@ -4,4 +4,4 @@ var b = pizza.open();
 b.openAsync("www.yelp.com");
 
 // Wait for a element matching the CSS selector '#find_desc' (a button with id 'find_desc')
-b.waitForVisible("#find_desc");
+b.waitVisible("#find_desc");

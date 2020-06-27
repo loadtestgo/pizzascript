@@ -216,25 +216,65 @@ pizza.main.commands = function() {
         });
     };
 
-    var _hasText = function(id, params) {
-        var searchRegexp = null;
-        if (params.text) {
-            searchRegexp = new RegExp(pizza.regexEscape(params.text), 'i');
-        } else {
-            searchRegexp = pizza.regexFromString(params.regexp);
+    function getParamPollTime(params) {
+        var pollTime = 200;
+        if (params.poll) {
+            pollTime = params.poll;
         }
+        return pollTime;
+    }
+
+    function getParamTextAsRegex(params) {
+        if (params.text) {
+            return new RegExp(pizza.regexEscape(params.text), 'i');
+        } else {
+            return pizza.regexFromString(params.regexp);
+        }
+    }
+
+    var _hasText = function(id, params) {
+        var searchRegexp = getParamTextAsRegex(params);
         _hasTextInternal(searchRegexp, function(found) {
             sendResponse(id, { value: found });
         });
     };
 
+    var _waitText = function(id, params) {
+        var searchRegexp = getParamTextAsRegex(params);
+        var pollTime = getParamPollTime(params);
+
+        var check = function() {
+            _hasTextInternal(searchRegexp, function(found) {
+                if (found) {
+                    sendResponse(id, { value: found });
+                } else {
+                    setTimeout(check, pollTime);
+                }
+            });
+        };
+
+        check();
+    };
+
+    var _waitNotText = function(id, params) {
+        var searchRegexp = getParamTextAsRegex(params);
+        var pollTime = getParamPollTime(params);
+
+        var check = function() {
+            _hasTextInternal(searchRegexp, function(found) {
+                if (found) {
+                    setTimeout(check, pollTime);
+                } else {
+                    sendResponse(id, { value: found });
+                }
+            });
+        };
+
+        check();
+    };
+
     var _verifyTitle = function(id, params) {
-        var searchRegexp = null;
-        if (params.text) {
-            searchRegexp = new RegExp(pizza.regexEscape(params.text), 'i');
-        } else {
-            searchRegexp = pizza.regexFromString(params.regexp);
-        }
+        var searchRegexp = getParamTextAsRegex(params);
         chrome.tabs.get(_currentTabId, function(tab) {
             var found = tab.title.search(searchRegexp) !== -1;
             sendResponse(id, { value: found });
@@ -1018,6 +1058,10 @@ pizza.main.commands = function() {
         });
     };
 
+    // Inject our automation API helpers into the current context if it hasn't been
+    // already.  Once in the context these functions can be called over and over again
+    // without needing re-inject every time.  They also can maintain some state between
+    // calls, but generally we don't use this.
     function injectAutomationAPI(callback) {
         if (_automationAPI) {
             callback(_automationAPI);
@@ -1140,13 +1184,13 @@ pizza.main.commands = function() {
             args.push(arg);
         }
 
-        // chrome.debugger.sendCommand() takes a context id for the webpage currently loaded,
-        // a new webpage can be loaded while this command is waiting to be run, forcing a
-        // unload of the previous page, so sendCommand() will fail with the following error:
+        // chrome.debugger.sendCommand() takes a context id for the webpage currently loaded, a new webpage
+        // can be loaded while this command is waiting to be run, forcing a unload of the previous page,
+        // so sendCommand() will fail with the following error:
         //      "{code:-32000,message:'Cannot find context with specified id'}
-        // We detect this but looking for the above message and then checking the context ids
-        // this allows us to retry in only this case.  There should be no side effects of this
-        // as the command doesn't get to run first time.
+        // We detect this by looking for this message and then checking the context ids; this allows us to
+        // retry in only this case.  There should be no side effects of this as the command doesn't get to
+        // run first time.
         var sendCommand = function(response) {
             if (response && response.error) {
                 errorCallback(response.error);
@@ -1198,15 +1242,20 @@ pizza.main.commands = function() {
         if (params.retry && !params.retryWaitTime) {
             params.retryWaitTime = 500;
         }
-        var check = function(params) {
+
+        var retryFunc = null;
+
+        var applyElementGetRegion = function(params, offsets) {
             executeAutomationAPI(
-                applyElementFunction,
-            function (error) {
+                function(response) {
+                    applyElementFunction(response, offsets);
+                },
+                function (error) {
                     if (error.type) {
                         if (error.type === 'HiddenByElement' || error.type === 'EmptyBoundingBox') {
                             if (params.retry) {
                                 params.retry--;
-                                setTimeout(check, params.retryWaitTime, params);
+                                setTimeout(retryFunc, params.retryWaitTime, params);
                                 return;
                             }
                         }
@@ -1218,9 +1267,89 @@ pizza.main.commands = function() {
                 true,
                 "function(selector) { return this.moveElementOnScreenAndGetRegion(selector); }",
                 params.selector);
+        };
+
+        if (_currentFrameId) {
+            retryFunc = function(params) {
+                var frameSearchId = _currentFrameId;
+                pizza.devtools.sendCommand('Page.getFrameTree', {},
+                    function (response) {
+                        var frameStack = [];
+                        var buildFramePath = function(tree) {
+                            var j = 0;
+                            if (tree.frame.id === frameSearchId) {
+                                frameStack.push(tree.frame.id);
+                                return true;
+                            }
+                            if (tree.childFrames) {
+                                frameStack.push(tree.frame.id);
+                                for (var j = 0; j < tree.childFrames.length; ++j) {
+                                    var frame = tree.childFrames[j];
+                                    if (buildFramePath(frame)) {
+                                        return true;
+                                    }
+                                }
+                                frameStack.pop();
+                            }
+                            return false;
+                        };
+
+                        if (!buildFramePath(response.frameTree)) {
+                            throw "unable to find parent frame";
+                        }
+
+                        var boundingBoxes = {};
+                        var parentFrameId = frameStack[0];
+
+                        var wait = pizza.waitAll();
+
+                        var script = "" + function() {
+                            var rect = this.getBoundingClientRect();
+                            return { 'x': rect.x, 'y': rect.y, 'height': rect.height, 'width': rect.width };
+                        };
+
+                        for (var i = 1; i < frameStack.length; ++i) {
+                            var contextId = pizza.contexttracker.getContextIdForFrame(_currentTabId, parentFrameId);
+                            var frameId = frameStack[i];
+                            pizza.frametracker.resolveFrame(frameId, wait.add(function(frameObjectId) {
+                                pizza.devtools.sendCommand('Runtime.callFunctionOn',
+                                    { 'objectId': frameObjectId.object.objectId,
+                                      'functionDeclaration': script,
+                                      'arguments': [],
+                                      'returnByValue': true },
+                                    wait.add(function(response) {
+                                        if (response.result) {
+                                            boundingBoxes[frameId] = response.result.value;
+                                        } else {
+                                            console.log("Error get frame offsets", JSON.stringify(response));
+                                        }
+                                    })
+                                );
+                            }));
+                            parentFrameId = frameStack[i];
+                        }
+
+                        wait.done(function() {
+                            var frameX = 0;
+                            var frameY = 0;
+                            for (var i = 1; i < frameStack.length; ++i) {
+                                var frameId = frameStack[i];
+                                var r = boundingBoxes[frameId];
+                                frameX += r.x;
+                                frameY += r.y;
+                            }
+                            applyElementGetRegion(params, {'x': frameX, 'y': frameY });
+                        });
+                    }
+                );
+            };
+        } else {
+            retryFunc = function(params) {
+                applyElementGetRegion(params, {'x': 0, 'y': 0 });
+            };
         }
 
-        check(params);
+        retryFunc(params);
     }
 
     var isRegionVisible = function(region) {
@@ -1245,9 +1374,9 @@ pizza.main.commands = function() {
         return width !== 0 && height !== 0;
     }
 
-    var calcElementPosition = function(region, params, zoomFactor) {
-        var left = region.left * zoomFactor;
-        var top = region.top * zoomFactor;
+    var calcElementPosition = function(region, params, zoomFactor, frameOffset) {
+        var left = (region.left + frameOffset.x) * zoomFactor;
+        var top = (region.top + frameOffset.y) * zoomFactor;
         var height = region.height * zoomFactor;
         var width = region.width * zoomFactor;
         if (left < 0) {
@@ -1279,13 +1408,13 @@ pizza.main.commands = function() {
     };
 
     var _click = function(id, params) {
-        applyElementRegionWithRetry(id, params, function(response) {
+        applyElementRegionWithRetry(id, params, function(response, frameOffset) {
             var region = response.result.value;
             if (!isRegionVisible(region)) {
                 sendResponse(id, {error: "Unable to click element at " + JSON.stringify(region)});
             } else {
                 chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
-                    var pos = calcElementPosition(region, params, zoomFactor);
+                    var pos = calcElementPosition(region, params, zoomFactor, frameOffset);
                     console.log("clicking", pos, region);
                     pizza.input.click(pos.x, pos.y, function () {
                         sendResponse(id, {value: { x: pos.x, y: pos.y }});
@@ -1296,13 +1425,13 @@ pizza.main.commands = function() {
     };
 
     var _hover = function(id, params) {
-        applyElementRegionWithRetry(id, params, function(response) {
+        applyElementRegionWithRetry(id, params, function(response, frameOffset) {
             var region = response.result.value;
             if (!isRegionVisible(region)) {
                 sendResponse(id, {error: "Unable to move mouse to element at " + JSON.stringify(region)});
             } else {
                 chrome.tabs.getZoom(_currentTabId, function(zoomFactor) {
-                    var pos = calcElementPosition(region, params, zoomFactor);
+                    var pos = calcElementPosition(region, params, zoomFactor, frameOffset);
                     pizza.input.mouseMove(pos.x, pos.y, function () {
                         sendResponse(id, {value: {}});
                     });
@@ -1322,7 +1451,6 @@ pizza.main.commands = function() {
             "function(selector) { return this.focus(selector); }",
             params.selector);
     };
-
 
     var _type = function(id, params) {
         // Focus the element using injected JS, then type using the
@@ -1623,17 +1751,17 @@ pizza.main.commands = function() {
         );
     };
 
-    var _waitForElement = function(id, params) {
+    var _waitElement = function(id, params) {
         var pollTime = 200;
         if (params.poll) {
             pollTime = params.poll;
         }
 
-        var check = function(selector) {
+        var check = function() {
             executeAutomationAPI(
                 function (response) {
                     if (response.result.value) {
-                        sendResponse(id, { });
+                        sendResponse(id, {});
                     } else {
                         setTimeout(check, pollTime);
                     }
@@ -1650,7 +1778,7 @@ pizza.main.commands = function() {
         check();
     };
 
-    var _waitForText = function(id, params) {
+    var _waitElementText = function(id, params) {
         var textCheckScript = "" + function(selector, text) {
                 try {
                     var v = this.findElement(selector);
@@ -1714,7 +1842,7 @@ pizza.main.commands = function() {
         );
     };
 
-    var _waitForVisible = function(id, params) {
+    var _waitVisible = function(id, params) {
         var selector = params.selector;
 
         var pollTime = 500;
@@ -1872,8 +2000,8 @@ pizza.main.commands = function() {
         }
 
         var script = "" + function(selector) {
-                return this.findElement(selector).outerHTML;
-            };
+            return this.findElement(selector).outerHTML;
+        };
 
         executeAutomationAPI(
             function(response) { sendResponse(id, { value: response.result.value }); },
@@ -2267,7 +2395,9 @@ pizza.main.commands = function() {
 
     addCommand("hasText", _hasText);
     addCommand("getInnerText", _getInnerText);
-    addCommand("waitForText", _waitForText);
+    addCommand("waitText", _waitText);
+    addCommand("waitNotText", _waitNotText);
+    addCommand("waitElementText", _waitElementText);
 
     addCommand("verifyTitle", _verifyTitle);
     addCommand("getTitle", _getTitle);
@@ -2324,10 +2454,10 @@ pizza.main.commands = function() {
     addCommand("submit", _submit);
 
     addCommand("exists", _exists);
-    addCommand("waitForElement", _waitForElement);
-    addCommand("isVisible", _isVisible);
-    addCommand("waitForVisible", _waitForVisible);
     addCommand("query", _query);
+    addCommand("waitElement", _waitElement);
+    addCommand("isVisible", _isVisible);
+    addCommand("waitVisible", _waitVisible);
 
     addCommand("clearHighlight", _clearHighlight);
     addCommand("highlight", _highlight);
