@@ -156,6 +156,17 @@ public class Http {
         return urlDetails;
     }
 
+    static public String stripAnchor(String url) {
+        if (url == null) {
+            return null;
+        }
+        int lastHash = url.lastIndexOf('#');
+        if (lastHash == -1) {
+            return url;
+        }
+        return url.substring(0, lastHash);
+    }
+
     static private void parseRequestLine(String statusLine, Request request) {
         int firstSpace = statusLine.indexOf(" ");
         if (firstSpace > 0) {

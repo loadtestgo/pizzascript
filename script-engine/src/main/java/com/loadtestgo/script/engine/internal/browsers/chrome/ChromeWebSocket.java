@@ -187,6 +187,12 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 case "tabCreated":
                     tabCreated(details);
                     break;
+                case "tabRemoved":
+                    tabRemoved(details);
+                    break;
+                case "debuggerDetached":
+                    debuggerDetached(details);
+                    break;
                 case "Console.messagesCleared":
                     consoleMessagesCleared(details);
                     break;
@@ -214,6 +220,37 @@ public class ChromeWebSocket extends BrowserWebSocket {
             }
 
             return true;
+        }
+    }
+
+    private void debuggerDetached(JSONObject details) {
+        // Same as tabRemoved essentially
+    }
+
+    private void tabRemoved(JSONObject details) {
+        int tabId = -1;
+        if (details.has("tabId")) {
+            tabId = details.optInt("tabId");
+        }
+        if (tabId == -1) {
+            return;
+        }
+        // Tab is removed cancel all ongoing requests for that tab, we've no way of getting information
+        // about these requests - however once the tab is closed, the connections are also closed.
+        synchronized(testResult) {
+            List<String> requestsToRemove = new ArrayList<>();
+            for (Map.Entry<String, HttpRequest> requestEntry : ongoingRequests.entrySet()) {
+                HttpRequest request = requestEntry.getValue();
+                if (request.getTabId() == tabId) {
+                    request.setError("Cancelled");
+                    request.setState(HttpRequest.State.Complete);
+                    requestsToRemove.add(requestEntry.getKey());
+                }
+            }
+
+            for (String requestId : requestsToRemove) {
+                ongoingRequests.remove(requestId);
+            }
         }
     }
 
@@ -737,7 +774,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
         JSONObject deferredDetails = deferredRequestExtraInfo.get(request.requestId);
         if (deferredDetails != null) {
             setRequestHeaders(deferredDetails, request);
-            deferredDetails.remove(request.requestId);
+            deferredRequestExtraInfo.remove(request.requestId);
         }
 
         synchronized (testResult) {
@@ -1125,8 +1162,20 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
         HttpRequest request = getRequestForTab(requestInfo);
         if (request == null) {
-            Logger.error("networkResponseReceived event, but no request found: {}", responseObj.getString("url"));
-            return;
+            JSONObject deferredDetails = deferredRequestExtraInfo.get(requestInfo.requestId);
+            if (deferredDetails == null) {
+                Logger.error("networkResponseReceived event, but no request found: {}", responseObj.getString("url"));
+                return;
+            } else {
+                // We have a deferred request but no actual request, create one.
+                // This can happen when opening a new tab, and we miss the initial network request because
+                // it takes time to attach.  Ideally Chrome would queue these up and then send to us but that is not
+                // happening.
+                request = addNewRequestFromDefer(responseObj, requestInfo);
+                if (request == null) {
+                    return;
+                }
+            }
         }
 
         request.setResourceType(convertResourceType(details.getString("type")));
@@ -1139,6 +1188,41 @@ public class ChromeWebSocket extends BrowserWebSocket {
         }
     }
 
+    private HttpRequest addNewRequestFromDefer(JSONObject responseObj, RequestInfo requestInfo) {
+        HttpRequest request;
+        Page page = getPageForRequest(requestInfo);
+        if (page == null) {
+            Logger.error("Unable to find frame for process: {} tab: {} frame: {}",
+                    requestInfo.processId, requestInfo.tabId, requestInfo.frameId);
+            return null;
+        }
+
+        String url = responseObj.getString("url");
+        if (isInternalUrl(url)) {
+            addInternalRequestId(requestInfo);
+            return null;
+        }
+
+        request = new HttpRequest();
+        request.setTabId(requestInfo.tabId);
+        request.setFrameId(requestInfo.frameId);
+        request.setRequestId(requestInfo.requestId);
+
+        request.parseUrl(url);
+
+        request.setState(HttpRequest.State.Send);
+
+        setRequestHeaders(responseObj, request);
+
+        synchronized (testResult) {
+            page.addRequest(request);
+            ongoingRequests.put(requestInfo.getRequestId(), request);
+        }
+
+        deferredRequestExtraInfo.remove(request.requestId);
+        return request;
+    }
+
     private void networkResponseReceivedExtraInfo(JSONObject details) {
         RequestInfo requestInfo = getDevToolsRequestInfo(details);
         if (isInternalRequestId(requestInfo)) {
@@ -1147,12 +1231,14 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
         HttpRequest request = getRequestForTab(requestInfo);
         if (request == null) {
-            Logger.error("networkResponseReceivedExtraInfo event, but no request found: {}", details.getString("requestId"));
-            return;
-        }
-
-        if (details.has("headersText")) {
-            processHeadersText(request, details);
+            String requestId = details.getString("requestId");
+            if (!StringUtils.isEmpty(requestId)) {
+                deferredRequestExtraInfo.put(requestId, details);
+            }
+        } else {
+            if (details.has("headersText")) {
+                processHeadersText(request, details);
+            }
         }
 
         // Blocked cookies also available
@@ -1190,6 +1276,12 @@ public class ChromeWebSocket extends BrowserWebSocket {
         setRecvEnd(details, request);
         request.setState(HttpRequest.State.Complete);
         removeOngoingRequest(requestInfo);
+    }
+
+    private void removeOngoingRequest(String requestId) {
+        synchronized (testResult) {
+            ongoingRequests.remove(requestId);
+        }
     }
 
     private void removeOngoingRequest(RequestInfo requestInfo) {
@@ -1239,9 +1331,19 @@ public class ChromeWebSocket extends BrowserWebSocket {
             }
         }
 
+        // Handle case where browser blocks due to mixed content
+        if (details.has("blockedReason")) {
+            if (!errorSet) {
+                request.setError("Blocked: " + details.getString("blockedReason"));
+                errorSet = true;
+            }
+        }
+
         if (!errorSet) {
             request.setError("Unknown");
         }
+
+        removeOngoingRequest(requestInfo);
     }
 
     private static void setRecvEnd(JSONObject details, HttpRequest request) {
@@ -1277,7 +1379,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
         if (frameInfo.parentFrameId == -1) {
             Date navStartTime = convertToDateFromMillis(details.getDouble("timeStamp"));
 
-            Page page = getPageForFrame(frameInfo);
+            Page page = getPageForTab(frameInfo);
             // Check if we already processed the message.
             if (page != null) {
                 if (page.getTabId() == frameInfo.tabId &&
@@ -1300,10 +1402,10 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 // Not a top level frame, ignore
                 return;
             }
-            page = getPageForFrame(frameInfo);
+            page = getPageForTab(frameInfo);
             page = setupPageForNewNavigation(details, url, page, frameInfo);
         } else {
-            page = getPageForFrame(details);
+            page = getPageForTab(details);
             // ignore
             if (page == null) {
                 return;
@@ -1353,7 +1455,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void historyStateUpdated(JSONObject details) throws JSONException {
-        Page page = getPageForFrame(details);
+        Page page = getPageForTab(details);
         if (page == null) {
             return;
         }
@@ -1367,9 +1469,38 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
     private void navigationDOMContentLoaded(JSONObject details) throws JSONException {
         synchronized(testResult) {
-            Page page = getPageForFrame(details);
+            Page page = getPageForTab(details);
             if (page == null) {
                 return;
+            }
+
+            String url = details.getString("url");
+            if (StringUtils.isSet(url)) {
+                url = Http.stripAnchor(url);
+                // HTTP2 document requests are missing a load event - generate one here instead
+                for (Map.Entry<String,HttpRequest> requestEntry : ongoingRequests.entrySet()) {
+                    HttpRequest request = requestEntry.getValue();
+                    if ("h2".equalsIgnoreCase(request.getProtocol()) && url.equalsIgnoreCase(request.url)) {
+                        if (request.getResourceType().equals(ResourceType.Document)) {
+                            boolean isNavigate = false;
+                            for (HttpHeader header : request.getRequestHeaders()) {
+                                if (StringUtils.equalsIgnoreCase(header.name, "sec-fetch-mode")) {
+                                    if (StringUtils.equalsIgnoreCase(header.value, "navigate")) {
+                                        isNavigate = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (isNavigate) {
+                                Date date = convertToDateFromMillis(details.getDouble("timeStamp"));
+                                request.setRecvEnd((int) (date.getTime() - (request.getStartTime() - request.getWallTimeOffset())));
+                                request.setState(HttpRequest.State.Complete);
+                                removeOngoingRequest(requestEntry.getKey());
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             if (details.getInt("frameId") != page.getFrameId()) {
@@ -1413,11 +1544,12 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void navigationError(JSONObject details) throws JSONException {
-        Page page = getPageForFrame(details);
+        Page page = getPageForFrameAndProcess(details);
         if (page == null) {
             return;
         }
 
+        // If not the top level page frame discard
         if (details.getInt("frameId") != page.getFrameId()) {
             return;
         }
@@ -1564,7 +1696,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void navigationLoadTimes(JSONObject details) throws JSONException {
-        Page page = getPageForFrame(details);
+        Page page = getPageForTab(details);
         if (page == null) {
             return;
         }
@@ -1585,7 +1717,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void calculatedPageStats(JSONObject details) throws JSONException {
-        Page page = getPageForFrame(details);
+        Page page = getPageForTab(details);
         if (page == null) {
             return;
         }
@@ -1783,14 +1915,43 @@ public class ChromeWebSocket extends BrowserWebSocket {
         }
     }
 
-    private Page getPageForFrame(JSONObject details) throws JSONException {
+    private Page getPageForTab(JSONObject details) throws JSONException {
         synchronized(testResult) {
             FrameInfo frameInfo = getNavFrameInfo(details);
-            return getPageForFrame(frameInfo);
+            return getPageForTab(frameInfo);
         }
     }
 
-    private Page getPageForFrame(FrameInfo frameInfo) throws JSONException {
+    private Page getPageForFrameAndProcess(JSONObject details) throws JSONException {
+        synchronized(testResult) {
+            FrameInfo frameInfo = getNavFrameInfo(details);
+            return getPageForFrameAndProcess(frameInfo);
+        }
+    }
+
+    private Page getPageForFrameAndProcess(FrameInfo frameInfo) throws JSONException {
+        if (frameInfo.processId != -1) {
+            synchronized(testResult) {
+                for (int i = getPages().size() - 1; i >= 0; --i) {
+                    Page page = getPages().get(i);
+                    if (page.getTabId() == frameInfo.tabId && page.frameId == frameInfo.frameId && page.processId == frameInfo.processId) {
+                        return page;
+                    }
+                }
+                return null;
+            }
+        } else {
+            for (int i = getPages().size() - 1; i >= 0; --i) {
+                Page page = getPages().get(i);
+                if (page.getTabId() == frameInfo.tabId && page.frameId == frameInfo.frameId) {
+                    return page;
+                }
+            }
+            return null;
+        }
+    }
+
+    private Page getPageForTab(FrameInfo frameInfo) throws JSONException {
         return getCurrentPageForTab(frameInfo.tabId);
     }
 

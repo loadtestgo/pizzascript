@@ -73,13 +73,12 @@ pizza.main.devtools = function() {
         }
     }
 
-    function detachFromTab(tabId) {
+    function detachedFromTab(tabId) {
         pizza.arrayDelete(_attachedTabs, tabId);
 
-        console.log("Detaching from tab: " + tabId);
+        console.log("Detached from tab: " + tabId);
 
-        var debugId = { tabId:tabId };
-        chrome.debugger.detach(debugId, onDetach.bind(null, debugId));
+        _ws.send(JSON.stringify({event: "tabRemoved", details: { tabId: tabId }}));
 
         if (_currentTab == tabId) {
             if (_attachedTabs.length > 0) {
@@ -93,9 +92,11 @@ pizza.main.devtools = function() {
     var onDetach = function(debugId) {
         if (chrome.runtime.lastError) {
             console.log(chrome.runtime.lastError.message);
+            _ws.send(JSON.stringify({event: "debuggerDetached", details: { tabId: debugId.tabId, error: chrome.runtime.lastError.message }}));
             return;
         }
         console.log("debugger detached: " + debugId.tabId);
+        _ws.send(JSON.stringify({event: "debuggerDetached", details: { tabId: debugId.tabId }}));
     };
 
     var _init = function(ws, wait) {
@@ -128,7 +129,7 @@ pizza.main.devtools = function() {
             if (_attachedTabs.indexOf(tab) < 0) {
                 return;
             }
-            detachFromTab(tab);
+            detachedFromTab(tab);
         });
 
         pizza.network.addListener("onBeforeNavigate", function(details) {

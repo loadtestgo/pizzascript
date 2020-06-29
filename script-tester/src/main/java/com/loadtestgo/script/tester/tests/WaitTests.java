@@ -52,13 +52,28 @@ public class WaitTests extends JavaScriptTest {
     }
 
     @Test
-    public void waitVisibleFail() {
+    public void waitVisibleTimeout() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "var v = b.query('#div6');\n" +
             "assert.eq(v.length, 1);\n" +
             "assert.eq(v[0].visible, false);\n" +
             "b.waitVisible('#div6');\n",
+            getTestUrl("files/findElements.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertEquals(1, result.getPages().size());
+        assertError("Script interrupted", ErrorType.Timeout, result);
+        assertTrue("Runtime greater than 3000ms", result.getRunTime() > 3000);
+    }
+
+    @Test
+    public void waitVisibleTimeoutNonExistingElement() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            // Non-existing element '#notAndElement'
+            "b.waitVisible('#notAndElement');\n",
             getTestUrl("files/findElements.html"));
 
         TestResult result = runScript(script, 3000);
@@ -84,9 +99,10 @@ public class WaitTests extends JavaScriptTest {
     }
 
     @Test
-    public void waitNotVisibleFail() {
+    public void waitNotVisibleTimeout() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
+            // Visible element '#revealAfterWait'
             "b.waitNotVisible('#revealAfterWait');\n",
             getTestUrl("files/elementLater.html"));
 
@@ -95,6 +111,20 @@ public class WaitTests extends JavaScriptTest {
         assertEquals(1, result.getPages().size());
         assertError("Script interrupted", ErrorType.Timeout, result);
         assertTrue("Runtime greater than 3000ms", result.getRunTime() > 3000);
+    }
+
+    @Test
+    public void waitNotVisibleNonExistingElement() {
+        String script = String.format(
+                "b = pizza.open(\"%s\");\n" +
+                // Non-existing element '#notAndElement'
+                "b.waitVisible('#notAndElement');\n",
+                getTestUrl("files/elementLater.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertNoError(result);
+        assertEquals(1, result.getPages().size());
     }
 
     @Test

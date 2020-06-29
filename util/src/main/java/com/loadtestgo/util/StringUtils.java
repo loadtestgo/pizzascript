@@ -257,4 +257,20 @@ public class StringUtils {
             return null;
         }
     }
+
+    public static boolean equalsIgnoreCase(String s1, String s2) {
+        if (StringUtils.isEmpty(s1) && StringUtils.isEmpty(s2)) {
+            return true;
+        }
+
+        if (s1 == null) {
+            return false;
+        }
+
+        if (s2 == null) {
+            return false;
+        }
+
+        return s1.equalsIgnoreCase(s2);
+    }
 }
