@@ -230,11 +230,12 @@ public class ChromeBrowser implements Browser {
             int processId = response.optInt("processId");
 
             TestResult testResult = testContext.getTestResult();
+            // Find and return the page matching this navigation
             synchronized (testResult) {
                 ArrayList<Page> pages = testContext.getTestResult().getPages();
                 for (int i = pages.size() - 1; i >= 0; --i) {
                     Page page = pages.get(i);
-                    if (page.getUrl().equals(navUrl) && page.getFrameId() == frameId &&
+                    if (page.getUrl() != null && page.getUrl().equals(navUrl) && page.getFrameId() == frameId &&
                         page.getTabId() == tabId && page.getProcessId() == processId) {
                         if (!ignoreHttpErrors) {
                             checkPageForInvalidHttpStatusCodes(page);
