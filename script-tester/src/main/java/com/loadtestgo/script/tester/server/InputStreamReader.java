@@ -43,7 +43,7 @@ public class InputStreamReader {
                 }
             }
 
-            stringBuilder.append(new String(buf, start, end - start, UTF_8))
+            stringBuilder.append(new String(buf, start, end - start, UTF_8));
             start = end;
 
             fill();
