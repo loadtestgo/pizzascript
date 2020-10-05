@@ -973,10 +973,16 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
         // Calc request headers len
         int size = getHeadersSize(headers);
-        size += request.getMethod().getBytes().length;
-        size += 1; // " "
-        size += request.getUrl().getBytes().length;
-        size += 11; // " HTTP/1.1\r\n"
+
+        // Guard against the method not being filled out - sometimes happens with Chrome 77
+        if (request.getMethod() != null) {
+            size += request.getMethod().getBytes().length;
+            size += 1; // " "
+            if (request.getUrl() != null) {
+                size += request.getUrl().getBytes().length;
+                size += 11; // " HTTP/1.1\r\n"
+            }
+        }
         request.setRequestHeadersSize(size);
     }
 

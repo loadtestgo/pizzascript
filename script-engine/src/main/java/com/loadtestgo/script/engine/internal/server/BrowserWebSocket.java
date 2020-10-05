@@ -149,7 +149,7 @@ public class BrowserWebSocket {
     }
 
     public synchronized void onError(Exception ex) {
-        Logger.warn(ex, "BrowserWebSocket socket error");
+        Logger.error(ex, "BrowserWebSocket socket error");
     }
 
     public boolean waitForConnection() throws InterruptedException {

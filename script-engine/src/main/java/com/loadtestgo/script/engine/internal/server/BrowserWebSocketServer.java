@@ -140,10 +140,10 @@ public class BrowserWebSocketServer extends WebSocketServer {
             BrowserWebSocket browserWebSocket = clientMap.get(conn);
             if (browserWebSocket != null) {
                 browserWebSocket.onError(ex);
+                return;
             }
-        } else {
-            Logger.error(ex, "WebSocket error");
         }
+        Logger.error(ex, "WebSocket error");
     }
 
     public void initHandler(int userId, BrowserWebSocket browserWebSocket) {
