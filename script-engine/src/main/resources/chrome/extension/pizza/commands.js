@@ -936,7 +936,7 @@ pizza.main.commands = function() {
             chrome.tabs.update(tabId, { active: true }, function(tab) {
                 _currentContextId = null;
                 _automationAPI = null;
-                pizza.devtools.setTab(tabId);
+                pizza.devtools.setTab(tabId, true);
                 sendResponse(id, { value: convertTab(tab) });
             });
         });
@@ -2154,13 +2154,13 @@ pizza.main.commands = function() {
 
             if (firstTab) {
                 chrome.tabs.update(firstTab.id, { url: "about:blank"}, function() {
-                    pizza.devtools.setTab(firstTab.id);
+                    pizza.devtools.setTab(firstTab.id, false);
                     next();
                 });
             } else {
                 // open a tab if no one is open
                 chrome.tabs.create({ url: "about:blank" }, function(tab) {
-                    pizza.devtools.setTab(tab.id);
+                    pizza.devtools.setTab(tab.id, false);
                     next();
                 });
             }
@@ -2258,7 +2258,7 @@ pizza.main.commands = function() {
     function validateCloseDialogParams(params) {
         if (_dialogInfo) {
             // If we don't accept alert dialogs Chrome on Mac crashes
-            if (_dialogInfo.type == "alert") {
+            if (_dialogInfo.type === "alert") {
                 params.accept = true;
             }
         }

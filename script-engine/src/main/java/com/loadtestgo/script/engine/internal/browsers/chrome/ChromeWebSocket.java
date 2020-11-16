@@ -187,6 +187,9 @@ public class ChromeWebSocket extends BrowserWebSocket {
                 case "tabCreated":
                     tabCreated(details);
                     break;
+                case "tabUpdated":
+                    tabUpdated(details);
+                    break;
                 case "tabRemoved":
                     tabRemoved(details);
                     break;
@@ -221,6 +224,10 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
             return true;
         }
+    }
+
+    private void tabUpdated(JSONObject details) {
+        // Tab moved, changed display, was activated, etc
     }
 
     private void debuggerDetached(JSONObject details) {

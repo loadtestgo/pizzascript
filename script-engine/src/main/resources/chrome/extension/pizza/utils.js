@@ -4,19 +4,19 @@
  * @returns {boolean}
  */
 pizza.isExternalUrl = function(url) {
-    if (url.indexOf("chrome:") == 0) {
+    if (url.indexOf("chrome:") === 0) {
         return false;
     }
 
-    if (url.indexOf("chrome-extension:") == 0) {
+    if (url.indexOf("chrome-extension:") === 0) {
         return false;
     }
 
-    if (url.indexOf("chrome-devtools:") == 0) {
+    if (url.indexOf("chrome-devtools:") === 0) {
         return false;
     }
 
-    if (url.indexOf("about:") == 0) {
+    if (url.indexOf("about:") === 0) {
         return false;
     }
 

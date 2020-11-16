@@ -107,15 +107,19 @@ pizza.main.contexttracker = function() {
 
     var _getContextIdForFrame = function(tabId, frameId) {
         var tab = _frameToContextMap[tabId];
-        if (frameId == null) {
-            return tab.firstContext;
-        }
-        var keys = Object.keys(tab);
-        for (var i = 0; i < keys.length; ++i) {
-            var item = tab[keys[i]];
-            if (item && item === frameId) {
-                return parseInt(keys[i]);
+        if (tab) {
+            if (frameId == null) {
+                return tab.firstContext;
             }
+            var keys = Object.keys(tab);
+            for (var i = 0; i < keys.length; ++i) {
+                var item = tab[keys[i]];
+                if (item && item === frameId) {
+                    return parseInt(keys[i]);
+                }
+            }
+        } else {
+            console.log("Can't find tabId", tabId);
         }
         return null;
     };

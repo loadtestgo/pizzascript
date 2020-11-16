@@ -59,12 +59,12 @@ public class TestConfig {
     }
 
     public boolean getReuseSession() {
-        Object resuseSession = settings.get("reuse.session");
-        if (resuseSession == null) {
+        Object reuseSession = settings.get("reuse.session");
+        if (reuseSession == null) {
             return false;
         }
-        if (resuseSession instanceof Boolean) {
-            return (Boolean)resuseSession;
+        if (reuseSession instanceof Boolean) {
+            return (Boolean)reuseSession;
         }
         return false;
     }

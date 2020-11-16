@@ -3,6 +3,7 @@
 //
 pizza.main.emulation = function() {
     var _deviceInfo = null;
+    var _networkEmulation = null;
 
     var devices = [
         {
@@ -283,17 +284,14 @@ pizza.main.emulation = function() {
     }
 
     var _setDevice = function(deviceName, wait) {
-        if (deviceName == null) {
-            _deviceInfo = null;
-            return true;
-        }
-
-        for (var i = 0; i < devices.length; ++i) {
-            var d = devices[i];
-            if (d.title == deviceName) {
-                _deviceInfo = getDeviceMetrics(i);
-                applyOverrides(wait);
-                return true;
+        if (deviceName != null) {
+            for (var i = 0; i < devices.length; ++i) {
+                var d = devices[i];
+                if (d.title === deviceName) {
+                    _deviceInfo = getDeviceMetrics(i);
+                    applyOverrides(wait);
+                    return true;
+                }
             }
         }
 
@@ -303,28 +301,34 @@ pizza.main.emulation = function() {
     };
 
     var _reset = function(wait) {
-        _deviceInfo = null;
+        if (_deviceInfo) {
+            _deviceInfo = null;
+            applyOverrides(wait);
+        }
 
-        applyOverrides(wait);
+        if (_networkEmulation) {
+            // Set other params to default if they are not set
+            var c = {};
+            c.offline = false;
+            c.latency = 0;
+            // 0 apparently means turn off limiting now
+            c.downloadThroughput = 0;
+            // 0 apparently means turn off limiting now
+            c.uploadThroughput = 0;
 
-        // Set other params to default if they are not set
-        var c = {};
-        c.offline = false;
-        c.latency = 0;
-        // Set really high, setting to zero seems to halt network traffic
-        c.downloadThroughput = 10 * 1000 * 1000 * 1000;
-        // Set really high, setting to zero seems to halt network traffic
-        c.uploadThroughput = 10 * 1000 * 1000 * 1000;
-
-        pizza.devtools.sendCommand(
-            'Network.emulateNetworkConditions',
-            c,
-            wait.add(function () {
-                var error = chrome.runtime.lastError;
-                if (error) {
-                    console.log(error);
-                }
-            }));
+            pizza.devtools.sendCommand(
+                'Network.emulateNetworkConditions',
+                c,
+                wait.add(function () {
+                    var error = chrome.runtime.lastError;
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        // its reset so clear
+                        _networkEmulation = null;
+                    }
+                }));
+        }
     };
 
     var _getDevice = function() {
@@ -360,7 +364,7 @@ pizza.main.emulation = function() {
             if (params.name) {
                 for (var i = 0; i < networkConditions.length; ++i) {
                     var n = networkConditions[i];
-                    if (n.name == params.name) {
+                    if (n.name === params.name) {
                         c = getDevToolsNetworkConditions(n);
                     }
                 }
@@ -384,12 +388,12 @@ pizza.main.emulation = function() {
             c.latency = 0;
         }
         if (!c.hasOwnProperty('downloadThroughput')) {
-            // Set really high, setting to zero seems to halt network traffic
-            c.downloadThroughput = 10 * 1000 * 1000 * 1000;
+            // 0 apparently means turn off limiting now
+            c.downloadThroughput = 0;
         }
         if (!c.hasOwnProperty('uploadThroughput')) {
-            // Set really high, setting to zero seems to halt network traffic
-            c.uploadThroughput = 10 * 1000 * 1000 * 1000;
+            // 0 apparently means turn off limiting now
+            c.uploadThroughput = 0;
         }
 
         pizza.devtools.sendCommand(
@@ -400,6 +404,7 @@ pizza.main.emulation = function() {
                 if (error) {
                     response({ error: error });
                 } else {
+                    _networkEmulation = c;
                     response({ value: true });
                 }
             });

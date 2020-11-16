@@ -51,22 +51,24 @@ pizza.main.devtools = function() {
     };
 
     function attachToTab(tabId, wait) {
-        var newTabSet = false;
+        if (_attachedTabs.indexOf(tabId) < 0) {
+            console.log("Attaching to tab: " + tabId);
+
+            var debugId = { tabId: tabId };
+            chrome.debugger.attach(debugId, _version, onAttach.bind(null, debugId, wait));
+        }
+    }
+
+    function attachToTabCb(tabId, wait) {
+        var setNewTab = false;
         if (_currentTab == null) {
             _currentTab = tabId;
-            newTabSet = true;
+            setNewTab = true;
         }
 
-        if (_attachedTabs.indexOf(tabId) >= 0) {
-            return;
-        }
+        attachToTab(tabId, wait);
 
-        console.log("Attaching to tab: " + tabId);
-
-        var debugId = { tabId: tabId };
-        chrome.debugger.attach(debugId, _version, onAttach.bind(null, debugId, wait));
-
-        if (newTabSet) {
+        if (setNewTab) {
             pizza.webdriver.setTab(tabId);
             pizza.commands.setTab(tabId);
             pizza.frametracker.setTab(tabId);
@@ -80,7 +82,7 @@ pizza.main.devtools = function() {
 
         _ws.send(JSON.stringify({event: "tabRemoved", details: { tabId: tabId }}));
 
-        if (_currentTab == tabId) {
+        if (_currentTab === tabId) {
             if (_attachedTabs.length > 0) {
                 _currentTab = _attachedTabs[0];
             } else {
@@ -112,15 +114,19 @@ pizza.main.devtools = function() {
         chrome.tabs.query({}, function(tabs) {
             if (tabs.length > 0) {
                 var tabId = tabs[0].id;
-                attachToTab(tabId, wait);
+                attachToTabCb(tabId, wait);
             }
         });
 
+        // After that connect to any new tab we can.
+        // There's also a attempt to attach when a new tab is selected via scripting
+        // This is to catch the case where the tab is created with an empty URL or
+        // some other URL we cannot attach to, but is changed later.
         chrome.tabs.onCreated.addListener(function(tab) {
             // Attach if a new tab with an external URL is created (or
-            // one with the default.
-            if (pizza.isExternalUrl(tab.url) || tab.url == "about:blank") {
-                attachToTab(tab.id, pizza.waitNull());
+            // one with the default).
+            if (pizza.isExternalUrl(tab.url) || tab.url === "about:blank") {
+                attachToTabCb(tab.id, pizza.waitNull());
                 _ws.send(JSON.stringify({event: "tabCreated", details: tab}));
             }
         });
@@ -132,17 +138,30 @@ pizza.main.devtools = function() {
             detachedFromTab(tab);
         });
 
+        chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+            if (changeInfo.url) {
+                var tabUrl = changeInfo.url;
+                if (pizza.isExternalUrl(tabUrl)) {
+                    attachToTabCb(tabId, pizza.waitNull());
+                    _ws.send(JSON.stringify({event: "tabUpdated", details:
+                                {tabId: tabId, changeInfo: changeInfo}}));
+                }
+            }
+        });
+
         pizza.network.addListener("onBeforeNavigate", function(details) {
             if (_attachedTabs.indexOf(details.tabId) > 0) {
                 return;
             }
             attachToTab(details.tabId, pizza.waitNull());
-        })
+        });
     };
 
-    var _setTab = function(tabId) {
+    var _setTab = function(tabId, attachIfNot) {
+        if (attachIfNot) {
+            attachToTab(tabId, pizza.waitNull());
+        }
         _currentTab = tabId;
-
         pizza.webdriver.setTab(tabId);
         pizza.commands.setTab(tabId);
         pizza.frametracker.setTab(tabId);

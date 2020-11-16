@@ -118,7 +118,7 @@ public class WaitTests extends JavaScriptTest {
         String script = String.format(
                 "b = pizza.open(\"%s\");\n" +
                 // Non-existing element '#notAndElement'
-                "b.waitVisible('#notAndElement');\n",
+                "b.waitNotVisible('#notAndElement');\n",
                 getTestUrl("files/elementLater.html"));
 
         TestResult result = runScript(script, 3000);
