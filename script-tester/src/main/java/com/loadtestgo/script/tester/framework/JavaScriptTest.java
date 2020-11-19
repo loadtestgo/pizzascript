@@ -55,13 +55,15 @@ public class JavaScriptTest extends BaseTest {
 
     public TestContext newTestContext() {
         EasyTestContext testContext = new EasyTestContext();
+        setupTestContext(testContext);
+        return testContext;
+    }
 
+    public void setupTestContext(TestContext testContext) {
         // Don't bother capturing video, it just slows the tests down.
         testContext.setCaptureVideo(false);
 
         // Add verbose logging to help debug failures
         testContext.getEngineSettings().setVerboseLogging(true);
-
-        return testContext;
     }
 }

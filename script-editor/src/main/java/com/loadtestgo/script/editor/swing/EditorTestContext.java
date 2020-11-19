@@ -1,7 +1,6 @@
 package com.loadtestgo.script.editor.swing;
 
 import com.loadtestgo.script.engine.EasyTestContext;
-import com.loadtestgo.script.engine.EngineSettings;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 
 public class EditorTestContext extends EasyTestContext {
@@ -15,7 +14,22 @@ public class EditorTestContext extends EasyTestContext {
         super(name, userId);
 
         setCaptureVideo(false);
+        if (getReuseBrowser()) {
+            getUserContext().setKeepBrowserOpen(true);
+            getUserContext().setReuseSession(false);
+        }
         setSandboxJavaScript(getEngineSettings().sandboxJavaScript());
+    }
+
+    public boolean getReuseBrowser() {
+        Object reuseBrowser = getEngineSettings().getSettings().getBoolean("reuse.browser", false);
+        if (reuseBrowser == null) {
+            return false;
+        }
+        if (reuseBrowser instanceof Boolean) {
+            return (Boolean)reuseBrowser;
+        }
+        return false;
     }
 
     public void setWindowPosition(WindowPosition windowPosition) {

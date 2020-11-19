@@ -15,6 +15,8 @@ pizza.main.commands = function() {
         _autoDismissDialogs = false,
         _videoCapture = false,
         _dialogInfo = null,
+        _sessionId = 0,
+        _timeouts = new Set(),
         _webRequestModifyCallbacks = [];
 
     pizza.contexttracker.addContextDestroyedHandler(function(contextIds) {
@@ -242,13 +244,18 @@ pizza.main.commands = function() {
     var _waitText = function(id, params) {
         var searchRegexp = getParamTextAsRegex(params);
         var pollTime = getParamPollTime(params);
+        var timeoutId = 0;
 
         var check = function() {
+            if (timeoutId) {
+                _timeouts.delete(timeoutId)
+            }
             _hasTextInternal(searchRegexp, function(found) {
                 if (found) {
                     sendResponse(id, { value: found });
                 } else {
-                    setTimeout(check, pollTime);
+                    timeoutId = setTimeout(check, pollTime);
+                    _timeouts.add(timeoutId)
                 }
             });
         };
@@ -259,11 +266,16 @@ pizza.main.commands = function() {
     var _waitNotText = function(id, params) {
         var searchRegexp = getParamTextAsRegex(params);
         var pollTime = getParamPollTime(params);
+        var timeoutId = 0;
 
         var check = function() {
+            if (timeoutId) {
+                _timeouts.delete(timeoutId)
+            }
             _hasTextInternal(searchRegexp, function(found) {
                 if (found) {
-                    setTimeout(check, pollTime);
+                    timeoutId = setTimeout(check, pollTime);
+                    _timeouts.add(timeoutId)
                 } else {
                     sendResponse(id, { value: found });
                 }
@@ -1062,7 +1074,7 @@ pizza.main.commands = function() {
     // already.  Once in the context these functions can be called over and over again
     // without needing re-inject every time.  They also can maintain some state between
     // calls, but generally we don't use this.
-    function injectAutomationAPI(callback) {
+    function injectAutomationAPI(callback, sessionIdIssued) {
         if (_automationAPI) {
             callback(_automationAPI);
         } else {
@@ -1077,6 +1089,9 @@ pizza.main.commands = function() {
             };
 
             pizza.devtools.sendCommand('Runtime.evaluate', loc, function (response) {
+                if (_sessionId !== sessionIdIssued) {
+                    return;
+                }
                 if (response.error) {
                     // Runtime.evaluate threw an error before executing the script
                     callback({error: response.error});
@@ -1184,6 +1199,8 @@ pizza.main.commands = function() {
             args.push(arg);
         }
 
+        var sessionIdWhenIssued = _sessionId;
+
         // chrome.debugger.sendCommand() takes a context id for the webpage currently loaded, a new webpage
         // can be loaded while this command is waiting to be run, forcing a unload of the previous page,
         // so sendCommand() will fail with the following error:
@@ -1192,6 +1209,10 @@ pizza.main.commands = function() {
         // retry in only this case.  There should be no side effects of this as the command doesn't get to
         // run first time.
         var sendCommand = function(response) {
+            if (sessionIdWhenIssued !== _sessionId) {
+                return;
+            }
+
             if (response && response.error) {
                 errorCallback(response.error);
             } else if (response.exceptionDetails) {
@@ -1207,13 +1228,17 @@ pizza.main.commands = function() {
                 var lastContextId = _currentContextId;
 
                 pizza.devtools.sendCommand('Runtime.callFunctionOn', loc, function (response) {
+                    if (sessionIdWhenIssued !== _sessionId) {
+                        return;
+                    }
+
                     if (response.message) {
                         // console.log("1", JSON.stringify(response));
                         if (isSendCommandInvalidContextError(response) &&
                             lastContextId !== _currentContextId) {
                             console.log("Context has changed was: " + lastContextId + " now: " + _currentContextId + ".  Reinjecting...");
                             lastContextId = _currentContextId;
-                            injectAutomationAPI(sendCommand);
+                            injectAutomationAPI(sendCommand, sessionIdWhenIssued);
                         } else {
                             errorCallback(response.message);
                         }
@@ -1234,7 +1259,7 @@ pizza.main.commands = function() {
                 });
             }
         }
-        injectAutomationAPI(sendCommand);
+        injectAutomationAPI(sendCommand, sessionIdWhenIssued);
     }
 
     function applyElementRegionWithRetry(id, params, applyElementFunction) {
@@ -1244,6 +1269,7 @@ pizza.main.commands = function() {
         }
 
         var retryFunc = null;
+        var timeoutId = 0;
 
         var applyElementGetRegion = function(params, offsets) {
             executeAutomationAPI(
@@ -1255,7 +1281,8 @@ pizza.main.commands = function() {
                         if (error.type === 'HiddenByElement' || error.type === 'EmptyBoundingBox') {
                             if (params.retry) {
                                 params.retry--;
-                                setTimeout(retryFunc, params.retryWaitTime, params);
+                                timeoutId = setTimeout(retryFunc, params.retryWaitTime, params);
+                                _timeouts.add(timeoutId)
                                 return;
                             }
                         }
@@ -1271,6 +1298,9 @@ pizza.main.commands = function() {
 
         if (_currentFrameId) {
             retryFunc = function(params) {
+                if (timeoutId) {
+                    _timeouts.delete(timeoutId)
+                }
                 var frameSearchId = _currentFrameId;
                 pizza.devtools.sendCommand('Page.getFrameTree', {},
                     function (response) {
@@ -1753,14 +1783,19 @@ pizza.main.commands = function() {
 
     var _waitElement = function(id, params) {
         var pollTime = getParamPollTime(params);
+        var timeoutId = 0;
 
         var check = function() {
+            if (timeoutId) {
+                _timeouts.delete(timeoutId);
+            }
             executeAutomationAPI(
                 function (response) {
                     if (response.result.value) {
                         sendResponse(id, {});
                     } else {
-                        setTimeout(check, pollTime);
+                        timeoutId = setTimeout(check, pollTime);
+                        _timeouts.add(timeoutId);
                     }
                 },
                 function (error) {
@@ -1792,14 +1827,19 @@ pizza.main.commands = function() {
             };
 
         var pollTime = getParamPollTime(params);
+        var timeoutId = 0;
 
         var check = function() {
+            if (timeoutId) {
+                _timeouts.delete(timeoutId);
+            }
             executeAutomationAPI(
                 function (response) {
                     if (response.result.value) {
                         sendResponse(id, { });
                     } else {
-                        setTimeout(check, pollTime);
+                        timeoutId = setTimeout(check, pollTime);
+                        _timeouts.add(timeoutId);
                     }
                 },
                 function (error) {
@@ -1839,16 +1879,21 @@ pizza.main.commands = function() {
     var _waitVisible = function(id, params) {
         var selector = params.selector;
         var pollTime = getParamPollTime(params);
+        var timeoutId = 0;
 
         var check = function(selector) {
+            if (timeoutId) {
+                _timeouts.delete(timeoutId)
+            }
             executeAutomationAPI(
                 function (response) {
                     if (response.result.value) {
                         sendResponse(id, { });
                     } else {
-                        setTimeout(function () {
+                        timeoutId = setTimeout(function () {
                             check(selector);
                         }, pollTime);
+                        _timeouts.add(timeoutId);
                     }
                 },
                 function (error) {
@@ -1866,14 +1911,19 @@ pizza.main.commands = function() {
     var _waitNotVisible = function(id, params) {
         var selector = params.selector;
         var pollTime = getParamPollTime(params);
+        var timeoutId = 0;
 
         var check = function(selector) {
+            if (timeoutId) {
+                _timeouts.delete(timeoutId)
+            }
             executeAutomationAPI(
                 function (response) {
                     if (response.result.value) {
-                        setTimeout(function () {
+                        timeoutId = setTimeout(function () {
                             check(selector);
                         }, pollTime);
+                        _timeouts.add(timeoutId);
                     } else {
                         sendResponse(id, { });
                     }
@@ -2044,17 +2094,19 @@ pizza.main.commands = function() {
                 timeout = params.timeout;
             }
             var timedOut = false;
-            var timeoutId;
+            var timeoutId = 0;
             if (timeout > 0) {
                 timeoutId = setTimeout(function () {
                     timedOut = true;
                     sendResponse(id,
                         { "error": "Timeout after " + timeout + "ms while waiting for page load" });
                 }, timeout);
+                _timeouts.add(timeoutId);
             }
 
             pizza.navigation.setLoadedHandler(function(response) {
                 if (timeoutId) {
+                    _timeouts.delete(timeoutId);
                     clearTimeout(timeoutId);
                 }
                 if (!timedOut) {
@@ -2116,7 +2168,20 @@ pizza.main.commands = function() {
         }
 
         _autoDismissDialogs = false;
+
+        // Clear automation API
         _automationAPI = null;
+        _sessionId++;
+
+        // Cancel any outstanding waits, so that the automation API is not reloaded
+        function cancelWaits(next) {
+            var it = _timeouts.values();
+            var timeoutId = null;
+            while (timeoutId = it.next().value) {
+                clearTimeout(timeoutId);
+            }
+            next();
+        }
 
         function stopVideo(next) {
             if (_videoCapture) {
@@ -2201,6 +2266,7 @@ pizza.main.commands = function() {
         var operations;
         if (params.reuseSession) {
             operations = [
+                cancelWaits,
                 stopVideo,
                 closeTabs,
                 gotoAboutBlank,
@@ -2209,6 +2275,7 @@ pizza.main.commands = function() {
             ];
         } else {
             operations = [
+                cancelWaits,
                 stopVideo,
                 closeTabs,
                 gotoAboutBlank,
