@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript Modal Dialogs</title>
+</head>
+<body>
+<button id="alert" onclick="doAlert()">Alert</button>
+<button id="alert100ms" onclick="doAlert100ms()">Alert After 100ms</button>
+<button id="alert1s" onclick="doAlert1s()">Alert After 1s</button>
+<script>
+    function doAlert() {
+        window.alert("it's a dialog!")
+    }
+
+    function doAlert100ms() {
+        setTimeout(function() {
+            window.alert("it's a dialog!")
+        }, 0);
+    }
+
+    function doAlert1s() {
+        setTimeout(function() {
+            window.alert("it's a dialog!")
+        }, 1000);
+    }
+</script>
+</body>
+</html>

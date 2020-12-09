@@ -59,4 +59,29 @@ public class DialogTests extends JavaScriptTest {
 
         assertNoError(result);
     }
+
+    @Test
+    public void dialogOpen() {
+        String script = String.format(
+            "var b = pizza.open(\"%s\");\n" +
+            "b.click('#alert100ms');\n" +
+            "pizza.sleep(1000);",
+            getTestUrl("files/dialogLater.html"));
+
+        TestResult result = runScript(script, 3000);
+        assertNoError(result);
+    }
+
+    @Test
+    public void dialogLater() {
+        String script = String.format(
+            "var b = pizza.open(\"%s\");\n" +
+            "b.click('#alert100ms');\n" +
+            "pizza.sleep(1000);",
+            getTestUrl("files/dialogLater.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertNoError(result);
+    }
 }

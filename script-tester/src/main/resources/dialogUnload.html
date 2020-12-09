@@ -1,0 +1,15 @@
+<html>
+<head>
+<script>
+    function popup() {
+        // Have to return a text string here for the browser to display
+        // any window.alert() or anything that spawns new windows will be ignored
+        return 'I see you are leaving the site';
+    }
+    window.onbeforeunload = popup;
+</script>
+</head>
+<body>
+<a href="/files/basic.html">Leave</a>
+</body>
+</html>

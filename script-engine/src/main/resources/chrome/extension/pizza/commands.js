@@ -2160,18 +2160,25 @@ pizza.main.commands = function() {
     };
 
     var _reset = function(id, params) {
-        // close dialogs
+        // close any dialogs
         var firstTab = null;
 
         if (_dialogInfo) {
             dismissDialog();
         }
 
-        _autoDismissDialogs = false;
+        _autoDismissDialogs = true;
 
         // Clear automation API
         _automationAPI = null;
         _sessionId++;
+
+        function finish(next) {
+            _autoDismissDialogs = false;
+            _dialogInfo = null;
+            pizza.devtools.suppressMessages(false);
+            next();
+        }
 
         // Cancel any outstanding waits, so that the automation API is not reloaded
         function cancelWaits(next) {
@@ -2258,11 +2265,6 @@ pizza.main.commands = function() {
             });
         }
 
-        function enableMessages(next) {
-            pizza.devtools.suppressMessages(false);
-            next();
-        }
-
         var operations;
         if (params.reuseSession) {
             operations = [
@@ -2271,7 +2273,7 @@ pizza.main.commands = function() {
                 closeTabs,
                 gotoAboutBlank,
                 resetEmulation,
-                enableMessages
+                finish
             ];
         } else {
             operations = [
@@ -2281,7 +2283,7 @@ pizza.main.commands = function() {
                 gotoAboutBlank,
                 clearBrowsingData,
                 resetEmulation,
-                enableMessages
+                finish
             ];
         }
 
@@ -2324,8 +2326,8 @@ pizza.main.commands = function() {
 
     function validateCloseDialogParams(params) {
         if (_dialogInfo) {
-            // If we don't accept alert dialogs Chrome on Mac crashes
             if (_dialogInfo.type === "alert") {
+                // If we don't accept alert dialogs Chrome on Mac crashes
                 params.accept = true;
             }
         }
@@ -2344,7 +2346,15 @@ pizza.main.commands = function() {
         }
 
         var params = { accept: false };
-        validateCloseDialogParams(params);
+        if (_dialogInfo) {
+            if (_dialogInfo.type === "alert") {
+                // If we don't accept alert dialogs Chrome on Mac crashes
+                params.accept = true;
+            } else if (_dialogInfo.type === "beforeunload") {
+                // If we don't accept beforeunload new page won't be loaded!
+                params.accept = true;
+            }
+        }
         pizza.devtools.sendCommand("Page.handleJavaScriptDialog", params, callback);
     }
 

@@ -80,6 +80,125 @@ public class ReuseTests extends JavaScriptTest {
         }
     }
 
+    @Test
+    public void dialogOpenReuse() {
+        UserContext userContext = newUserContext();
+        try {
+            // Can we handle opening a page that calls an alert dialog on document.onload?
+            String script = String.format(
+                "var b = pizza.open();\n" +
+                "b.open(\"%s\");",
+                getTestUrl("files/dialog.html"));
+
+            TestContext testContext = newTestContext(userContext);
+            TestResult result = runScript(testContext, script, 3000);
+
+            assertError("JavaScript alert \"it's a dialog!\" interrupted navigation. " +
+                "See Browser.dismissDialogs() to find out how to ignore this error.", result);
+
+            String isBrowserOkScript = String.format(
+                "b = pizza.open(\"%s\");\n",
+                getTestUrl("files/basic.html"));
+
+            testContext = newTestContext(userContext);
+            result = runScript(testContext, isBrowserOkScript, 3000);
+
+            assertNoError(result);
+        } finally {
+            userContext.cleanup();
+            userContext.getEngineContext().cleanup();
+        }
+    }
+
+    @Test
+    public void dialogLater() {
+        UserContext userContext = newUserContext();
+        try {
+            // Can we handle opening a page that calls an alert dialog on document.onload?
+            String script = String.format(
+                "var b = pizza.open(\"%s\");\n" +
+                "b.click('#alert100ms');\n" +
+                "pizza.sleep(90);\n",
+                getTestUrl("files/dialogLater.html"));
+
+            TestContext testContext = newTestContext(userContext);
+            TestResult result = runScript(testContext, script, 3000);
+
+            assertNoError(result);
+
+            String isBrowserOkScript = String.format(
+                "b = pizza.open(\"%s\");\n",
+                getTestUrl("files/basic.html"));
+
+            testContext = newTestContext(userContext);
+            result = runScript(testContext, isBrowserOkScript, 3000);
+
+            assertNoError(result);
+        } finally {
+            userContext.cleanup();
+            userContext.getEngineContext().cleanup();
+        }
+    }
+
+    @Test
+    public void dialogBeforeUnload() {
+        UserContext userContext = newUserContext();
+        try {
+            // The final beforeunload
+            String script = String.format(
+                "var b = pizza.open(\"%s\");\n",
+                getTestUrl("files/dialogUnload.html"));
+
+            TestContext testContext = newTestContext(userContext);
+            TestResult result = runScript(testContext, script, 3000);
+
+            assertNoError(result);
+
+            String isBrowserOkScript = String.format(
+                "b = pizza.open(\"%s\");\n",
+                getTestUrl("files/basic.html"));
+
+            testContext = newTestContext(userContext);
+            result = runScript(testContext, isBrowserOkScript, 3000);
+
+            assertNoError(result);
+        } finally {
+            userContext.cleanup();
+            userContext.getEngineContext().cleanup();
+        }
+    }
+
+    @Test
+    public void dialogBeforeUnloadWithAlert() {
+        UserContext userContext = newUserContext();
+        try {
+            // Cause the beforeunload dialog to be displayed,
+            // and make sure we properly dismiss it.
+            String script = String.format(
+                "var b = pizza.open(\"%s\");\n" +
+                "b.click('a:contains(Leave)');\n",
+                getTestUrl("files/dialogUnload.html")
+            );
+
+            TestContext testContext = newTestContext(userContext);
+            TestResult result = runScript(testContext, script, 3000);
+
+            assertError("Script interrupted", ErrorType.Timeout, result);
+
+            String isBrowserOkScript = String.format(
+                "b = pizza.open(\"%s\");\n",
+                getTestUrl("files/basic.html"));
+
+            testContext = newTestContext(userContext);
+            result = runScript(testContext, isBrowserOkScript, 3000);
+
+            assertNoError(result);
+        } finally {
+            userContext.cleanup();
+            userContext.getEngineContext().cleanup();
+        }
+    }
+
     private UserContext newUserContext() {
         UserContext userContext = new UserContext(new EngineContext());
         userContext.setKeepBrowserOpen(true);
