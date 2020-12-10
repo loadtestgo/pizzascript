@@ -275,17 +275,17 @@ public class JavaScriptEngine {
         return runScript(script, filename, 0);
     }
 
-    public Object runScript(String script, String filename, long timeout) throws ScriptException {
+    public Object runScript(String script, String filename, long timeoutMS) throws ScriptException {
         TestResult result = testContext.getTestResult();
         Date startTime = new Date();
         result.setStartTime(startTime);
 
         Timer timer = null;
         InterruptTimer interruptTimer = null;
-        if (timeout > 0) {
+        if (timeoutMS > 0) {
             timer = new Timer();
             interruptTimer = new InterruptTimer(timer, Thread.currentThread(),
-                testContext, startTime.getTime(), timeout);
+                testContext, startTime.getTime(), timeoutMS);
         }
 
         try {

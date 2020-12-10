@@ -555,21 +555,28 @@ public class ChromeBrowser implements Browser {
 
     @Override
     public void waitForHttpRequests(long idleTimeMS) {
-        long startTime = System.currentTimeMillis();
+        long idleTimeBegin = System.currentTimeMillis();
         while (true) {
             long now = System.currentTimeMillis();
             if (!pizzaHandler.isOpen()) {
                 throw new ScriptException(ErrorType.Internal, "Browser closed");
             }
             if (!pizzaHandler.checkPendingRequests()) {
-                long lastRequestTime = pizzaHandler.getLastRequestTime();
-                if (lastRequestTime > 0) {
-                    if (lastRequestTime > startTime) {
-                        startTime = lastRequestTime;
+                long lastRequestFinishTime = pizzaHandler.getLastRequestFinishedTime();
+                if (lastRequestFinishTime > 0) {
+                    if (lastRequestFinishTime > idleTimeBegin) {
+                        // guard against requests having and end time in the future
+                        if (lastRequestFinishTime > now) {
+                            idleTimeBegin = now;
+                        } else {
+                            // normal case - make the idle time begin be the time the
+                            // last request was downloaded
+                            idleTimeBegin = lastRequestFinishTime;
+                        }
                     }
                 }
 
-                if (startTime + idleTimeMS <= now) {
+                if (idleTimeBegin + idleTimeMS <= now) {
                     return;
                 }
             }

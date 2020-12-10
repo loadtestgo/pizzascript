@@ -450,7 +450,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
         return false;
     }
 
-    public long getLastRequestTime() {
+    public long getLastRequestFinishedTime() {
         Page page = getCurrentPage();
         if (page == null) {
             return -1;
@@ -1490,10 +1490,10 @@ public class ChromeWebSocket extends BrowserWebSocket {
             String url = details.getString("url");
             if (StringUtils.isSet(url)) {
                 url = Http.stripAnchor(url);
-                // HTTP2 document requests are missing a load event - generate one here instead
+                // HTTP2/3 document requests are missing a load event - generate one here instead
                 for (Map.Entry<String,HttpRequest> requestEntry : ongoingRequests.entrySet()) {
                     HttpRequest request = requestEntry.getValue();
-                    if ("h2".equalsIgnoreCase(request.getProtocol()) && url.equalsIgnoreCase(request.url)) {
+                    if (isNewHttp(request.getProtocol()) && url.equalsIgnoreCase(request.url)) {
                         if (request.getResourceType().equals(ResourceType.Document)) {
                             boolean isNavigate = false;
                             for (HttpHeader header : request.getRequestHeaders()) {
@@ -1506,7 +1506,7 @@ public class ChromeWebSocket extends BrowserWebSocket {
                             }
                             if (isNavigate) {
                                 Date date = convertToDateFromMillis(details.getDouble("timeStamp"));
-                                request.setRecvEnd((int) (date.getTime() - (request.getStartTime() - request.getWallTimeOffset())));
+                                request.setRecvEnd((int) (date.getTime() - request.getStartTime()));
                                 request.setState(HttpRequest.State.Complete);
                                 removeOngoingRequest(requestEntry.getKey());
                                 break;
@@ -1522,6 +1522,17 @@ public class ChromeWebSocket extends BrowserWebSocket {
 
             page.setDomContentLoadedTime(convertToDateFromMillis(details.getDouble("timeStamp")));
             page.setState(Page.State.DOMContentLoaded);
+        }
+    }
+
+    private boolean isNewHttp(String protocol) {
+        if (StringUtils.isSet(protocol)) {
+            protocol = protocol.toLowerCase();
+            // HTTP/2 is 'h2' exactly
+            // HTTP/3 can have a version tagged on e.g. 'h3-Q050'
+            return protocol.startsWith("h2") || protocol.startsWith("h3");
+        } else {
+            return false;
         }
     }
 
@@ -1786,14 +1797,14 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private Date convertToDateFromSecs(double timestamp) {
-        return new Date((long)(timestamp * 1000));
+        return new Date((long)(timestamp * 1000.));
     }
 
     /**
      * yesThisIsActuallyAFunctionAndIDontCareIfItsStupid()
      */
     private long convertToMillisFromSeconds(double timestamp) {
-        return (long)(timestamp * 1000);
+        return (long)(timestamp * 1000.);
     }
 
     private NavigationType convertNavigationType(String type) {
