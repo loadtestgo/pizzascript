@@ -507,6 +507,13 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
+    public Object selectTab(int tabIndex) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("tab", tabIndex);
+        return getResponseData(pizzaHandler.sendCommand("selectTab", params));
+    }
+
+    @Override
     public Object selectLatestTab() {
         return getResponseData(pizzaHandler.sendCommand("selectLatestTab"));
     }

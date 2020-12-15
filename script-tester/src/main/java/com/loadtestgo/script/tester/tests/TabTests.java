@@ -63,6 +63,10 @@ public class TabTests extends JavaScriptTest {
             "b.selectTab({ title: 'Test Page' });\n" +
             "b.verifyTitle('Test Page');\n" +
             "b.selectTab({ title: 'Open New Tab' });\n" +
+            "b.verifyTitle('Open New Tab');\n" +
+            "b.selectTab(1);\n" +
+            "b.verifyTitle('Test Page');\n" +
+            "b.selectTab(0);\n" +
             "b.verifyTitle('Open New Tab');\n",
             getTestUrl("files/openNew.html"));
 

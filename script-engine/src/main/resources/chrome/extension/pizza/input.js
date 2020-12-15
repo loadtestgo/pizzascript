@@ -312,11 +312,7 @@ pizza.main.input = function() {
 
     function getKeyForChar(char) {
         var key = charToKey[char];
-        if (key) {
-            if (key[KEY_CODE] !== char.codePointAt(0)) {
-                console.log("diff in code", char, key[KEY_CODE], char.codePointAt(0));
-            }
-        } else {
+        if (!key) {
             key = [char, char, 0, 0, char.codePointAt(0)];
         }
         return key;

@@ -954,6 +954,16 @@ public interface Browser {
     Object selectTab(NativeObject tab);
 
     /**
+     * Select the given tab by index
+     *
+     * 1st tab starts at index 0, and each new tab opened increments this
+     * number.
+     *
+     * Returns info about the selected tab.
+     */
+    Object selectTab(int tabIndex);
+
+    /**
      * Select the most recently opened new tab.
      *
      * @return info about the selected tab.

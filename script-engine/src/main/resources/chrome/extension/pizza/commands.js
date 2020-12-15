@@ -957,9 +957,10 @@ pizza.main.commands = function() {
     var _selectTab = function(id, params) {
         var selector = params.tab;
         var selectors = ['index', 'title', 'url'];
-        if (!pizza.hasAtLeastOneProperty(selector, selectors)) {
+
+        if (!pizza.isNumber(selector) && !pizza.hasAtLeastOneProperty(selector, selectors)) {
             sendResponse(id,
-                { error: "Unable to find tab: selector must be one of [\'" + selectors.join("\', \'") + "\']" });
+                { error: "Unable to find tab: selector must be a tab index or one of [\'" + selectors.join("\', \'") + "\']" });
             return;
         }
         pizza.navigation.reset(_currentTabId, 0);
@@ -974,7 +975,21 @@ pizza.main.commands = function() {
             var tabId = null;
             var windowId = null;
             var tab = null;
-            if (selector.hasOwnProperty("index")) {
+            if (pizza.isNumber(selector)) {
+                if (selector < 0) {
+                    sendResponse(id,
+                        { error: "Unable to find tab #" + selector + ": Index must be >= 0" });
+                    return;
+                } else if (selector >= tabs.length) {
+                    sendResponse(id,
+                        { error: "Unable to find tab #" + selector + ": Only " + tabs.length + " tab(s)" });
+                    return;
+                } else {
+                    tab = tabs[selector];
+                    tabId = tab.id;
+                    windowId = tab.windowId;
+                }
+            } else if (selector.hasOwnProperty("index")) {
                 if (selector.index < 0) {
                     sendResponse(id,
                         { error: "Unable to find tab " + JSON.stringify(selector) + ": Index must be >= 0" });
@@ -1306,7 +1321,6 @@ pizza.main.commands = function() {
                     function (response) {
                         var frameStack = [];
                         var buildFramePath = function(tree) {
-                            var j = 0;
                             if (tree.frame.id === frameSearchId) {
                                 frameStack.push(tree.frame.id);
                                 return true;
@@ -1321,11 +1335,17 @@ pizza.main.commands = function() {
                                 }
                                 frameStack.pop();
                             }
+
                             return false;
                         };
 
                         if (!buildFramePath(response.frameTree)) {
-                            throw "unable to find parent frame";
+                            console.log("Unable to find parent frame", response, frameSearchId);
+                            sendResponse(id, {
+                                error: "Unable to find parent frame",
+                                response: JSON.stringify(response)
+                            });
+                            return;
                         }
 
                         var boundingBoxes = {};
@@ -2176,6 +2196,7 @@ pizza.main.commands = function() {
         function finish(next) {
             _autoDismissDialogs = false;
             _dialogInfo = null;
+            _currentFrameId = null;
             pizza.devtools.suppressMessages(false);
             next();
         }

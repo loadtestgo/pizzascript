@@ -199,6 +199,40 @@ public class ReuseTests extends JavaScriptTest {
         }
     }
 
+    @Test
+    public void verifyText() {
+        UserContext userContext = newUserContext();
+        try {
+            String script = String.format(
+                "b = pizza.open(\"%s\");\n" +
+                "b.verifyText(\"This text doesn't exists in the body\");",
+                getTestUrl("files/basic.html"));
+
+            TestContext testContext = newTestContext(userContext);
+            TestResult result = runScript(testContext, script, 3000);
+
+            assertOnePage(result);
+            assertError("Unable to find text 'This text doesn't exists in the body'",
+                ErrorType.Script, result);
+
+            String clickScript = String.format(
+                "b = pizza.open(\"%s\");\n" +
+                    "b.hover('#menu1');\n" +
+                    "b.waitVisible('#menu1drop');\n" +
+                    "b.click('a:contains(Item1)');\n" +
+                    "b.waitPageLoad();",
+                getTestUrl("files/navMenu.html"));
+
+            testContext = newTestContext(userContext);
+            result = runScript(testContext, clickScript, 3000);
+
+            assertNoError(result);
+        } finally {
+            userContext.cleanup();
+            userContext.getEngineContext().cleanup();
+        }
+    }
+
     private UserContext newUserContext() {
         UserContext userContext = new UserContext(new EngineContext());
         userContext.setKeepBrowserOpen(true);

@@ -193,6 +193,22 @@ public class WaitTests extends JavaScriptTest {
     }
 
     @Test
+    public void waitSelectTab() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.click('#newTabButton');\n" +
+            "pizza.sleep(100);\n" +
+            "b.selectTab({ index: 1 });\n" +
+            "b.waitText('This is the HTML body.')",
+            getTestUrl("files/openNew.html"));
+
+        TestResult result = runScript(script);
+
+        assertNoError(result);
+        assertEquals(2, result.getPages().size());
+    }
+
+    @Test
     public void waitNotText() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
