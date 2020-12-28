@@ -9,9 +9,20 @@
 <p>Side By Side Forms</p>
 <p>Offset a little from the left and top to make sure offsets are calculated correctly.</p>
 <div style="height: 100px"></div>
+<script>
+    function removeFrameIn1Second() {
+        setTimeout(function() {
+            var element = document.getElementById("frame1");
+            element.parentNode.removeChild(element);
+        }, 1000);
+    }
+</script>
 <span style="display: inline-block; width: 50px;"></span>
-<iframe src="/files/form.html" name="name_1" width="500px" height="600px" frameborder="no" title="flesh"></iframe>
-<iframe src="/files/form.html" name="name_2" width="500px" height="600px" frameborder="no" title="flesh"></iframe>
+<div>
+    <button id="closeFrame1sBtn" onclick="removeFrameIn1Second()">Close Frame in 1 second</button>
+</div>
+<iframe src="/files/form.html" id="frame1" name="name_1" width="500px" height="600px" frameborder="no" title="flesh"></iframe>
+<iframe src="/files/form.html" id="frame2" name="name_2" width="500px" height="600px" frameborder="no" title="flesh"></iframe>
 </body>
 </html>
 </body>

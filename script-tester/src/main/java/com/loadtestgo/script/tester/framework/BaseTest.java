@@ -76,6 +76,10 @@ public class BaseTest {
         assertEquals(0, result.getPages().size());
     }
 
+    public static void assertNumPages(TestResult result, int num) {
+        assertEquals(num, result.getPages().size());
+    }
+
     public static void assertNoRequests(TestResult result) {
         ArrayList<Page> pages = result.getPages();
         for (Page page : pages) {

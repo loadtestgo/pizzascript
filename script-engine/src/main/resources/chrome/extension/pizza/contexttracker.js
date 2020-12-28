@@ -1,10 +1,13 @@
 /**
  * Track JavaScript contexts are they are created.
  *
- * Associate frameIds with contextIds using Devtools Runtime.* APIs
+ * Associates FrameIds with ExecutionContextIds using Devtools Runtime.* APIs
  */
 pizza.main.contexttracker = function() {
-    var _frameToContextMap = {};
+    // chrome.tabs.TabId -> Map<Runtime.ExecutionContextId,Frame Id (DOM.NodeId)>
+    // Be aware that 'firstContext' is a special key in the map, and maps the top level frame to the
+    // 'Runtime.ExecutionContextId'.
+    var _tabToContextFrameIdMap = {};
     var _contextDestroyedHandlers = [];
 
     function isInjectedExtensionTab(params) {
@@ -31,10 +34,10 @@ pizza.main.contexttracker = function() {
             return;
         }
 
-        var tab = _frameToContextMap[params.tabId];
+        var tab = _tabToContextFrameIdMap[params.tabId];
         if (!tab) {
             tab = { };
-            _frameToContextMap[params.tabId] = tab;
+            _tabToContextFrameIdMap[params.tabId] = tab;
         }
 
         // First frame overrides as it usually the main frame
@@ -48,13 +51,13 @@ pizza.main.contexttracker = function() {
         var frameIdSplit = frameId.split(".");
         if (frameIdSplit.length > 1) {
             if (frameIdSplit[1] === "1") {
-                tab.firstContext = params.context.id;
+                tab.firstContext = params.context.id; // ExecutionContextId
                 console.log("Setting main context", tab.firstContext);
             }
         }
 
         if (!tab.firstContext) {
-            tab.firstContext = params.context.id;
+            tab.firstContext = params.context.id; // ExecutionContextId
             console.log("Setting main context", tab.firstContext);
         }
 
@@ -65,7 +68,7 @@ pizza.main.contexttracker = function() {
         for (var i = 0; i < _contextDestroyedHandlers.length; ++i) {
             _contextDestroyedHandlers[i].apply(null, [[params.executionContextId]]);
         }
-        var tab = _frameToContextMap[params.tabId];
+        var tab = _tabToContextFrameIdMap[params.tabId];
         if (tab) {
             delete tab[params.executionContextId];
             if (tab.firstContext === params.executionContextId) {
@@ -89,7 +92,7 @@ pizza.main.contexttracker = function() {
             return;
         }
 
-        var tab = _frameToContextMap[params.tabId];
+        var tab = _tabToContextFrameIdMap[params.tabId];
         if (tab) {
             var contexts = [];
             for (var executionContextId in tab) {
@@ -102,11 +105,11 @@ pizza.main.contexttracker = function() {
             }
         }
 
-        _frameToContextMap[params.tabId] = {};
+        _tabToContextFrameIdMap[params.tabId] = {};
     };
 
     var _getContextIdForFrame = function(tabId, frameId) {
-        var tab = _frameToContextMap[tabId];
+        var tab = _tabToContextFrameIdMap[tabId];
         if (tab) {
             if (frameId == null) {
                 return tab.firstContext;

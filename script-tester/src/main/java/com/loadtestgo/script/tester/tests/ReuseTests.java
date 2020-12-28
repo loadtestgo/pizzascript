@@ -233,6 +233,43 @@ public class ReuseTests extends JavaScriptTest {
         }
     }
 
+    @Test
+    public void selectSubFrame() {
+        UserContext userContext = newUserContext();
+        try {
+            // Select a sub frame, issue a command to load the automation framework, and then run another test that
+            // requires the automation framework but for a different page
+            String script = String.format(
+                "b = pizza.open(\"%s\");\n" +
+                "r = b.selectFrame(\"iframe:nth(1)\");\n" +
+                "b.hover(\"body\");\n" +
+                "assert.equal(r.type, 'iframe');\n",
+                getTestUrl("files/frames/nested.html"));
+
+            TestContext testContext = newTestContext(userContext);
+            TestResult result = runScript(testContext, script);
+
+            assertOnePage(result);
+            assertNoError(result);
+
+            String clickScript = String.format(
+                "b = pizza.open(\"%s\");\n" +
+                "b.hover('#menu1');\n" +
+                "b.waitVisible('#menu1drop');\n" +
+                "b.click('a:contains(Item1)');\n" +
+                "b.waitPageLoad();",
+                getTestUrl("files/navMenu.html"));
+
+            testContext = newTestContext(userContext);
+            result = runScript(testContext, clickScript, 3000);
+
+            assertNoError(result);
+        } finally {
+            userContext.cleanup();
+            userContext.getEngineContext().cleanup();
+        }
+    }
+
     private UserContext newUserContext() {
         UserContext userContext = new UserContext(new EngineContext());
         userContext.setKeepBrowserOpen(true);

@@ -119,7 +119,7 @@ pizza.main.devtools = function() {
         });
 
         // After that connect to any new tab we can.
-        // There's also a attempt to attach when a new tab is selected via scripting
+        // There's also an attempt to attach when a new tab is selected via scripting
         // This is to catch the case where the tab is created with an empty URL or
         // some other URL we cannot attach to, but is changed later.
         chrome.tabs.onCreated.addListener(function(tab) {

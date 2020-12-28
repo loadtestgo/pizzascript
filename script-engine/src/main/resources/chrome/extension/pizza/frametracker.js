@@ -1,13 +1,15 @@
 //
 // Track frame nodes as they are added to the DOM.
 //
-// The main purpose is to find DevTools frame ids for frame nodes.
-// The frame id can be converted to an execution content id via
-// contexttracker.
+// The main purpose is to find DevTools NodesIds for frames for given selectors / queries.
+//
+// The NodeIds / frame IDs returned can then be converted to an execution content id via pizza.contexttracker,
+// which keeps track of JavaScript context ids.
 //
 // Provides functions to querying frames in the current DOM.
 //
-// After the top level document (which itself is a frame), each sub frame has two node ids.
+// After the top level document (which itself is a frame), each sub frame has two node ids.  One in the parent frame,
+// and one in the sub frame itself.
 //
 // Uses Devtools DOM.* APIs
 //
@@ -23,6 +25,8 @@ pizza.main.frametracker = function() {
 
     var _documentUpdated = function(params) {
         _nodeIdToFrameId = {};
+        _nodeIdToFrame = {};
+        _frameIdToContentNodeId = {};
         _rootNodeId = null;
     };
 

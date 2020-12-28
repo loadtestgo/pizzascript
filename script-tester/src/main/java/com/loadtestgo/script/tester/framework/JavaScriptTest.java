@@ -39,6 +39,10 @@ public class JavaScriptTest extends BaseTest {
         return runScript(newTestContext(), script, timeout);
     }
 
+    public TestResult runScript(TestContext testContext, String script) {
+        return runScript(testContext, script, getDefaultScriptTimeout());
+    }
+
     public TestResult runScript(TestContext testContext, String script, long timeout) {
         TestResult results = testContext.getTestResult();
         JavaScriptEngine javaScriptEngine = new JavaScriptEngine();

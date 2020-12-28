@@ -123,4 +123,41 @@ public class FrameTests extends JavaScriptTest {
         assertOnePage(result);
         assertNoError(result);
     }
+
+    @Test
+    public void frameRemoved() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.click(\"#closeFrame1sBtn\");\n" +
+            "r = b.selectFrame(\"iframe:nth(0)\");\n" +
+            "b.type(\"#input1\", \"hello\");\n" +
+            "assert.equal(b.getValue(\"#input1\"), 'hello');\n" +
+            "pizza.sleep(1000);\n" +
+            "b.hover(\"#closeFrame1sBtn\");\n",
+            getTestUrl("files/frames/forms.html"));
+
+        TestResult result = runScript(script);
+
+        assertOnePage(result);
+        assertError("Unable to find frame", result);
+    }
+
+    @Test
+    public void selectSubFrameAndNavigate() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "r = b.selectFrame(\"iframe:nth(0)\");\n" +
+            "b.type(\"#input1\", \"hello\");\n" +
+            "assert.equal(b.getValue(\"#input1\"), 'hello');\n" +
+            "b.open(\"%s\");" +
+            "b.type(\"#input1\", \"hello\");\n" +
+            "assert.equal(b.getValue(\"#input1\"), 'hello');\n",
+            getTestUrl("files/frames/forms.html"),
+            getTestUrl("files/form.html"));
+
+        TestResult result = runScript(script);
+
+        assertNumPages(result, 2);
+        assertNoError(result);
+    }
 }

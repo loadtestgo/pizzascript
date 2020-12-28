@@ -4,12 +4,22 @@
  * closely to our Pizza API language binding.
  */
 pizza.main.commands = function() {
-    var _currentTabId = null,
+    var
+        // The currently selected tab (chrome.tabs.TabId)
+        // Updated indirectly when pizza.devtools.setTab() is called
+        _currentTabId = null,
         _responseHandler = null,
         _binaryResponseHandler = null,
         _commandMap = {},
+        // Current selected frame (DevTools DOM.NodeId)
+        // If set to null then it refers to the top level frame.
         _currentFrameId = null,
+        // The JavaScript context for the current frame.  (DevTools Runtime.ExecutionsContextId).
+        // Lazy loaded as needed.
         _currentContextId = null,
+        // The currently loaded Automation API JavaScript object loaded into the current context.
+        // Lazy loaded as needed. We only allow one Automation API to be active at a time, this is purely
+        // to simplify bookkeeping.
         _automationAPI = null,
         _headers = {},
         _autoDismissDialogs = false,
@@ -22,6 +32,7 @@ pizza.main.commands = function() {
     pizza.contexttracker.addContextDestroyedHandler(function(contextIds) {
         for (var i = 0; i < contextIds.length; ++i) {
             var contextId = contextIds[i];
+            console.log("Unloading contextId", contextId);
             if (contextId === _currentContextId) {
                 _automationAPI = null;
                 _currentContextId = null;
@@ -1340,9 +1351,9 @@ pizza.main.commands = function() {
                         };
 
                         if (!buildFramePath(response.frameTree)) {
-                            console.log("Unable to find parent frame", response, frameSearchId);
+                            console.log("Unable to find frame", response, frameSearchId);
                             sendResponse(id, {
-                                error: "Unable to find parent frame",
+                                error: "Unable to find frame",
                                 response: JSON.stringify(response)
                             });
                             return;
@@ -1359,7 +1370,6 @@ pizza.main.commands = function() {
                         };
 
                         for (var i = 1; i < frameStack.length; ++i) {
-                            var contextId = pizza.contexttracker.getContextIdForFrame(_currentTabId, parentFrameId);
                             var frameId = frameStack[i];
                             pizza.frametracker.resolveFrame(frameId, wait.add(function(frameObjectId) {
                                 pizza.devtools.sendCommand('Runtime.callFunctionOn',
@@ -2197,6 +2207,7 @@ pizza.main.commands = function() {
             _autoDismissDialogs = false;
             _dialogInfo = null;
             _currentFrameId = null;
+            _currentContextId = null;
             pizza.devtools.suppressMessages(false);
             next();
         }
@@ -2244,7 +2255,7 @@ pizza.main.commands = function() {
         function gotoAboutBlank(next) {
             pizza.devtools.suppressMessages(true);
             pizza.network.suppressNextNavigation();
-
+            // Update the current tab
             if (firstTab) {
                 chrome.tabs.update(firstTab.id, { url: "about:blank"}, function() {
                     pizza.devtools.setTab(firstTab.id, false);
