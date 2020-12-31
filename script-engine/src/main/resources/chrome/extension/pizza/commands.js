@@ -98,8 +98,27 @@ pizza.main.commands = function() {
     };
 
     var _open = function(id, params) {
+        var timeoutId = null;
+        var timeout = null;
         pizza.navigation.reset(_currentTabId, 0);
+        if (params.timeout && params.timeout > 0) {
+            timeout = params.timeout;
+        }
+        if (timeout > 0) {
+            timeoutId = setTimeout(function () {
+                var error = "Timeout after " + _formatTimeout(timeout) + " while waiting for page to load";
+                sendResponse(id,{ "error": error, "type": "Timeout" });
+            }, timeout);
+            _timeouts.add(timeoutId)
+        }
+        var removeTimeouts = function() {
+            if (timeoutId) {
+                _timeouts.delete(timeoutId);
+                clearTimeout(timeoutId);
+            }
+        };
         pizza.navigation.setLoadedHandler(function(details) {
+            removeTimeouts();
             sendResponse(id, details);
         });
         pizza.devtools.sendCommand("Page.navigate", { url: params.url },
@@ -108,11 +127,13 @@ pizza.main.commands = function() {
                 // in chrome.runtime.lastError
                 if (response == null) {
                     pizza.navigation.setLoadedHandler(null);
+                    removeTimeouts();
                     sendResponse(id, { error: chrome.runtime.lastError });
                 } else if (response.message) {
                     // New way is to return a json string with the error message
                     // and code embedded
                     pizza.navigation.setLoadedHandler(null);
+                    removeTimeouts();
                     try {
                         var errorObj = JSON.parse(response.message);
                         if (errorObj && errorObj.message) {
@@ -237,6 +258,14 @@ pizza.main.commands = function() {
         return pollTime;
     }
 
+    function getParamTimeout(params) {
+        var timeout = null;
+        if (params.timeout && params.timeout > 0) {
+            timeout = params.timeout;
+        }
+        return timeout;
+    }
+
     function getParamTextAsRegex(params) {
         if (params.text) {
             return new RegExp(pizza.regexEscape(params.text), 'i');
@@ -252,9 +281,24 @@ pizza.main.commands = function() {
         });
     };
 
+    var _formatTimeout = function(timeMS) {
+        var second = 1000;
+        timeMS = Math.floor(timeMS);
+        if (timeMS < 2000) {
+            return timeMS + "ms";
+        } else {
+            return Math.floor(timeMS / second) + "s";
+        }
+    };
+
     var _waitText = function(id, params) {
         var searchRegexp = getParamTextAsRegex(params);
         var pollTime = getParamPollTime(params);
+        var timeout = getParamTimeout(params);
+        var timeoutTime = null;
+        if (timeout) {
+            timeoutTime = (new Date()).getTime() + timeout;
+        }
         var timeoutId = 0;
 
         var check = function() {
@@ -265,6 +309,19 @@ pizza.main.commands = function() {
                 if (found) {
                     sendResponse(id, { value: found });
                 } else {
+                    if (timeoutTime) {
+                        if (timeoutTime > (new Date()).getTime()) {
+                            var error = "Timeout after " + _formatTimeout(timeout) +
+                                " while waiting for text matching \'";
+                            if (params.text) {
+                                error += params.text + "\'";
+                            } else {
+                                error += "/" + params.regexp + "/\'";
+                            }
+                            sendResponse(id, { type: "Timeout", error: error});
+                            return;
+                        }
+                    }
                     timeoutId = setTimeout(check, pollTime);
                     _timeouts.add(timeoutId)
                 }
@@ -277,6 +334,11 @@ pizza.main.commands = function() {
     var _waitNotText = function(id, params) {
         var searchRegexp = getParamTextAsRegex(params);
         var pollTime = getParamPollTime(params);
+        var timeout = getParamTimeout(params);
+        var timeoutTime = null;
+        if (timeout) {
+            timeoutTime = (new Date()).getTime() + timeout;
+        }
         var timeoutId = 0;
 
         var check = function() {
@@ -285,6 +347,21 @@ pizza.main.commands = function() {
             }
             _hasTextInternal(searchRegexp, function(found) {
                 if (found) {
+                    if (timeoutTime) {
+                        if (timeoutTime > (new Date()).getTime()) {
+                            var error = "Timeout after " + _formatTimeout(timeout) +
+                                " while waiting for text matching \'";
+
+                            if (params.text) {
+                                error += params.text + "\'";
+                            } else {
+                                error += "/" + params.regexp + "/\'";
+                            }
+                            error += " to be removed";
+                            sendResponse(id, { type: "Timeout", error: error});
+                            return;
+                        }
+                    }
                     timeoutId = setTimeout(check, pollTime);
                     _timeouts.add(timeoutId)
                 } else {
@@ -407,7 +484,7 @@ pizza.main.commands = function() {
             console.timeEnd("capture");
             var lastError = chrome.runtime.lastError;
             if (lastError) {
-                if (lastError.message && lastError.message.indexOf("unknown error") != -1) {
+                if (lastError.message && lastError.message.indexOf("unknown error") !== -1) {
                     sendResponse(id, {error: "Failed to capture tab: window has to be visible"});
                 } else {
                     sendResponse(id, {error: lastError});
@@ -500,7 +577,7 @@ pizza.main.commands = function() {
                     var isDone = true;
                     for (var i = 0; i < resultArray.length; ++i) {
                         var state = resultArray[i][0];
-                        if (state !== 'DONE' && state != 'ERROR') {
+                        if (state !== 'DONE' && state !== 'ERROR') {
                             isDone = false;
                             break;
                         }
@@ -516,7 +593,7 @@ pizza.main.commands = function() {
                                 result.push(null);
                             }
                         }
-                        if (result.length == 1) {
+                        if (result.length === 1) {
                             sendResponse(id, { value: result[0] });
                         } else {
                             sendResponse(id, { value: result });
@@ -660,11 +737,11 @@ pizza.main.commands = function() {
             var c = url[i];
             switch (state) {
                 case PARSE:
-                    if (c == '\\') {
+                    if (c === '\\') {
                         state = "ESCAPE";
-                    } else if (c == '(') {
+                    } else if (c === '(') {
                         depth++;
-                    } else if (c == ')') {
+                    } else if (c === ')') {
                         depth--;
                     } else {
                         r += c;
@@ -710,9 +787,9 @@ pizza.main.commands = function() {
             var c = url[i];
             switch (state) {
                 case PARSE:
-                    if (c == '\\') {
+                    if (c === '\\') {
                         state = "ESCAPE";
-                    } else if (c == '(' || c == ')') {
+                    } else if (c === '(' || c === ')') {
                         r += c;
                     } else {
                         addChar(c);
@@ -971,7 +1048,8 @@ pizza.main.commands = function() {
 
         if (!pizza.isNumber(selector) && !pizza.hasAtLeastOneProperty(selector, selectors)) {
             sendResponse(id,
-                { error: "Unable to find tab: selector must be a tab index or one of [\'" + selectors.join("\', \'") + "\']" });
+                { error: "Unable to find tab: selector must be a tab index or one of [\'" +
+                        selectors.join("\', \'") + "\']" });
             return;
         }
         pizza.navigation.reset(_currentTabId, 0);
@@ -1813,6 +1891,11 @@ pizza.main.commands = function() {
 
     var _waitElement = function(id, params) {
         var pollTime = getParamPollTime(params);
+        var timeout = getParamTimeout(params);
+        var timeoutTime = null;
+        if (timeout) {
+            timeoutTime = (new Date()).getTime() + timeout;
+        }
         var timeoutId = 0;
 
         var check = function() {
@@ -1824,6 +1907,14 @@ pizza.main.commands = function() {
                     if (response.result.value) {
                         sendResponse(id, {});
                     } else {
+                        if (timeoutTime) {
+                            if (timeoutTime > (new Date()).getTime()) {
+                                var error = "Timeout after " + _formatTimeout(timeout) +
+                                    " while waiting for element \'" + params.selector + "\'";
+                                sendResponse(id, { type: "Timeout", error: error});
+                                return;
+                            }
+                        }
                         timeoutId = setTimeout(check, pollTime);
                         _timeouts.add(timeoutId);
                     }
@@ -1857,6 +1948,11 @@ pizza.main.commands = function() {
             };
 
         var pollTime = getParamPollTime(params);
+        var timeout = getParamTimeout(params);
+        var timeoutTime = null;
+        if (timeout) {
+            timeoutTime = (new Date()).getTime() + timeout;
+        }
         var timeoutId = 0;
 
         var check = function() {
@@ -1868,6 +1964,14 @@ pizza.main.commands = function() {
                     if (response.result.value) {
                         sendResponse(id, { });
                     } else {
+                        if (timeoutTime) {
+                            if (timeoutTime > (new Date()).getTime()) {
+                                var error = "Timeout after " + _formatTimeout(timeout) +
+                                    " while waiting for text matching \'" + params.text + "\'";
+                                sendResponse(id, { type: "Timeout", error: error });
+                                return;
+                            }
+                        }
                         timeoutId = setTimeout(check, pollTime);
                         _timeouts.add(timeoutId);
                     }
@@ -1909,6 +2013,11 @@ pizza.main.commands = function() {
     var _waitVisible = function(id, params) {
         var selector = params.selector;
         var pollTime = getParamPollTime(params);
+        var timeout = getParamTimeout(params);
+        var timeoutTime = null;
+        if (timeout) {
+            timeoutTime = (new Date()).getTime() + timeout;
+        }
         var timeoutId = 0;
 
         var check = function(selector) {
@@ -1920,6 +2029,14 @@ pizza.main.commands = function() {
                     if (response.result.value) {
                         sendResponse(id, { });
                     } else {
+                        if (timeoutTime) {
+                            if (timeoutTime > (new Date()).getTime()) {
+                                var error = "Timeout after " + _formatTimeout(timeout) +
+                                    " while waiting for element to be visible \'" + selector + "\'";
+                                sendResponse(id, { type: "Timeout", error: error });
+                                return;
+                            }
+                        }
                         timeoutId = setTimeout(function () {
                             check(selector);
                         }, pollTime);
@@ -1941,6 +2058,11 @@ pizza.main.commands = function() {
     var _waitNotVisible = function(id, params) {
         var selector = params.selector;
         var pollTime = getParamPollTime(params);
+        var timeout = getParamTimeout(params);
+        var timeoutTime = null;
+        if (timeout) {
+            timeoutTime = (new Date()).getTime() + timeout;
+        }
         var timeoutId = 0;
 
         var check = function(selector) {
@@ -1950,6 +2072,14 @@ pizza.main.commands = function() {
             executeAutomationAPI(
                 function (response) {
                     if (response.result.value) {
+                        if (timeoutTime) {
+                            if (timeoutTime > (new Date()).getTime()) {
+                                var error = "Timeout after " + _formatTimeout(timeout) +
+                                    " while waiting for element to be removed or hidden \'" + selector + "\'";
+                                sendResponse(id, { type: "Timeout", error: error });
+                                return;
+                            }
+                        }
                         timeoutId = setTimeout(function () {
                             check(selector);
                         }, pollTime);
@@ -2128,8 +2258,9 @@ pizza.main.commands = function() {
             if (timeout > 0) {
                 timeoutId = setTimeout(function () {
                     timedOut = true;
+                    var error = "Timeout after " + _formatTimeout(timeout) + " while waiting for page to load";
                     sendResponse(id,
-                        { "error": "Timeout after " + timeout + "ms while waiting for page load" });
+                        { "error": error, "type": "Timeout" });
                 }, timeout);
                 _timeouts.add(timeoutId);
             }

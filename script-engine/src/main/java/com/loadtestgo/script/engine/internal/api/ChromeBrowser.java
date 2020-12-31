@@ -2,6 +2,7 @@ package com.loadtestgo.script.engine.internal.api;
 
 import com.loadtestgo.script.api.*;
 import com.loadtestgo.script.engine.*;
+import com.loadtestgo.script.engine.internal.FormatUtils;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeProcess;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeSettings;
 import com.loadtestgo.script.engine.internal.browsers.chrome.ChromeWebSocket;
@@ -32,6 +33,7 @@ public class ChromeBrowser implements Browser {
     private boolean ignoreHttpErrors = false;
     private ArrayList<Integer> ignoreHttpErrorCodes = null;
     private long startTime = -1;
+    private Long defaultWaitTimeout = null; // no timeout on wait functions by default
 
     public ChromeBrowser(TestContext testContext) {
         init(testContext, new ChromeSettings());
@@ -202,8 +204,16 @@ public class ChromeBrowser implements Browser {
 
     @Override
     public Page open(String url) {
+        return open(url, this.defaultWaitTimeout);
+    }
+
+    @Override
+    public Page open(String url, Long timeoutMS) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("url", Http.prependHttpToUrl(url));
+        if (timeoutMS != null) {
+            params.put("timeout", timeoutMS);
+        }
 
         if (testContext.getCaptureVideo()) {
             startVideoCapture();
@@ -358,6 +368,15 @@ public class ChromeBrowser implements Browser {
     public void waitText(String text) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("text", text);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitText", params));
+    }
+
+    @Override
+    public void waitText(String text, Long timeoutMS) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("text", text);
+        params.put("timeout", timeoutMS);
         checkResponseForErrors(pizzaHandler.sendCommand("waitText", params));
     }
 
@@ -366,6 +385,16 @@ public class ChromeBrowser implements Browser {
         HashMap<String,Object> params = new HashMap<>();
         String text = regexp.toString();
         params.put("regexp", text);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitText", params));
+    }
+
+    @Override
+    public void waitText(NativeRegExp regexp, Long timeoutMS) {
+        HashMap<String,Object> params = new HashMap<>();
+        String text = regexp.toString();
+        params.put("regexp", text);
+        params.put("timeout", timeoutMS);
         checkResponseForErrors(pizzaHandler.sendCommand("waitText", params));
     }
 
@@ -373,11 +402,29 @@ public class ChromeBrowser implements Browser {
     public void waitNotText(String text) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("text", text);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitNotText", params));
+    }
+
+    @Override
+    public void waitNotText(String text, Long timeoutMS) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("text", text);
+        params.put("timeout", timeoutMS);
         checkResponseForErrors(pizzaHandler.sendCommand("waitNotText", params));
     }
 
     @Override
     public void waitNotText(NativeRegExp regexp) {
+        HashMap<String,Object> params = new HashMap<>();
+        String text = regexp.toString();
+        params.put("regexp", text);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitNotText", params));
+    }
+
+    @Override
+    public void waitNotText(NativeRegExp regexp, Long timeoutMS) {
         HashMap<String,Object> params = new HashMap<>();
         String text = regexp.toString();
         params.put("regexp", text);
@@ -561,10 +608,23 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public void waitForHttpRequests(long idleTimeMS) {
+    public void waitHttpIdle(long idleTimeMS) {
+        waitHttpIdle(idleTimeMS, this.defaultWaitTimeout);
+    }
+
+    @Override
+    public void waitHttpIdle(long idleTimeMS, Long timeoutMS) {
         long idleTimeBegin = System.currentTimeMillis();
+        Long waitTimeEnd = null;
+        if (timeoutMS != null) {
+            waitTimeEnd = idleTimeBegin + timeoutMS;
+        }
         while (true) {
             long now = System.currentTimeMillis();
+            if (waitTimeEnd != null && now >= waitTimeEnd) {
+                throw new ScriptException(ErrorType.Timeout, String.format("Timeout after %s while waiting for HTTP " +
+                    "requests to complete", FormatUtils.formatTimeout(timeoutMS)));
+            }
             if (!pizzaHandler.isOpen()) {
                 throw new ScriptException(ErrorType.Internal, "Browser closed");
             }
@@ -572,7 +632,7 @@ public class ChromeBrowser implements Browser {
                 long lastRequestFinishTime = pizzaHandler.getLastRequestFinishedTime();
                 if (lastRequestFinishTime > 0) {
                     if (lastRequestFinishTime > idleTimeBegin) {
-                        // guard against requests having and end time in the future
+                        // guard against requests having an end time in the future
                         if (lastRequestFinishTime > now) {
                             idleTimeBegin = now;
                         } else {
@@ -596,12 +656,28 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
-    public Page waitPageLoad() {
-        return checkNavigationSuccess(pizzaHandler.sendCommand("waitPageLoad"));
+    public void waitForHttpRequests(long idleTimeMS) {
+        waitHttpIdle(idleTimeMS, this.defaultWaitTimeout);
     }
 
     @Override
-    public Page waitPageLoad(long timeoutMS) {
+    public void waitForHttpRequests(long idleTimeMS, Long timeoutMS) {
+        waitHttpIdle(idleTimeMS, timeoutMS);
+    }
+
+    @Override
+    public Page waitPageLoad() {
+        if (shouldApplyTimeout()) {
+            HashMap<String,Object> params = new HashMap<>();
+            params.put("timeout", this.defaultWaitTimeout);
+            return checkNavigationSuccess(pizzaHandler.sendCommand("waitPageLoad", params));
+        } else {
+            return checkNavigationSuccess(pizzaHandler.sendCommand("waitPageLoad"));
+        }
+    }
+
+    @Override
+    public Page waitPageLoad(Long timeoutMS) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("timeout", timeoutMS);
         return checkNavigationSuccess(pizzaHandler.sendCommand("waitPageLoad", params));
@@ -962,6 +1038,15 @@ public class ChromeBrowser implements Browser {
     public void waitElement(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitElement", params));
+    }
+
+    @Override
+    public void waitElement(String selector, Long timeoutMS) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        params.put("timeout", timeoutMS);
         checkResponseForErrors(pizzaHandler.sendCommand("waitElement", params));
     }
 
@@ -975,6 +1060,16 @@ public class ChromeBrowser implements Browser {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
         params.put("text", text);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitElementText", params));
+    }
+
+    @Override
+    public void waitElementText(String selector, String text, Long timeoutMS) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        params.put("text", text);
+        params.put("timeout", timeoutMS);
         checkResponseForErrors(pizzaHandler.sendCommand("waitElementText", params));
     }
 
@@ -982,6 +1077,15 @@ public class ChromeBrowser implements Browser {
     public void waitVisible(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitVisible", params));
+    }
+
+    @Override
+    public void waitVisible(String selector, Long timeoutMS) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        params.put("timeout", timeoutMS);
         checkResponseForErrors(pizzaHandler.sendCommand("waitVisible", params));
     }
 
@@ -994,6 +1098,15 @@ public class ChromeBrowser implements Browser {
     public void waitNotVisible(String selector) {
         HashMap<String,Object> params = new HashMap<>();
         params.put("selector", selector);
+        applyTimeoutIfNecessary(params);
+        checkResponseForErrors(pizzaHandler.sendCommand("waitNotVisible", params));
+    }
+
+    @Override
+    public void waitNotVisible(String selector, Long timeoutMS) {
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("selector", selector);
+        params.put("timeout", timeoutMS);
         checkResponseForErrors(pizzaHandler.sendCommand("waitNotVisible", params));
     }
 
@@ -1154,6 +1267,32 @@ public class ChromeBrowser implements Browser {
     }
 
     @Override
+    public void setWaitTimeout(Long timeout) {
+        if (timeout == null) {
+            this.defaultWaitTimeout = null;
+        } else if (timeout > 0) {
+            this.defaultWaitTimeout = timeout;
+        } else {
+            this.defaultWaitTimeout = null;
+        }
+    }
+
+    @Override
+    public Long getWaitTimeout() {
+        return this.defaultWaitTimeout;
+    }
+
+    private boolean shouldApplyTimeout() {
+        return this.defaultWaitTimeout != null && this.defaultWaitTimeout > 0;
+    }
+
+    private void applyTimeoutIfNecessary(HashMap<String, Object> params) {
+        if (shouldApplyTimeout()) {
+            params.put("timeout", this.defaultWaitTimeout);
+        }
+    }
+
+    @Override
     public String toString() {
         return "ChromeBrowser";
     }
@@ -1239,11 +1378,14 @@ public class ChromeBrowser implements Browser {
                     } else {
                         errorMsg = error.optString("message");
                     }
-                    if (errorMsg != null) {
-                        throw new ScriptException(ErrorType.Script, errorMsg);
-                    } else {
-                        throw new ScriptException(ErrorType.Script, error.toString());
+                    if (errorMsg == null) {
+                        errorMsg = error.toString();
                     }
+                    String errorType = response.optString("type");
+                    if (StringUtils.isSet(errorType) && errorType.equals("Timeout")) {
+                        throw new ScriptException(ErrorType.Timeout, errorMsg);
+                    }
+                    throw new ScriptException(ErrorType.Script, errorMsg);
                 }
             }
         } catch (JSONException e) {

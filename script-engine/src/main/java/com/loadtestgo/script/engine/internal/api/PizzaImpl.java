@@ -11,11 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.loadtestgo.script.engine.internal.FormatUtils.formatTimeout;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PizzaImpl implements Pizza {
     private TestContext testContext;
     private JavaScriptEngine javaScriptEngine;
+    private Long defaultWaitTimeout = null; // no timeout on wait functions by default
 
     public PizzaImpl(TestContext testContext, JavaScriptEngine javaScriptEngine) {
         this.testContext = testContext;
@@ -66,8 +68,14 @@ public class PizzaImpl implements Pizza {
 
     @Override
     public Browser open(String url) {
+        return open(url, this.defaultWaitTimeout);
+    }
+
+    @Override
+    public Browser open(String url, Long timeoutMS) {
         Browser browser = open();
-        browser.open(url);
+        browser.setWaitTimeout(this.defaultWaitTimeout);
+        browser.open(url, timeoutMS);
         return browser;
     }
 
@@ -87,21 +95,56 @@ public class PizzaImpl implements Pizza {
 
     @Override
     public void waitFor(NativeFunction func) {
-        waitFor(func, 100);
+        waitFor(func, null, 100);
     }
 
     @Override
-    public void waitFor(NativeFunction func, long waitIterationMilliseconds) {
+    public void waitFor(NativeFunction func, Long timeoutMS) {
+        waitFor(func, timeoutMS, 100);
+    }
+
+    @Override
+    public void waitFor(NativeFunction func, Long timeoutMS, long waitIterationMilliseconds) {
+        Long timeoutTime = null;
+        if (timeoutMS != null) {
+            timeoutTime = System.currentTimeMillis() + timeoutMS;
+        }
         while (!RhinoUtils.toBoolean(func.call(javaScriptEngine.getContext(),
             javaScriptEngine.getScope(),
             javaScriptEngine.getScope(),
             new Object[0]))) {
+            if (timeoutTime != null) {
+                if (System.currentTimeMillis() > timeoutTime) {
+                    throw new ScriptException(ErrorType.Timeout,
+                        String.format("waitFor() interrupted after %s", formatTimeout(timeoutMS)));
+                }
+            }
             try {
                 Thread.sleep(waitIterationMilliseconds);
             } catch (InterruptedException e) {
                 throw new ScriptException(ErrorType.Timeout, "waitFor() interrupted");
             }
         }
+    }
+
+    @Override
+    public void setWaitTimeout(Long timeout) {
+        if (timeout == null) {
+            this.defaultWaitTimeout = null;
+        } else if (timeout > 0) {
+            this.defaultWaitTimeout = timeout;
+        } else {
+            this.defaultWaitTimeout = null;
+        }
+        Browser b = browser();
+        if (b != null) {
+            b.setWaitTimeout(this.defaultWaitTimeout);
+        }
+    }
+
+    @Override
+    public Long getWaitTimeout() {
+        return this.defaultWaitTimeout;
     }
 
     @Override

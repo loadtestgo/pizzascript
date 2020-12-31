@@ -1,13 +1,10 @@
 package com.loadtestgo.script.tester.tests;
 
 import com.loadtestgo.script.api.ErrorType;
-import com.loadtestgo.script.api.HttpRequest;
 import com.loadtestgo.script.api.Page;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
 import org.junit.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,8 +13,8 @@ public class NewPage extends JavaScriptTest {
     public void openAsync() {
         String script = String.format(
             "var b = pizza.open();\n" +
-            "b.openAsync(\'%s\');\n" +
-            "b.waitPageLoad(10000);",
+            "b.openAsync('%s');\n" +
+            "b.waitPageLoad();",
             getTestUrl("files/basic.html"));
 
         TestResult result = runScript(script);
@@ -41,7 +38,7 @@ public class NewPage extends JavaScriptTest {
             "b.waitForHttpRequests(1000);\n" +
             // Now try an async navigate
             "b.openAsync(\"%s\");\n" +
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"),
             getTestUrl("files/buttonNav.html"));
 
@@ -103,7 +100,7 @@ public class NewPage extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.jq(\"$('#button').click()\");\n" +
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"));
 
         TestResult result = runScript(script);
@@ -132,7 +129,7 @@ public class NewPage extends JavaScriptTest {
             "b = pizza.open(\"%s\");\n" +
             // Call click on the native element, jquery.click() won't work
             "b.jq(\"$('#link1')[0].click()\");" +
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"));
 
         TestResult result = runScript(script);
@@ -150,7 +147,7 @@ public class NewPage extends JavaScriptTest {
             "b.waitForHttpRequests(1000);\n" +
             // Now check that a new page did load, waitPageLoad() should return
             // immediately as the page has been loaded.
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"));
 
         TestResult result = runScript(script);
@@ -171,7 +168,7 @@ public class NewPage extends JavaScriptTest {
             "b.clearPageLoad();\n" +
             // Load the new page
             "b.execute(\"window.location = \'%s\'\");\n" +
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"),
             getTestUrl("files/buttonNav.html"));
 
@@ -206,7 +203,7 @@ public class NewPage extends JavaScriptTest {
             "b.waitForHttpRequests(1000);\n" +
             // Clear the page load, and then wait using waitPageLoad(), this should timeout
             "b.clearPageLoad();\n" +
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"));
 
         TestResult result = runScript(script, 5000);

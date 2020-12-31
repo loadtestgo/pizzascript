@@ -126,6 +126,22 @@ public interface Browser {
     /**
      * Open the given URL
      * <p>
+     * Function blocks until the page is open.
+     * <p>
+     * An exception is thrown if the navigation fails.
+     * <p>
+     * 4xx and 5xx responses don't trigger a failure, you have to check those
+     * yourself.
+     *
+     * @param url the url to open
+     * @param timeoutMS timeout in milliseconds
+     * @return a new page object for the given page.
+     */
+    Page open(String url, Long timeoutMS);
+
+    /**
+     * Open the given URL
+     * <p>
      * Does not wait for the page to load.
      * <p>
      * Normally you would call this in conjunction with waitForHttpRequests() or waitPageLoad()
@@ -147,9 +163,40 @@ public interface Browser {
      * idleTimeMS is the minimum time to wait, this function will not return
      * before then.
      *
-     * @parm idleTimeMS the time to wait after the last request has completed
+     * @param idleTimeMS the time to wait after the last request has completed
      */
     void waitForHttpRequests(long idleTimeMS);
+
+    /**
+     * Wait for all ongoing HTTP requests to stop.
+     * <p>
+     * idleTimeMS is the minimum time to wait, this function will not return
+     * before then.
+     *
+     * @param idleTimeMS the time to wait after the last request has completed
+     */
+    void waitForHttpRequests(long idleTimeMS, Long timeoutMS);
+
+    /**
+     * Wait for all ongoing HTTP requests to stop.
+     * <p>
+     * idleTimeMS is the minimum time to wait, this function will not return
+     * before then.
+     *
+     * @param idleTimeMS the time to wait after the last request has completed
+     */
+    void waitHttpIdle(long idleTimeMS);
+
+    /**
+     * Wait for all ongoing HTTP requests to stop.
+     * <p>
+     * idleTimeMS is the minimum time to wait, this function will not return
+     * before then.
+     *
+     * @param idleTimeMS the time to wait after the last request has completed
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitHttpIdle(long idleTimeMS, Long timeoutMS);
 
     /**
      * Wait for a new page to load on current tab.
@@ -171,7 +218,26 @@ public interface Browser {
      *
      * @param timeoutMS the max time to wait in milliseconds
      */
-    Page waitPageLoad(long timeoutMS);
+    Page waitPageLoad(Long timeoutMS);
+
+    /**
+     * Set the default timeout for wait functions in milliseconds.
+     *
+     * Initially this value is set to never timeout.
+     *
+     * Overall script timeout applies independently.
+     *
+     * @param timeoutMS the timeout in milliseconds.  Set to null or <=0 to never timeout.
+     */
+    void setWaitTimeout(Long timeoutMS);
+
+    /**
+     * Return the default timeout for wait functions in milliseconds.
+     *
+     * If the timeout is set to null or <=0 then wait functions that don't otherwise specify a timeout
+     * never timeout on their own.
+     */
+    Long getWaitTimeout();
 
     /**
      * Tells the browser to disregard any page loads that happened before this function
@@ -280,8 +346,22 @@ public interface Browser {
 
     /**
      * Wait for the current window / tab to contain the given text.
+     *
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitText(String text, Long timeoutMS);
+
+    /**
+     * Wait for the current window / tab to contain the given text.
      */
     void waitText(NativeRegExp regexp);
+
+    /**
+     * Wait for the current window / tab to contain the given text.
+     *
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitText(NativeRegExp regexp, Long timeoutMS);
 
     /**
      * Wait for the current window / tab to not contain the given text.
@@ -290,8 +370,22 @@ public interface Browser {
 
     /**
      * Wait for the current window / tab to not contain the given text.
+     *
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitNotText(String text, Long timeoutMS);
+
+    /**
+     * Wait for the current window / tab to not contain the given text.
      */
     void waitNotText(NativeRegExp regexp);
+
+    /**
+     * Wait for the current window / tab to not contain the given text.
+     *
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitNotText(NativeRegExp regexp, Long timeoutMS);
 
     /**
      * Return the page title.
@@ -821,11 +915,27 @@ public interface Browser {
     void waitElement(String selector);
 
     /**
+     * Wait for the given selector to be matched.
+     *
+     * @param selector the element(s) to wait for
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitElement(String selector, Long timeoutMS);
+
+    /**
      * Wait for the given selector to be matched and at least one resulting element to be visible.
      *
      * @param selector the element(s) to wait for
      */
     void waitVisible(String selector);
+
+    /**
+     * Wait for the given selector to be matched and at least one resulting element to be visible.
+     *
+     * @param selector the element(s) to wait for
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitVisible(String selector, Long timeoutMS);
 
     /**
      * Wait for the given selector to either not be matched or matched but none of the resulting
@@ -838,6 +948,17 @@ public interface Browser {
     void waitNotVisible(String selector);
 
     /**
+     * Wait for the given selector to either not be matched or matched but none of the resulting
+     * elements are visible.
+     *
+     * NOTE: The element does not need to be visible to begin with.
+     *
+     * @param selector the element(s) to wait for to be no longer visible
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitNotVisible(String selector, Long timeoutMS);
+
+    /**
      * Wait for the element matching the given selector to contain the
      * given text
      *
@@ -845,6 +966,16 @@ public interface Browser {
      * @param text     the text to wait for
      */
     void waitElementText(String selector, String text);
+
+    /**
+     * Wait for the element matching the given selector to contain the
+     * given text
+     *
+     * @param selector the element(s) to wait for
+     * @param text     the text to wait for
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitElementText(String selector, String text, Long timeoutMS);
 
     /**
      * Highlight the first element matching the selector

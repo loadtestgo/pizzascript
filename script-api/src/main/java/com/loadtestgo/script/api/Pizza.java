@@ -3,7 +3,6 @@ package com.loadtestgo.script.api;
 import org.mozilla.javascript.NativeFunction;
 import org.mozilla.javascript.NativeObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
@@ -32,10 +31,23 @@ public interface Pizza {
      * <p>
      * The url can be fully qualified or not.  If not 'http://' is prepended.
      *
-     * @param url
+     * @param url url to navigate to
      * @return Browser object for handling interactions with the page.
      */
     Browser open(String url);
+
+    /**
+     * Open the browser and navigate to the given url.
+     * <p>
+     * Function blocks until the page is open.
+     * <p>
+     * The url can be fully qualified or not.  If not 'http://' is prepended.
+     *
+     * @param url url to navigate to
+     * @param timeoutMS timeout in milliseconds
+     * @return Browser object for handling interactions with the page.
+     */
+    Browser open(String url, Long timeoutMS);
 
     /**
      * Returns the current browser if one is open
@@ -68,9 +80,37 @@ public interface Pizza {
      * Wait for the given function to return true
      *
      * @param func
-     * @param waitIterationMilliseconds the milliseconds to wait before calling func again
+     * @param timeoutMS timeout in milliseconds
      */
-    void waitFor(NativeFunction func, long waitIterationMilliseconds);
+    void waitFor(NativeFunction func, Long timeoutMS);
+
+    /**
+     * Wait for the given function to return true
+     *
+     * @param func
+     * @param waitIterationMS the milliseconds to wait before calling func again
+     * @param timeoutMS timeout in milliseconds
+     */
+    void waitFor(NativeFunction func, Long timeoutMS, long waitIterationMS);
+
+    /**
+     * Set the default timeout for wait functions in milliseconds.
+     *
+     * Initially this value is set to never timeout.
+     *
+     * Overall script timeout applies independently.
+     *
+     * @param timeoutMS the timeout in milliseconds.  Set to null or <=0 to never timeout.
+     */
+    void setWaitTimeout(Long timeoutMS);
+
+    /**
+     * Return the default timeout for wait functions in milliseconds.
+     *
+     * If the timeout is set to null or <=0 then wait functions that don't otherwise specify a timeout
+     * never timeout on their own.
+     */
+    Long getWaitTimeout();
 
     Page[] getPages();
 

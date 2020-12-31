@@ -1,6 +1,7 @@
 package com.loadtestgo.script.tester.tests;
 
 import com.loadtestgo.script.api.ErrorType;
+import com.loadtestgo.script.api.Page;
 import com.loadtestgo.script.api.TestResult;
 import com.loadtestgo.script.tester.framework.JavaScriptTest;
 import org.junit.Test;
@@ -32,6 +33,85 @@ public class WaitTests extends JavaScriptTest {
     }
 
     @Test
+    public void waitPageLoad() {
+        String script = String.format(
+            "var b = pizza.open();\n" +
+            "b.openAsync('%s');\n" +
+            "b.waitPageLoad();",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script, 2000);
+
+        assertNoError(result);
+        assertEquals(1, result.getPages().size());
+
+        Page page = result.getPages().get(0);
+        assertNumRequests(1, page);
+        assertFirstUrlPath("/files/basic.html", page);
+        assertUrlPath("/files/basic.html", page.getUrl());
+    }
+
+    @Test
+    public void waitPageLoadTimeout() {
+        String script = String.format(
+            "var b = pizza.open();\n" +
+            "b.openAsync('%s');\n" +
+            "b.waitPageLoad(1000);",
+            getTestUrl("files/longLoad.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertError("Timeout after 1000ms while waiting for page to load",
+            ErrorType.Navigation, result);
+        assertEquals(1, result.getPages().size());
+    }
+
+    @Test
+    public void waitPageLoadScriptTimeout() {
+        String script = String.format(
+            "var b = pizza.open();\n" +
+            "b.openAsync('%s');\n" +
+            "b.waitPageLoad();",
+            getTestUrl("files/longLoad.html"));
+
+        TestResult result = runScript(script, 2000);
+
+        assertError("Script interrupted", ErrorType.Timeout, result);
+        assertEquals(1, result.getPages().size());
+    }
+
+    @Test
+    public void waitHttpIdleTimeout() {
+        String script = String.format(
+            "var b = pizza.open();\n" +
+            "b.openAsync('%s');\n" +
+            "b.waitHttpIdle(1000, 1000);",
+            getTestUrl("files/longLoad.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertError("Timeout after 1000ms while waiting for HTTP requests to complete",
+            ErrorType.Timeout, result);
+        assertEquals(1, result.getPages().size());
+    }
+
+    @Test
+    public void waitHttpIdleDefaultTimeout() {
+        String script = String.format(
+            "var b = pizza.open();\n" +
+            "b.setWaitTimeout(1000);\n" +
+            "b.openAsync('%s');\n" +
+            "b.waitHttpIdle(1000);",
+            getTestUrl("files/longLoad.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertError("Timeout after 1000ms while waiting for HTTP requests to complete",
+            ErrorType.Timeout, result);
+        assertEquals(1, result.getPages().size());
+    }
+
+    @Test
     public void waitVisible() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
@@ -53,6 +133,23 @@ public class WaitTests extends JavaScriptTest {
 
     @Test
     public void waitVisibleTimeout() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "var v = b.query('#div6');\n" +
+            "assert.eq(v.length, 1);\n" +
+            "assert.eq(v[0].visible, false);\n" +
+            "b.waitVisible('#div6', 500);\n",
+            getTestUrl("files/findElements.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertEquals(1, result.getPages().size());
+        assertError("Timeout after 500ms while waiting for element to be visible '#div6'",
+            ErrorType.Timeout, result);
+    }
+
+    @Test
+    public void waitVisibleScriptTimeout() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "var v = b.query('#div6');\n" +
@@ -103,6 +200,21 @@ public class WaitTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             // Visible element '#revealAfterWait'
+            "b.waitNotVisible('#revealAfterWait', 500);\n",
+            getTestUrl("files/elementLater.html"));
+
+        TestResult result = runScript(script, 3000);
+
+        assertEquals(1, result.getPages().size());
+        assertError("Timeout after 500ms while waiting for element to be removed or hidden '#revealAfterWait'",
+            ErrorType.Timeout, result);
+    }
+
+    @Test
+    public void waitNotVisibleScriptTimeout() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            // Visible element '#revealAfterWait'
             "b.waitNotVisible('#revealAfterWait');\n",
             getTestUrl("files/elementLater.html"));
 
@@ -116,10 +228,10 @@ public class WaitTests extends JavaScriptTest {
     @Test
     public void waitNotVisibleNonExistingElement() {
         String script = String.format(
-                "b = pizza.open(\"%s\");\n" +
-                // Non-existing element '#notAndElement'
-                "b.waitNotVisible('#notAndElement');\n",
-                getTestUrl("files/elementLater.html"));
+            "b = pizza.open(\"%s\");\n" +
+            // Non-existing element '#notAndElement'
+            "b.waitNotVisible('#notAndElement');\n",
+            getTestUrl("files/elementLater.html"));
 
         TestResult result = runScript(script, 3000);
 
@@ -145,7 +257,21 @@ public class WaitTests extends JavaScriptTest {
     }
 
     @Test
-    public void waitExistsFail() {
+    public void waitExistsTimeout() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.waitElement('#notAnElement', 500);\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script, 2000);
+
+        assertEquals(1, result.getPages().size());
+        assertError("Timeout after 500ms while waiting for element '#notAnElement'",
+            ErrorType.Timeout, result);
+    }
+
+    @Test
+    public void waitExistsScriptTimeout() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.waitElement('#notAnElement');\n",
@@ -227,6 +353,20 @@ public class WaitTests extends JavaScriptTest {
     public void waitTextTimeout() {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
+            "b.waitText('Text doesn\\'t exist', 100);\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script, 2000);
+
+        assertEquals(1, result.getPages().size());
+        assertError("Timeout after 100ms while waiting for text matching 'Text doesn't exist'",
+            ErrorType.Timeout, result);
+    }
+
+    @Test
+    public void waitTextScriptTimeout() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
             "b.waitText('Text doesn\\'t exist');\n",
             getTestUrl("files/basic.html"));
 
@@ -235,6 +375,21 @@ public class WaitTests extends JavaScriptTest {
         assertEquals(1, result.getPages().size());
         assertError("Script interrupted", ErrorType.Timeout, result);
         assertTrue("Runtime greater than 2000ms", result.getRunTime() > 2000);
+    }
+
+    @Test
+    public void waitTextScriptChangeDefaultTimeout() {
+        String script = String.format(
+            "b = pizza.open(\"%s\");\n" +
+            "b.setWaitTimeout(100);\n" +
+            "b.waitText('Text doesn\\'t exist');\n",
+            getTestUrl("files/basic.html"));
+
+        TestResult result = runScript(script, 2000);
+
+        assertEquals(1, result.getPages().size());
+        assertError("Timeout after 100ms while waiting for text matching 'Text doesn't exist'",
+            ErrorType.Timeout, result);
     }
 
     @Test

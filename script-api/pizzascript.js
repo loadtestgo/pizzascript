@@ -51,12 +51,13 @@ pizza = { };
  * b.ignoreHttpErrors();
  * b.open("mysite.com/404");
  *
- * @params {String=|Object=} url the URL to open, or settings to use when opening the browser
+ * @params {String=|Object=} a url the URL to open, or settings to use when opening the browser
+ * @param {Number=} timeoutMS timeout in milliseconds when opening a url
  * @return {module:Browser} the newly opened browser
  *
  * @see module:Browser#ignoreHttpErrors
  */
-pizza.open = function() {};
+pizza.open = function(a, timeoutMS) {};
 
 /**
  * Returns the current browser if one is open
@@ -107,9 +108,32 @@ pizza.sleep = function(milliseconds) {};
  * }, 1000);
  *
  * @param {Function} func the function to check
+ * @param {Number=} timeoutMS timeout in milliseconds, pass 'null' or 0 for no timeout.
  * @param {Number=} waitIterationMilliseconds the milliseconds to wait before calling func again
+ * defaults to 100 milliseconds.
  */
-pizza.waitFor = function(func, waitIterationMilliseconds) {};
+pizza.waitFor = function(func, timeoutMS, waitIterationMilliseconds) {};
+
+/**
+ * Set the default timeout for wait functions in milliseconds.
+ *
+ * Initially this value is set to never timeout.
+ *
+ * Overall script timeout applies independently.
+ *
+ * @param timeoutMS the timeout in milliseconds.  Set to null or <=0 to never timeout.
+ */
+pizza.setWaitTimeout = function(timeoutMS) {};
+
+/**
+ * Return the default timeout for wait functions in milliseconds.
+ *
+ * If the timeout is set to null or <=0 then wait functions that don't otherwise specify a timeout
+ * never timeout on their own.
+ *
+ * @return {Number} timeout in milliseconds
+ */
+pizza.getWaitTimeout = function() {};
 
 /**
  * Open a CSV file for read access.
@@ -591,12 +615,13 @@ Browser = {};
  * main document.
  *
  * @param {String} url the url to open
+ * @param {Number=} timeoutMS timeout in milliseconds
  * @return {module:Page} a new page object for the given page.
  *
  * @see module:Browser#ignoreHttpErrors
  * @see module:Browser#openAsync
  */
-Browser.prototype.open = function(url) {};
+Browser.prototype.open = function(url, timeoutMS) {};
 
 /**
  * Open the given URL
@@ -641,12 +666,13 @@ Browser.prototype.getUrl = function() {};
  * var b = pizza.open("www.facebook.com");
  * b.waitForHttpRequests(2000);
  *
- * @param {Number} idleTimeMS the time to wait after the last request has completed
+ * @param {Number=} idleTimeMS the time to wait after the last request has completed
+ * @param {Number=} timeoutMS timeout in milliseconds
  *
  * @see module:Browser#waitPageLoad
  * @see module:Browser#verifyRequest
  */
-Browser.prototype.waitForHttpRequests = function(idleTimeMS) {};
+Browser.prototype.waitForHttpRequests = function(idleTimeMS, timeoutMS) {};
 
 /**
  * Wait for a new page to load on the current tab.
@@ -772,13 +798,14 @@ Browser.prototype.verifyText = function(text) {};
  *
  * @param {String} selector the element to wait for
  * @param {String} text the text to wait for
+ * @param {Number=} timeoutMS timeout in milliseconds
  *
  * @see module:Browser#waitText
  * @see module:Browser#hasText
  * @see module:Browser#verifyText
  * @see module:Browser#verifyNotText
  */
-Browser.prototype.waitElementText = function(selector, text) {};
+Browser.prototype.waitElementText = function(selector, text, timeoutMS) {};
 
 /**
  * Wait for the current window / tab to contain the given text.
@@ -787,6 +814,7 @@ Browser.prototype.waitElementText = function(selector, text) {};
  * b.waitText("Sign Out");
  *
  * @param {String} text the text to wait for
+ * @param {Number=} timeoutMS timeout in milliseconds
  *
  * @see module:Browser#waitNotText
  * @see module:Browser#hasText
@@ -794,7 +822,7 @@ Browser.prototype.waitElementText = function(selector, text) {};
  * @see module:Browser#verifyNotText
  * @see module:Browser#getInnerText
  */
-Browser.prototype.waitText = function(text) {};
+Browser.prototype.waitText = function(text, timeoutMS) {};
 
 /**
  * Wait for the current window / tab to not contain the given text.
@@ -803,6 +831,7 @@ Browser.prototype.waitText = function(text) {};
  * b.waitNotText("Sign In");
  *
  * @param {String} text the text to not wait for
+ * @param {Number=} timeoutMS timeout in milliseconds
  *
  * @see module:Browser#waitText
  * @see module:Browser#hasText
@@ -810,7 +839,7 @@ Browser.prototype.waitText = function(text) {};
  * @see module:Browser#verifyNotText
  * @see module:Browser#getInnerText
  */
-Browser.prototype.waitNotText = function(text) {};
+Browser.prototype.waitNotText = function(text, timeoutMS) {};
 
 /**
  * Verify that the text of the page does not contain the given string.
@@ -1754,8 +1783,9 @@ Browser.prototype.queryVisible = function(selector) {};
  * b.waitElement('#divNew');
  *
  * @param {String} selector The element(s) to wait for
+ * @param {Number=} timeoutMS timeout in milliseconds
  */
-Browser.prototype.waitElement = function(selector) {};
+Browser.prototype.waitElement = function(selector, timeoutMS) {};
 
 /**
  * Wait for the given selector to be matched and at least one resulting element to be visible.
@@ -1767,12 +1797,13 @@ Browser.prototype.waitElement = function(selector) {};
  * b.waitVisible('#button1');
  *
  * @param {String} selector The element(s) to wait for
+ * @param {Number=} timeoutMS timeout in milliseconds
  *
  * @see module:Browser#exists
  * @see module:Browser#isVisible
  * @see module:Browser#waitNotVisible
  */
-Browser.prototype.waitVisible = function(selector) {};
+Browser.prototype.waitVisible = function(selector, timeoutMS) {};
 
 /**
  * Wait for the given selector to either not be matched or matched but none of the resulting
@@ -1785,12 +1816,13 @@ Browser.prototype.waitVisible = function(selector) {};
  * b.waitNotVisible('#errorDiv');
  *
  * @param {String} selector The element(s) to wait for to be no longer visible
+ * @param {Number=} timeoutMS timeout in milliseconds
  *
  * @see module:Browser#exists
  * @see module:Browser#isVisible
  * @see module:Browser#waitVisible
  */
-Browser.prototype.waitNotVisible = function(selector) {};
+Browser.prototype.waitNotVisible = function(selector, timeoutMS) {};
 
 /**
  * Highlight the first element matching the selector

@@ -21,7 +21,7 @@ public class ClickTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.click('#button');\n" +
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"));
 
         TestResult result = runScript(script);
@@ -47,7 +47,7 @@ public class ClickTests extends JavaScriptTest {
         String script = String.format(
             "b = pizza.open(\"%s\");\n" +
             "b.click('#link1');\n" +
-            "b.waitPageLoad(10000);",
+            "b.waitPageLoad();",
             getTestUrl("files/buttonNav.html"));
 
         TestResult result = runScript(script);

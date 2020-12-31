@@ -128,9 +128,9 @@ pizza.formatInt = function(bytes) {
 };
 
 pizza.formatMillis = function(time) {
-    if (time == undefined || time < 0) {
+    if (time === undefined || time < 0) {
         return "n/a";
-    } else if (time == 0) {
+    } else if (time === 0) {
         return "0ms";
     } else if (time < 1000) {
         return time + "ms";
@@ -143,7 +143,7 @@ pizza.formatMillis = function(time) {
 pizza.formatMillisPlus = function(time) {
     if (time > 0) {
         return "+" + pizza.formatMillis(time);
-    } else if (time == 0) {
+    } else if (time === 0) {
         return pizza.formatMillis(time);
     } else {
         return "n/a";
@@ -590,5 +590,3 @@ dt.timeSpan = function(data,type,row) {
         return "";
     }
 };
-
-
