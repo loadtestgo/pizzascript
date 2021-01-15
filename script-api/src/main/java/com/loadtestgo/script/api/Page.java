@@ -13,6 +13,8 @@ public class Page {
     public Date navStartTime;
     public Date navCommitTime;
     public Date domContentLoadedTime;
+    public Date firstPaintTime;
+    public Date firstContentfulPaintTime;
     public Date navEndTime;
     public Date unloadTime;
 
@@ -29,8 +31,6 @@ public class Page {
     public ArrayList<ConsoleMessage> consoleMessages = new ArrayList<>();
     public Object pageId;
     public String protocol;
-    public Date firstPaintTime;
-    public Date firstPaintAfterLoadTime;
     public String name;
     public int numDomElements;
     public int numFrames;
@@ -51,12 +51,12 @@ public class Page {
         return firstPaintTime;
     }
 
-    public void setFirstPaintAfterLoadTime(Date firstPaintAfterLoadTime) {
-        this.firstPaintAfterLoadTime = firstPaintAfterLoadTime;
+    public void setFirstContentfulPaintTime(Date firstContentfulPaintTime) {
+        this.firstContentfulPaintTime = firstContentfulPaintTime;
     }
 
-    public Date getFirstPaintAfterLoadTime() {
-        return firstPaintAfterLoadTime;
+    public Date getFirstContentfulPaintTime() {
+        return firstContentfulPaintTime;
     }
 
     public void setName(String name) {

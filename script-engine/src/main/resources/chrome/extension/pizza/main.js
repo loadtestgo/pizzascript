@@ -101,7 +101,25 @@ pizza.main.setup = function() {
 
     chrome.runtime.onConnect.addListener(function(port) {
         port.onMessage.addListener(function(msg) {
-            ws.send(JSON.stringify({ event: "Pizza.inspectElement", "id": pizza.config.id, "details": msg}));
+            let event;
+            if (msg.type === "perf") {
+                // We dont know which item this is available for
+                if (msg.tabId && msg.frameId) {
+                    let details = msg.msg;
+                    details.tabId = msg.tabId;
+                    details.frameId = msg.frameId;
+                    console.log(details);
+                    event = { event: "navigationLoadTimes", "id": pizza.config.id, "details": details};
+                } else {
+                    return;
+                }
+            } else if (msg.type === "PizzaElementSelected") {
+                let details = msg.msg;
+                details.tabId = msg.tabId;
+                details.frameId = msg.frameId;
+                event = { event: "Pizza.inspectElement", "id": pizza.config.id, "details": details};
+            }
+            ws.send(JSON.stringify(event));
         });
     });
 

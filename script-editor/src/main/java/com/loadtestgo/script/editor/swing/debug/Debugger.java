@@ -687,6 +687,7 @@ public class Debugger {
     private class DebuggerExecution implements Runnable {
         private SourceFile file;
         private JavaScriptEngine engine;
+        UserContext userContext;
         private ConsoleOutputStream consoleOutputStream;
         private EditorTestContext.WindowPosition windowPosition;
         private Map<DebuggableScript, FunctionSource> functionToSource;
@@ -695,6 +696,8 @@ public class Debugger {
 
         public DebuggerExecution(JavaScriptEngine engine) {
             this.engine = engine;
+            EngineContext engineContext = new EngineContext();
+            this.userContext = new UserContext(engineContext,1);
             this.functionToSource = new ConcurrentHashMap<>();
         }
 
@@ -815,7 +818,7 @@ public class Debugger {
             };
 
             Throwable exception = null;
-            EditorTestContext testContext = new EditorTestContext(Path.getFileName(file.getFilePath()), 1);
+            EditorTestContext testContext = new EditorTestContext(userContext, Path.getFileName(file.getFilePath()));
             testContext.setWindowPosition(windowPosition);
             testContext.setResultNotifier(consoleOutputStream);
             testContext.setBaseDirectory(Path.getParentDirectory(file.getFilePath()));

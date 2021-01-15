@@ -26,11 +26,27 @@ pizza.main.contexttracker = function() {
         return false;
     }
 
+    function setExecutionContextFrameId(params) {
+        if (params.context.auxData && !params.context.auxData.isDefault) {
+            if (params.context.name === "PizzaScript") {
+                console.log(params);
+                var frameId = params.context.auxData.frameId;
+                var tabId = params.tabId;
+                var loc = {
+                    expression: "setPizzaScriptTabAndFrameId(" + tabId + ",\"" + frameId + "\")",
+                    contextId: params.context.id
+                };
+                pizza.devtools.sendCommand('Runtime.evaluate', loc, function (response) {});
+            }
+        }
+    }
+
     var _executionContextCreated = function(params) {
         // Ignore injected extension tabs.  We inject our own scripting context and so can other
         // extensions.  We are not interested in these and we don't want to overwrite the main
         // context, as we use this as the default context target for commands.execute().
         if (isInjectedExtensionTab(params)) {
+            setExecutionContextFrameId(params);
             return;
         }
 

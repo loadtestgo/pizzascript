@@ -1,10 +1,7 @@
 package com.loadtestgo.script.engine.internal.browsers.chrome;
 
 import com.loadtestgo.script.engine.*;
-import com.loadtestgo.util.Joiner;
-import com.loadtestgo.util.Path;
-import com.loadtestgo.util.ResourceUtils;
-import com.loadtestgo.util.Template;
+import com.loadtestgo.util.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -115,6 +112,20 @@ public class ChromeProcess {
 
         if (settings.ignoreCertErrors) {
             args.add("--ignore-certificate-errors");
+
+            // Also needed to add '--test-type' to avoid warnings.
+            // Docs say it also does the following (much of which is covered by other command line params below):
+            //   - It avoids creating application stubs in ~/Applications on mac.
+            //   - It makes exit codes slightly more correct
+            //   - Windows navigation jumplists arent updated crbug.com/389375
+            //   - Doesn't start some chrome StartPageService
+            //   - Disables initializing chromecast service
+            //   - "Component extensions with background pages are not enabled during tests because they generate a lot
+            //      of background behavior that can interfere."
+            //   - When quitting the browser, it disables additional checks that may stop that quitting process. (like
+            //     unsaved form modifications or unhandled profile notifications..)
+            // NOTE: if you run into issues with some the command line params below no longer working it might be
+            // work always turning 'test-type' ON.
             args.add("--test-type");
         }
 
@@ -154,6 +165,13 @@ public class ChromeProcess {
         // Instead we disable this in Preferences.json that we use to create the chrome profile
         args.add("--disable-save-password-bubble");
 
+        if (Os.isLinux()) {
+            // Avoid potential instability of using Gnome Keyring or KDE wallet. crbug.com/571003
+            args.add("--password-store=basic");
+        }
+
+        args.add("--disable-device-discovery-notifications");
+
         // Load our profile
         args.add(String.format("--user-data-dir=%s", profileDir));
 
@@ -162,7 +180,25 @@ public class ChromeProcess {
 
         // Disable chrome apps and extensions
         args.add("--disable-default-apps");
-        args.add("--disable-component-update");
+        args.add("--disable-component-update"); // Don't update the browser 'components' listed at chrome://components/
+
+        // Disables Domain Reliability Monitoring, which tracks whether the browser has difficulty contacting
+        // Google-owned sites and uploads reports to Google.
+        args.add("--disable-domain-reliability");
+
+        // Disable reporting to UMA, but allows for collection
+        args.add("--metrics-recording-only");
+
+        // Disable crash reporting
+        args.add("--disable-breakpad");
+
+        if (Os.isMac()) {
+            // Use mock keychain on Mac to prevent blocking permissions dialogs
+            args.add("--use-mock-keychain");
+        }
+
+        // Disables client-side phishing detection
+        args.add("--disable-client-side-phishing-detection");
 
         // From the Chrome command line docs:
         //   "Disable default component extensions with background pages - useful for performance
@@ -172,7 +208,8 @@ public class ChromeProcess {
         // Disable google account sync (you'd have to login to google for this to be active)
         args.add("--disable-sync");
 
-        // Disable auto translation
+        // Disable auto translation (NO LONGER WORKS since April 2017)
+        // https://codereview.chromium.org/2819813002/
         args.add("--disable-translate");
 
         // From the Chrome command line docs:

@@ -20,7 +20,9 @@ public class ConsoleScriptThread {
         this.engine = new JavaScriptEngine();
         this.callbacks = callbacks;
         this.executorService = Executors.newSingleThreadExecutor();
-        this.testContext = new EditorTestContext("Console", 0);
+        EngineContext engineContext = new EngineContext();
+        UserContext userContext = new UserContext(engineContext,0);
+        this.testContext = new EditorTestContext(userContext,"Console");
         this.testContext.setResultNotifier(output);
         this.testContext.setCaptureVideo(false);
         output.setTestResult(testContext.getTestResult());
@@ -44,7 +46,7 @@ public class ConsoleScriptThread {
         return engine;
     }
 
-    public EasyTestContext getTestContext() {
+    public TestContext getTestContext() {
         return testContext;
     }
 

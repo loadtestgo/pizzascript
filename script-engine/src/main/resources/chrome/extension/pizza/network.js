@@ -73,27 +73,11 @@ pizza.main.network = function() {
 
         // If it's the main frame then send detailed load times, for other frames we don't record
         // this info right now.
-        if (details.frameId == 0) {
+        if (details.frameId === 0) {
             var wait = pizza.waitAll();
 
             console.log("done loading: ", details.url, " gathering stats");
             if (pizza.isExternalUrl(details.url)) {
-                chrome.tabs.executeScript(details.tabId,
-                    { code: "window.chrome.loadTimes();", allFrames: false },
-                    wait.add(function (response) {
-                        if (chrome.runtime.lastError) {
-                            console.log(chrome.runtime.lastError);
-                            return;
-                        }
-                        if (response && response.length > 0) {
-                            var loadTimes = response[0];
-                            loadTimes.tabId = details.tabId;
-                            loadTimes.processId = details.processId;
-                            loadTimes.frameId = details.frameId;
-                            _ws.send(JSON.stringify({ event: "navigationLoadTimes", details: loadTimes }));
-                        }
-                    }));
-
                 // We could used the devtools' Memory.getDOMCounters() but it returns stats for the current
                 // devtools tab, not the tab that just navigated, also it counts extension pages and nodes loaded
                 // by extension pages.

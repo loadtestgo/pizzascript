@@ -145,14 +145,21 @@ public class ChromeBrowser implements Browser {
 
     public void close() {
         if (testContext.getUserContext().keepBrowserOpen()) {
-            HashMap<String,Object> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("reuseSession", testContext.getUserContext().reuseSession());
-            checkResponseForErrors(pizzaHandler.sendCommand("reset", params));
-            pizzaHandler.reset();
-        } else {
-            pizzaHandler.close();
-            chromeProcess.close();
+            try {
+                checkResponseForErrors(pizzaHandler.sendCommand("reset", params));
+                pizzaHandler.reset();
+                testContext.setOpenBrowser(null);
+                return;
+            } catch (Throwable t) {
+                Logger.warn("Unable to keep browser open: {}.  Closing...", t);
+            }
         }
+        pizzaHandler.close();
+        chromeProcess.close();
+        testContext.getUserContext().setChromeProcess(null);
+        testContext.getUserContext().setPizzaHandler(null);
         testContext.setOpenBrowser(null);
     }
 

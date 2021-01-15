@@ -1720,23 +1720,25 @@ public class ChromeWebSocket extends BrowserWebSocket {
     }
 
     private void navigationLoadTimes(JSONObject details) throws JSONException {
-        Page page = getPageForTab(details);
+        int tabId = details.getInt("tabId");
+        Page page = getCurrentPageForTab(tabId);
         if (page == null) {
             return;
         }
 
-        String connectionInfo = details.optString("connectionInfo");
-        if (connectionInfo != null) {
-            page.setProtocol(connectionInfo);
+        String nextHopProtocol = details.optString("nextHopProtocol");
+        if (nextHopProtocol != null) {
+            page.setProtocol(nextHopProtocol);
         }
 
-        double firstPaintTime = details.optDouble("firstPaintTime");
-        if (firstPaintTime != 0.0) {
-            page.setFirstPaintTime(convertToDateFromSecs(firstPaintTime));
+        double timeOrigin =  details.optDouble("timeOrigin");
+        double firstPaintTime = details.optDouble("firstPaint");
+        if (!Double.isNaN(firstPaintTime)) {
+            page.setFirstPaintTime(convertToDateFromMillis(timeOrigin + firstPaintTime));
         }
-        double firstPaintAfterLoadTime = details.optDouble("firstPaintAfterLoadTime");
-        if (firstPaintAfterLoadTime != 0.0) {
-            page.setFirstPaintAfterLoadTime(convertToDateFromSecs(firstPaintAfterLoadTime));
+        double firstContentfulPaint = details.optDouble("firstContentfulPaint");
+        if (!Double.isNaN(firstContentfulPaint)) {
+            page.setFirstContentfulPaintTime(convertToDateFromMillis(timeOrigin + firstContentfulPaint));
         }
     }
 

@@ -275,6 +275,7 @@ pizza.viewresult = function() {
         var startTime = event.data.startTime;
         var navStart = event.data.navStart;
         var firstRender = event.data.firstRender;
+        var firstContentfulRender = event.data.firstContentfulRender;
 
         tooltip = mtl.execTemplate("#info-tip-template",
             {
@@ -284,6 +285,7 @@ pizza.viewresult = function() {
                 navStart: pizza.formatMillisPlus(navStart),
                 domLoaded: pizza.formatMillisPlus(domLoaded),
                 firstRender: pizza.formatMillisPlus(firstRender),
+                firstContentfulRender: pizza.formatMillisPlus(firstContentfulRender),
                 pageLoaded: pizza.formatMillisPlus(pageLoaded)
             });
 
@@ -568,6 +570,7 @@ pizza.viewresult = function() {
         var domLoadTime = page.domContentLoadedTime;
         var navEndTime = page.navEndTime;
         var firstRenderTime = page.firstPaintTime;
+        var firstContentfulRenderTime = page.firstContentfulPaintTime;
 
         var loadSpan = endTime - startTime;
 
@@ -575,6 +578,7 @@ pizza.viewresult = function() {
         var navEndSpan = navEndTime - startTime;
         var navStartSpan = navStartTime - startTime;
         var firstRenderSpan = firstRenderTime - startTime;
+        var firstContentfulRenderSpan = firstContentfulRenderTime - startTime;
 
         for (j = 0; j < page.requests.length; ++j) {
             request = page.requests[j];
@@ -671,6 +675,7 @@ pizza.viewresult = function() {
             addRequestMarker(netBar, "netNavStartBar", navStartSpan, loadSpan);
             addRequestMarker(netBar, "netContentLoadBar", domLoadSpan, loadSpan);
             addRequestMarker(netBar, "netFirstRenderBar", firstRenderSpan, loadSpan);
+            addRequestMarker(netBar, "netFirstContentfulRenderBar", firstContentfulRenderSpan, loadSpan);
             addRequestMarker(netBar, "netWindowLoadBar", navEndSpan, loadSpan);
 
             netBar.mouseenter({
@@ -679,6 +684,7 @@ pizza.viewresult = function() {
                 navStart: navStartSpan,
                 domLoaded: domLoadSpan,
                 firstRender: firstRenderSpan,
+                firstContentfulRender: firstContentfulRenderSpan,
                 pageLoaded: navEndSpan
             }, requestTimingsMouseEnter).mouseleave(removeTooltip);
 

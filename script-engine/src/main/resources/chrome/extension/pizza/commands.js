@@ -2393,11 +2393,39 @@ pizza.main.commands = function() {
                     next();
                 });
             } else {
-                // open a tab if no one is open
-                chrome.tabs.create({ url: "about:blank" }, function(tab) {
-                    pizza.devtools.setTab(tab.id, false);
-                    next();
-                });
+                // No window open - open one
+                if (chrome.windows) {
+                    // If no one.
+                    chrome.windows.create({url: "about:blank" }, function(window) {
+                        if (window) {
+                            chrome.tabs.query({}, function(tabs) {
+                                var tabId = tabs[0].id
+                                pizza.devtools.setTab(tabId, false);
+                                next();
+                            });
+                        } else {
+                            var error = "Unable to create window";
+                            if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
+                                error += ": " + chrome.runtime.lastError.message;
+                            }
+                            sendResponse(id, {error: error});
+                        }
+                    });
+                } else {
+                    // before chrome.windows API, this would automatically open a window
+                    chrome.tabs.create({ url: "about:blank" }, function(tab) {
+                        if (tab) {
+                            pizza.devtools.setTab(tab.id, false);
+                            next();
+                        } else {
+                            var error = "Unable to create tab";
+                            if (chrome.runtime.lastError && chrome.runtime.lastError.message) {
+                                error += ": " + chrome.runtime.lastError.message;
+                            }
+                            sendResponse(id, {error: error});
+                        }
+                    });
+                }
             }
         }
 

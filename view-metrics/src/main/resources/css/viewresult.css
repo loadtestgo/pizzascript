@@ -491,6 +491,10 @@ td.breakable {
     background-color: green;
 }
 
+.netFirstContentfulRenderBar {
+    background-color: #404040;
+}
+
 .netTimeLabel {
     -moz-box-sizing: padding-box;
     position: absolute;
@@ -540,7 +544,8 @@ td.breakable {
 
 .netWindowLoadBar.timeInfoTipBar,
 .netContentLoadBar.timeInfoTipBar,
-.netFirstRenderBar.timeInfoTipBar {
+.netFirstRenderBar.timeInfoTipBar,
+.netFirstContentfulRenderBar.timeInfoTipBar {
     width: 1px;
 }
 
