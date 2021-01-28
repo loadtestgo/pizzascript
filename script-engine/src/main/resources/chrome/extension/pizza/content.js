@@ -13,27 +13,27 @@ window.addEventListener("message", function(event) {
 
 /* Grab paint timings */
 var processPerfEvents = function (entries) {
-    let loadTimes = { "timeOrigin": performance.timeOrigin };
-    for (let i = 0; i < entries.length; i++) {
-        let entry = entries[i];
-        let entryType = entry.entryType;
+    var loadTimes = { "timeOrigin": performance.timeOrigin };
+    for (var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
+        var entryType = entry.entryType;
         if (entryType === "paint") {
-            let startTime = entry.startTime;
+            var startTime = entry.startTime;
             if (entry.name === "first-paint") {
                 loadTimes.firstPaint = startTime;
             } else if (entry.name === "first-contentful-paint") {
                 loadTimes.firstContentfulPaint = startTime;
             }
         } else if (entryType === "navigation") {
-            let copy = [
+            var copy = [
                 "connectEnd", "connectStart", "domComplete", "domContentLoadedEventEnd",
                 "domContentLoadedEventStart", "domInteractive", "domainLookupEnd",
                 "domainLookupStart", "duration", "fetchStart", "loadEventEnd",
                 "loadEventStart", "nextHopProtocol", "requestStart", "requestEnd",
                 "responseEnd", "responseStart"
             ];
-            for (let j = 0; j < copy.length; ++j) {
-                let str = copy[j];
+            for (var j = 0; j < copy.length; ++j) {
+                var str = copy[j];
                 loadTimes[str] = entry[str];
             }
         }

@@ -101,11 +101,11 @@ pizza.main.setup = function() {
 
     chrome.runtime.onConnect.addListener(function(port) {
         port.onMessage.addListener(function(msg) {
-            let event;
+            var event, details;
             if (msg.type === "perf") {
                 // We dont know which item this is available for
                 if (msg.tabId && msg.frameId) {
-                    let details = msg.msg;
+                    details = msg.msg;
                     details.tabId = msg.tabId;
                     details.frameId = msg.frameId;
                     console.log(details);
@@ -114,7 +114,7 @@ pizza.main.setup = function() {
                     return;
                 }
             } else if (msg.type === "PizzaElementSelected") {
-                let details = msg.msg;
+                details = msg.msg;
                 details.tabId = msg.tabId;
                 details.frameId = msg.frameId;
                 event = { event: "Pizza.inspectElement", "id": pizza.config.id, "details": details};
