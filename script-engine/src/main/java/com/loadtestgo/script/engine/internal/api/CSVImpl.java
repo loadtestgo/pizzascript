@@ -1,6 +1,7 @@
 package com.loadtestgo.script.engine.internal.api;
 
 import com.loadtestgo.script.api.CSV;
+import org.apache.commons.io.input.BOMInputStream;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -47,12 +48,21 @@ public class CSVImpl implements CSV {
     }
 
     public CSVImpl(File file) throws IOException {
-        rows = parseCsvRowsIntoArray(new FileInputStream(file));
+        init(new FileInputStream(file));
+    }
+
+    public CSVImpl(InputStream inputStream) throws IOException {
+        init(inputStream);
+    }
+
+    private void init(InputStream inputStream) throws IOException {
+        rows = parseCsvRowsIntoArray(inputStream);
 
         if (rows.size() > 0) {
             List<String> columns = parseCsvRow(rows.get(0));
             for (int i = 0; i < columns.size(); ++i) {
-                columnNames.put(columns.get(i).toLowerCase(), i);
+                String name = columns.get(i);
+                columnNames.put(name.toLowerCase().trim(), i);
             }
         }
     }
@@ -152,13 +162,15 @@ public class CSVImpl implements CSV {
         START,
         INQUOTES,
         INQUOTE_ESCAPE,
-        START_SKIP_R, START_SKIP_N, NOQUOTES
+        START_SKIP_R,
+        START_SKIP_N,
+        NOQUOTES
     }
 
-    static List<String> parseCsvRowsIntoArray(FileInputStream file) throws IOException {
+    static List<String> parseCsvRowsIntoArray(InputStream file) throws IOException {
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(
-                file,
+                new BOMInputStream(file),
                 StandardCharsets.UTF_8));
 
         return parseCsvRowsIntoArray(reader);

@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
 public class CSVImplTest {
+    @Test
     public void testParseLine() {
         List<String> r = CSVImpl.parseCsvRow(
             "a,b,c,d"
@@ -104,5 +105,17 @@ public class CSVImplTest {
         r = CSVImpl.parseCsvRowsIntoArray(reader("a,b,\"c\nd\",f,g\n"));
         assertEquals(1, r.size());
         assertEquals("a,b,c\nd,f,g", r.get(0));
+    }
+
+    @Test
+    public void testWithBom() throws IOException {
+        InputStream inputStream = this.getClass().getResourceAsStream("bom.csv");
+        CSVImpl csv = new CSVImpl(inputStream);
+        CSVImpl.Row row = csv.row(1);
+        assertEquals(1, row.getNumColumns());
+        assertEquals(2, csv.getNumRows());
+        assertEquals("hello", csv.value(0, 0));
+        assertEquals("bom", csv.value(1, 0));
+        assertEquals("bom", csv.value(1, "hello"));
     }
 }
